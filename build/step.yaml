@@ -1,0 +1,52 @@
+kind: step
+version: "1.0"
+metadata:
+  name: build
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "IMAGE_NAME",
+        "TAG"
+      ],
+      "properties": {
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "title": "Working Directory",
+          "description": "The directory in which the build command is executed. It can be an explicit path in the container’s file system, or a variable that references another step.",
+          "default": "${{main_clone}}"
+        },
+        "DOCKERFILE": {
+          "type": "string",
+          "title": "Dockerfile",
+          "description": "The path to the Dockerfile from which the image is built",
+          "default": "Dockerfile"
+        },
+        "IMAGE_NAME": {
+          "type": "string",
+          "title": "Image Name",
+          "description": "The name for the image you build."
+        },
+        "BUILD_ARGUMENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Build Arguments",
+          "description": "A set of Docker build arguments to pass to the build process."
+        },
+        "TARGET": {
+          "type": "string",
+          "title": "Build Target",
+          "description": "Target stage in a multistage build (build will run until this stage)"
+        },
+        "TAG": {
+          "type": "string",
+          "title": "Image Tag",
+          "description": "The tag that is assigned to the image you build."
+        }
+      }
+    }

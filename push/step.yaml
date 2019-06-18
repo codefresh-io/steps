@@ -1,0 +1,50 @@
+kind: step
+version: "1.0"
+metadata:
+  name: push
+spec:
+  arguments: |
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "required": [
+            "CANDIDATE",
+            "REGISTRY"
+        ],
+        "definitions": {},
+        "properties": {
+            "CANDIDATE": {
+                "type": "string",
+                "title": "Working Directory",
+                "description": "The identifier of the image to push to the remote Docker registry."
+            },
+            "TAG": {
+                "oneOf": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Tags",
+                        "description": "The tag under which to push the image. Use either this or tags."
+                    },
+                    {
+                        "title": "Tag",
+                        "type": "string",
+                        "description": "The tag under which to push the image. Use either this or tags."
+                    }
+                ],
+                "default": ["latest"]
+            },
+            "IMAGE_NAME": {
+                "type": "string",
+                "title": "Image Name",
+                "description": "The tagged image name that will be used The default value will be the same image name as of the candidate."
+            },
+            "REGISTRY": {
+                "type": "string",
+                "title": "Registry",
+                "description": "The registry logical name of one of the inserted registries from the integration view"
+            }
+        }
+    }

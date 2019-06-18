@@ -1,0 +1,33 @@
+kind: step
+version: "1.0"
+metadata:
+  name: git-clone
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "REPOSITORY",
+        "CONTEXT",
+        "REVISION"
+      ],
+      "properties": {
+        "REPOSITORY": {
+          "type": "string",
+          "title": "Repository",
+          "description": "Repository name owner/name mostly"
+        },
+        "CONTEXT": {
+          "type": "string",
+          "title": "Context name",
+          "description": "Name of the context to be used to clone the repo"
+        },
+        "REVISION": {
+          "type": "string",
+          "title": "Revision",
+          "description": "Revision sha or branch name to clone"
+        }
+      }
+    }

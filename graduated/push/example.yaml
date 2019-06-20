@@ -1,0 +1,7 @@
+Push:
+  type: push
+  arguments:
+    candidate: ${{build_step_name}}
+    tag: latest
+    image_name: codefresh/app
+    registry: my-registry

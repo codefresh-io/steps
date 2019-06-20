@@ -1,0 +1,6 @@
+Freestyle:
+    title: Running docker image
+    arguments:
+      image: alpine:3.8
+      commands:
+      - echo "Hello world"

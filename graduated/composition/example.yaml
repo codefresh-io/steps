@@ -1,0 +1,16 @@
+Composition:
+    title: Running Composition
+    type: composition
+    arguments:
+      composition:
+        version: '2'
+        services:
+          db:
+            image: postgres
+      composition_candidates:
+        test_service:
+          image: ${{build_step}}
+          command: gulp integration_test
+          working_dir: /app
+          environment:
+            - key=value

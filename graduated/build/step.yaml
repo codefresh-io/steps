@@ -5,55 +5,57 @@ metadata:
 spec:
   arguments: |
     {
-      "definitions": {},
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "required": [
-        "IMAGE_NAME",
-        "TAG"
-      ],
-      "additionalProperties": false,
-      "patterns": [],
-      "required": ["image_name"]
-      "working_directory": {
-          "type": "string"
-      },
-      "dockerfile": {
-          "oneOf": [{
-              "type": "string"
-          }, {
-              "type": "object",
-              "properties": {
-                  "content": {
-                      "type": "string"
-                  }
-              },
-              "additionalProperties": false,
-              "patterns": []
-          }]
-      },
-      "no_cache": {
-          "type": "boolean"
-      },
-      "no_cf_cache": {
-          "type": "boolean"
-      },
-      "squash": {
-          "type": "boolean"
-      },
-      "image_name": {
-          "type": "string"
-      },
-      "build_arguments": {
-          "type": "array",
-          "items": {
-              "type": "string"
-          }
-      },
-      "tag": {
-          "type": "string"
-      },
-      "target": {
-          "type": "string"
-      }
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "working_directory": {
+                "type": "string"
+            },
+            "dockerfile": {
+                "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                    "content": {
+                        "type": "string"
+                    }
+                    },
+                    "additionalProperties": false,
+                    "patterns": [
+                    
+                    ]
+                }
+                ]
+            },
+            "no_cache": {
+                "type": "boolean"
+            },
+            "no_cf_cache": {
+                "type": "boolean"
+            },
+            "squash": {
+                "type": "boolean"
+            },
+            "image_name": {
+                "type": "string"
+            },
+            "build_arguments": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                }
+            },
+            "tag": {
+                "type": "string"
+            }
+        },
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+        "image_name"
+        ]
     }

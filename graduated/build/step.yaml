@@ -12,41 +12,48 @@ spec:
         "IMAGE_NAME",
         "TAG"
       ],
-      "properties": {
-        "WORKING_DIRECTORY": {
-          "type": "string",
-          "title": "Working Directory",
-          "description": "The directory in which the build command is executed. It can be an explicit path in the container’s file system, or a variable that references another step.",
-          "default": "${{main_clone}}"
-        },
-        "DOCKERFILE": {
-          "type": "string",
-          "title": "Dockerfile",
-          "description": "The path to the Dockerfile from which the image is built",
-          "default": "Dockerfile"
-        },
-        "IMAGE_NAME": {
-          "type": "string",
-          "title": "Image Name",
-          "description": "The name for the image you build."
-        },
-        "BUILD_ARGUMENTS": {
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["image_name"]
+      "working_directory": {
+          "type": "string"
+      },
+      "dockerfile": {
+          "oneOf": [{
+              "type": "string"
+          }, {
+              "type": "object",
+              "properties": {
+                  "content": {
+                      "type": "string"
+                  }
+              },
+              "additionalProperties": false,
+              "patterns": []
+          }]
+      },
+      "no_cache": {
+          "type": "boolean"
+      },
+      "no_cf_cache": {
+          "type": "boolean"
+      },
+      "squash": {
+          "type": "boolean"
+      },
+      "image_name": {
+          "type": "string"
+      },
+      "build_arguments": {
           "type": "array",
           "items": {
-            "type": "string"
-          },
-          "title": "Build Arguments",
-          "description": "A set of Docker build arguments to pass to the build process."
-        },
-        "TARGET": {
-          "type": "string",
-          "title": "Build Target",
-          "description": "Target stage in a multistage build (build will run until this stage)"
-        },
-        "TAG": {
-          "type": "string",
-          "title": "Image Tag",
-          "description": "The tag that is assigned to the image you build."
-        }
+              "type": "string"
+          }
+      },
+      "tag": {
+          "type": "string"
+      },
+      "target": {
+          "type": "string"
       }
     }

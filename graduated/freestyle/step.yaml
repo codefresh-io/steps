@@ -1,0 +1,65 @@
+kind: step
+version: "1.0"
+metadata:
+  name: push
+spec:
+  arguments: |
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "definitions": {},
+        "type": "object",
+        "properties": {
+            "working_directory": {
+                "type": "string"
+            },
+            "image": {
+                "type": "string"
+            },
+            "commands": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "cmd": {
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }]
+            },
+            "volumes": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": ":"
+                }
+            },
+            "environment": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "entry_point": {
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }]
+            },
+            "shell": {
+                "enum": ["sh", "bash"],
+                "type": "string"
+            }
+        },
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["image"]
+    }

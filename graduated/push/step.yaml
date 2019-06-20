@@ -6,45 +6,43 @@ spec:
   arguments: |
     {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "type": "object",
-        "required": [
-            "CANDIDATE",
-            "REGISTRY"
-        ],
         "definitions": {},
+                "type": "object",
         "properties": {
-            "CANDIDATE": {
-                "type": "string",
-                "title": "Working Directory",
-                "description": "The identifier of the image to push to the remote Docker registry."
+            "candidate": {
+                "type": "string"
             },
-            "TAG": {
-                "oneOf": [
-                    {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "title": "Tags",
-                        "description": "The tag under which to push the image. Use either this or tags."
+            "registry": {
+                "type": "string"
+            },
+            "credentials": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
                     },
-                    {
-                        "title": "Tag",
-                        "type": "string",
-                        "description": "The tag under which to push the image. Use either this or tags."
+                    "password": {
+                        "type": "string"
                     }
-                ],
-                "default": ["latest"]
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": ["username", "password"]
             },
-            "IMAGE_NAME": {
-                "type": "string",
-                "title": "Image Name",
-                "description": "The tagged image name that will be used The default value will be the same image name as of the candidate."
+            "tag": {
+                "type": "string"
             },
-            "REGISTRY": {
-                "type": "string",
-                "title": "Registry",
-                "description": "The registry logical name of one of the inserted registries from the integration view"
+            "tags": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "image_name": {
+                "type": "string"
             }
-        }
+        },
+        "additionalProperties": false,
+        "patterns": [],
+        "required": ["candidate"]
     }

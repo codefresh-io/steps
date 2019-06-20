@@ -1,0 +1,35 @@
+kind: step
+version: "1.0"
+metadata:
+  name: launch-composition
+spec:
+  arguments: |
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "definitions": {},
+        "type": "object",
+        "properties": {
+            "working_directory": {
+                "type": "string"
+            },
+            "composition": {
+                "oneOf": [{
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": true,
+                    "patterns": []
+                }, {
+                    "type": "string"
+                }]
+            },
+            "composition_variables": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["composition"]
+    }

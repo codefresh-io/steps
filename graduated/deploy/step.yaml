@@ -1,0 +1,52 @@
+kind: step
+version: "1.0"
+metadata:
+  name: push
+spec:
+  arguments: |
+    {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "definitions": {},
+                "type": "object",
+        "properties": {
+            "kind": {
+                "type": "string"
+            },
+            "cluster": {
+                "type": "string"
+            },
+            "namespace": {
+                "type": "string"
+            },
+            "file_path": {
+                "type": "string"
+            },
+            "timeout": {
+                "type": "number"
+            },
+            "service": {
+                "oneOf": [{
+                    "type": ["array", "boolean", "number", "object", "string", "null"]
+                }, {
+                    "type": "string"
+                }]
+            },
+            "candidate": {
+                "type": "object",
+                "properties": {
+                    "image": {
+                        "type": "string"
+                    },
+                    "registry": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "patterns": [],
+                "required": ["image", "registry"]
+            }
+        },
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["kind", "cluster", "namespace"]
+    }

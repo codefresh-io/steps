@@ -1,0 +1,23 @@
+image: codefreshplugins/gitlab-mr-annotate
+version: 0.1.0
+description: The plugin allows for easy applying labels to GitLab merge requests
+keywords:
+  - gitlab
+  - merge
+  - annotate
+categories:
+  - git
+sources:
+  - https://github.com/codefresh-contrib/cf-gitlab-mr-annotate
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-gitlab-mr-annotate/master/icon.jpg
+maintainers:
+  - name: Alex Kogan
+envs:
+  - name: GIT_CONTEXT
+    description: The name of the git provider context you can see on the integrations page.
+  - name: LABELS
+    description: The comma separated list of labels you would like to apply to the merge request
+  - name: PROJECT_ID
+    description: 'The ID of the GitLab project. Optional (the default value is formed from Codefresh variables)'
+  - name: MERGE_REQUEST_ID
+    description: 'The ID of the merge request. Optional (the default value is formed from Codefresh variables)'

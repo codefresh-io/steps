@@ -1,0 +1,53 @@
+name: cfstep-msteams-notifier
+image: icon.jpg
+tag: 0.1.0
+version: 0.1.0
+description: Send Message to Microsoft Teams
+categories:
+- notifications
+keywords:
+- messaging
+- notifications
+sources:
+- https://github.com/codefresh-contrib/cfstep-msteams-notifier
+maintainers:
+- name: Dustin Van Buskirk
+  email: dustinb@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-msteams-notifier/master/icon.jpg
+envs:
+- name: CF_STATUS_MESSAGE
+  type: optional
+  description: Custom Status Message, Default [EXECUTED]
+- name: MSTEAMS_ACTIVITY_IMAGE
+  type: optional
+  description: Custom Activity Image, Default [Superfresh GIF]
+- name: MSTEAMS_ACTIVITY_SUBTITLE
+  type: optional
+  description: 'Custom Activity Subtitle, Default [Build Status: CF_STATUS_MESSAGE]'
+- name: MSTEAMS_ACTIVITY_TEXT
+  type: optional
+  description: Custom Activity Text, Default [Additional Information Below]
+- name: MSTEAMS_LINK_TEXT
+  type: optional
+  description: Custom Link Text, Default [Codefresh Build Logs]
+- name: MSTEAMS_LINK_TEXT_2
+  type: optional
+  description: Custom Link 2 Text, Default [Commit Information]
+- name: MSTEAMS_LINK_URL
+  type: optional
+  description: Custom Link URL, Default [CF_BUILD_URL]
+- name: MSTEAMS_LINK_URL_2
+  type: optional
+  description: Custom Link 2 URL, Default [CF_COMMIT_URL]
+- name: MSTEAMS_NEW_WEBHOOK_URL
+  type: optional
+  description: Additional Microsoft Teams Webhook (connector) URL
+- name: MSTEAMS_TEXT
+  type: optional
+  description: Custom Text, Default [CF_ACCOUNT]
+- name: MSTEAMS_TITLE
+  type: optional
+  description: Custom Title, Default [Codefresh Build Notification]
+- name: MSTEAMS_WEBHOOK_URL
+  type: required
+  description: Microsoft Teams Webhook (connector) URL

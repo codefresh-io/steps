@@ -1,0 +1,20 @@
+title: Run jenkins job
+image: codefreshplugins/run-jenkins-jobs
+version: 0.1.0
+description: Run jenkins job from codefresh pipeline
+categories:
+  - build
+sources:
+  - 'https://github.com/codefresh-contrib/cf-run-jenkins-jobs'
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-run-jenkins-jobs/master/icon.jpg
+maintainers:
+  - name: Vadim Waisman
+envs:
+  - name: JENKINS_USERNAME
+    description: jenkins username (required)
+  - name: JENKINS_TOKEN
+    description: jenkins token (required)
+  - name: JENKINS_URL
+    description: jenkins machine url (required)
+  - name: JENKINS_JOB
+    description: list of jenkins jobs to run separated by spaces (required)

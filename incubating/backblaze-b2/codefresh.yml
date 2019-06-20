@@ -1,0 +1,26 @@
+version: "1.0"
+steps:
+  main_clone:
+    title: Cloning repository
+    type: git-clone
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    revision: ${{CF_REVISION}}
+    git: cf_github
+  build_step:
+    title: Building production image
+    type: build
+    dockerfile: Dockerfile
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
+    image_name: codefreshplugins/backblaze-b2
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{build_step}}
+    tags:
+    - latest
+    - 0.1.0
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

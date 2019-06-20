@@ -1,0 +1,5 @@
+BB_pr:
+  image: codefreshplugins/bitbucket-pr
+  environment:
+    - GIT_CONTEXT=my_bitbucket_context_name
+    - LABELS=my_label1,my_label2,my_label_n

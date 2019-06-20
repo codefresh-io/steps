@@ -1,0 +1,33 @@
+version: '1.0'
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefresh/demochat # Replace with your Docker image name
+    working_directory: ./
+    dockerfile: Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+  CheckClair:
+    image: codefreshplugins/cfstep-paclair
+    environment:
+      - IMAGE=example-voting-app/worker # Replace with your Docker image name
+      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+    on_success: # Execute only once the step succeeded
+      metadata: # Declare the metadata attribute
+        set: # Specify the set operation
+          - ${{BuildingDockerImage.imageId}}: # Select any number of target images
+            - SECURITY_SCAN: true
+    on_fail: # Execute only once the step failed
+      metadata: # Declare the metadata attribute
+        set: # Specify the set operation
+          - ${{BuildingDockerImage.imageId}}: # Select any number of target images
+            - SECURITY_SCAN: false
+  ArchiveReport:
+    image: mesosphere/aws-cli
+    commands:
+      - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html --acl public-read
+    on_success:
+     metadata:
+        set:
+          - ${{BuildingDockerImage.imageId}}:
+              - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html"

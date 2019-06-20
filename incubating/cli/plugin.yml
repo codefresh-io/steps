@@ -1,0 +1,19 @@
+image: codefresh/cli
+tag: 0.1.0
+version: 0.1.0
+description: Operate on Codefresh resources
+categories:
+- utility
+- featured
+keywords:
+- cli
+sources:
+- https://github.com/codefresh-io/cli
+maintainers:
+- name: Itay Shakury
+  email: i.shakury@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cli/master/icon.jpg
+envs:
+- name: CFCONFIG
+  type: optional
+  description: Path for cfconfig file path

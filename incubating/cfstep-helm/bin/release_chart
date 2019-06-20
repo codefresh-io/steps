@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+#
+# release_chart
+#
+# This script is historically named "release_chart", but it really handles many functions
+# related to working with Kubectl and Helm.
+#
+# The Python script "build_entrypoint_script" will create the true entrypoint script ("/tmp/run")
+# based on variables exported in the current environment. If any required vars are missing, or
+# there is some invalid combo of vars, this step will fail and message will be printed to stderr.
+#
+# Finally the "/tmp/run" script is executed (or sourced if this script itself is being sourced)
+#
+
+mask_cmd() {
+    (set -o pipefail && $@ | sed 's/:[^\/][^@]*@/:\*\*\*\*\*@/g')
+}
+
+CFSTEP_HELM_ROOTDIR="${CFSTEP_HELM_ROOTDIR:-/opt}"
+
+PYTHONPATH="${CFSTEP_HELM_ROOTDIR}/lib" "${CFSTEP_HELM_ROOTDIR}/bin/build_entrypoint_script" > /tmp/run
+
+echo ""
+echo "Running the following script:"
+echo "----------------------------"
+mask_cmd cat /tmp/run
+echo "----------------------------"
+echo ""
+
+if [ "$(basename $0)" = "release_chart" ]; then
+    chmod +x /tmp/run
+    mask_cmd /tmp/run
+else
+    . /tmp/run
+fi

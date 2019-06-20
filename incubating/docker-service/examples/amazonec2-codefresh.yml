@@ -1,0 +1,29 @@
+# Creating docker-machine on aws
+# set evironments in Codefresh:
+#    AWS_ACCESS_KEY_ID=***
+#    AWS_SECRET_ACCESS_KEY=***
+#    AWS_DEFAULT_REGION=us-east-1
+#    AWS_ZONE=d
+
+version: '1.0'
+steps:
+  create_aws_docker_service:
+    image: codefreshplugins/docker-service:master
+    commands:
+        - docker-service-create  --driver amazonec2 --amazonec2-instance-type t2.medium my-docker-4
+
+  check_my_docker:
+    image: codefreshplugins/docker-service:master
+    commands:
+        - env | grep DOCKER
+        - docker info
+
+  delete_my_docker:
+    image: codefreshplugins/docker-service:master
+    commands:
+        - docker-service-delete
+
+  clean_my_docker:
+    image: codefreshplugins/docker-service:master
+    commands:
+        - docker-service-clean

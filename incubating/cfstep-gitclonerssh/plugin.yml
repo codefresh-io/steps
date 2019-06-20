@@ -1,0 +1,33 @@
+image: codefreshplugins/cfstep-gitclonerssh
+tag: latest
+version: 0.1.0
+description: clone git repositories via SSH.
+categories:
+  - git
+  - utility
+keywords:
+  - git
+  - clone
+  - ssh
+sources:
+  - https://github.com/codefresh-contrib/cfstep-gitclonerssh
+maintainers:
+  - name: Francisco Cocozza
+    email: francisco@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitclonerssh/master/icon.jpg
+envs:
+    - name: REMOTE_URL
+      type: required
+      description: Reporitory SSH URL (e.g. `git@github.com:my-user/my-repo.git`)
+    - name: BRANCH
+      type: optional
+      description: Branch name to checkout (e.g. `master`)
+    - name: SSH_KEY
+      type: required
+      description: Private SSH key to access the repository.
+    - name: SPLIT_CHAR
+      type: required
+      description: Split character you’ve used to replace newline in SSH key
+    - name: CLONE_PATH
+      type: optional
+      description: Path where `git clone` is going to be executed. A "`repo-name`" directory will be created there

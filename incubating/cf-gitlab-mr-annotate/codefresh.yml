@@ -1,0 +1,13 @@
+version: '1.0'
+steps:
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cf-gitlab-mr-annotate
+  PushingToRegistry:
+    type: push
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags:
+      - "0.1"
+      - "latest"

@@ -1,0 +1,11 @@
+version: '1.0'
+steps:
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/plugin-gke
+  PushingToRegistry:
+    type: push
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tag: "0.1"

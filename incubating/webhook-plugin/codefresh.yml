@@ -1,0 +1,23 @@
+version: "1.0"
+stages:
+- build
+- push
+steps:
+  build_step:
+    title: Building production image
+    stage: build
+    type: build
+    dockerfile: Dockerfile
+    image_name: codefreshplugins/webhook-plugin
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{build_step}}
+    tags:
+    - latest
+    - master
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

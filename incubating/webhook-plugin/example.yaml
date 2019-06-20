@@ -1,0 +1,9 @@
+steps:
+  TestPlugin:
+    title: TestPlugin
+    image: codefreshplugins/webhook-plugin
+    environment:
+    - "WEBHOOK_URL=http://example.com/api/endpoint"
+    - "HEADER_Content-Type=plain/text"
+    - "HEADER_X-Auth-Token={{apiKey}}"
+    - "WEBHOOK_URL={{status}}"

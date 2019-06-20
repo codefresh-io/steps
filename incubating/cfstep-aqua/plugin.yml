@@ -1,0 +1,37 @@
+image: codefreshplugins/cfstep-aqua
+version: 0.1.0
+description: Execute Aqua Security image scan as build step
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-aqua/master/logo.png
+categories:
+  - security
+keywords:
+  - aqua
+  - security
+  - scanner
+sources:
+  - https://github.com/codefresh-contrib/cfstep-aqua
+maintainers: 
+  - name: Dustin Van Buskirk
+    email: dev@vanbuskirk.me
+envs:
+  - name: AQUA_HOST
+    type: required
+    description: Aqua Host URI including protocol ex. https://aqua.mydomain.com
+  - name: AQUA_PASSWORD
+    type: required
+    description: Aqua Password
+  - name: AQUA_USERNAME
+    type: required
+    description: Aqua Username
+  - name: CF_ACCOUNT
+    type: required
+    description: Auto pulled from pipeline also replaces REGISTRY if not provided
+  - name: IMAGE
+    type: required
+    description: Docker Image Name
+  - name: TAG
+    type: required
+    description: Docker Image Tag
+  - name: REGISTRY
+    type: optional
+    description: Name of Codefresh Registry setup in Aqua

@@ -1,0 +1,10 @@
+version: '1.0'
+steps:
+  build_step:
+    type: build
+    image-name: codefreshplugins/docker-service
+
+  push_to_registry:
+    type: push
+    candidate: ${{build_step}}
+    tag: "0.1"

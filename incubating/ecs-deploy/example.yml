@@ -1,0 +1,23 @@
+version: '1.0'
+
+steps:
+  build-step:
+    type: build
+    image-name: repo/image:tag
+
+  push to registry:
+    type: push
+    candidate: ${{build-step}}
+    tag: ${{CF_BRANCH}}
+
+  deploy to ecs:
+    image: codefreshplugins/cf-deploy-ecs
+    commands:
+      - cfecs-update <aws-region> <ecs-cluster-name> <ecs-service-name>
+    environment:
+      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}
+      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}
+
+    when:
+      - name: "Execute for 'master' branch"
+        condition: "'${{CF_BRANCH}}' == 'master'"

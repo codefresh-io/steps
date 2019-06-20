@@ -1,0 +1,17 @@
+---
+version: '1.0'
+
+steps:
+
+  ...
+
+  Kompose:
+    image: codefreshplugins/plugin-kompose
+    working_directory: ${{CloneStep}}
+    environment:
+     - KUBE_CONTEXT=myClusterName  # see the name of the cluster in Codefresh UI
+     - NAMESPACE=test-kompose
+     - FILE=./example/docker-compose.yaml
+     - DEBUG=true
+     - VOLUMES=emptyDir
+     - REPLICAS=2

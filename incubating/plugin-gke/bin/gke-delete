@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+DIR=$(dirname $0)
+
+source ${DIR}/helpers
+
+usage() {
+  echo "Usage: 
+  ${0} gke_cluster_name 
+
+  Deletes GKE Cluster by gcloud container cluster delete gke_cluster_name 
+  
+  gke_cluster_name: can be set also by passing GKE_CLUSTER_NAME env variable
+
+     see gcloud container clusters delete --help
+"
+}
+
+activateServiceAccount
+if [[ -n "${1}" && ! "${1}" =~ ^-- ]]; then
+   GKE_CLUSTER_NAME=$1
+   shift
+fi
+
+if [[ -z ${GKE_CLUSTER_NAME} ]]; then
+  err "GKE_CLUSTER_NAME is not set"
+fi
+
+setZoneRegionParams $@
+
+msg "Deleting cluster ${GKE_CLUSTER_NAME} $ZONE_REGION_PARAM"
+gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME}  $ZONE_REGION_PARAM $@
+if [[ $? != 0 ]]; then
+  err "Failed delete cluster"
+fi
+
+echo "Getting kubeconfig"

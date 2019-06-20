@@ -1,0 +1,52 @@
+version: '1.0'
+steps:
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cf-plugin-example
+  ScanImage:
+    type: composition
+    composition:
+      version: '2'
+      services:
+        imagebuild:
+          image: ${{BuildImage}}
+          command: sh -c "exit 0"
+          labels:
+            build.image.id: ${{CF_BUILD_ID}}
+    composition_candidates:
+      scan_service:
+        image: codefreshplugins/cf-twistlock
+        environment:
+          - TL_CONSOLE_HOSTNAME=${{TL_CONSOLE_HOSTNAME}}
+          - TL_CONSOLE_PORT=${{TL_CONSOLE_PORT}}
+          - TL_CONSOLE_USERNAME=${{TL_CONSOLE_USERNAME}}
+          - TL_CONSOLE_PASSWORD=${{TL_CONSOLE_PASSWORD}}
+          - TL_ONLY=${{TL_ONLY}}
+        command: twistlock.py -i "$$(docker inspect $$(docker inspect $$(docker ps -aqf label=build.image.id=${{CF_BUILD_ID}}) -f {{.Config.Image}}) -f {{.Id}} | sed 's/sha256://g')"
+        depends_on:
+          - imagebuild
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /var/lib/docker:/var/lib/docker
+          # Everything below this line is Optional for CF_METADATA
+          - '${{CF_VOLUME_NAME}}:/codefresh/volume'
+    add_flow_volume_to_composition: true
+  TestSuccess:
+    title: Running success test
+    description: This should succeed
+    image: ${{BuildImage}}
+    environment:
+    - PLUGIN_RESULT=SUCCESS
+  TestFailure:
+    fail_fast: false
+    title: Running failure test
+    description: This should fail
+    image: ${{BuildImage}}
+    environment:
+    - PLUGIN_RESULT=FAILURE
+  PushingToRegistry:
+    type: push
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tag: "0.2"

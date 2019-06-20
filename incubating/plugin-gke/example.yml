@@ -1,0 +1,17 @@
+  create-cluster:
+    image: codefreshplugins/plugin-gke
+    commands: 
+        - gke-create gke-test-cluster-1 --zone=us-central1-a --num-nodes 2 --machine-type n1-standard-2
+    
+  deploy-my-service:
+    image: codefreshplugins/plugin-gke
+    commands:
+        - kubectl get pods --all-namespaces -owide
+       # - deploy.sh
+       # - kubectl run --image mytestimage
+       # - check-status.sh
+
+  clean:
+     image: codefreshplugins/plugin-gke
+     commands:
+        - gke-delete gke-test-cluster-1 --zone=us-central1-a 

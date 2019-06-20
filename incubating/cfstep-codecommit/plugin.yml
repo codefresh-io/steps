@@ -1,0 +1,24 @@
+name: cfstep-codecommit
+image: codefreshplugins/cfstep-codecommit
+tag: 0.1.0
+version: 0.1.0
+description: Clone an AWS CodeCommit Git repository
+categories:
+- git
+keywords:
+- codecommit
+- git
+- clone
+sources:
+- https://github.com/codefresh-contrib/cfstep-codecommit
+maintainers:
+- name: Guy Salton
+  email: guy.salton@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-codecommit/master/icon.jpg
+envs:
+- name: GIT_USER
+  type: required
+  description: AWS CodeCommit Git username
+- name: GIT_PASSWORD
+  type: required
+  description: AWS CodeCommit Git password

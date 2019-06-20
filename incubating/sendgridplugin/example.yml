@@ -1,0 +1,5 @@
+steps:
+  ...
+  TestMail:
+    title: Test Mail
+    image: 'codefreshplugins/sendgridplugin:latest'

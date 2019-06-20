@@ -1,0 +1,8 @@
+  AquaSecurityScan:
+    image: codefreshplugins/cfstep-aqua
+    environment:
+      - AQUA_HOST=http://0.0.0.0
+      - AQUA_PASSWORD=########
+      - AQUA_USERNAME=administrator
+      - IMAGE=example-voting-app/worker # Replace with your Docker image name
+      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}} # Replace with your Docker image tag

@@ -1,0 +1,21 @@
+version: '1.0'
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cfstep-aqua
+    working_directory: ./
+    tag: "0.1.0"
+    dockerfile: Dockerfile
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: '${{BuildingDockerImage}}'
+    tags:
+      - "0.1.0"
+      - "latest"
+    registry: dockerhub
+    when:
+      branch:
+        only:
+          - master

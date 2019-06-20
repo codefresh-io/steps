@@ -1,0 +1,27 @@
+name: backblaze-b2
+image: codefreshplugins/backblaze-b2
+tag: 0.1.0
+version: 0.1.0
+description: Upload files to Backblaze B2 bucket
+categories:
+- utility
+keywords:
+- backblaze
+sources:
+- https://github.com/codefresh-plugins/backblaze-b2
+maintainers:
+- name: andrii-codefresh
+icon: https://raw.githubusercontent.com/codefresh-plugins/backblaze-b2/master/icon.jpg
+envs:
+- name: APPLICATION_KEY_ID
+  type: required
+  description: Application key Id in Backblaze B2
+- name: APPLICATION_KEY
+  type: required
+  description: Application key in Backblaze B2
+- name: BUCKET_ID
+  type: required
+  description: Bucket Id in Backblaze B2
+- name: UPLOAD_FILE_N
+  type: required
+  description: Variable with file description. `N` in name - any number or text identifier

@@ -1,0 +1,34 @@
+version: '1.0'
+stages:
+- Bintray download
+- Dockerize
+steps:
+  Prepare:
+    title: 'Delete previous artifact'
+    image: alpine
+    commands:
+      - rm -f download-example/sample
+  DownloadNewVersion:
+    stage: 'Bintray download'
+    title: Download from Bintray
+    image: codefreshplugins/cfstep-bintray:master
+    working_directory: download-example/
+    environment:
+      - BINTRAY_COMMAND=dlv
+      - BINTRAY_ARGS=codefresh-demo/test/cf-demo/v4.0 --unpublished
+  MyAppDockerImage:
+    title: Building Docker Image
+    stage: 'Dockerize'
+    type: build
+    image_name: my-full-app
+    working_directory: download-example/
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
+    dockerfile: Dockerfile
+  PushingToBintray:
+    stage: 'Dockerize'
+    type: push
+    title: jfrog_Pushing To Bintray Registry
+    candidate: ${{MyAppDockerImage}}
+    tag: ${{CF_SHORT_REVISION}}
+    registry: bintray
+

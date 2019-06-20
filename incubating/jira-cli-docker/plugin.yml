@@ -1,0 +1,24 @@
+image: codefreshplugins/jira-cli
+version: 0.1.0
+description: Update a Jira ticket
+categories:
+  - utility
+  - project Management
+keywords:
+  - jira
+sources:
+  - https://github.com/codefresh-contrib/jira-cli-docker
+maintainers: # (optional)
+  - name: Ant Weiss
+    email: anton@otomato.link
+icon: https://raw.githubusercontent.com/codefresh-plugins/jira-cli-docker/master/icon.jpg
+envs:
+  - name: JIRA_URL
+    type: required
+    description: Url to Jira instance
+  - name: JIRA_USR
+    type: required
+    description: Jira user
+  - name: JIRA_PWD
+    type: required
+    description: Jira password

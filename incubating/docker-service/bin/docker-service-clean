@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+if [ -z "${MACHINE_STORAGE_PATH}" ]; then
+  MACHINE_STORAGE_PATH=${HOME}/.docker/machine
+fi
+
+rm -rf ${MACHINE_STORAGE_PATH}

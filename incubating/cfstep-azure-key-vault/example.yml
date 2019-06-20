@@ -1,0 +1,16 @@
+version: '1.0'
+version: '1.0'
+stages:
+  - prepare
+steps:
+  GetAzureSecret:
+    title: Fetching Azure Secret from Key Vault
+    stage: prepare
+    image: codefreshplugins/cfstep-azure-key-vault:latest
+    environment:
+      - AZURE_CLIENT_ID=applicationid
+      - AZURE_SECRET=serviceprincipalsecret
+      - AZURE_TENANT=directoryid
+      - AZURE_SECRET_ID=mysecret
+      - AZURE_SECRET_VERSION=d9ccc49fadfe4f37b4039e7edd32aa41
+      - AZURE_VAULT_URL=https://dustinvb-kv.vault.azure.net/

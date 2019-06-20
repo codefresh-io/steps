@@ -1,0 +1,56 @@
+{
+    "$id": "cli-config-schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "output": {
+            "type": "object",
+            "properties": {
+                "pretty": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Defines whether to show data in table view in pretty mode or not"
+                },
+                "dateFormat": {
+                    "type": "string",
+                    "enum": ["default", "date", "datetime", "date-diff"],
+                    "default": "default",
+                    "description": "Defines date format. Choices: [\"date\", \"datetime\", \"date-diff\", \"default\"] (default for resource)"
+                }
+            }
+        },
+        "request": {
+            "type": "object",
+            "properties": {
+                "maxAttempts": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Defines how many times request will be retried in case of network error"
+                },
+                "retryDelay": {
+                    "type": "integer",
+                    "default": 500,
+                    "description": "Defines delay between retries"
+                }
+            }
+        },
+        "logs": {
+            "type": "object",
+            "properties": {
+                "fallback": {
+                    "type": "object",
+                    "properties": {
+                        "interval": {
+                            "type": "integer",
+                            "default": 5000
+                        },
+                        "maxAttempts": {
+                            "type": "integer",
+                            "default": 1000
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

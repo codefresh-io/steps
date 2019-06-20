@@ -1,0 +1,43 @@
+title: azure-builder
+image: codefreshplugins/cf-azure-builder
+categories:
+  - build
+version: 0.1.0
+description: Docker build in Azure ACR
+keywords:
+  - docker
+  - azure
+sources:
+  - https://github.com/codefresh-contrib/azure-build-plugin
+maintainers:
+  - name: Amir Gabay
+    email: amir.gabay@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/azure-build-plugin/master/icon.jpg
+envs:
+  - name: AUTH
+    type: optional
+    description: Only if authentication mode is by service principal
+  - name: USER
+    type: required
+    description: azure user name (not need in service principal authentication mode)
+  - name: IMAGE
+    type: required
+    description: image name
+  - name: TAG
+    type: required
+    description: tag name
+  - name: ACR_NAME
+    type: required
+    description: acr registry name
+  - name: APP_ID
+    type: required
+    description: azure service principal application id (service principal authentication mode only)
+  - name: PASSWORD
+    type: required
+    description: azure service principal password or user password (based on authentication mode)
+  - name: TENANT
+    type: required
+    description: azure ad tenant id (service principal authentication mode only)
+  - name: DOCKERFILE_PATH
+    type: required
+    description: dockerfile path (default - working_dir/Dockerfile)

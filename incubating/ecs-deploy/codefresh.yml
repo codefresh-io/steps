@@ -1,0 +1,11 @@
+version: '1.0'
+
+steps:
+  build-step:
+    type: build
+    image-name: codefreshplugins/cf-deploy-ecs
+
+  push to registry:
+    type: push
+    candidate: ${{build-step}}
+    tags: [ "latest", "0.1.0" ]

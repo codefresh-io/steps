@@ -1,0 +1,22 @@
+---
+version: '1.0'
+
+steps:
+  build:
+    type: build
+    image_name: codefreshplugins/plugin-kompose
+    build_arguments:
+      - KOMPOSE_VERSION=v1.5.0
+  push_latest:
+    type: push
+    title: "Pushing plugin-kompose:latest ..."
+    description: Push Codefresh Plugin-Kompose image to the DockerHub
+    candidate: ${{build}}
+    tags:
+      - "0.1"
+      - "latest"
+    image_name: codefreshplugins/plugin-kompose
+    when:
+      branch:
+        only:
+          - master

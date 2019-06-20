@@ -1,0 +1,6 @@
+version: '1.0'
+steps:
+  MSTeamsNotification:
+    image: codefreshplugins/cfstep-msteams-notifier:latest
+    environment:
+      - MSTEAMS_WEBHOOK_URL=https://outlook.office.com/webhook/37a4ea3d...

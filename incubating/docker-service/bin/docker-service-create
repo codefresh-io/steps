@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export MACHINE_STORAGE_PATH=${CF_VOLUME_PATH}/.docker/machine
+mkdir -p ${MACHINE_STORAGE_PATH}
+
+docker-machine create $@
+
+if [ $? != 0 ]; then
+  echo "Failed to launch docker service"
+  exit 1
+fi
+
+if [[ -z "${DOCKER_MACHINE_NAME}" ]]; then
+   DOCKER_MACHINE_NAME=${@:$#}
+fi
+
+echo "DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME} "
+eval $(docker-machine env ${DOCKER_MACHINE_NAME} )
+
+cf_export DOCKER_HOST DOCKER_CERT_PATH DOCKER_TLS_VERIFY DOCKER_MACHINE_NAME

@@ -1,0 +1,22 @@
+    
+version: '1.0'
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: trivial-web
+    working_directory: ./example/
+    tag: '${{CF_SHORT_REVISION}}'
+    dockerfile: Dockerfile
+  canaryDeploy:
+    title: "Deploying new version ${{CF_SHORT_REVISION}}"
+    image: codefreshplugins/k8s-canary
+    environment:
+      - WORKING_VOLUME=.
+      - SERVICE_NAME=my-demo-app
+      - DEPLOYMENT_NAME=my-demo-app
+      - TRAFFIC_INCREMENT=20
+      - NEW_VERSION=${{CF_SHORT_REVISION}}
+      - SLEEP_SECONDS=40
+      - NAMESPACE=canary
+      - KUBE_CONTEXT=myDemoAKSCluster

@@ -1,0 +1,26 @@
+image: codefreshplugins/cfstep-gitsubmodules
+tag: latest
+version: 0.1.0
+description: Update git submodules
+categories:
+  - git
+  - utility
+keywords:
+  - git
+  - submodules
+sources:
+  - https://github.com/codefresh-contrib/cfstep-gitsubmodules
+maintainers:
+  - name: Francisco Cocozza
+    email: francisco@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitsubmodules/master/logo.png
+envs:
+    - name: GITHUB_TOKEN
+      type: required
+      description: GitHub Token required to access the repository
+    - name: CF_SUBMODULE_SYNC
+      type: optional
+      description: if var is set to 'true', the step will perform 'git submodule sync' command
+    - name: CF_SUBMODULE_UPDATE_RECURSIVE
+      type: optional
+      description: if set to 'true', the step will perform 'git submodule update --init' command with '--recursive' option

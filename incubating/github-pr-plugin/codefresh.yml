@@ -1,0 +1,13 @@
+version: "1.0"
+steps:
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/github-pr-plugin
+  PushingToRegistry:
+    type: push
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags:
+    - latest
+    - master

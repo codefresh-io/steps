@@ -1,0 +1,14 @@
+image: codefreshplugins/slack-message-sender
+version: 0.1.0
+categories:
+  - notifications
+description: Send message to slack channel
+keywords:
+  - slack
+  - notifications
+sources:
+  - https://github.com/codefresh-plugins/slack-message-sender
+maintainers: # (optional)
+  - name: Oleg Sucharevich
+    email: olegs@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/slack-message-sender/master/icon.jpg

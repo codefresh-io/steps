@@ -1,0 +1,454 @@
+version: "1.0"
+stages:
+- build
+- push
+steps:
+  build_2_3_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.3.0
+    tag: 2.3.0-${{CF_SHORT_REVISION}}
+  build_2_3_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.3.1
+    tag: 2.3.1-${{CF_SHORT_REVISION}}
+  build_2_4_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.4.0
+    tag: 2.4.0-${{CF_SHORT_REVISION}}
+  build_2_4_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.4.1
+    tag: 2.4.1-${{CF_SHORT_REVISION}}
+  build_2_4_2:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.4.2
+    tag: 2.4.2-${{CF_SHORT_REVISION}}
+  build_2_5_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.5.0
+    tag: 2.5.0-${{CF_SHORT_REVISION}}
+  build_2_5_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.5.1
+    tag: 2.5.1-${{CF_SHORT_REVISION}}
+  build_2_6_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.6.0
+    tag: 2.6.0-${{CF_SHORT_REVISION}}
+  build_2_6_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.6.1
+    tag: 2.6.1-${{CF_SHORT_REVISION}}
+  build_2_6_2:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.6.2
+    tag: 2.6.2-${{CF_SHORT_REVISION}}
+  build_2_7_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.7.0
+    tag: 2.7.0-${{CF_SHORT_REVISION}}
+  build_2_7_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.7.1
+    tag: 2.7.1-${{CF_SHORT_REVISION}}
+  build_2_7_2:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.7.2
+    tag: 2.7.2-${{CF_SHORT_REVISION}}
+  build_2_8_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.8.0
+    tag: 2.8.0-${{CF_SHORT_REVISION}}
+  build_2_8_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.8.1
+    tag: 2.8.1-${{CF_SHORT_REVISION}}
+  build_2_8_2:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.8.2
+    tag: 2.8.2-${{CF_SHORT_REVISION}}
+  build_2_9_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.9.0
+    tag: 2.9.0-${{CF_SHORT_REVISION}}
+  build_2_9_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.9.1
+    tag: 2.9.1-${{CF_SHORT_REVISION}}
+  build_2_10_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.10.0
+    tag: 2.10.0-${{CF_SHORT_REVISION}}
+  build_2_11_0:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.11.0
+    tag: 2.11.0-${{CF_SHORT_REVISION}}
+  build_2_12_1:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.12.1
+    tag: 2.12.1-${{CF_SHORT_REVISION}}
+  build_2_12_2:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.12.2
+    tag: 2.12.2-${{CF_SHORT_REVISION}}
+  build_2_12_3:
+    type: build
+    stage: build
+    image_name: codefreshplugins/cfstep-helm
+    build_arguments:
+    - HELM_VERSION=2.12.3
+    tag: 2.12.3-${{CF_SHORT_REVISION}}
+  push_2_3_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_3_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_3_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_3_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_4_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_4_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_4_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_4_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_4_2:
+    type: push
+    stage: push
+    candidate: ${{build_2_4_2}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_5_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_5_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_5_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_5_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_6_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_6_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_6_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_6_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_6_2:
+    type: push
+    stage: push
+    candidate: ${{build_2_6_2}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_7_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_7_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_7_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_7_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_7_2:
+    type: push
+    stage: push
+    candidate: ${{build_2_7_2}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_8_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_8_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_8_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_8_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_8_2:
+    type: push
+    stage: push
+    candidate: ${{build_2_8_2}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_9_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_9_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_9_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_9_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_10_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_10_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_11_0:
+    type: push
+    stage: push
+    candidate: ${{build_2_11_0}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_12_1:
+    type: push
+    stage: push
+    candidate: ${{build_2_12_1}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_12_2:
+    type: push
+    stage: push
+    candidate: ${{build_2_12_2}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_2_12_3:
+    type: push
+    stage: push
+    candidate: ${{build_2_12_3}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master
+  push_latest:
+    type: push
+    stage: push
+    candidate: ${{build_2_12_3}}
+    registry: dockerhub
+    tags:
+    - latest
+    - 0.1.0
+    when:
+      branch:
+        only:
+        - master

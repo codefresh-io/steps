@@ -1,0 +1,12 @@
+node_modules
+yarn-error.log
+.idea/
+.vscode
+*.log
+coverage
+.DS_Store
+/dist
+*.zip
+public
+temp
+package-lock.json

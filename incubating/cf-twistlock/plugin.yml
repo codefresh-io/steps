@@ -1,0 +1,54 @@
+name: cf-twistlock
+image: codefreshplugins/cf-twistlock
+tag: "19.03"
+version: "19.03"
+description: Execute Twistlock CLI image scan as build step
+categories:
+- security
+keywords:
+- Twistlock
+sources:
+- https://github.com/SC-TechDev/docker-twistlock
+maintainers:
+- name: Dustin Van Buskirk
+  email: dev@vanbuskirk.me
+- name: Varun Tagore
+  email: rondevops@gmail.com
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-twistlock/master/icon.jpg
+envs:
+- name: CODEFRESH_CLI_KEY
+  type: required
+  description: https://g.codefresh.io/account/tokens
+- name: CONSOLE_HOSTNAME
+  type:	required
+  description: Twistlock hostname/ip
+- name: CONSOLE_PORT
+  type:	required
+  description: port
+- name: CONSOLE_USERNAME
+  type:	required
+  description: username
+- name: CONSOLE_PASSWORD
+  type:	required
+  description: password
+- name: TLSCACERT
+  type:	optional
+  description: CA Cert if provided TLS will be used
+- name: HASH
+  type:	optional
+  description: "hashing algorithm (one of: md5, sha1, sha256)" 
+- name: DETAILS
+  type:	optional
+  description: true|false - prints an itemized list of each vulnerability found by the scanner
+- name: INCLUDE_PACKAGE_FILES
+  type:	optional
+  description: true|false - List all packages in the image.
+- name: ONLY_FIXED
+  type:	optional
+  description: true|false - reports just the vulnerabilites that have fixes available
+- name: COMPLIANCE_THRESHOLD
+  type:	optional
+  description: "[ low, medium, high ] sets the the minimal severity compliance issue that returns a fail exit code"
+- name: VULNERABILITY_THRESHOLD
+  type:	optional
+  description: "[ low, medium, high, critical ] sets the minimal severity vulnerability that returns a fail exit code"

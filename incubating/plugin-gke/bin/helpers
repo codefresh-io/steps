@@ -1,0 +1,105 @@
+#!/bin/bash
+# 
+msg() { echo -e "\e[32mINFO ---> $1\e[0m"; }
+err() { echo -e "\e[31mERR ---> $1\e[0m" ; exit 1; }
+
+activateServiceAccount() {
+	[[ -z "$GOOGLE_SERVICE_ACCOUNT_KEY" ]] && err "Please set the service-account env var!"
+    
+	export CLOUDSDK_CORE_PROJECT=$(jq -r '.project_id' <(echo $GOOGLE_SERVICE_ACCOUNT_KEY) )
+    [[ -z "$CLOUDSDK_CORE_PROJECT" ]] && err "Cannot get project_id - invalid GOOGLE_SERVICE_ACCOUNT_KEY"
+	gcloud config set project $CLOUDSDK_CORE_PROJECT
+	
+	gcloud auth activate-service-account --key-file <(echo $GOOGLE_SERVICE_ACCOUNT_KEY)	
+	if [[ $? != 0 ]]; then
+       err "Cannot authenticate to Google cloud with given GOOGLE_SERVICE_ACCOUNT_KEY"
+	fi
+
+	if [[ -z "${CLOUDSDK_COMPUTE_ZONE}" && -z "${CLOUDSDK_COMPUTE_REGION}" ]]; then
+	   DEFAULT_REGION=us-central1
+	   msg "setting CLOUDSDK_COMPUTE_REGION=$DEFAULT_REGION because neither CLOUDSDK_COMPUTE_ZONE nor CLOUDSDK_COMPUTE_REGION are set"
+	   gcloud config set compute/region $DEFAULT_REGION
+	   export CLOUDSDK_COMPUTE_REGION=$DEFAULT_REGION
+	fi
+	msg "CLOUDSDK_COMPUTE_REGION=${CLOUDSDK_COMPUTE_REGION}"
+	msg "CLOUDSDK_COMPUTE_ZONE=${CLOUDSDK_COMPUTE_ZONE}"
+
+}
+
+setZoneRegionParams() {
+	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(\S*) ?.*/\2/p')
+	REGION_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--region(=| +)(\S*) ?.*/\2/p' )
+	if [[ -n "${ZONE_CMD_PARAM}" ]]; then
+	  ZONE_REGION_PARAM="--zone=${ZONE_CMD_PARAM}"
+	elif [[ -n "${CLOUDSDK_COMPUTE_ZONE}" ]]; then
+	  ZONE_REGION_PARAM="--zone=${CLOUDSDK_COMPUTE_ZONE}"
+	fi
+
+    if [[ -z "${ZONE_REGION_PARAM}" ]]; then
+		if [[ -n "${REGION_CMD_PARAM}" ]]; then
+		  ZONE_REGION_PARAM="--region=${REGION_CMD_PARAM}"
+		elif [[ -n "${CLOUDSDK_COMPUTE_REGION}" ]]; then
+		  ZONE_REGION_PARAM="--region=${CLOUDSDK_COMPUTE_REGION}"
+		fi
+	fi
+	echo "ZONE_REGION_PARAM=$ZONE_REGION_PARAM"	
+	export ZONE_REGION_PARAM
+}
+
+setZoneParam() {
+	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(.*) */\2/p')
+	if [[ -n "${ZONE_CMD_PARAM}" ]]; then
+	  ZONE_PARAM="--zone=${ZONE_CMD_PARAM}"
+	elif [[ -n "${CLOUDSDK_COMPUTE_ZONE}" ]]; then
+	  ZONE_PARAM="--zone=${CLOUDSDK_COMPUTE_ZONE}"
+	fi
+	export ZONE_PARAM
+	echo "ZONE_PARAM=$ZONE_PARAM"
+}
+
+setRegionParam() {
+	REGION_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--region(=| +)(.*) */\2/p' )
+	if [[ -n "${REGION_CMD_PARAM}" ]]; then
+	  REGION_PARAM="--region=${REGION_CMD_PARAM}"
+	elif [[ -n "${CLOUDSDK_COMPUTE_REGION}" ]]; then
+	  REGION_PARAM="--region=${CLOUDSDK_COMPUTE_REGION}"
+	fi
+	export REGION_PARAM
+	echo "REGION_PARAM=$REGION_PARAM"
+}
+
+generateKubeconfig() {
+  GKE_CLUSTER_NAME=${1:-$GKE_CLUSTER_NAME}
+  JQ_QUERY='{
+        "apiVersion": "v1",
+		"kind": "Config",
+        "clusters": [{
+		    "name": .name ,
+            "cluster": {
+			  "certificate-authority-data": .masterAuth.clusterCaCertificate ,
+			  "server": ("https://" + .endpoint)
+		    }
+	    }],
+        "contexts": [
+            {
+                "context": {
+                    "cluster": .name,
+                    "user": ( .name + "-admin" )
+                },
+                "name": .name
+            }
+        ],
+		"current-context": .name,
+		"users": [
+            {
+                "name": ( .name + "-admin" ),
+				"user": {
+					"client-certificate-data": .masterAuth.clientCertificate , 
+					"client-key-data": .masterAuth.clientKey 
+				}
+			}
+		]
+    }'
+
+	gcloud container clusters describe $GKE_CLUSTER_NAME $ZONE_REGION_PARAM --format=json | jq -r "$JQ_QUERY"
+}

@@ -1,0 +1,5 @@
+{
+    "resource": "/ping",
+    "path": "/ping",
+    "httpMethod": "GET"
+  }

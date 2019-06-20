@@ -1,0 +1,15 @@
+{
+  "name": "sendgrid-plugin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
+    "ejs": "^2.6.1",
+    "lodash": "^4.17.11",
+    "pug": "^2.0.3"
+  },
+  "scripts": {
+    "start": "node ./index.js"
+  }
+}

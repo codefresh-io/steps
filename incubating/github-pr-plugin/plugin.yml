@@ -1,0 +1,52 @@
+name: github-pr-plugin
+image: codefreshplugins/github-pr-plugin
+tag: master
+version: 0.2.0
+description: Operates on GitHub pull requests
+categories:
+- git
+- code-review
+keywords:
+- docker
+- github
+- pull-request
+sources:
+- https://github.com/codefresh-io/github-pr-plugin
+maintainers:
+- name: Nick Sakovich
+  email: nick.sakovich@codefresh.io
+- name: Yaroslav Drachenko
+  email: yaroslav@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/github-pr-plugin/master/icon.jpg
+envs:
+- name: GITHUB_TOKEN
+  type: required
+  description: Token for access to GitHub
+- name: GITHUB_REPO_OWNER
+  type: required
+  description: Name of repo owner
+- name: GITHUB_REPO_NAME
+  type: required
+  description: Name of repo
+- name: GITHUB_PR_NUMBER
+  type: ""
+  description: The number of updated pull request. Required for open/close/update
+    operations
+- name: GITHUB_PR_OPERATION
+  type: ""
+  description: Operation on pull request. Options - create, update, open, close. Default
+    - create.
+- name: HEAD
+  type: ""
+  description: The name of the branch where your changes are implemented. For cross-repository
+    pull requests in the same network, namespace head with a user like this - username:branch.
+    Required for 'create' operation.
+- name: BASE
+  type: ""
+  description: The name of the branch you want the changes pulled into. This should
+    be an existing branch on the current repository. You cannot submit a pull request
+    to one repository that requests a merge to a base of another repository. Required
+    for 'create' operation.
+- name: TITLE
+  type: ""
+  description: The title of the pull request. Required for 'create' operation.

@@ -1,0 +1,26 @@
+
+image: codefreshplugins/plugin-kompose
+version: 0.1.0
+description: Release a Docker Compose to Kubernetes
+categories:
+  - featured
+sources:
+  - https://github.com/codefresh-contrib/cf-kompose-plugin
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-kompose-plugin/master/icon.jpg
+maintainers:
+  - name: Alexei Ledenev
+envs:
+  - name: KUBE_CONTEXT
+    description: 'Kubernetes context to use (required)'
+  - name: FILE
+    description: 'Docker Compose file to deploy (default docker-compose.yaml file)'
+  - name: NAMESPACE
+    description: 'target Kubernetes namespace (default "default")'
+  - name: VOLUMES
+    description: 'volumes to be generated ("persistentVolumeClaim"|"emptyDir") (default "persistentVolumeClaim")'
+  - name: REPLICAS
+    description: 'specify the number of replicas generated (default 1)'
+  - name: DRY_RUN
+    description: 'do a "dry run" (print out) deployment (do not install anything, useful for Debug)'
+  - name: DEBUG
+    description: 'print verbose install output'

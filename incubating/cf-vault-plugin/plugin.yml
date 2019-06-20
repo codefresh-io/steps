@@ -1,0 +1,26 @@
+
+image: codefreshplugins/cf-vault-plugin
+version: 0.1.0
+description: The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV variables
+keywords:
+  - vault
+  - keys
+  - security
+categories:
+  - featured
+sources:
+  - https://github.com/codefresh-contrib/cf-vault-plugin
+icon: 'https://raw.githubusercontent.com/codefresh-plugins/cf-vault-plugin/master/og-image.png'
+maintainers:
+  - name: Alexander Aladov
+envs:
+  - name: VAULT_ADDR 
+    description: 'Vault server URI. Example: https://vault.testdomain.io:8200 (required)'
+  - name: VAULT_PATH
+    description: 'Path to secrets in vault. Example: secret/codefreshsecret (required)'
+  - name: VAULT_AUTH_TOKEN
+    description: 'Vault authentication token (required)'
+  - name: VAULT_CLIENT_CERT_BASE64
+    description: 'Base64 encoded client cerificate'
+  - name: VAULT_CLIENT_KEY_BASE64
+    description: 'Base64 encoded client key'

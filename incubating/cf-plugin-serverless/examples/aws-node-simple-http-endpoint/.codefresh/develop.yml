@@ -1,0 +1,87 @@
+version: '1.0'
+
+steps:
+
+  check_master:
+    image: alpine:3.7
+    title: fail on master branch
+    commands:
+      - echo "cannot run this pipeline on master"
+      - exit 1
+    when:
+      branch:
+        only:
+          - master
+
+  setup:
+    image: alpine:3.7
+    title: generate AWS shared credentials file
+    commands:
+      - mkdir -p .aws
+      - echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${PWD}/.aws/credentials
+      - cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials
+
+  test:
+    image: node:10-alpine
+    title: lint and test
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - yarn lint
+      - yarn test
+
+  package:
+    image: codefresh/serverless:1.28
+    title: package serverless service
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless package --stage ${AWS_STAGE} --region ${AWS_REGION} --package ${PACKAGE}
+
+  archive:
+    image: mesosphere/aws-cli
+    title: archive package to S3 bucket
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - aws --profile ${AWS_PROFILE} --region ${AWS_REGION} s3 cp ${PACKAGE} s3://${AWS_BUCKET}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}/ --recursive
+
+  deploy:
+    image: codefresh/serverless:1.28
+    title: deploy to AWS with serverless framework
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless deploy --conceal --verbose --stage ${AWS_STAGE} --region ${AWS_REGION} --aws-profile ${AWS_PROFILE} --package ${PACKAGE}
+
+  integration:
+    image: codefresh/serverless:1.28
+    title: run integration test
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    fail_fast: false
+    commands:
+      - serverless invoke --function currentTime --stage ${AWS_STAGE} --region ${AWS_REGION} --path test/data.json && cf_export INTEGRATION_FAILED=false || cf_export INTEGRATION_FAILED=true
+    
+  rollback:
+    image: codefresh/serverless:1.28
+    title: rollback if integration test failed
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - ${INTEGRATION_FAILED} && echo "rollback to previous version on error" || true
+      - ${INTEGRATION_FAILED} && if [ ! -z "${KEEP_VERSION}" ]; then serverless rollback --verbose --timestamp ${KEEP_VERSION} --region ${AWS_REGION} --stage ${AWS_STAGE} --aws-profile ${AWS_PROFILE}; fi || true
+
+  cleanup:
+    image: codefresh/serverless:1.28
+    title: cleanup allocated resources
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless remove --verbose --region ${AWS_REGION} --stage ${AWS_STAGE} --aws-profile ${AWS_PROFILE}
+
+  release_pull_request:
+    image: codefresh/serverless:1.28
+    title: create a pull-request for release, if integration tests passed 
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - if [ ${INTEGRATION_FAILED} == false ]; curl -H 'Authorization: token ${GITHUB_TOKEN}' -d '{"title":"release of ${{CF_BRANCH}}","base":"master", "head":"${{CF_BRANCH}}"}' https://api.github.com/repos/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/pulls; fi
+
+  decide_on_status:
+    image: alpine:3.7
+    title: decide on pipeline status
+    commands:
+      - if [ ${INTEGRATION_FAILED} == true ]; then echo "integration tests failed" && exit 1; fi

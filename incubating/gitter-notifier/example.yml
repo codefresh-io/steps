@@ -1,0 +1,5 @@
+
+  sendMessage:
+    image: codefreshplugins/gitternotifier
+    environment:
+      - GITTER_WEBHOOK=https://webhooks.gitter.im/e/123abc

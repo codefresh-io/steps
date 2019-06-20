@@ -1,0 +1,18 @@
+image: codefreshplugins/k8s-blue-green
+version: 0.1.0
+description: 'Perform blue/green deployments on a Kubernetes cluster'
+keywords:
+  - kubernetes
+  - green
+  - deployment
+categories:
+  - featured
+  - deployment
+sources:
+  - https://github.com/codefresh-contrib/k8s-blue-green-deployment
+icon: https://raw.githubusercontent.com/codefresh-plugins/k8s-blue-green-deployment/master/icon.jpg
+maintainers:
+  - name: Kostis Kapelonis
+envs:
+  - name: KUBE_CONTEXT
+    description: 'The name of your cluster (as found in the Codefresh Kubernetes dashboard).'

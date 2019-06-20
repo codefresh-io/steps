@@ -1,0 +1,25 @@
+image: codefreshplugins/anchore-plugin
+description: Analyze Docker images and generate a detailed manifest using Anchore
+version: 0.1.0
+keywords:
+  - anchore
+  - security
+  - scan
+categories:
+  - security
+sources:
+  - https://github.com/codefresh-contrib/anchore-plugin
+icon: https://raw.githubusercontent.com/codefresh-plugins/anchore-plugin/master/icon.jpg
+maintainers:
+  - name: Jeremy Valance
+envs:
+- name: ANCHORE_CLI_URL
+  description: "The address of the Anchore server"
+- name: ANCHORE_CLI_USER
+  description: "Anchore account name"
+- name: ANCHORE_CLI_PASS
+  description: "Anchore account password"
+- name: ANCHORE_FAIL_ON_POLICY
+  description: "Fail build if policy evaluation fails"
+- name: ANCHORE_CLI_IMAGE
+  description: "Name of the image to scan with Anchore"

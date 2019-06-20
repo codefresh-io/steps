@@ -1,0 +1,6 @@
+deploy:
+  image: codefresh/cfstep-helm:2.9.0
+  environment:
+    - CHART_REF=mychart
+    - RELEASE_NAME=mychart-prod
+    - KUBE_CONTEXT=kube-prod

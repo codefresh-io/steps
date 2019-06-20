@@ -1,0 +1,7 @@
+makisuBuildStep:
+  image: codefresh/cfstep-makisu
+  environment:
+    - REGISTRY_HOSTNAME=docker.io
+    - R_USER=my_username
+    - R_PASSWORD=my_password
+    - IMAGE_NAME_TAG=image/name:tag

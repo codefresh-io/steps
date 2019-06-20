@@ -1,0 +1,76 @@
+version: '1.0'
+
+steps:
+
+  check_non_master:
+    image: alpine:3.7
+    title: fail on master branch
+    commands:
+      - echo "cannot run this pipeline on non-master"
+      - exit 1
+    when:
+      branch:
+        ignore:
+          - master
+
+  setup:
+    image: alpine:3.7
+    title: generate AWS shared credentials file
+    commands:
+      - mkdir -p .aws
+      - echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${PWD}/.aws/credentials
+      - cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials
+
+  test:
+    image: node:10-alpine
+    title: lint and test
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - yarn lint
+      - yarn test
+
+  package:
+    image: codefresh/serverless:1.28
+    title: package serverless service
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless package --stage ${AWS_STAGE} --region ${AWS_REGION} --package ${PACKAGE}
+
+  archive:
+    image: mesosphere/aws-cli
+    title: archive package to S3 bucket
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - aws --profile ${AWS_PROFILE} --region ${AWS_REGION} s3 cp ${PACKAGE} s3://${AWS_BUCKET}/${{CF_BRANCH}}/${{CF_SHORT_REVISION}}/ --recursive
+
+  deploy:
+    image: codefresh/serverless:1.28
+    title: deploy to AWS with serverless framework
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - KEEP_VERSION=$(serverless deploy list --stage ${AWS_STAGE} --region ${AWS_REGION} | grep Timestamp | tail -1 | awk '{print $3}') || true
+      - cf_export KEEP_VERSION=${KEEP_VERSION}
+      - serverless deploy --conceal --verbose --stage ${AWS_STAGE} --region ${AWS_REGION} --aws-profile ${AWS_PROFILE} --package ${PACKAGE}
+
+  acceptance:
+    image: codefresh/serverless:1.28
+    title: run acceptance test
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    fail_fast: false
+    commands:
+      - serverless invoke --function currentTime --stage ${AWS_STAGE} --region ${AWS_REGION} --path test/data.json && cf_export ACCEPTANCE_FAILED=false || cf_export ACCEPTANCE_FAILED="true"
+    
+  rollback:
+    image: codefresh/serverless:1.28
+    title: rollback if acceptance test failed
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - ${ACCEPTANCE_FAILED} && echo "rollback to previous version on error" || true
+      - ${ACCEPTANCE_FAILED} && if [ ! -z "${KEEP_VERSION}" ]; then serverless rollback --verbose --timestamp ${KEEP_VERSION} --region ${AWS_REGION} --stage ${AWS_STAGE} --aws-profile ${AWS_PROFILE}; fi || true
+  
+  decide_on_status:
+    image: alpine:3.7
+    title: decide on pipeline status
+    commands:
+      - if [ ${ACCEPTANCE_FAILED} == true ]; then echo "acceptance tests failed, rollback to previous version" && exit 1; fi
+

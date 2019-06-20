@@ -1,0 +1,28 @@
+version: '1.0'
+
+steps:
+
+  create-my-docker:
+    image: codefreshplugins/docker-service
+    commands: 
+        - docker-service-create  --driver amazonec2 --amazonec2-instance-type m4.large my-docker
+    
+  build-on-my-docker:
+    image: codefreshplugins/docker-service
+    commands:
+        - docker build -t mycompany/repo:${{CF_BRANCH}} ${{CF_VOLUME_PATH}}/
+
+  run-on-my-docker:
+    image: codefreshplugins/docker-service
+    commands:
+        - docker run -d mycompany/repo:${{CF_BRANCH}}
+
+  delete-my-docker:
+     image: codefreshplugins/docker-service
+     commands:
+        - docker-service-delete my-docker
+
+  clean:
+     image: codefreshplugins/docker-service
+     commands:
+        - docker-service-clean

@@ -1,0 +1,4 @@
+.idea/
+.robot/
+.at_venv/
+**/*.pyc

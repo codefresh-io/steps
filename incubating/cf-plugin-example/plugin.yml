@@ -1,0 +1,12 @@
+image: my-cf-lugin
+tag: "0.2"
+version: "0.2"
+categories: ["security"]
+description: Codefresh Plugin
+keywords: ['docker']
+sources: []
+maintainers:
+- name: Your Name
+  email: Your Email
+icon: ""
+envs: []

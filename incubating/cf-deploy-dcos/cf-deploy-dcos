@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+DEPLOYMENT_TMPL=${1:-deployment.tmpl}
+SSL_VERIFY=${DCOS_SSL_VERIFY:-true}
+DCOS_DIR=$HOME/.dcos
+DCOS_CLUSTER_ID_DIR=""
+DEPLOYMENT_FILE=deployment.json
+
+[ -z "$DCOS_URL" ] && echo "Please set DCOS_URL variable" && exit 1;
+[ -z "$DCOS_CLUSTER_NAME" ] && echo "Please set DCOS_CLUSTER_NAME variable" && exit 1;
+[ -z "$DCOS_CLUSTER_ID" ] && echo "Please set DCOS_CLUSTER_ID variable" && exit 1;
+[ -z "$DCOS_DCOS_ACS_TOKEN" ] && echo "Please set DCOS_DCOS_ACS_TOKEN variable" && exit 1;
+
+if [ -d "$DCOS_DIR" ]; then
+  rm -rf $DCOS_DIR
+else
+  DCOS_CLUSTER_ID_DIR=$DCOS_DIR/clusters/$DCOS_CLUSTER_ID
+  mkdir -p $DCOS_CLUSTER_ID_DIR
+  touch $DCOS_CLUSTER_ID_DIR/attached
+  cat <<EOF > $DCOS_CLUSTER_ID_DIR/dcos.toml
+[core]
+dcos_url = "$DCOS_URL"
+ssl_verify = "$SSL_VERIFY"
+dcos_acs_token = "$DCOS_DCOS_ACS_TOKEN"
+[cluster]
+name = "$DCOS_CLUSTER_NAME"
+EOF
+
+chmod 0600 $DCOS_CLUSTER_ID_DIR/dcos.toml && \
+chmod 0600 $DCOS_CLUSTER_ID_DIR/attached
+
+fi
+
+[ ! -f "$DEPLOYMENT_TMPL" ] && echo "Couldn't find $DEPLOYMENT_TMPL file" && exit 1;
+
+/templater.sh "$DEPLOYMENT_TMPL" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template"
+
+if [[ -n "$DEPLOYMENT_FILE" ]]; then
+# dcos cluster setup --insecure $DCOS_URL
+  dcos marathon app add $DEPLOYMENT_FILE
+fi

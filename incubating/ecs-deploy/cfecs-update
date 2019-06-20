@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+#
+import sys, argparse, cfecs, logging, pprint
+
+def print_usage():
+    print ("Usage: \n"
+           "   cfecs-update aws-region ecs_cluster ecs_service")
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Codefresh ECS Deploy')
+
+    parser.add_argument('region_name', help="AWS Region, ex. us-east-1")
+    parser.add_argument('cluster_name', help="ECS Cluster Name")
+    parser.add_argument('service_name', help="ECS Service Name")
+
+    image_group = parser.add_argument_group()
+    image_group.add_argument('-i', '--image-name', action = 'store', dest = 'image_name', help='Image Name in ECS Task Definition to set new tag')
+    image_group.add_argument('-t', '--image-tag', action = 'store', dest = 'image_tag', help='Tag for the image')
+
+    args_wait_group = parser.add_mutually_exclusive_group()
+    args_wait_group.add_argument('--wait', action = 'store_true', dest = 'wait', default=True, help='Wait for deployment to complete (default)')
+    args_wait_group.add_argument('--no-wait', action = 'store_false', dest = 'wait', help='No Wait for deployment to complete')
+
+    parser.add_argument('--timeout', action = 'store', dest = 'timeout', default = cfecs.DEPLOY_TIMEOUT, help='deployment wait timeout (default 900s)')
+    parser.add_argument('--max-failed', action = 'store', dest = 'max_failed', default = cfecs.MAX_FAILED_TASKS, help='max failed tasks to consider deployment as failed (default 4)')
+    parser.add_argument('--debug', action = 'store_true', dest = 'debug', help='show debug messages')
+
+
+    args = parser.parse_args()
+    try:
+        if args.debug:
+            cfecs.init_log(logging.DEBUG)
+        response = cfecs.update_service(args.cluster_name, args.service_name, region_name=args.region_name,
+                                        wait=args.wait, deploy_timeout=args.timeout, max_failed=args.max_failed,
+                                        image_name=args.image_name, image_tag=args.image_tag)
+
+        if not response.get("status") or response["status"] in (cfecs.C_FAIL, cfecs.C_TIMEOUT):
+            cfecs.log.error("ERROR: {}".format(pprint.pformat(response)))
+            sys.exit(1)
+
+        cfecs.log.debug(pprint.pformat(response))
+        cfecs.log.info("ECS Deploy completed with status {}".format(response.get("status")))
+
+    except Exception as e:
+        cfecs.log.error("ERROR: {}".format(e.message))
+        sys.exit(1)
+
+
+

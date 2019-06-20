@@ -1,0 +1,35 @@
+name: scp-plugin
+image: codefreshplugins/scp-plugin
+tag: master
+version: 1.0.0
+description: Plugin to upload file or directory to remote machine using scp protocol.
+categories:
+- utility
+keywords:
+- scp
+sources:
+- https://github.com/codefresh-io/scp-plugin
+maintainers:
+- name: Denys Voznyuk
+  email: denys@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/scp-plugin/master/icon.jpg
+envs:
+- name: CF_SCP_HOST
+  type: required
+  description: Target machine host
+- name: CF_SCP_USER_NAME
+  type: required
+  description: Target machine user name
+- name: CF_SCP_PASSWORD
+  type: required
+  description: Target machine user password
+- name: CF_SCP_SOURCE
+  type: required
+  description: path to resource which will be uploaded, example /codefresh/volume/test.txt
+- name: CF_SCP_TARGET
+  type: required
+  description: path to resource on remote machine where resource will be created,
+    example /home/test.txt
+- name: CF_SCP_PORT
+  type: required
+  description: default port is 22, use this variable to specify different port.

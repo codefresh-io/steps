@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-08-06T11:25:47Z
+  labels:
+    version: "c39f076"
+  name: my-demo-app
+  namespace: canary
+spec:
+
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http1
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: my-demo-app
+  sessionAffinity: None
+  type: LoadBalancer
+

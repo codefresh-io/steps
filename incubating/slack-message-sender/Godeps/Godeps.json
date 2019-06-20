@@ -1,0 +1,29 @@
+{
+	"ImportPath": "github.com/codefresh-io/slack-message-sender",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/sirupsen/logrus",
+			"Comment": "v1.0.3-11-g89742ae",
+			"Rev": "89742aefa4b206dcf400792f3bd35b542998eb3b"
+		},
+		{
+			"ImportPath": "github.com/urfave/cli",
+			"Comment": "v1.20.0-36-g44cb242",
+			"Rev": "44cb242eeb4d76cc813fdc69ba5c4b224677e799"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "0ac51a24ef1c37380f98ba8b98f56e3bffd59850"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/windows",
+			"Rev": "0ac51a24ef1c37380f98ba8b98f56e3bffd59850"
+		}
+	]
+}

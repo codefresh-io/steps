@@ -1,0 +1,27 @@
+image: codefreshplugins/telegramnotifier
+version: 0.1.0
+description: Telegram plugin which gives the opportunity send any messages to users via bot.
+keywords:
+  - telegram
+  - notifications
+categories:
+  - featured
+sources:
+  - https://github.com/codefresh-contrib/telegram-notifier
+maintainers:
+  - name: Andrii Shaforostov
+    email: andrii@codefresh.io
+icon: 'https://raw.githubusercontent.com/codefresh-plugins/telegram-notifier/master/icon.jpg'
+envs:
+  - name: TELEGRAM_TOKEN
+    type: required
+    description: token of your bot
+  - name: TELEGRAM_TO
+    type: required
+    description: array of user ids who will receive a message separated by comma
+  - name: TELEGRAM_STATUS
+    description: send info about current build
+  - name: TELEGRAM_MESSAGE
+    description: text of message which will be sent to user
+  - name: TELEGRAM_IMAGES
+    description: array of image links for attaching to message

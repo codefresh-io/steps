@@ -1,0 +1,16 @@
+version: '1.0'
+
+steps:
+  buildimage:
+    type: build
+    description: image build step
+    dockerfile: Dockerfile
+    image_name: codefreshplugins/cf-twistlock
+  push_image:
+    type: push
+    candidate: ${{buildimage}}
+    tag: "latest"
+    when:
+      branch:
+        only:
+          - master

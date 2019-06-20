@@ -1,0 +1,34 @@
+image: codefreshplugins/cf-deploy-dcos
+version: 0.1.0
+description: Deploy an application on dcos cluster
+categories:
+  - deployment
+keywords:
+  - dcos
+  - deploy
+  - deployment
+sources:
+  - https://github.com/codefresh-contrib/cf-deploy-dcos
+maintainers: # (optional)
+  - name: Eugene Semirski
+    email: eugene@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-deploy-dcos/master/icon.jpg
+envs:
+  - name: DCOS_URL
+    type: required
+    description: DC/OS cluster URL
+  - name: DCOS_CLUSTER_NAME
+    type: required
+    description: DC/OS cluster name
+  - name: DCOS_CLUSTER_ID
+    type: required
+    description: DC/OS cluster ID
+  - name: DCOS_DCOS_ACS_TOKEN
+    type: required
+    description: DC/OS cluster existing user's token
+  - name: DCOS_SSL_VERIFY
+    type: not_required
+    description: default is true, if we want to bypass SSL certificate verification - set it to false
+  - name: PARAMETER
+    type: not_required
+    description: see README.md for details

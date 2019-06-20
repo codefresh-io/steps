@@ -1,0 +1,4 @@
+      google_kms:
+        image: codefreshplugins/google-kms
+        commands:
+        - kms encrypt VALUE_1 VALUE_n

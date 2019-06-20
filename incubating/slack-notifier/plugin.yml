@@ -1,0 +1,30 @@
+image: codefreshplugins/slacknotifier
+version: 0.1.0
+description: Send message to slack 
+categories:
+  - messaging
+keywords:
+  - slack
+sources:
+  - https://github.com/codefresh-contrib/slack-notifier
+maintainers: # (optional)
+  - name: Pavel Kostohrys
+    email: pavel@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/slack-notifier/master/logo.png
+envs:
+  - name: SLACK_HOOK_URL
+    type: required
+    description: Url to the channel
+  - name: SLACK_TEXT
+    type: required
+    description: Message to send
+  - name: SLACK_ATTACHMENTS
+    description: Attachments to send. Documentation https://api.slack.com/docs/message-attachments
+  - name: MODE
+    description: template | simple | default-template, by default - simple. In case with template mode you can have general body in attachment SLACK_TEMPLATE_BODY and different fields SLACK_TEMPLATE_FIELDS
+  - name: SLACK_TEMPLATE_BODY
+    type: required
+    description: Required in template mode, general body, should be not array. Support only one attachment in body. Documentation https://api.slack.com/docs/message-attachments
+  - name: SLACK_TEMPLATE_FIELDS
+    type: required
+    description: Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments

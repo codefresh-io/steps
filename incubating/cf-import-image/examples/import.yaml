@@ -1,0 +1,8 @@
+version: '1.0'
+
+steps:
+
+  import_images:
+    title: Importing images ...
+    description: import Docker images form external registry
+    image: codefreshplugins/import-images

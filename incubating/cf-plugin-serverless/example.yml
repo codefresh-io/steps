@@ -1,0 +1,23 @@
+steps:
+
+  setup:
+    image: alpine:3.7
+    title: generate AWS shared credentials file
+    commands:
+      - mkdir -p .aws
+      - echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${PWD}/.aws/credentials
+      - cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials
+
+  package:
+    image: ccodefreshplugins/cf-plugin-serverless
+    title: package serverless service
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless package --stage ${AWS_STAGE} --region ${AWS_REGION} --package ${PACKAGE}
+
+  deploy:
+    image: codefreshplugins/cf-plugin-serverless
+    title: deploy to AWS with serverless framework
+    working_directory: ${{main_clone}}/examples/aws-node-simple-http-endpoint
+    commands:
+      - serverless deploy --conceal --verbose --stage ${AWS_STAGE} --region ${AWS_REGION} --aws-profile ${AWS_PROFILE} --package ${PACKAGE}

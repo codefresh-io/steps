@@ -1,0 +1,36 @@
+version: '1.0'
+stages:
+- Compile
+- Bintray upload
+- Dockerize
+steps:
+  BuildingArtifact:
+    title: Compile Go Code
+    image: golang:1.7.1
+    stage: Compile
+    working_directory: upload-example/
+    commands:
+      - cp -r src /go/src
+      - cd /go/src
+      - go build -o /go/bin/sample src/sample/trivial-web-server.go
+      - cp -r /go/bin /codefresh/volume/
+  UploadBinary:
+    stage: 'Bintray upload'
+    title: upload Go binary to Bintray
+    image: codefreshplugins/cfstep-bintray:master
+    environment:
+      - BINTRAY_COMMAND=u
+      - BINTRAY_ARGS=/codefresh/volume/bin/sample codefresh-demo/test/cf-demo/v7.0 --override
+  PublishVersion:
+    stage: 'Bintray upload'
+    title: Publish Bintray version
+    image: codefreshplugins/cfstep-bintray:master
+    environment:
+      - BINTRAY_COMMAND=vp
+      - BINTRAY_ARGS=codefresh-demo/test/cf-demo/v7.0
+  Waiting:
+    stage: 'Bintray upload'
+    title: 'Awaiting publication'
+    image: alpine
+    commands:
+      - sleep 30  

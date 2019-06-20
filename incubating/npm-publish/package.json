@@ -1,0 +1,27 @@
+{
+  "name": "publish-for-npm",
+  "version": "1.0.5",
+  "description": "Let the CI do the `npm publish` step after the build passes",
+  "main": "npm-publish.js",
+  "bin": {
+    "npm-publish": "npm-publish.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codefresh-io/npm-publish.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/codefresh-io/npm-publish#readme",
+  "dependencies": {
+    "npm-utils": "1.7.1",
+    "lodash": "^4.17.4",
+    "yargs": "^10.0.3"
+  }
+}

@@ -1,0 +1,23 @@
+name: cfstep-bintray
+image: codefreshplugins/cfstep-bintray
+tag: 0.1.0
+version: 0.1.0
+description: A Codefresh freestyle step to manage releases in JFrog Bintray
+categories:
+- featured
+keywords:
+- jfrog
+- bintray
+sources:
+- https://github.com/codefresh-contrib/cfstep-bintray
+maintainers:
+- name: Kostis Kapelonis
+  email: kostis@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cfstep-bintray/master/icon.jpg
+envs:
+- name: BINTRAY_USER
+  type: required
+  description: username for Bintray
+- name: BINTRAY_KEY
+  type: required
+  description: API key for bintray

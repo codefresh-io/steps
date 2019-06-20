@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+DIR=$(dirname $0)
+
+source ${DIR}/helpers
+
+usage() {
+  echo "Usage:
+  ${0} [gke_cluster_name]  [optional flags]
+
+  Creates GKE Cluster by gcloud container cluster create gke_cluster_name 
+  
+  gke_cluster_name:     can be set also by passing GKE_CLUSTER_NAME env variable
+                    if both \$1 and GKE_CLUSTER_NAME are not set we will generate:
+                      GKE_CLUSTER_NAME=codefresh-plugin-gke-\$RANDOM
+
+  optional flags:   --additional-zones | --addons | --async |
+                    --cluster-ipv4-cidr | --cluster-secondary-range-name |
+                    --cluster-version | --create-subnetwork |
+                    --disable-addons | --disk-size | --enable-autorepair |
+                    --enable-autoscaling | --enable-autoupgrade |
+                    --enable-basic-auth | --enable-cloud-endpoints |
+                    --enable-cloud-logging | --enable-cloud-monitoring |
+                    --enable-ip-alias | --enable-kubernetes-alpha |
+                    --enable-legacy-authorization |
+                    --enable-master-authorized-networks |
+                    --enable-network-policy | --help | --image-type |
+                    --issue-client-certificate | --labels |
+                    --local-ssd-count | --machine-type |
+                    --maintenance-window | --master-authorized-networks |
+                    --max-nodes | --max-nodes-per-pool |
+                    --min-cpu-platform | --min-nodes | --network |
+                    --node-labels | --node-locations | --node-taints |
+                    --node-version | --num-nodes | --password |
+                    --preemptible | --scopes | --service-account |
+                    --services-ipv4-cidr |
+                    --services-secondary-range-name | --subnetwork |
+                    --tags | --username | --zone
+    (see gcloud container clusters create --help)
+"
+}
+
+activateServiceAccount
+
+if [[ -n "${1}" && ! "${1}" =~ ^-- ]]; then
+   GKE_CLUSTER_NAME=$1
+   shift
+fi
+
+if [[ -z ${GKE_CLUSTER_NAME} ]]; then
+   RANDOM_GKE_CLUSTER_NAME="codefresh-plugin-gke-${RANDOM}"
+   GKE_CLUSTER_NAME=${RANDOM_GKE_CLUSTER_NAME}
+fi
+
+echo "GKE_CLUSTER_NAME=${GKE_CLUSTER_NAME}"
+export GKE_CLUSTER_NAME
+cf_export GKE_CLUSTER_NAME
+
+setZoneRegionParams $@ 
+
+msg "Creating cluster ${GKE_CLUSTER_NAME} $ZONE_REGION_PARAM"
+gcloud --quiet container clusters create ${GKE_CLUSTER_NAME}  $ZONE_REGION_PARAM $@
+if [[ $? != 0 ]]; then
+      err "Failed to create cluster $GKE_CLUSTER_NAME"
+fi
+
+KUBECONFIG_DIR=/codefresh/volume/.kube
+mkdir -p $KUBECONFIG_DIR
+export KUBECONFIG=${KUBECONFIG_DIR}/${GKE_CLUSTER_NAME}-config
+
+generateKubeconfig > ${KUBECONFIG_DIR}/${GKE_CLUSTER_NAME}-config
+if [[ $? != 0 ]]; then
+      err "Failed to get kubeconfig for cluster $GKE_CLUSTER_NAME"
+fi
+
+gcloud container clusters get-credentials $ZONE_REGION_PARAM $GKE_CLUSTER_NAME
+# Enable cluster-admin role for tls client
+kubectl create clusterrolebinding cluster-admin-tls-client --clusterrole cluster-admin --user client 
+
+kubectl config use-context ${GKE_CLUSTER_NAME}
+kubectl config get-contexts
+cf_export KUBECONFIG

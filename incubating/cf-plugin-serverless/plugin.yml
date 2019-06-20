@@ -1,0 +1,34 @@
+name: cf-plugin-serverless
+image: codefresh-plugins/cf-plugin-serverless
+tag: 0.1.0
+version: 0.1.0
+description: Deploy a Serverless service (functions and resources)
+categories:
+- featured
+keywords:
+- serverless
+sources:
+- https://github.com/codefresh-plugins/cf-plugin-serverless
+maintainers:
+- name: Francisco Cocozza
+  email: francisco@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/cf-plugin-serverless/master/icon.jpg
+envs:
+- name: PACKAGE
+  type: required
+  description: Serverless Framework package folder
+- name: AWS_CREDENTIALS_FILE
+  type: required
+  description: Base64 encoded AWS credentials file
+- name: AWS_SHARED_CREDENTIALS_FILE
+  type: required
+  description: Path to shared AWS credentials file
+- name: AWS_REGION
+  type: required
+  description: AWS region
+- name: AWS_PROFILE
+  type: required
+  description: AWS credentials profile
+- name: AWS_STAGE
+  type: required
+  description: AWS API Gateway stage

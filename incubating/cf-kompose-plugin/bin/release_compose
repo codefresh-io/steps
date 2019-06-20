@@ -1,0 +1,63 @@
+#!/bin/sh
+
+set -e 
+
+# helper functions
+msg() { echo -e "\e[32mINFO ---> $1\e[0m"; }
+err() { echo -e "\e[31mERR ---> $1\e[0m" ; exit 1; }
+check() { command -v "$1" >/dev/null 2>&1 || err "$1 utility is requiered!"; }
+
+# =---
+# MAIN
+# =---
+
+check kubectl 
+
+check kompose
+
+if [ -z "$KUBE_CONTEXT" ]; then
+  err "Please, set Kubernetes context. Use name from Codefresh Integrations page."
+else
+  msg "Using ${KUBE_CONTEXT} context"
+  kubectl config use-context ${KUBE_CONTEXT}
+fi
+
+# target namespace
+if [ ! -z "${FILE}" ]; then
+  file="--file ${FILE}"
+fi
+
+# target namespace
+if [ ! -z "${NAMESPACE}" ]; then
+  namespace="--namespace ${NAMESPACE}"
+	msg "Creating target namespace ..."
+	kubectl create namespace ${NAMESPACE} || true # supress error of already existing namespace
+fi
+
+# replicas
+if [ ! -z "${REPLICAS}" ]; then
+  replicas="--replicas ${REPLICAS}"
+fi
+
+# volumes
+if [ ! -z "${VOLUMES}" ]; then
+  volumes="--volumes ${VOLUMES}"
+fi
+
+# set chart version flag
+if [ ! -z "${DEBUG}" ]; then
+  verbose="--verbose"
+fi
+
+# set chart repo flag
+if [ ! -z "${DRY_RUN}" ]; then
+  msg "Releasing Docker Compose - DRY RUN"
+  komposeCmd="kompose ${verbose} convert --stdout ${file} ${volumes} ${replicas}"
+else
+  msg "Releasing Docker Compose ..."
+  komposeCmd="kompose ${verbose} up ${namespace} ${file} ${replicas} ${volumes}"
+fi
+
+# execute kompose command
+msg "$komposeCmd"
+eval "$komposeCmd"

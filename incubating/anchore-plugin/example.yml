@@ -1,0 +1,13 @@
+version: '1.0'
+steps:
+  MyDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: ${{QA_IMAGE}}
+  ScanMyImage:
+    title: Scanning Docker Image
+    image: codefreshplugins/anchore-plugin
+    env:
+      - ANCHORE_CLI_IMAGE=alpine
+      - ANCHORE_CLI_URL=http://anchore-engine::8228/v1
+      - ANCHORE_CLI_FAIL_ON_POLICY=true

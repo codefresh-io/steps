@@ -1,0 +1,31 @@
+version: '1.0'
+
+steps:
+
+  main_build:
+    type: build
+    title: "Building GitHub pull request container ..."
+    description: build github pr container
+    image_name: codefresh/github-pr-plugin
+
+  push_testing:
+    type: push
+    title: "Pushing github-pr-plugin with branch tag for testing ..."
+    description: Push github-pr-plugin testing image to the DockerHub
+    candidate: ${{main_build}}
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
+    image_name: codefresh/github-pr-plugin
+    when:
+      branch:
+        ignore: [ master ]
+
+  push_latest:
+    type: push
+    title: "Pushing github-pr-plugin:latest ..."
+    description: Push github-pr-plugin latest image to the DockerHub
+    candidate: ${{main_build}}
+    tag: latest
+    image_name: codefresh/github-pr-plugin
+    when:
+      branch:
+        only: [ master ]

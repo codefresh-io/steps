@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-demo-app-c39f076
+  namespace: colors
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: my-demo-app
+        app: my-demo-app
+        version: 'c39f076'
+    spec:
+      containers:
+      - name: my-demo-app
+        image: r.cfcr.io/kostis-codefresh/trivial-web:c39f076
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+      imagePullSecrets:
+        - name: codefresh-generated-r.cfcr.io-cfcr-colors

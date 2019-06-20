@@ -1,0 +1,5 @@
+GitClone:
+  image: codefreshplugins/cfstep-codecommit
+  environment:
+    - GIT_USER=mygituser
+    - GIT_PASSWORD=#######

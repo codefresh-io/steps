@@ -1,0 +1,23 @@
+version: "1.0"
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cfstep-msteams-notifier
+    working_directory: ./
+    tag: ${{PYMSTEAMS_VERSION}}
+    dockerfile: Dockerfile
+    build_arguments:
+    - PYMSTEAMS_VERSION=${{PYMSTEAMS_VERSION}}
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    tags:
+    - latest
+    - 0.1.0
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

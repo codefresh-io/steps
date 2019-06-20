@@ -1,0 +1,21 @@
+version: "1.0"
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cfstep-azure-key-vault
+    working_directory: ./
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
+    dockerfile: Dockerfile
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    tags:
+    - latest
+    - 0.1.0
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

@@ -5,6 +5,7 @@ metadata:
   description: Perform blue/green deployments on a Kubernetes cluster
   sources:
     - 'https://github.com/codefresh-contrib/k8s-blue-green-deployment'
+  graduationStage: incubating
   maintainers:
     - name: Kostis Kapelonis
   categories:
@@ -48,7 +49,6 @@ spec:
   steps:
     main:
       name: k8s-blue-green-deployment
-      title: ''
       image: codefreshplugins/k8s-blue-green
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

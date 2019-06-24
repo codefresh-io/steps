@@ -5,6 +5,7 @@ metadata:
   description: Fetch Secrets from Azure Key Vault
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-azure-key-vault'
+  graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
@@ -68,7 +69,6 @@ spec:
   steps:
     main:
       name: cfstep-azure-key-vault
-      title: ''
       image: codefreshplugins/cfstep-azure-key-vault
       environment:
         - 'AZURE_CLIENT_ID=${{AZURE_CLIENT_ID}}'

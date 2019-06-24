@@ -5,6 +5,7 @@ metadata:
   description: Run jenkins job from codefresh pipeline
   sources:
     - 'https://github.com/codefresh-contrib/cf-run-jenkins-jobs'
+  graduationStage: incubating
   maintainers:
     - name: Vadim Waisman
   categories:
@@ -57,7 +58,6 @@ spec:
   steps:
     main:
       name: cf-run-jenkins-jobs
-      title: ''
       image: codefreshplugins/run-jenkins-jobs
       environment:
         - 'JENKINS_USERNAME=${{JENKINS_USERNAME}}'

@@ -5,6 +5,7 @@ metadata:
   description: Perform canary deployments on a Kubernetes cluster
   sources:
     - 'https://github.com/codefresh-contrib/k8s-canary-deployment'
+  graduationStage: incubating
   maintainers:
     - name: Kostis Kapelonis
       email: ''
@@ -58,7 +59,6 @@ spec:
   steps:
     main:
       name: k8s-canary-deployment
-      title: ''
       image: codefreshplugins/k8s-canary
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

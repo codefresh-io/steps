@@ -5,6 +5,7 @@ metadata:
   description: Send message to gitter
   sources:
     - 'https://github.com/codefresh-contrib/gitter-notifier'
+  graduationStage: incubating
   maintainers:
     - name: Andrii Shaforostov
       email: andrii@codefresh.io
@@ -52,7 +53,6 @@ spec:
   steps:
     main:
       name: gitter-notifier
-      title: ''
       image: codefreshplugins/gitternotifier
       environment:
         - 'GITTER_WEBHOOK=${{GITTER_WEBHOOK}}'

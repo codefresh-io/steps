@@ -5,6 +5,7 @@ metadata:
   description: Docker build in Azure ACR
   sources:
     - 'https://github.com/codefresh-contrib/azure-build-plugin'
+  graduationStage: incubating
   maintainers:
     - name: Amir Gabay
       email: amir.gabay@codefresh.io
@@ -101,7 +102,6 @@ spec:
   steps:
     main:
       name: azure-build-plugin
-      title: ''
       image: codefreshplugins/cf-azure-builder
       environment:
         - 'AUTH=${{AUTH}}'

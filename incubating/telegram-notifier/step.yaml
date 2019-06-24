@@ -7,6 +7,7 @@ metadata:
     bot.
   sources:
     - 'https://github.com/codefresh-contrib/telegram-notifier'
+  graduationStage: incubating
   maintainers:
     - name: Andrii Shaforostov
       email: andrii@codefresh.io
@@ -112,7 +113,6 @@ spec:
   steps:
     main:
       name: telegram-notifier
-      title: ''
       image: codefreshplugins/telegramnotifier
       environment:
         - 'TELEGRAM_TOKEN=${{TELEGRAM_TOKEN}}'

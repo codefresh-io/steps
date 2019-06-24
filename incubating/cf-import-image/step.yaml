@@ -5,6 +5,7 @@ metadata:
   description: Import metadata for existing Docker images into Codefresh
   sources:
     - 'https://github.com/codefresh-contrib/cf-import-image'
+  graduationStage: incubating
   maintainers:
     - name: Alexei Ledenev
   categories:
@@ -61,7 +62,6 @@ spec:
   steps:
     main:
       name: cf-import-image
-      title: ''
       image: codefreshplugins/import-images
       environment:
         - 'IMAGES=${{IMAGES}}'

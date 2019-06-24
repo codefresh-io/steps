@@ -5,6 +5,7 @@ metadata:
   description: Deploy a Serverless service (functions and resources)
   sources:
     - 'https://github.com/codefresh-plugins/cf-plugin-serverless'
+  graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
@@ -90,7 +91,6 @@ spec:
   steps:
     main:
       name: cf-plugin-serverless
-      title: ''
       image: codefresh-plugins/cf-plugin-serverless
       environment:
         - 'PACKAGE=${{PACKAGE}}'

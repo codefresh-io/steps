@@ -5,6 +5,7 @@ metadata:
   description: Codefresh gke plugin
   sources:
     - 'https://github.com/codefresh-contrib/plugin-gke'
+  graduationStage: incubating
   maintainers:
     - name: Kosta Klevensky
   categories:
@@ -67,7 +68,6 @@ spec:
   steps:
     main:
       name: plugin-gke
-      title: ''
       image: 'codefreshplugins/plugin-gke:latest'
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'

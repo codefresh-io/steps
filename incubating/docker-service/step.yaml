@@ -5,6 +5,7 @@ metadata:
   description: Codefresh docker-service plugin
   sources:
     - 'https://github.com/codefresh-contrib/docker-service'
+  graduationStage: incubating
   maintainers:
     - name: Kosta Klevensky
       email: kosta@codefresh.io
@@ -62,7 +63,6 @@ spec:
   steps:
     main:
       name: docker-service
-      title: ''
       image: codefreshplugins/docker-service
       environment:
         - 'DOCKER_MACHINE_NAME=${{DOCKER_MACHINE_NAME}}'

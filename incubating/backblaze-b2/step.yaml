@@ -5,6 +5,7 @@ metadata:
   description: Upload files to Backblaze B2 bucket
   sources:
     - 'https://github.com/codefresh-plugins/backblaze-b2'
+  graduationStage: incubating
   maintainers:
     - name: andrii-codefresh
   categories:
@@ -63,7 +64,6 @@ spec:
   steps:
     main:
       name: backblaze-b2
-      title: ''
       image: codefreshplugins/backblaze-b2
       environment:
         - 'APPLICATION_KEY_ID=${{APPLICATION_KEY_ID}}'

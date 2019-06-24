@@ -5,6 +5,7 @@ metadata:
   description: Operate on Codefresh resources
   sources:
     - 'https://github.com/codefresh-io/cli'
+  graduationStage: incubating
   maintainers:
     - name: Itay Shakury
       email: i.shakury@codefresh.io
@@ -46,7 +47,6 @@ spec:
   steps:
     main:
       name: cli
-      title: ''
       image: codefresh/cli
       environment:
         - 'CFCONFIG=${{CFCONFIG}}'

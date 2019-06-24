@@ -5,6 +5,7 @@ metadata:
   description: Send Message to Microsoft Teams
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-msteams-notifier'
+  graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
@@ -89,7 +90,6 @@ spec:
   steps:
     main:
       name: cfstep-msteams-notifier
-      title: ''
       image: icon.jpg
       environment:
         - 'CF_STATUS_MESSAGE=${{CF_STATUS_MESSAGE}}'

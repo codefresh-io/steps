@@ -5,6 +5,7 @@ metadata:
   description: Clone an AWS CodeCommit Git repository
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-codecommit'
+  graduationStage: incubating
   maintainers:
     - name: Guy Salton
       email: guy.salton@codefresh.io
@@ -50,7 +51,6 @@ spec:
   steps:
     main:
       name: cfstep-codecommit
-      title: ''
       image: codefreshplugins/cfstep-codecommit
       environment:
         - 'GIT_USER=${{GIT_USER}}'

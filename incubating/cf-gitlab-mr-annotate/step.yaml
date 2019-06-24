@@ -5,6 +5,7 @@ metadata:
   description: The plugin allows for easy applying labels to GitLab merge requests
   sources:
     - 'https://github.com/codefresh-contrib/cf-gitlab-mr-annotate'
+  graduationStage: incubating
   maintainers:
     - name: Alex Kogan
   categories:
@@ -54,7 +55,6 @@ spec:
   steps:
     main:
       name: cf-gitlab-mr-annotate
-      title: ''
       image: codefreshplugins/gitlab-mr-annotate
       environment:
         - 'GIT_CONTEXT=${{GIT_CONTEXT}}'

@@ -7,6 +7,7 @@ metadata:
     variables
   sources:
     - 'https://github.com/codefresh-contrib/cf-vault-plugin'
+  graduationStage: incubating
   maintainers:
     - name: Alexander Aladov
   categories:
@@ -62,7 +63,6 @@ spec:
   steps:
     main:
       name: cf-vault-plugin
-      title: ''
       image: codefreshplugins/cf-vault-plugin
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'

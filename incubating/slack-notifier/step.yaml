@@ -5,6 +5,7 @@ metadata:
   description: Send message to slack
   sources:
     - 'https://github.com/codefresh-contrib/slack-notifier'
+  graduationStage: incubating
   maintainers:
     - name: Pavel Kostohrys
       email: pavel@codefresh.io
@@ -70,7 +71,6 @@ spec:
   steps:
     main:
       name: slack-notifier
-      title: ''
       image: codefreshplugins/slacknotifier
       environment:
         - 'SLACK_HOOK_URL=${{SLACK_HOOK_URL}}'

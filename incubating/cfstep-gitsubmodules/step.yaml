@@ -5,6 +5,7 @@ metadata:
   description: Update git submodules
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-gitsubmodules'
+  graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
@@ -59,7 +60,6 @@ spec:
   steps:
     main:
       name: cfstep-gitsubmodules
-      title: ''
       image: codefreshplugins/cfstep-gitsubmodules
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'

@@ -5,6 +5,7 @@ metadata:
   description: clone git repositories via SSH.
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-gitclonerssh'
+  graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
@@ -67,7 +68,6 @@ spec:
   steps:
     main:
       name: cfstep-gitclonerssh
-      title: ''
       image: codefreshplugins/cfstep-gitclonerssh
       environment:
         - 'REMOTE_URL=${{REMOTE_URL}}'

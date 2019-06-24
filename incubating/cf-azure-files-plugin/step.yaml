@@ -5,6 +5,7 @@ metadata:
   description: Plugin for pushing files to Azure Files
   sources:
     - 'https://github.com/codefresh-io/cf-azure-files-plugin'
+  graduationStage: incubating
   maintainers:
     - name: Denys Voznyuk
       email: denys@codefresh.io
@@ -73,7 +74,6 @@ spec:
   steps:
     main:
       name: cf-azure-files-plugin
-      title: ''
       image: codefresh/cf-azure-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'

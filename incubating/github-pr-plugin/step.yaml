@@ -5,6 +5,7 @@ metadata:
   description: Operates on GitHub pull requests
   sources:
     - 'https://github.com/codefresh-io/github-pr-plugin'
+  graduationStage: incubating
   maintainers:
     - name: Nick Sakovich
       email: nick.sakovich@codefresh.io
@@ -88,7 +89,6 @@ spec:
   steps:
     main:
       name: github-pr-plugin
-      title: ''
       image: codefreshplugins/github-pr-plugin
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'

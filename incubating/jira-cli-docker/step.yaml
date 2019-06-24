@@ -5,6 +5,7 @@ metadata:
   description: Update a Jira ticket
   sources:
     - 'https://github.com/codefresh-contrib/jira-cli-docker'
+  graduationStage: incubating
   maintainers:
     - name: Ant Weiss
       email: anton@otomato.link
@@ -64,7 +65,6 @@ spec:
   steps:
     main:
       name: jira-cli-docker
-      title: ''
       image: codefreshplugins/jira-cli
       environment:
         - 'JIRA_URL=${{JIRA_URL}}'

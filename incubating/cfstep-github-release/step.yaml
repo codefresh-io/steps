@@ -5,6 +5,7 @@ metadata:
   description: Plugin to make github releases
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-github-release'
+  graduationStage: incubating
   maintainers:
     - name: Alex Cheshko
       email: a.cheshko@codefresh.io
@@ -79,7 +80,6 @@ spec:
   steps:
     main:
       name: cfstep-github-release
-      title: ''
       image: codefreshplugins/cfstep-github-release
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'

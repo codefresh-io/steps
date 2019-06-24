@@ -5,6 +5,7 @@ metadata:
   description: Open and Annotate BitBucket PullRequests
   sources:
     - 'https://github.com/codefresh-contrib/bitbucket-pr'
+  graduationStage: incubating
   maintainers:
     - name: Ant Weiss
       email: ant.weiss@codefresh.io
@@ -45,7 +46,6 @@ spec:
   steps:
     main:
       name: bitbucket-pr
-      title: ''
       image: codefreshplugins/bitbucket-pr
       environment:
         - 'MY_VAR=${{MY_VAR}}'

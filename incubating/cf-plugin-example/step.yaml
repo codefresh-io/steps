@@ -4,6 +4,7 @@ metadata:
   name: cf-plugin-example
   description: Codefresh Plugin
   sources: []
+  graduationStage: incubating
   maintainers:
     - name: Your Name
       email: Your Email
@@ -37,6 +38,5 @@ spec:
   steps:
     main:
       name: cf-plugin-example
-      title: ''
       image: my-cf-lugin
       environment: []

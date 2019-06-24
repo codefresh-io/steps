@@ -5,6 +5,7 @@ metadata:
   description: Release a Docker Compose to Kubernetes
   sources:
     - 'https://github.com/codefresh-contrib/cf-kompose-plugin'
+  graduationStage: incubating
   maintainers:
     - name: Alexei Ledenev
   categories:
@@ -71,7 +72,6 @@ spec:
   steps:
     main:
       name: cf-kompose-plugin
-      title: ''
       image: codefreshplugins/plugin-kompose
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

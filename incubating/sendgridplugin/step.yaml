@@ -5,6 +5,7 @@ metadata:
   description: Send e-mail via Sendgrid
   sources:
     - 'https://github.com/codefresh-contrib/sendgridplugin'
+  graduationStage: incubating
   maintainers:
     - name: Pavel Kostohrys
   categories:
@@ -66,7 +67,6 @@ spec:
   steps:
     main:
       name: sendgridplugin
-      title: ''
       image: codefreshplugins/sendgridplugin
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'

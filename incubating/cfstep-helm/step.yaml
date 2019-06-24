@@ -5,6 +5,7 @@ metadata:
   description: Release a Helm chart (update or install)
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-helm'
+  graduationStage: incubating
   maintainers:
     - name: Itay Shakury
       email: i.shakury@codefresh.io
@@ -80,7 +81,6 @@ spec:
   steps:
     main:
       name: cfstep-helm
-      title: ''
       image: 'codefresh/cfstep-helm:2.9.0'
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

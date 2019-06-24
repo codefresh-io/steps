@@ -5,6 +5,7 @@ metadata:
   description: Execute Twistlock CLI image scan as build step
   sources:
     - 'https://github.com/SC-TechDev/docker-twistlock'
+  graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dev@vanbuskirk.me
@@ -129,7 +130,6 @@ spec:
   steps:
     main:
       name: cf-twistlock
-      title: ''
       image: codefreshplugins/cf-twistlock
       environment:
         - 'CODEFRESH_CLI_KEY=${{CODEFRESH_CLI_KEY}}'

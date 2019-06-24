@@ -5,6 +5,7 @@ metadata:
   description: 'Scan docker images with Clair - https://github.com/coreos/clair'
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-paclair'
+  graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
@@ -118,7 +119,6 @@ spec:
   steps:
     main:
       name: cfstep-paclair
-      title: ''
       image: codefreshplugins/cfstep-paclair
       environment:
         - 'API_PREFIX=${{API_PREFIX}}'

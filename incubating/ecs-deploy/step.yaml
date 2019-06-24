@@ -5,6 +5,7 @@ metadata:
   description: Release a Helm chart (update or install)
   sources:
     - 'https://github.com/codefresh-contrib/cf-deploy-ecs.git'
+  graduationStage: incubating
   maintainers:
     - name: Oleg  Verhovsky
       email: oleg@codefresh.io
@@ -82,7 +83,6 @@ spec:
   steps:
     main:
       name: ecs-deploy
-      title: ''
       image: codefreshplugins/cf-deploy-ecs
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'

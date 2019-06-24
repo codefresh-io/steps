@@ -7,6 +7,7 @@ metadata:
     encrypting and decrypting
   sources:
     - 'https://github.com/codefresh-contrib/google-kms'
+  graduationStage: incubating
   maintainers:
     - name: Will Malone
   categories:
@@ -59,7 +60,6 @@ spec:
   steps:
     main:
       name: google-kms
-      title: ''
       image: codefreshplugins/google-kms
       environment:
         - 'KMS_PROJECT=${{KMS_PROJECT}}'

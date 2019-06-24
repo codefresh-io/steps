@@ -13,6 +13,7 @@ metadata:
       email: eugene@codefresh.io
   categories:
     - deployment
+  official: false
   tags: []
   icons:
     large: >-

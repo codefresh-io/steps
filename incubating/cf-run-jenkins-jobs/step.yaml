@@ -12,6 +12,7 @@ metadata:
     - name: Vadim Waisman
   categories:
     - build
+  official: false
   tags: []
   icons:
     large: >-

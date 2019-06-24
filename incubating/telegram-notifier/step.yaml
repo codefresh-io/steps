@@ -15,6 +15,7 @@ metadata:
       email: andrii@codefresh.io
   categories:
     - featured
+  official: false
   tags: []
   icons:
     large: >-

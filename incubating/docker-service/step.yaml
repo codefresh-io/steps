@@ -13,6 +13,7 @@ metadata:
       email: kosta@codefresh.io
   categories:
     - utility
+  official: false
   tags: []
   icons:
     large: >-

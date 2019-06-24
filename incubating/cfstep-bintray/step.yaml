@@ -13,6 +13,7 @@ metadata:
       email: kostis@codefresh.io
   categories:
     - featured
+  official: false
   tags: []
   icons:
     large: >-

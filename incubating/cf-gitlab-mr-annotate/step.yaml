@@ -12,6 +12,7 @@ metadata:
     - name: Alex Kogan
   categories:
     - git
+  official: false
   tags: []
   icons:
     large: >-

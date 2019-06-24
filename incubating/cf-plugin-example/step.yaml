@@ -13,6 +13,7 @@ metadata:
       email: Your Email
   categories:
     - security
+  official: false
   tags: []
   icons: {}
   examples:

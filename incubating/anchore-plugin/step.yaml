@@ -12,6 +12,7 @@ metadata:
     - name: Jeremy Valance
   categories:
     - security
+  official: false
   tags: []
   icons:
     large: >-

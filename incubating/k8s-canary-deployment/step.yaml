@@ -14,6 +14,7 @@ metadata:
   categories:
     - featured
     - deployment
+  official: false
   tags: []
   icons:
     large: >-

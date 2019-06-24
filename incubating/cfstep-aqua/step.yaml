@@ -12,6 +12,7 @@ metadata:
       email: dev@vanbuskirk.me
   categories:
     - security
+  official: false
   tags: []
   icons:
     large: >-

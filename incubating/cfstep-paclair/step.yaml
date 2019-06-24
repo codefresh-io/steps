@@ -13,6 +13,7 @@ metadata:
       email: dustinb@codefresh.io
   categories:
     - security
+  official: false
   tags: []
   icons:
     large: >-

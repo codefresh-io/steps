@@ -13,6 +13,7 @@ metadata:
       email: francisco@codefresh.io
   categories:
     - featured
+  official: false
   tags: []
   icons:
     large: >-

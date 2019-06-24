@@ -13,6 +13,7 @@ metadata:
   categories:
     - utility
     - featured
+  official: false
   tags: []
   icons:
     large: 'https://raw.githubusercontent.com/codefresh-plugins/cli/master/icon.jpg'

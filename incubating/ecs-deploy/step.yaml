@@ -12,6 +12,7 @@ metadata:
       email: oleg@codefresh.io
   categories:
     - deployment
+  official: false
   tags: []
   icons:
     large: >-

@@ -12,6 +12,7 @@ metadata:
       email: denys@codefresh.io
   categories:
     - utility
+  official: false
   tags: []
   icons:
     large: >-

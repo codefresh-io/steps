@@ -14,6 +14,7 @@ metadata:
   categories:
     - git
     - utility
+  official: false
   tags: []
   icons:
     large: >-

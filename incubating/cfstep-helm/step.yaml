@@ -12,6 +12,7 @@ metadata:
       email: i.shakury@codefresh.io
   categories:
     - featured
+  official: false
   tags: []
   icons:
     large: >-

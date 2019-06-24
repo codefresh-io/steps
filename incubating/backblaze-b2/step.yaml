@@ -11,6 +11,7 @@ metadata:
     - name: andrii-codefresh
   categories:
     - utility
+  official: false
   tags: []
   icons:
     large: >-

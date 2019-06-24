@@ -13,6 +13,7 @@ metadata:
       email: andrii@codefresh.io
   categories:
     - messaging
+  official: false
   tags: []
   icons:
     large: >-

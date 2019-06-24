@@ -12,6 +12,7 @@ metadata:
       email: ant.weiss@codefresh.io
   categories:
     - git
+  official: false
   tags: []
   icons:
     large: >-

@@ -6,11 +6,12 @@ metadata:
   description: Publishes a nodejs package to NPM registry
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/npm-publish'
-  stage: graduated
+  stage: incubating
   maintainers:
     - name: Jakob Stuart
   categories:
     - deployment
+  official: false
   tags: []
   icons:
     large: >-

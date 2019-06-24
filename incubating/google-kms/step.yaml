@@ -13,6 +13,7 @@ metadata:
     - name: Will Malone
   categories:
     - featured
+  official: false
   tags: []
   icons:
     large: >-

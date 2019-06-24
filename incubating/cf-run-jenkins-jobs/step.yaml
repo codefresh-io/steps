@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/cf-run-jenkins-jobs
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Vadim Waisman
   categories:

@@ -6,7 +6,7 @@ metadata:
   description: Build a Docker image
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

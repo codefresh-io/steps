@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-build-plugin
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Amir Gabay
       email: amir.gabay@codefresh.io

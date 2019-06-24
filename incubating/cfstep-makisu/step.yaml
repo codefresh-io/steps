@@ -6,7 +6,7 @@ metadata:
   description: The plugin makes using Makisu build tool easier in a Codefresh pipeline
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-makisu'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Alexander Cheshko
       email: a.cheshko@codefresh.io

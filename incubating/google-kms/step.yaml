@@ -8,7 +8,7 @@ metadata:
     encrypting and decrypting
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/google-kms'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Will Malone
   categories:

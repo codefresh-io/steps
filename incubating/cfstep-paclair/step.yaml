@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-paclair
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io

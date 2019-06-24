@@ -6,7 +6,7 @@ metadata:
   description: Codefresh gke plugin
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/plugin-gke'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Kosta Klevensky
   categories:

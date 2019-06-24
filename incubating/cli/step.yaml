@@ -6,7 +6,7 @@ metadata:
   description: Operate on Codefresh resources
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/cli'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Itay Shakury
       email: i.shakury@codefresh.io

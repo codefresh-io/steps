@@ -6,7 +6,7 @@ metadata:
   description: Execute Twistlock CLI image scan as build step
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/cf-twistlock'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Dustin Van Buskirk
       email: dev@vanbuskirk.me

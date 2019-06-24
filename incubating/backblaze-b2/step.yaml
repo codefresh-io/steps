@@ -6,7 +6,7 @@ metadata:
   description: Upload files to Backblaze B2 bucket
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/backblaze-b2'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: andrii-codefresh
   categories:

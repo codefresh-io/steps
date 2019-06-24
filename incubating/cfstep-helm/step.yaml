@@ -6,7 +6,7 @@ metadata:
   description: Release a Helm chart (update or install)
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-helm'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Itay Shakury
       email: i.shakury@codefresh.io

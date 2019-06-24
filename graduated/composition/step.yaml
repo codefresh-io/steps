@@ -6,7 +6,7 @@ metadata:
   description: Run a docker-compose
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/composition'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

@@ -6,7 +6,7 @@ metadata:
   description: Pause a running build until an approve or deny action
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/pending-approval'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

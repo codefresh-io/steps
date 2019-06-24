@@ -6,7 +6,7 @@ metadata:
   description: Run and externaly expose a docker-compose
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/launch-composition'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-blue-green-deployment
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Kostis Kapelonis
   categories:

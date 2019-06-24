@@ -9,7 +9,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/cf-vault-plugin
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Alexander Aladov
   categories:

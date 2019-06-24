@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/anchore-plugin
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Jeremy Valance
   categories:

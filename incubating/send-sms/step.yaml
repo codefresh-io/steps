@@ -6,7 +6,7 @@ metadata:
   description: Send SMS notifications via Twillio
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/send-sms'
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Pasha Kostohrys
   categories:

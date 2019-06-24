@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/slack-notifier
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Pavel Kostohrys
       email: pavel@codefresh.io

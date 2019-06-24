@@ -6,7 +6,7 @@ metadata:
   description: Clone a git repository
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

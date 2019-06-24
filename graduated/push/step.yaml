@@ -6,7 +6,7 @@ metadata:
   description: Push a docker image to a registry
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/push'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

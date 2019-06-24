@@ -6,7 +6,7 @@ metadata:
   description: Run freestyle commands on top of a docker image
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

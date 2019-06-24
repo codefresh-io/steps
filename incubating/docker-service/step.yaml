@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/docker-service
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Kosta Klevensky
       email: kosta@codefresh.io

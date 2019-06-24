@@ -6,7 +6,7 @@ metadata:
   description: Deploy
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'
-  graduationStage: graduated
+  stage: graduated
   official: true
   maintainers:
     - name: Codefresh INC

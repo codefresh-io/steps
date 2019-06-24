@@ -7,7 +7,7 @@ metadata:
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/github-pr-plugin
-  graduationStage: incubating
+  stage: incubating
   maintainers:
     - name: Nick Sakovich
       email: nick.sakovich@codefresh.io

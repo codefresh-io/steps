@@ -1,5 +1,7 @@
-sendSlack:
+version: '1.0'
+steps:
+  sendSlack:
     title: notifySlack
     image: 'codefreshplugins/slack-message-sender:0.1'
     commands:
-      - "slack-message-sender send --webhook-url https://my-webhook-url --message "My message"
+      - "slack-message-sender send --webhook-url https://my-webhook-url --message \"My message"

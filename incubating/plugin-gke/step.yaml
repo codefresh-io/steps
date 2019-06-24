@@ -1,0 +1,79 @@
+kind: step
+version: '1.0'
+metadata:
+  name: plugin-gke
+  description: Codefresh gke plugin
+  sources:
+    - 'https://github.com/codefresh-contrib/plugin-gke'
+  maintainers:
+    - name: Kosta Klevensky
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/plugin-gke/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          create-cluster:
+            image: codefreshplugins/plugin-gke
+            commands:
+              - >-
+                gke-create gke-test-cluster-1 --zone=us-central1-a --num-nodes 2
+                --machine-type n1-standard-2
+          deploy-my-service:
+            image: codefreshplugins/plugin-gke
+            commands:
+              - kubectl get pods --all-namespaces -owide
+          clean:
+            image: codefreshplugins/plugin-gke
+            commands:
+              - gke-delete gke-test-cluster-1 --zone=us-central1-a
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "VAULT_ADDR": {
+                "type": "string",
+                "description": "Vault server URI. Example: https://vault.testdomain.io:8200 (required)"
+            },
+            "GOOGLE_SERVICE_ACCOUNT_KEY (required)": {
+                "type": "string",
+                "description": "Google Service Account Key value"
+            },
+            "CLOUDSDK_COMPUTE_ZONE": {
+                "type": "string",
+                "description": "one of valid Google Compute zones"
+            },
+            "CLOUDSDK_COMPUTE_REGION": {
+                "type": "string",
+                "description": "one of valid Google Compute regions. If both CLOUDSDK_COMPUTE_ZONE and CLOUDSDK_COMPUTE_REGION are not set, default is us-central1"
+            },
+            "GKE_CLUSTER_NAME": {
+                "type": "string",
+                "description": "Name of the cluster to create/delete. Can be also set from gke-create command line. It is generated if not set"
+            }
+        }
+    }
+  steps:
+    main:
+      name: plugin-gke
+      title: ''
+      image: 'codefreshplugins/plugin-gke:latest'
+      environment:
+        - 'VAULT_ADDR=${{VAULT_ADDR}}'
+        - >-
+          GOOGLE_SERVICE_ACCOUNT_KEY (required)=${{GOOGLE_SERVICE_ACCOUNT_KEY
+          (required)}}
+        - 'CLOUDSDK_COMPUTE_ZONE=${{CLOUDSDK_COMPUTE_ZONE}}'
+        - 'CLOUDSDK_COMPUTE_REGION=${{CLOUDSDK_COMPUTE_REGION}}'
+        - 'GKE_CLUSTER_NAME=${{GKE_CLUSTER_NAME}}'

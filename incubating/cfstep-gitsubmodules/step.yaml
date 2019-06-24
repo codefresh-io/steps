@@ -1,0 +1,67 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cfstep-gitsubmodules
+  description: Update git submodules
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-gitsubmodules'
+  maintainers:
+    - name: Francisco Cocozza
+      email: francisco@codefresh.io
+  categories:
+    - git
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitsubmodules/master/logo.png
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          updateSubmodules:
+            image: codefreshplugins/cfstep-gitsubmodules
+            environment:
+              - GITHUB_TOKEN=<github_token>
+              - >-
+                CF_SUBMODULE_SYNC=<boolean to determine if modules should be
+                synced>
+              - >-
+                CF_SUBMODULE_UPDATE_RECURSIVE=<boolean to determine if modules
+                should be recursively updated>
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GITHUB_TOKEN"
+        ],
+        "properties": {
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "GitHub Token required to access the repository"
+            },
+            "CF_SUBMODULE_SYNC": {
+                "type": "string",
+                "description": "if var is set to 'true', the step will perform 'git submodule sync' command"
+            },
+            "CF_SUBMODULE_UPDATE_RECURSIVE": {
+                "type": "string",
+                "description": "if set to 'true', the step will perform 'git submodule update --init' command with '--recursive' option"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cfstep-gitsubmodules
+      title: ''
+      image: codefreshplugins/cfstep-gitsubmodules
+      environment:
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'CF_SUBMODULE_SYNC=${{CF_SUBMODULE_SYNC}}'
+        - 'CF_SUBMODULE_UPDATE_RECURSIVE=${{CF_SUBMODULE_UPDATE_RECURSIVE}}'

@@ -1,48 +1,74 @@
 kind: step
-version: "1.0"
+version: '1.0'
 metadata:
   name: anchore-plugin
   description: Analyze Docker images and generate a detailed manifest using Anchore
-  source: https://github.com/codefresh-contrib/anchore-plugin
+  sources:
+    - 'https://github.com/codefresh-contrib/anchore-plugin'
   maintainers:
     - name: Jeremy Valance
   categories:
     - security
-  tags:
-    - anchore
-    - security
-    - scan
+  tags: []
   icons:
-    main: https://raw.githubusercontent.com/codefresh-plugins/anchore-plugin/master/icon.jpg
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/anchore-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          MyDockerImage:
+            title: Building Docker Image
+            type: build
+            image_name: '${{QA_IMAGE}}'
+          ScanMyImage:
+            title: Scanning Docker Image
+            image: codefreshplugins/anchore-plugin
+            env:
+              - ANCHORE_CLI_IMAGE=alpine
+              - 'ANCHORE_CLI_URL=http://anchore-engine::8228/v1'
+              - ANCHORE_CLI_FAIL_ON_POLICY=true
 spec:
-  arguments: |
+  arguments: |-
     {
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": []
+        "required": [],
         "properties": {
             "ANCHORE_CLI_URL": {
-                "type": "string"
+                "type": "string",
                 "description": "The address of the Anchore server"
             },
             "ANCHORE_CLI_USER": {
-                    "type": "string"
-                    "description": "Anchore account name"
+                "type": "string",
+                "description": "Anchore account name"
             },
             "ANCHORE_CLI_PASS": {
-                    "type": "string"
-                    "description": "Anchore account password"
+                "type": "string",
+                "description": "Anchore account password"
             },
             "ANCHORE_FAIL_ON_POLICY": {
-                    "type": "string"
-                    "description": "Fail build if policy evaluation fails"
+                "type": "string",
+                "description": "Fail build if policy evaluation fails"
             },
             "ANCHORE_CLI_IMAGE": {
-                    "type": "string"
-                    "description": "Name of the image to scan with Anchore"
-            },
-        },
+                "type": "string",
+                "description": "Name of the image to scan with Anchore"
+            }
+        }
     }
+  steps:
+    main:
+      name: anchore-plugin
+      title: ''
+      image: codefreshplugins/anchore-plugin
+      environment:
+        - 'ANCHORE_CLI_URL=${{ANCHORE_CLI_URL}}'
+        - 'ANCHORE_CLI_USER=${{ANCHORE_CLI_USER}}'
+        - 'ANCHORE_CLI_PASS=${{ANCHORE_CLI_PASS}}'
+        - 'ANCHORE_FAIL_ON_POLICY=${{ANCHORE_FAIL_ON_POLICY}}'
+        - 'ANCHORE_CLI_IMAGE=${{ANCHORE_CLI_IMAGE}}'

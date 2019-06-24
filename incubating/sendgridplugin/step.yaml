@@ -1,0 +1,78 @@
+kind: step
+version: '1.0'
+metadata:
+  name: sendgridplugin
+  description: Send e-mail via Sendgrid
+  sources:
+    - 'https://github.com/codefresh-contrib/sendgridplugin'
+  maintainers:
+    - name: Pavel Kostohrys
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/sendgridplugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          TestMail:
+            title: Test Mail
+            image: 'codefreshplugins/sendgridplugin:latest'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "SENDGRID_MAIL"
+        ],
+        "properties": {
+            "SENDGRID_APIKEY": {
+                "type": "string",
+                "description": "API key from SendGrid (required)"
+            },
+            "SENDGRID_MAIL": {
+                "type": "string",
+                "description": "mail where the letter will be sent, you can use comma divider to send on multiple mails (ex.: mail1@example.com, mail2@exmaple.com)"
+            },
+            "SENDGRID_FROM": {
+                "type": "string",
+                "description": "from header of mail (required)"
+            },
+            "SENDGRID_SUBJECT": {
+                "type": "string",
+                "description": "subject header of mail (required)"
+            },
+            "SENDGRID_TYPE": {
+                "type": "string",
+                "description": "type of mail [build, message, custom] (required)"
+            },
+            "SENDGRID_MESSAGE": {
+                "type": "string",
+                "description": "Text of message for type message"
+            },
+            "SENDGRID_TEMPLATE": {
+                "type": "string",
+                "description": "Template of message for type message"
+            }
+        }
+    }
+  steps:
+    main:
+      name: sendgridplugin
+      title: ''
+      image: codefreshplugins/sendgridplugin
+      environment:
+        - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
+        - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'
+        - 'SENDGRID_FROM=${{SENDGRID_FROM}}'
+        - 'SENDGRID_SUBJECT=${{SENDGRID_SUBJECT}}'
+        - 'SENDGRID_TYPE=${{SENDGRID_TYPE}}'
+        - 'SENDGRID_MESSAGE=${{SENDGRID_MESSAGE}}'
+        - 'SENDGRID_TEMPLATE=${{SENDGRID_TEMPLATE}}'

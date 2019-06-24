@@ -1,0 +1,52 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cli
+  description: Operate on Codefresh resources
+  sources:
+    - 'https://github.com/codefresh-io/cli'
+  maintainers:
+    - name: Itay Shakury
+      email: i.shakury@codefresh.io
+  categories:
+    - utility
+    - featured
+  tags: []
+  icons:
+    large: 'https://raw.githubusercontent.com/codefresh-plugins/cli/master/icon.jpg'
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          annotate_image:
+            image: codefresh/cli
+            description: annotates image with metadata
+            command: annotate image IMAGE_ID -a key1=value1 -a key2=value2
+          run_pipeline:
+            image: codefresh/cli
+            description: run a pipeline
+            command: run PIPELINE_ID -b master
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "CFCONFIG": {
+                "type": "string",
+                "description": "Path for cfconfig file path"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cli
+      title: ''
+      image: codefresh/cli
+      environment:
+        - 'CFCONFIG=${{CFCONFIG}}'

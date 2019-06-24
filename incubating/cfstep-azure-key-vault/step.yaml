@@ -1,0 +1,79 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cfstep-azure-key-vault
+  description: Fetch Secrets from Azure Key Vault
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-azure-key-vault'
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustinb@codefresh.io
+  categories:
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cfstep-azure-key-vault/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          GetAzureSecret:
+            title: Fetching Azure Secret from Key Vault
+            image: 'codefreshplugins/cfstep-azure-key-vault:latest'
+            environment:
+              - AZURE_CLIENT_ID=applicationid
+              - AZURE_SECRET=serviceprincipalsecret
+              - AZURE_TENANT=directoryid
+              - AZURE_SECRET_ID=mysecret
+              - AZURE_SECRET_VERSION=d9ccc49fadfe4f37b4039e7edd32aa41
+              - 'AZURE_VAULT_URL=https://dustinvb-kv.vault.azure.net/'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "AZURE_CLIENT_ID": {
+                "type": "string",
+                "description": "Application (client) ID for Service Principal"
+            },
+            "AZURE_SECRET": {
+                "type": "string",
+                "description": "Secret for Service Principal"
+            },
+            "AZURE_TENANT": {
+                "type": "string",
+                "description": "Directory (tenant) ID for Service Principal"
+            },
+            "AZURE_SECRET_ID": {
+                "type": "string",
+                "description": "Secret ID from Azure Key Vault"
+            },
+            "AZURE_SECRET_VERSION": {
+                "type": "string",
+                "description": "Secret Version from Azure Key Vault"
+            },
+            "AZURE_VAULT_URL": {
+                "type": "string",
+                "description": "URL for Azure Key Vault"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cfstep-azure-key-vault
+      title: ''
+      image: codefreshplugins/cfstep-azure-key-vault
+      environment:
+        - 'AZURE_CLIENT_ID=${{AZURE_CLIENT_ID}}'
+        - 'AZURE_SECRET=${{AZURE_SECRET}}'
+        - 'AZURE_TENANT=${{AZURE_TENANT}}'
+        - 'AZURE_SECRET_ID=${{AZURE_SECRET_ID}}'
+        - 'AZURE_SECRET_VERSION=${{AZURE_SECRET_VERSION}}'
+        - 'AZURE_VAULT_URL=${{AZURE_VAULT_URL}}'

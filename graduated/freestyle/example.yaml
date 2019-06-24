@@ -4,3 +4,4 @@ Freestyle:
       image: alpine:3.8
       commands:
       - echo "Hello world"
+      - echo "asdasd"

@@ -1,6 +1,5 @@
+version: '1.0'
 steps:
-  ...
-
   annotate_image:
     image: codefresh/cli
     description: annotates image with metadata
@@ -10,4 +9,3 @@ steps:
     image: codefresh/cli
     description: run a pipeline
     command: run PIPELINE_ID -b master
-  ...

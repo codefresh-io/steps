@@ -1,6 +1,5 @@
 # codefresh.yml example with github for pr creating step
 version: '1.0'
-
 steps:
   build-step:
     type: build

@@ -3,12 +3,10 @@ steps:
   BuildingDockerImage:
     type: build
     image_name: applcation/image
-    ...
 
   PushToRegistry:
     type: push
     candidate: ${{BuildingDockerImage}}
-    ...
 
   DeployToDcos:
     image: codefreshplugins/cf-deploy-dcos:latest

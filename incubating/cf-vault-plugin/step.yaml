@@ -1,0 +1,72 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-vault-plugin
+  description: >-
+    The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
+    variables
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-vault-plugin'
+  maintainers:
+    - name: Alexander Aladov
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-vault-plugin/master/og-image.png
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          Vault_to_Env:
+            title: Importing vault values
+            image: codefreshplugins/cf-vault-plugin
+            environment:
+              - 'VAULT_ADDR=${{VAULT_ADDR}}'
+              - 'VAULT_PATH=${{VAULT_PATH}}'
+              - 'VAULT_AUTH_TOKEN=${{VAULT_AUTH_TOKEN}}'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "VAULT_ADDR": {
+                "type": "string",
+                "description": "Vault server URI. Example: https://vault.testdomain.io:8200 (required)"
+            },
+            "VAULT_PATH": {
+                "type": "string",
+                "description": "Path to secrets in vault. Example: secret/codefreshsecret (required)"
+            },
+            "VAULT_AUTH_TOKEN": {
+                "type": "string",
+                "description": "Vault authentication token (required)"
+            },
+            "VAULT_CLIENT_CERT_BASE64": {
+                "type": "string",
+                "description": "Base64 encoded client cerificate"
+            },
+            "VAULT_CLIENT_KEY_BASE64": {
+                "type": "string",
+                "description": "Base64 encoded client key"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-vault-plugin
+      title: ''
+      image: codefreshplugins/cf-vault-plugin
+      environment:
+        - 'VAULT_ADDR=${{VAULT_ADDR}}'
+        - 'VAULT_PATH=${{VAULT_PATH}}'
+        - 'VAULT_AUTH_TOKEN=${{VAULT_AUTH_TOKEN}}'
+        - 'VAULT_CLIENT_CERT_BASE64=${{VAULT_CLIENT_CERT_BASE64}}'
+        - 'VAULT_CLIENT_KEY_BASE64=${{VAULT_CLIENT_KEY_BASE64}}'

@@ -1,0 +1,77 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cfstep-gitclonerssh
+  description: clone git repositories via SSH.
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-gitclonerssh'
+  maintainers:
+    - name: Francisco Cocozza
+      email: francisco@codefresh.io
+  categories:
+    - git
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitclonerssh/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          clone_repo_via_ssh:
+            image: codefresh/cfstep-gitclonerssh
+            environment:
+              - 'REMOTE_URL=git@github.com:my-user/my-repo.git'
+              - BRANCH=my-branch
+              - 'SSH_KEY=${{SSH_KEY}}'
+              - 'SPLIT_CHAR=${{SPLIT_CHAR}}'
+              - CLONE_PATH=/codefresh/volume
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "REMOTE_URL",
+            "SSH_KEY",
+            "SPLIT_CHAR"
+        ],
+        "properties": {
+            "REMOTE_URL": {
+                "type": "string",
+                "description": "Reporitory SSH URL (e.g. `git@github.com:my-user/my-repo.git`)"
+            },
+            "BRANCH": {
+                "type": "string",
+                "description": "Branch name to checkout (e.g. `master`)"
+            },
+            "SSH_KEY": {
+                "type": "string",
+                "description": "Private SSH key to access the repository."
+            },
+            "SPLIT_CHAR": {
+                "type": "string",
+                "description": "Split character you’ve used to replace newline in SSH key"
+            },
+            "CLONE_PATH": {
+                "type": "string",
+                "description": "Path where `git clone` is going to be executed. A \"`repo-name`\" directory will be created there"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cfstep-gitclonerssh
+      title: ''
+      image: codefreshplugins/cfstep-gitclonerssh
+      environment:
+        - 'REMOTE_URL=${{REMOTE_URL}}'
+        - 'BRANCH=${{BRANCH}}'
+        - 'SSH_KEY=${{SSH_KEY}}'
+        - 'SPLIT_CHAR=${{SPLIT_CHAR}}'
+        - 'CLONE_PATH=${{CLONE_PATH}}'

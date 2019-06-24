@@ -1,4 +1,6 @@
- DownloadNewVersion:
+version: '1.0'
+steps:
+  DownloadNewVersion:
     stage: 'Bintray download'
     title: Download from Bintray
     image: codefreshplugins/cfstep-bintray

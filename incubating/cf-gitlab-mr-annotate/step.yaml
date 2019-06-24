@@ -1,0 +1,63 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-gitlab-mr-annotate
+  description: The plugin allows for easy applying labels to GitLab merge requests
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-gitlab-mr-annotate'
+  maintainers:
+    - name: Alex Kogan
+  categories:
+    - git
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-gitlab-mr-annotate/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          AnnotateMR:
+            image: codefreshplugins/gitlab-mr-annotate
+            environment:
+              - GIT_CONTEXT=my_gitlab_context_name
+              - 'LABELS=my_label1,my_label2,my_label_n'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "GIT_CONTEXT": {
+                "type": "string",
+                "description": "The name of the git provider context you can see on the integrations page."
+            },
+            "LABELS": {
+                "type": "string",
+                "description": "The comma separated list of labels you would like to apply to the merge request"
+            },
+            "PROJECT_ID": {
+                "type": "string",
+                "description": "The ID of the GitLab project. Optional (the default value is formed from Codefresh variables)"
+            },
+            "MERGE_REQUEST_ID": {
+                "type": "string",
+                "description": "The ID of the merge request. Optional (the default value is formed from Codefresh variables)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-gitlab-mr-annotate
+      title: ''
+      image: codefreshplugins/gitlab-mr-annotate
+      environment:
+        - 'GIT_CONTEXT=${{GIT_CONTEXT}}'
+        - 'LABELS=${{LABELS}}'
+        - 'PROJECT_ID=${{PROJECT_ID}}'
+        - 'MERGE_REQUEST_ID=${{MERGE_REQUEST_ID}}'

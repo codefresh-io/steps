@@ -1,0 +1,91 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cfstep-makisu
+  description: The plugin makes using Makisu build tool easier in a Codefresh pipeline
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-makisu'
+  maintainers:
+    - name: Alexander Cheshko
+      email: a.cheshko@codefresh.io
+  categories:
+    - utility
+    - build
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cfstep-makisu/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          makisuBuildStep:
+            image: codefresh/cfstep-makisu
+            environment:
+              - REGISTRY_HOSTNAME=docker.io
+              - R_USER=my_username
+              - R_PASSWORD=my_password
+              - 'IMAGE_NAME_TAG=image/name:tag'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "IMAGE_NAME_TAG",
+            "REGISTRY_HOSTNAME",
+            "R_USER",
+            "R_PASSWORD"
+        ],
+        "properties": {
+            "IMAGE_NAME_TAG": {
+                "type": "string",
+                "description": "Name and tag of the image to build"
+            },
+            "REGISTRY_HOSTNAME": {
+                "type": "string",
+                "description": "Docker registry host name. Example: docker.io"
+            },
+            "R_USER": {
+                "type": "string",
+                "description": "User name to authenticate against the registry"
+            },
+            "R_PASSWORD": {
+                "type": "string",
+                "description": "Password to authenticate against the registry"
+            },
+            "DOCKERFILE": {
+                "type": "string"
+            },
+            "CUSTOM_FLAGS": {
+                "type": "string",
+                "description": "Add custom flags to the makisu build command"
+            },
+            "MAKISU_COMMAND": {
+                "type": "string",
+                "description": "This is to override the makisu build command"
+            },
+            "WORKING_DIRECTORY": {
+                "type": "string",
+                "description": "Changes the makisu context directory. Default is the main clone directory"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cfstep-makisu
+      title: ''
+      image: codefresh/cfstep-makisu
+      environment:
+        - 'IMAGE_NAME_TAG=${{IMAGE_NAME_TAG}}'
+        - 'REGISTRY_HOSTNAME=${{REGISTRY_HOSTNAME}}'
+        - 'R_USER=${{R_USER}}'
+        - 'R_PASSWORD=${{R_PASSWORD}}'
+        - 'DOCKERFILE=${{DOCKERFILE}}'
+        - 'CUSTOM_FLAGS=${{CUSTOM_FLAGS}}'
+        - 'MAKISU_COMMAND=${{MAKISU_COMMAND}}'
+        - 'WORKING_DIRECTORY=${{WORKING_DIRECTORY}}'

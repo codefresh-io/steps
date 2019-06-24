@@ -1,0 +1,57 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cfstep-codecommit
+  description: Clone an AWS CodeCommit Git repository
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-codecommit'
+  maintainers:
+    - name: Guy Salton
+      email: guy.salton@codefresh.io
+  categories:
+    - git
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cfstep-codecommit/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          GitClone:
+            image: codefreshplugins/cfstep-codecommit
+            environment:
+              - GIT_USER=mygituser
+              - 'GIT_PASSWORD=#######'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GIT_USER",
+            "GIT_PASSWORD"
+        ],
+        "properties": {
+            "GIT_USER": {
+                "type": "string",
+                "description": "AWS CodeCommit Git username"
+            },
+            "GIT_PASSWORD": {
+                "type": "string",
+                "description": "AWS CodeCommit Git password"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cfstep-codecommit
+      title: ''
+      image: codefreshplugins/cfstep-codecommit
+      environment:
+        - 'GIT_USER=${{GIT_USER}}'
+        - 'GIT_PASSWORD=${{GIT_PASSWORD}}'

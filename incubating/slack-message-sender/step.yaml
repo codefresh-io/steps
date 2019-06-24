@@ -1,0 +1,45 @@
+kind: step
+version: '1.0'
+metadata:
+  name: slack-message-sender
+  description: Send message to slack channel
+  sources:
+    - 'https://github.com/codefresh-plugins/slack-message-sender'
+  maintainers:
+    - name: Oleg Sucharevich
+      email: olegs@codefresh.io
+  categories:
+    - notifications
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/slack-message-sender/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          sendSlack:
+            title: notifySlack
+            image: 'codefreshplugins/slack-message-sender:0.1'
+            commands:
+              - >-
+                slack-message-sender send --webhook-url https://my-webhook-url
+                --message "My message
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {}
+    }
+  steps:
+    main:
+      name: slack-message-sender
+      title: ''
+      image: codefreshplugins/slack-message-sender
+      environment: []

@@ -1,0 +1,72 @@
+kind: step
+version: '1.0'
+metadata:
+  name: webhook-plugin
+  description: Plugin which simply send notification
+  sources:
+    - 'https://github.com/codefresh-io/webhook-plugin'
+  maintainers:
+    - name: Andrii Shaforostov
+      email: andrii@codefresh.io
+  categories:
+    - notifications
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/webhook-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          TestPlugin:
+            title: TestPlugin
+            image: codefreshplugins/webhook-plugin
+            environment:
+              - 'WEBHOOK_URL=http://example.com/api/endpoint'
+              - HEADER_Content-Type=plain/text
+              - 'HEADER_X-Auth-Token={{apiKey}}'
+              - 'WEBHOOK_URL={{status}}'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "WEBHOOK_USERNAME",
+            "WEBHOOK_PASSWORD",
+            "WEBHOOK_TOKEN",
+            "WEBHOOK_BODY"
+        ],
+        "properties": {
+            "WEBHOOK_USERNAME": {
+                "type": "string",
+                "description": "User name"
+            },
+            "WEBHOOK_PASSWORD": {
+                "type": "string",
+                "description": "User password"
+            },
+            "WEBHOOK_TOKEN": {
+                "type": "string",
+                "description": "token for authorization"
+            },
+            "WEBHOOK_BODY": {
+                "type": "string",
+                "description": "body of http request"
+            }
+        }
+    }
+  steps:
+    main:
+      name: webhook-plugin
+      title: ''
+      image: codefreshplugins/webhook-plugin
+      environment:
+        - 'WEBHOOK_USERNAME=${{WEBHOOK_USERNAME}}'
+        - 'WEBHOOK_PASSWORD=${{WEBHOOK_PASSWORD}}'
+        - 'WEBHOOK_TOKEN=${{WEBHOOK_TOKEN}}'
+        - 'WEBHOOK_BODY=${{WEBHOOK_BODY}}'

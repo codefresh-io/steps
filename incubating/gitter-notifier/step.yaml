@@ -1,0 +1,60 @@
+kind: step
+version: '1.0'
+metadata:
+  name: gitter-notifier
+  description: Send message to gitter
+  sources:
+    - 'https://github.com/codefresh-contrib/gitter-notifier'
+  maintainers:
+    - name: Andrii Shaforostov
+      email: andrii@codefresh.io
+  categories:
+    - messaging
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/gitter-notifier/master/logo2.png
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          sendMessage:
+            image: codefreshplugins/gitternotifier
+            environment:
+              - 'GITTER_WEBHOOK=https://webhooks.gitter.im/e/123abc'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GITTER_WEBHOOK"
+        ],
+        "properties": {
+            "GITTER_WEBHOOK": {
+                "type": "string",
+                "description": "gitter webhook"
+            },
+            "GITTER_STATUS": {
+                "type": "string",
+                "description": "send info about current build"
+            },
+            "GITTER_MESSAGE": {
+                "type": "string",
+                "description": "text of message which will be sent in room"
+            }
+        }
+    }
+  steps:
+    main:
+      name: gitter-notifier
+      title: ''
+      image: codefreshplugins/gitternotifier
+      environment:
+        - 'GITTER_WEBHOOK=${{GITTER_WEBHOOK}}'
+        - 'GITTER_STATUS=${{GITTER_STATUS}}'
+        - 'GITTER_MESSAGE=${{GITTER_MESSAGE}}'

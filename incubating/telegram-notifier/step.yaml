@@ -1,0 +1,122 @@
+kind: step
+version: '1.0'
+metadata:
+  name: telegram-notifier
+  description: >-
+    Telegram plugin which gives the opportunity send any messages to users via
+    bot.
+  sources:
+    - 'https://github.com/codefresh-contrib/telegram-notifier'
+  maintainers:
+    - name: Andrii Shaforostov
+      email: andrii@codefresh.io
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/telegram-notifier/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          sendMessage:
+            image: codefreshplugins/telegramnotifier
+            environment:
+              - 'TELEGRAM_TOKEN=${{TOKEN}}'
+              - TELEGRAM_TO=99999999
+              - 'TELEGRAM_MESSAGE=Hello {{{userLink}}}, how are you'
+              - >-
+                TELEGRAM_IMAGES=https://codefresh.io/docs/assets/brand/codefresh-social.png
+    - description: example-2
+      workflow:
+        version: '1.0'
+        steps:
+          sendMessage:
+            image: codefreshplugins/telegramnotifier
+            environment:
+              - |-
+                TELEGRAM_MESSAGE=buildTrigger: {{buildTrigger}}
+                buildInitiator: {{buildInitiator}}
+                buildId: {{buildId}}
+                buildTimestamp: {{buildTimestamp}}
+                buildUrl: {{buildUrl}}
+                repoOwner: {{repoOwner}}
+                repoName: {{repoName}}
+                branch: {{branch}}
+                revision: {{revision}}
+                commitAuthor: {{commitAuthor}}
+                commitUrl: {{commitUrl}}
+                commitMessage: {{commitMessage}}
+                userID: {{userID}}
+                userLink: {{{userLink}}}
+    - description: example-3
+      workflow:
+        version: '1.0'
+        steps:
+          sendMessage:
+            image: codefreshplugins/telegramnotifier
+            environment:
+              - |-
+                TELEGRAM_MESSAGE=
+                buildTrigger: {{buildTrigger}}
+                buildInitiator: {{buildInitiator}}
+                buildId: {{buildId}}
+                buildTimestamp: {{buildTimestamp}}
+                buildUrl: {{buildUrl}}
+                repoOwner: {{repoOwner}}
+                repoName: {{repoName}}
+                branch: {{branch}}
+                revision: {{revision}}
+                commitAuthor: {{commitAuthor}}
+                commitUrl: {{commitUrl}}
+                commitMessage: {{commitMessage}}
+                userID: {{userID}}
+                userLink: {{{userLink}}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "TELEGRAM_TOKEN",
+            "TELEGRAM_TO"
+        ],
+        "properties": {
+            "TELEGRAM_TOKEN": {
+                "type": "string",
+                "description": "token of your bot"
+            },
+            "TELEGRAM_TO": {
+                "type": "string",
+                "description": "array of user ids who will receive a message separated by comma"
+            },
+            "TELEGRAM_STATUS": {
+                "type": "string",
+                "description": "send info about current build"
+            },
+            "TELEGRAM_MESSAGE": {
+                "type": "string",
+                "description": "text of message which will be sent to user"
+            },
+            "TELEGRAM_IMAGES": {
+                "type": "string",
+                "description": "array of image links for attaching to message"
+            }
+        }
+    }
+  steps:
+    main:
+      name: telegram-notifier
+      title: ''
+      image: codefreshplugins/telegramnotifier
+      environment:
+        - 'TELEGRAM_TOKEN=${{TELEGRAM_TOKEN}}'
+        - 'TELEGRAM_TO=${{TELEGRAM_TO}}'
+        - 'TELEGRAM_STATUS=${{TELEGRAM_STATUS}}'
+        - 'TELEGRAM_MESSAGE=${{TELEGRAM_MESSAGE}}'
+        - 'TELEGRAM_IMAGES=${{TELEGRAM_IMAGES}}'

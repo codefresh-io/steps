@@ -1,5 +1,7 @@
-AnnotateMR:
-  image: codefreshplugins/gitlab-mr-annotate
-  environment:
-    - GIT_CONTEXT=my_gitlab_context_name
-    - LABELS=my_label1,my_label2,my_label_n
+version: '1.0'
+steps:
+  AnnotateMR:
+    image: codefreshplugins/gitlab-mr-annotate
+    environment:
+      - GIT_CONTEXT=my_gitlab_context_name
+      - LABELS=my_label1,my_label2,my_label_n

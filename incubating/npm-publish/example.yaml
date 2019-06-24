@@ -1,5 +1,6 @@
+version: '1.0'
 steps:
-   deploy_to_npm:  
-      title: Publishing To Npm 
+   deploy_to_npm:
+      title: Publishing To Npm
       image: codefresh/npm-publish
       commands:

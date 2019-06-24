@@ -1,0 +1,72 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-import-image
+  description: Import metadata for existing Docker images into Codefresh
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-import-image'
+  maintainers:
+    - name: Alexei Ledenev
+  categories:
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-import-image/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          import_images:
+            title: Importing images ...
+            description: import Docker images form external registry
+            image: codefreshplugins/import-images
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "IMAGES": {
+                "type": "string",
+                "description": "list of comma separated image names (with tags)(required)"
+            },
+            "REGISTRY": {
+                "type": "string",
+                "description": "registry DNS name (including port if needed, default to `docker.io`)"
+            },
+            "USERNAME": {
+                "type": "string",
+                "description": "Docker registry user name (optional)"
+            },
+            "PASSWORD": {
+                "type": "string",
+                "description": "Docker registry password (optional)"
+            },
+            "CF_URL": {
+                "type": "string",
+                "description": "Codefresh URL, for example https://g.codefresh.io (required)"
+            },
+            "CF_API_TOKEN": {
+                "type": "string",
+                "description": "Codefresh API Token (required)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-import-image
+      title: ''
+      image: codefreshplugins/import-images
+      environment:
+        - 'IMAGES=${{IMAGES}}'
+        - 'REGISTRY=${{REGISTRY}}'
+        - 'USERNAME=${{USERNAME}}'
+        - 'PASSWORD=${{PASSWORD}}'
+        - 'CF_URL=${{CF_URL}}'
+        - 'CF_API_TOKEN=${{CF_API_TOKEN}}'

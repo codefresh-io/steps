@@ -1,0 +1,69 @@
+kind: step
+version: '1.0'
+metadata:
+  name: google-kms
+  description: >-
+    Facilitates work with Google Key Management Service for such operations as
+    encrypting and decrypting
+  sources:
+    - 'https://github.com/codefresh-contrib/google-kms'
+  maintainers:
+    - name: Will Malone
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/google-kms/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          google_kms:
+            image: codefreshplugins/google-kms
+            commands:
+              - kms encrypt VALUE_1 VALUE_n
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "KMS_PROJECT": {
+                "type": "string",
+                "description": "GCP project name in which your KMS entities are present"
+            },
+            "KMS_LOCATION": {
+                "type": "string",
+                "description": "Google KMS location"
+            },
+            "KMS_KEYRING": {
+                "type": "string",
+                "description": "Google KMS keyring"
+            },
+            "KMS_KEY": {
+                "type": "string",
+                "description": "Google KMS key"
+            },
+            "GCP_SA_KEY": {
+                "type": "string",
+                "description": "Google Service Account Key (JSON)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: google-kms
+      title: ''
+      image: codefreshplugins/google-kms
+      environment:
+        - 'KMS_PROJECT=${{KMS_PROJECT}}'
+        - 'KMS_LOCATION=${{KMS_LOCATION}}'
+        - 'KMS_KEYRING=${{KMS_KEYRING}}'
+        - 'KMS_KEY=${{KMS_KEY}}'
+        - 'GCP_SA_KEY=${{GCP_SA_KEY}}'

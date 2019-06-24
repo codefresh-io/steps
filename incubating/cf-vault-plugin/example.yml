@@ -1,3 +1,5 @@
+version: '1.0'
+steps:
   Vault_to_Env:
     title: Importing vault values
     image: codefreshplugins/cf-vault-plugin

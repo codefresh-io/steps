@@ -1,0 +1,54 @@
+kind: step
+version: '1.0'
+metadata:
+  name: k8s-blue-green-deployment
+  description: Perform blue/green deployments on a Kubernetes cluster
+  sources:
+    - 'https://github.com/codefresh-contrib/k8s-blue-green-deployment'
+  maintainers:
+    - name: Kostis Kapelonis
+  categories:
+    - featured
+    - deployment
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/k8s-blue-green-deployment/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          blueGreenDeploy:
+            title: 'Deploying new version ${{CF_SHORT_REVISION}}'
+            image: codefreshplugins/k8s-blue-green
+            environment:
+              - SERVICE_NAME=my-demo-app
+              - DEPLOYMENT_NAME=my-demo-app
+              - 'NEW_VERSION=${{CF_SHORT_REVISION}}'
+              - HEALTH_SECONDS=60
+              - NAMESPACE=colors
+              - KUBE_CONTEXT=myDemoAKSCluster
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "KUBE_CONTEXT": {
+                "type": "string",
+                "description": "The name of your cluster (as found in the Codefresh Kubernetes dashboard)."
+            }
+        }
+    }
+  steps:
+    main:
+      name: k8s-blue-green-deployment
+      title: ''
+      image: codefreshplugins/k8s-blue-green
+      environment:
+        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

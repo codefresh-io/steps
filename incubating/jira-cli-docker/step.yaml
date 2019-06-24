@@ -1,0 +1,72 @@
+kind: step
+version: '1.0'
+metadata:
+  name: jira-cli-docker
+  description: Update a Jira ticket
+  sources:
+    - 'https://github.com/codefresh-contrib/jira-cli-docker'
+  maintainers:
+    - name: Ant Weiss
+      email: anton@otomato.link
+  categories:
+    - utility
+    - project Management
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/jira-cli-docker/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          UpdateJira:
+            title: Update Jira Issue
+            image: codefreshplugins/jira-cli
+            commands:
+              - >-
+                yes n | jira-cli update ${JIRAID} --comment 'New docker image
+                otomato/bringon:${{CF_SHORT_REVISION}}. Build log is here
+                ${{CF_BUILD_URL}}' --jira-url ${JIRA_URL} -u ${JIRA_USR} -p
+                ${JIRA_PWD}
+            when:
+              condition:
+                all:
+                  JiraIdFound: 'match("${JIRAID}", "[A-Z]+-[0-9]+", true)'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "JIRA_URL",
+            "JIRA_USR",
+            "JIRA_PWD"
+        ],
+        "properties": {
+            "JIRA_URL": {
+                "type": "string",
+                "description": "Url to Jira instance"
+            },
+            "JIRA_USR": {
+                "type": "string",
+                "description": "Jira user"
+            },
+            "JIRA_PWD": {
+                "type": "string",
+                "description": "Jira password"
+            }
+        }
+    }
+  steps:
+    main:
+      name: jira-cli-docker
+      title: ''
+      image: codefreshplugins/jira-cli
+      environment:
+        - 'JIRA_URL=${{JIRA_URL}}'
+        - 'JIRA_USR=${{JIRA_USR}}'
+        - 'JIRA_PWD=${{JIRA_PWD}}'

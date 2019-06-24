@@ -1,11 +1,7 @@
 version: '1.0'
-version: '1.0'
-stages:
-  - prepare
 steps:
   GetAzureSecret:
     title: Fetching Azure Secret from Key Vault
-    stage: prepare
     image: codefreshplugins/cfstep-azure-key-vault:latest
     environment:
       - AZURE_CLIENT_ID=applicationid

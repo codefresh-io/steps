@@ -1,0 +1,101 @@
+kind: step
+version: '1.0'
+metadata:
+  name: github-pr-plugin
+  description: Operates on GitHub pull requests
+  sources:
+    - 'https://github.com/codefresh-io/github-pr-plugin'
+  maintainers:
+    - name: Nick Sakovich
+      email: nick.sakovich@codefresh.io
+    - name: Yaroslav Drachenko
+      email: yaroslav@codefresh.io
+  categories:
+    - git
+    - code-review
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/github-pr-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          build-step:
+            type: build
+            image-name: 'repo/image:tag'
+          push_to_registry:
+            type: push
+            candidate: '${{build-step}}'
+            tag: '${{CF_BRANCH}}'
+          github-pr:
+            image: codefreshplugins/github-pr-plugin
+            environment:
+              - 'GITHUB_REPO_OWNER=${{CF_REPO_OWNER}}'
+              - 'GITHUB_REPO_NAME=${{CF_REPO_NAME}}'
+              - BASE=master
+              - 'HEAD=${{CF_BRANCH}}'
+              - 'TITLE=Codefresh PR for ${{CF_BRANCH}}'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GITHUB_TOKEN",
+            "GITHUB_REPO_OWNER",
+            "GITHUB_REPO_NAME"
+        ],
+        "properties": {
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "Token for access to GitHub"
+            },
+            "GITHUB_REPO_OWNER": {
+                "type": "string",
+                "description": "Name of repo owner"
+            },
+            "GITHUB_REPO_NAME": {
+                "type": "string",
+                "description": "Name of repo"
+            },
+            "GITHUB_PR_NUMBER": {
+                "type": "string",
+                "description": "The number of updated pull request. Required for open/close/update operations"
+            },
+            "GITHUB_PR_OPERATION": {
+                "type": "string",
+                "description": "Operation on pull request. Options - create, update, open, close. Default - create."
+            },
+            "HEAD": {
+                "type": "string",
+                "description": "The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace head with a user like this - username:branch. Required for 'create' operation."
+            },
+            "BASE": {
+                "type": "string",
+                "description": "The name of the branch you want the changes pulled into. This should be an existing branch on the current repository. You cannot submit a pull request to one repository that requests a merge to a base of another repository. Required for 'create' operation."
+            },
+            "TITLE": {
+                "type": "string",
+                "description": "The title of the pull request. Required for 'create' operation."
+            }
+        }
+    }
+  steps:
+    main:
+      name: github-pr-plugin
+      title: ''
+      image: codefreshplugins/github-pr-plugin
+      environment:
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'
+        - 'GITHUB_REPO_NAME=${{GITHUB_REPO_NAME}}'
+        - 'GITHUB_PR_NUMBER=${{GITHUB_PR_NUMBER}}'
+        - 'GITHUB_PR_OPERATION=${{GITHUB_PR_OPERATION}}'
+        - 'HEAD=${{HEAD}}'
+        - 'BASE=${{BASE}}'
+        - 'TITLE=${{TITLE}}'

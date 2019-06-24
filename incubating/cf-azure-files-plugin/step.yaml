@@ -1,0 +1,84 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-azure-files-plugin
+  description: Plugin for pushing files to Azure Files
+  sources:
+    - 'https://github.com/codefresh-io/cf-azure-files-plugin'
+  maintainers:
+    - name: Denys Voznyuk
+      email: denys@codefresh.io
+  categories:
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-azure-files-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          pushToAzure:
+            title: Pushing to Azure files
+            image: codefresh/cf-azure-plugin
+            environment:
+              - 'ACCOUNT_NAME=${{AZ_NAME}}'
+              - 'ACCOUNT_KEY=${{AZ_ACCOUNT_KEY}}'
+              - 'SHARE_NAME=${{AZ_SHARE_NAME}}'
+              - 'DIRECTORY=${{AZ_DIRECTORY}}'
+              - 'PATH_TO_FILE=${{AZ_PATH_TO_FILE}}'
+              - ADD_TIMESTAMP=True
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "ACCOUNT_NAME",
+            "ACCOUNT_KEY",
+            "SHARE_NAME",
+            "PATH_TO_FILE"
+        ],
+        "properties": {
+            "ACCOUNT_NAME": {
+                "type": "string",
+                "description": "Storage account name"
+            },
+            "ACCOUNT_KEY": {
+                "type": "string",
+                "description": "Storage account key"
+            },
+            "SHARE_NAME": {
+                "type": "string",
+                "description": "File share name"
+            },
+            "PATH_TO_FILE": {
+                "type": "string",
+                "description": "Local path to the file you are going to push"
+            },
+            "DIRECTORY": {
+                "type": "string",
+                "description": "Path to directory within the file share"
+            },
+            "ADD_TIMESTAMP": {
+                "type": "string",
+                "description": "Fill with some string if you need to attach time stamp to the file name"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-azure-files-plugin
+      title: ''
+      image: codefresh/cf-azure-plugin
+      environment:
+        - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'
+        - 'ACCOUNT_KEY=${{ACCOUNT_KEY}}'
+        - 'SHARE_NAME=${{SHARE_NAME}}'
+        - 'PATH_TO_FILE=${{PATH_TO_FILE}}'
+        - 'DIRECTORY=${{DIRECTORY}}'
+        - 'ADD_TIMESTAMP=${{ADD_TIMESTAMP}}'

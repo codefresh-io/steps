@@ -1,0 +1,48 @@
+kind: step
+version: '1.0'
+metadata:
+  name: npm-publish
+  description: Publishes a nodejs package to NPM registry
+  sources:
+    - 'https://github.com/codefresh-contrib/npm-publish'
+  maintainers:
+    - name: Jakob Stuart
+      email: ''
+  categories:
+    - deployment
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/npm-publish/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          deploy_to_npm:
+            title: Publishing To Npm
+            image: codefresh/npm-publish
+            commands: null
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "NPM_TOKEN": {
+                "type": "string",
+                "description": "token of npm account (required)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: npm-publish
+      title: ''
+      image: 'codefresh/npm-publish:latest'
+      environment:
+        - 'NPM_TOKEN=${{NPM_TOKEN}}'

@@ -1,0 +1,94 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-deploy-dcos
+  description: Deploy an application on dcos cluster
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-deploy-dcos'
+  maintainers:
+    - name: Eugene Semirski
+      email: eugene@codefresh.io
+  categories:
+    - deployment
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-deploy-dcos/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          BuildingDockerImage:
+            type: build
+            image_name: applcation/image
+          PushToRegistry:
+            type: push
+            candidate: '${{BuildingDockerImage}}'
+          DeployToDcos:
+            image: 'codefreshplugins/cf-deploy-dcos:latest'
+            working_directory: '${{main_clone}}'
+            commands:
+              - /cf-deploy-dcos deployment.tmpl
+            environment:
+              - 'DCOS_URL=${{DCOS_URL}}'
+              - 'DCOS_CLUSTER_NAME=${{DCOS_CLUSTER_NAME}}'
+              - 'DCOS_CLUSTER_ID=${{DCOS_CLUSTER_ID}}'
+              - 'DCOS_DCOS_ACS_TOKEN=${{DCOS_DCOS_ACS_TOKEN}}'
+              - 'DCOS_SSL_VERIFY=${{DCOS_SSL_VERIFY}}'
+              - 'APP_ID=${{APP_ID}}'
+              - 'IMAGE_NAME=${{IMAGE_NAME}}'
+              - 'IMAGE_TAG=${{IMAGE_TAG}}'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "DCOS_URL",
+            "DCOS_CLUSTER_NAME",
+            "DCOS_CLUSTER_ID",
+            "DCOS_DCOS_ACS_TOKEN"
+        ],
+        "properties": {
+            "DCOS_URL": {
+                "type": "string",
+                "description": "DC/OS cluster URL"
+            },
+            "DCOS_CLUSTER_NAME": {
+                "type": "string",
+                "description": "DC/OS cluster name"
+            },
+            "DCOS_CLUSTER_ID": {
+                "type": "string",
+                "description": "DC/OS cluster ID"
+            },
+            "DCOS_DCOS_ACS_TOKEN": {
+                "type": "string",
+                "description": "DC/OS cluster existing user's token"
+            },
+            "DCOS_SSL_VERIFY": {
+                "type": "string",
+                "description": "default is true, if we want to bypass SSL certificate verification - set it to false"
+            },
+            "PARAMETER": {
+                "type": "string",
+                "description": "see README.md for details"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-deploy-dcos
+      title: ''
+      image: codefreshplugins/cf-deploy-dcos
+      environment:
+        - 'DCOS_URL=${{DCOS_URL}}'
+        - 'DCOS_CLUSTER_NAME=${{DCOS_CLUSTER_NAME}}'
+        - 'DCOS_CLUSTER_ID=${{DCOS_CLUSTER_ID}}'
+        - 'DCOS_DCOS_ACS_TOKEN=${{DCOS_DCOS_ACS_TOKEN}}'
+        - 'DCOS_SSL_VERIFY=${{DCOS_SSL_VERIFY}}'
+        - 'PARAMETER=${{PARAMETER}}'

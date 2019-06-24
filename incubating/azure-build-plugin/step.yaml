@@ -1,0 +1,115 @@
+kind: step
+version: '1.0'
+metadata:
+  name: azure-build-plugin
+  description: Docker build in Azure ACR
+  sources:
+    - 'https://github.com/codefresh-contrib/azure-build-plugin'
+  maintainers:
+    - name: Amir Gabay
+      email: amir.gabay@codefresh.io
+  categories:
+    - build
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/azure-build-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          cf-az-build:
+            image: codefreshplugins/cf-azure-builder
+            environment:
+              - AUTH=service-principal
+              - IMAGE=<image name>
+              - TAG=<tag name>
+              - ACR_NAME=<acr registry name>
+              - APP_ID=<azure service principal application id>
+              - PASSWORD=<azure service principal password>
+              - TENANT=<azure ad tenant id>
+              - DOCKERFILE_PATH=<dockerfile path>
+    - description: example-2
+      workflow:
+        version: '1.0'
+        steps:
+          image: codefresh/cf-azure-builder
+          environment:
+            - IMAGE=<image name>
+            - TAG=<tag name>
+            - ACR_NAME=<acr registry name>
+            - USER=<azure user name>
+            - PASSWORD=<azure user password>
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "USER",
+            "IMAGE",
+            "TAG",
+            "ACR_NAME",
+            "APP_ID",
+            "PASSWORD",
+            "TENANT",
+            "DOCKERFILE_PATH"
+        ],
+        "properties": {
+            "AUTH": {
+                "type": "string",
+                "description": "Only if authentication mode is by service principal"
+            },
+            "USER": {
+                "type": "string",
+                "description": "azure user name (not need in service principal authentication mode)"
+            },
+            "IMAGE": {
+                "type": "string",
+                "description": "image name"
+            },
+            "TAG": {
+                "type": "string",
+                "description": "tag name"
+            },
+            "ACR_NAME": {
+                "type": "string",
+                "description": "acr registry name"
+            },
+            "APP_ID": {
+                "type": "string",
+                "description": "azure service principal application id (service principal authentication mode only)"
+            },
+            "PASSWORD": {
+                "type": "string",
+                "description": "azure service principal password or user password (based on authentication mode)"
+            },
+            "TENANT": {
+                "type": "string",
+                "description": "azure ad tenant id (service principal authentication mode only)"
+            },
+            "DOCKERFILE_PATH": {
+                "type": "string",
+                "description": "dockerfile path (default - working_dir/Dockerfile)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: azure-build-plugin
+      title: ''
+      image: codefreshplugins/cf-azure-builder
+      environment:
+        - 'AUTH=${{AUTH}}'
+        - 'USER=${{USER}}'
+        - 'IMAGE=${{IMAGE}}'
+        - 'TAG=${{TAG}}'
+        - 'ACR_NAME=${{ACR_NAME}}'
+        - 'APP_ID=${{APP_ID}}'
+        - 'PASSWORD=${{PASSWORD}}'
+        - 'TENANT=${{TENANT}}'
+        - 'DOCKERFILE_PATH=${{DOCKERFILE_PATH}}'

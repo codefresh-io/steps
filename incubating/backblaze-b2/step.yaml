@@ -1,0 +1,72 @@
+kind: step
+version: '1.0'
+metadata:
+  name: backblaze-b2
+  description: Upload files to Backblaze B2 bucket
+  sources:
+    - 'https://github.com/codefresh-plugins/backblaze-b2'
+  maintainers:
+    - name: andrii-codefresh
+  categories:
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/backblaze-b2/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          upload:
+            title: Upload files to Backblaze B2
+            image: codefresh/backblaze-b2-plugin
+            environment:
+              - APPLICATION_KEY_ID=<application key id>
+              - APPLICATION_KEY=<application key>
+              - BUCKET_ID=<bucket id>
+              - 'UPLOAD_FILE_1=["./Dockerfile", "Dockerfile", "text/plain"]'
+              - 'UPLOAD_FILE_2=["./package.json", "package.json"]'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "APPLICATION_KEY_ID",
+            "APPLICATION_KEY",
+            "BUCKET_ID",
+            "UPLOAD_FILE_N"
+        ],
+        "properties": {
+            "APPLICATION_KEY_ID": {
+                "type": "string",
+                "description": "Application key Id in Backblaze B2"
+            },
+            "APPLICATION_KEY": {
+                "type": "string",
+                "description": "Application key in Backblaze B2"
+            },
+            "BUCKET_ID": {
+                "type": "string",
+                "description": "Bucket Id in Backblaze B2"
+            },
+            "UPLOAD_FILE_N": {
+                "type": "string",
+                "description": "Variable with file description. `N` in name - any number or text identifier"
+            }
+        }
+    }
+  steps:
+    main:
+      name: backblaze-b2
+      title: ''
+      image: codefreshplugins/backblaze-b2
+      environment:
+        - 'APPLICATION_KEY_ID=${{APPLICATION_KEY_ID}}'
+        - 'APPLICATION_KEY=${{APPLICATION_KEY}}'
+        - 'BUCKET_ID=${{BUCKET_ID}}'
+        - 'UPLOAD_FILE_N=${{UPLOAD_FILE_N}}'

@@ -1,0 +1,68 @@
+kind: step
+version: '1.0'
+metadata:
+  name: docker-service
+  description: Codefresh docker-service plugin
+  sources:
+    - 'https://github.com/codefresh-contrib/docker-service'
+  maintainers:
+    - name: Kosta Klevensky
+      email: kosta@codefresh.io
+  categories:
+    - utility
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/docker-service/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          create-my-docker:
+            image: codefreshplugins/docker-service
+            commands:
+              - >-
+                docker-service-create  --driver amazonec2
+                --amazonec2-instance-type m4.large my-docker
+          build-on-my-docker:
+            image: codefreshplugins/docker-service
+            commands:
+              - >-
+                docker build -t mycompany/repo:${{CF_BRANCH}}
+                ${{CF_VOLUME_PATH}}/
+          run-on-my-docker:
+            image: codefreshplugins/docker-service
+            commands:
+              - 'docker run -d mycompany/repo:${{CF_BRANCH}}'
+          delete-my-docker:
+            image: codefreshplugins/docker-service
+            commands:
+              - docker-service-delete my-docker
+          clean:
+            image: codefreshplugins/docker-service
+            commands:
+              - docker-service-clean
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "DOCKER_MACHINE_NAME": {
+                "type": "string",
+                "description": "Name of the created VM"
+            }
+        }
+    }
+  steps:
+    main:
+      name: docker-service
+      title: ''
+      image: codefreshplugins/docker-service
+      environment:
+        - 'DOCKER_MACHINE_NAME=${{DOCKER_MACHINE_NAME}}'

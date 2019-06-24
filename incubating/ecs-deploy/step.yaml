@@ -1,0 +1,93 @@
+kind: step
+version: '1.0'
+metadata:
+  name: ecs-deploy
+  description: Release a Helm chart (update or install)
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-deploy-ecs.git'
+  maintainers:
+    - name: Oleg  Verhovsky
+      email: oleg@codefresh.io
+  categories:
+    - deployment
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/ecs-deploy/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          build-step:
+            type: build
+            image-name: 'repo/image:tag'
+          push to registry:
+            type: push
+            candidate: '${{build-step}}'
+            tag: '${{CF_BRANCH}}'
+          deploy to ecs:
+            image: codefreshplugins/cf-deploy-ecs
+            commands:
+              - cfecs-update <aws-region> <ecs-cluster-name> <ecs-service-name>
+            environment:
+              - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
+              - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
+            when:
+              - name: Execute for 'master' branch
+                condition: '''${{CF_BRANCH}}'' == ''master'''
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "AWS_ACCESS_KEY_ID",
+            "AWS_SECRET_ACCESS_KEY",
+            "aws-region",
+            "region",
+            "cluster_name",
+            "service_name"
+        ],
+        "properties": {
+            "AWS_ACCESS_KEY_ID": {
+                "type": "string",
+                "description": "Amazon access key ID"
+            },
+            "AWS_SECRET_ACCESS_KEY": {
+                "type": "string",
+                "description": "amazon secret key (make sure it's encrypted)"
+            },
+            "aws-region": {
+                "type": "string",
+                "description": "Helm release name"
+            },
+            "region": {
+                "type": "string",
+                "description": "aws region"
+            },
+            "cluster_name": {
+                "type": "string",
+                "description": "ecs cluster name"
+            },
+            "service_name": {
+                "type": "string",
+                "description": "ecs service name"
+            }
+        }
+    }
+  steps:
+    main:
+      name: ecs-deploy
+      title: ''
+      image: codefreshplugins/cf-deploy-ecs
+      environment:
+        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
+        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
+        - 'aws-region=${{aws-region}}'
+        - 'region=${{region}}'
+        - 'cluster_name=${{cluster_name}}'
+        - 'service_name=${{service_name}}'

@@ -1,0 +1,83 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-kompose-plugin
+  description: Release a Docker Compose to Kubernetes
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-kompose-plugin'
+  maintainers:
+    - name: Alexei Ledenev
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-kompose-plugin/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          Kompose:
+            image: codefreshplugins/plugin-kompose
+            working_directory: '${{CloneStep}}'
+            environment:
+              - KUBE_CONTEXT=myClusterName
+              - NAMESPACE=test-kompose
+              - FILE=./example/docker-compose.yaml
+              - DEBUG=true
+              - VOLUMES=emptyDir
+              - REPLICAS=2
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "KUBE_CONTEXT": {
+                "type": "string",
+                "description": "Kubernetes context to use (required)"
+            },
+            "FILE": {
+                "type": "string",
+                "description": "Docker Compose file to deploy (default docker-compose.yaml file)"
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "target Kubernetes namespace (default \"default\")"
+            },
+            "VOLUMES": {
+                "type": "string",
+                "description": "volumes to be generated (\"persistentVolumeClaim\"|\"emptyDir\") (default \"persistentVolumeClaim\")"
+            },
+            "REPLICAS": {
+                "type": "string",
+                "description": "specify the number of replicas generated (default 1)"
+            },
+            "DRY_RUN": {
+                "type": "string",
+                "description": "do a \"dry run\" (print out) deployment (do not install anything, useful for Debug)"
+            },
+            "DEBUG": {
+                "type": "string",
+                "description": "print verbose install output"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-kompose-plugin
+      title: ''
+      image: codefreshplugins/plugin-kompose
+      environment:
+        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
+        - 'FILE=${{FILE}}'
+        - 'NAMESPACE=${{NAMESPACE}}'
+        - 'VOLUMES=${{VOLUMES}}'
+        - 'REPLICAS=${{REPLICAS}}'
+        - 'DRY_RUN=${{DRY_RUN}}'
+        - 'DEBUG=${{DEBUG}}'

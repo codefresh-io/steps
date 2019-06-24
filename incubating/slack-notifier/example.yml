@@ -1,7 +1,9 @@
-SendToSlack:
-    title: Sending message to slack
-    image: codefreshplugins/slacknotifier
-    environment:
-    - SLACK_HOOK_URL=${{SLACK_WEBHOOK_URL}}
-    - SLACK_TEXT=${{SLACK_TEXT}}
-    - SLACK_ATTACHMENTS=${{SLACK_ATTACHMENTS}}
+version: '1.0'
+steps:
+    SendToSlack:
+        title: Sending message to slack
+        image: codefreshplugins/slacknotifier
+        environment:
+        - SLACK_HOOK_URL=${{SLACK_WEBHOOK_URL}}
+        - SLACK_TEXT=${{SLACK_TEXT}}
+        - SLACK_ATTACHMENTS=${{SLACK_ATTACHMENTS}}

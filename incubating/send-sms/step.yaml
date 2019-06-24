@@ -1,0 +1,66 @@
+kind: step
+version: '1.0'
+metadata:
+  name: send-sms
+  description: Send SMS notifications via Twillio
+  sources:
+    - 'https://github.com/codefresh-contrib/send-sms'
+  maintainers:
+    - name: Pasha Kostohrys
+  categories:
+    - featured
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/send-sms/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          TestSMS:
+            title: Test SMS
+            image: codefreshplugins/twilioplugin
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "TWILIO_SID": {
+                "type": "string",
+                "description": "Your account SID from Twilio console"
+            },
+            "TWILIO_TOKEN": {
+                "type": "string",
+                "description": "Your API Auth Token from Twilio console"
+            },
+            "TWILIO_PHONE_FROM": {
+                "type": "string",
+                "description": "Phone number from which messages will be sent"
+            },
+            "TWILIO_PHONE_TO": {
+                "type": "string",
+                "description": "Phone number to which messages will be sent"
+            },
+            "TWILIO_TYPE": {
+                "type": "string",
+                "description": "Type of your message [build - send info about your build via Codefresh, default - Send message with statc text]"
+            }
+        }
+    }
+  steps:
+    main:
+      name: send-sms
+      title: ''
+      image: codefreshplugins/twilioplugin
+      environment:
+        - 'TWILIO_SID=${{TWILIO_SID}}'
+        - 'TWILIO_TOKEN=${{TWILIO_TOKEN}}'
+        - 'TWILIO_PHONE_FROM=${{TWILIO_PHONE_FROM}}'
+        - 'TWILIO_PHONE_TO=${{TWILIO_PHONE_TO}}'
+        - 'TWILIO_TYPE=${{TWILIO_TYPE}}'

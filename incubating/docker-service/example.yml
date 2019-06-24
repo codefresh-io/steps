@@ -1,12 +1,11 @@
 version: '1.0'
-
 steps:
 
   create-my-docker:
     image: codefreshplugins/docker-service
-    commands: 
+    commands:
         - docker-service-create  --driver amazonec2 --amazonec2-instance-type m4.large my-docker
-    
+
   build-on-my-docker:
     image: codefreshplugins/docker-service
     commands:

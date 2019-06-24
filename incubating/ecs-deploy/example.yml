@@ -1,5 +1,4 @@
 version: '1.0'
-
 steps:
   build-step:
     type: build

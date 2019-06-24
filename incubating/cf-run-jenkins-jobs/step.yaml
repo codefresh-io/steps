@@ -1,0 +1,66 @@
+kind: step
+version: '1.0'
+metadata:
+  name: cf-run-jenkins-jobs
+  description: Run jenkins job from codefresh pipeline
+  sources:
+    - 'https://github.com/codefresh-contrib/cf-run-jenkins-jobs'
+  maintainers:
+    - name: Vadim Waisman
+  categories:
+    - build
+  tags: []
+  icons:
+    large: >-
+      https://raw.githubusercontent.com/codefresh-plugins/cf-run-jenkins-jobs/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          RunJenkins:
+            title: Triggering Jenkins Job
+            image: codefreshplugins/cf-run-jenkins-job
+            environment:
+              - 'JENKINS_URL=http://<jenkins host>:<jenkins port>'
+              - JENKINS_USER=<jenkins user name>
+              - JENKINS_TOKEN=<jenkins token>
+              - JENKINS_JOB=<jenkins job name>
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "JENKINS_USERNAME": {
+                "type": "string",
+                "description": "jenkins username (required)"
+            },
+            "JENKINS_TOKEN": {
+                "type": "string",
+                "description": "jenkins token (required)"
+            },
+            "JENKINS_URL": {
+                "type": "string",
+                "description": "jenkins machine url (required)"
+            },
+            "JENKINS_JOB": {
+                "type": "string",
+                "description": "list of jenkins jobs to run separated by spaces (required)"
+            }
+        }
+    }
+  steps:
+    main:
+      name: cf-run-jenkins-jobs
+      title: ''
+      image: codefreshplugins/run-jenkins-jobs
+      environment:
+        - 'JENKINS_USERNAME=${{JENKINS_USERNAME}}'
+        - 'JENKINS_TOKEN=${{JENKINS_TOKEN}}'
+        - 'JENKINS_URL=${{JENKINS_URL}}'
+        - 'JENKINS_JOB=${{JENKINS_JOB}}'

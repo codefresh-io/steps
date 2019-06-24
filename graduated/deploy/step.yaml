@@ -2,6 +2,24 @@ kind: step
 version: "1.0"
 metadata:
   name: push
+  description: Deploy
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'
+  graduationStage: graduated
+  maintainers:
+    - name: Codefresh INC
+  examples:
+    - workflow:
+        version: '1.0'
+        steps:
+            Deploy:
+              title: deploying to cluster
+              type: deploy
+              arguments:
+                kind: kubernetes
+                cluster:  myDemoAKSCluster
+                namespace: demo
+                service: my-python-app
 spec:
   arguments: |
     {

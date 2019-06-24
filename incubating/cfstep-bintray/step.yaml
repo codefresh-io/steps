@@ -4,7 +4,8 @@ metadata:
   name: cfstep-bintray
   description: A Codefresh freestyle step to manage releases in JFrog Bintray
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-bintray'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-bintray
   graduationStage: incubating
   maintainers:
     - name: Kostis Kapelonis

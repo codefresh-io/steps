@@ -4,7 +4,8 @@ metadata:
   name: cf-deploy-dcos
   description: Deploy an application on dcos cluster
   sources:
-    - 'https://github.com/codefresh-contrib/cf-deploy-dcos'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cf-deploy-dcos
   graduationStage: incubating
   maintainers:
     - name: Eugene Semirski

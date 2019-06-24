@@ -4,7 +4,7 @@ metadata:
   name: npm-publish
   description: Publishes a nodejs package to NPM registry
   sources:
-    - 'https://github.com/codefresh-contrib/npm-publish'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/npm-publish'
   graduationStage: incubating
   maintainers:
     - name: Jakob Stuart

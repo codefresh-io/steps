@@ -4,7 +4,8 @@ metadata:
   name: github-pr-plugin
   description: Operates on GitHub pull requests
   sources:
-    - 'https://github.com/codefresh-io/github-pr-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/github-pr-plugin
   graduationStage: incubating
   maintainers:
     - name: Nick Sakovich

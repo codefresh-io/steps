@@ -4,7 +4,8 @@ metadata:
   name: cfstep-azure-key-vault
   description: Fetch Secrets from Azure Key Vault
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-azure-key-vault'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-azure-key-vault
   graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk

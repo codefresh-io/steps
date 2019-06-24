@@ -4,7 +4,8 @@ metadata:
   name: cf-kompose-plugin
   description: Release a Docker Compose to Kubernetes
   sources:
-    - 'https://github.com/codefresh-contrib/cf-kompose-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cf-kompose-plugin
   graduationStage: incubating
   maintainers:
     - name: Alexei Ledenev

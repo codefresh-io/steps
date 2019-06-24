@@ -4,7 +4,8 @@ metadata:
   name: cfstep-gitclonerssh
   description: clone git repositories via SSH.
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-gitclonerssh'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-gitclonerssh
   graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza

@@ -2,6 +2,24 @@ kind: step
 version: "1.0"
 metadata:
   name: git-clone
+  description: Clone a git repository
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
+  graduationStage: graduated
+  maintainers:
+    - name: Codefresh INC
+  examples:
+    - workflow:
+        version: '1.0'
+        steps:
+          Clone:
+            title: Running docker image
+            type: git-clone
+            arguments:
+              working_directory: ${{main_clone}}
+              repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+              git: github
+              revision: ${{CF_REVISION}}
 spec:
   arguments: |
     {

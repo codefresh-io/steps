@@ -6,7 +6,7 @@ metadata:
     Facilitates work with Google Key Management Service for such operations as
     encrypting and decrypting
   sources:
-    - 'https://github.com/codefresh-contrib/google-kms'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/google-kms'
   graduationStage: incubating
   maintainers:
     - name: Will Malone

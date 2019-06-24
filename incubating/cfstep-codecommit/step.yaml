@@ -4,7 +4,8 @@ metadata:
   name: cfstep-codecommit
   description: Clone an AWS CodeCommit Git repository
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-codecommit'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-codecommit
   graduationStage: incubating
   maintainers:
     - name: Guy Salton

@@ -1,8 +1,0 @@
-Deploy:
-    title: deploying to cluster
-    type: deploy
-    arguments:
-      kind: kubernetes 
-      cluster:  myDemoAKSCluster
-      namespace: demo
-      service: my-python-app

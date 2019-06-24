@@ -4,7 +4,8 @@ metadata:
   name: cfstep-github-release
   description: Plugin to make github releases
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-github-release'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-github-release
   graduationStage: incubating
   maintainers:
     - name: Alex Cheshko

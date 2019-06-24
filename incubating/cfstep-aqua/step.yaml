@@ -4,7 +4,7 @@ metadata:
   name: cfstep-aqua
   description: Execute Aqua Security image scan as build step
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-aqua'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-aqua'
   graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk

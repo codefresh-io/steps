@@ -4,7 +4,8 @@ metadata:
   name: azure-build-plugin
   description: Docker build in Azure ACR
   sources:
-    - 'https://github.com/codefresh-contrib/azure-build-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/azure-build-plugin
   graduationStage: incubating
   maintainers:
     - name: Amir Gabay

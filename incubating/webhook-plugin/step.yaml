@@ -4,7 +4,8 @@ metadata:
   name: webhook-plugin
   description: Plugin which simply send notification
   sources:
-    - 'https://github.com/codefresh-io/webhook-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/webhook-plugin
   graduationStage: incubating
   maintainers:
     - name: Andrii Shaforostov

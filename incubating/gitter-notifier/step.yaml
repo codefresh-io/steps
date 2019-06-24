@@ -4,7 +4,8 @@ metadata:
   name: gitter-notifier
   description: Send message to gitter
   sources:
-    - 'https://github.com/codefresh-contrib/gitter-notifier'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/gitter-notifier
   graduationStage: incubating
   maintainers:
     - name: Andrii Shaforostov

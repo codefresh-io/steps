@@ -4,7 +4,8 @@ metadata:
   name: jira-cli-docker
   description: Update a Jira ticket
   sources:
-    - 'https://github.com/codefresh-contrib/jira-cli-docker'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/jira-cli-docker
   graduationStage: incubating
   maintainers:
     - name: Ant Weiss

@@ -3,7 +3,9 @@ version: '1.0'
 metadata:
   name: cf-plugin-example
   description: Codefresh Plugin
-  sources: []
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cf-plugin-example
   graduationStage: incubating
   maintainers:
     - name: Your Name

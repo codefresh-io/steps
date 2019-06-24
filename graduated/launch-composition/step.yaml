@@ -2,6 +2,28 @@ kind: step
 version: "1.0"
 metadata:
   name: launch-composition
+  description: Run and externaly expose a docker-compose
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/launch-composition'
+  graduationStage: graduated
+  maintainers:
+    - name: Codefresh INC
+  examples:
+    - workflow:
+        version: '1.0'
+        steps:
+          Launch-Composition:
+            title: Running docker image
+            type: launch-composition
+            arguments:
+              composition:
+                version: '2'
+                services:
+                  app:
+                    image: owner/app:latest
+                  db:
+                    image: mongo
+              environment_name: 'environment name'
 spec:
   arguments: |
     {

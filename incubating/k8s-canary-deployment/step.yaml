@@ -4,7 +4,8 @@ metadata:
   name: k8s-canary-deployment
   description: Perform canary deployments on a Kubernetes cluster
   sources:
-    - 'https://github.com/codefresh-contrib/k8s-canary-deployment'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/k8s-canary-deployment
   graduationStage: incubating
   maintainers:
     - name: Kostis Kapelonis

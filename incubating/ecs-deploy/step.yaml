@@ -4,7 +4,7 @@ metadata:
   name: ecs-deploy
   description: Release a Helm chart (update or install)
   sources:
-    - 'https://github.com/codefresh-contrib/cf-deploy-ecs.git'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-deploy'
   graduationStage: incubating
   maintainers:
     - name: Oleg  Verhovsky

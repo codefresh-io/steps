@@ -4,7 +4,8 @@ metadata:
   name: cfstep-gitsubmodules
   description: Update git submodules
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-gitsubmodules'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-gitsubmodules
   graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza

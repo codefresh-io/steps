@@ -4,7 +4,8 @@ metadata:
   name: anchore-plugin
   description: Analyze Docker images and generate a detailed manifest using Anchore
   sources:
-    - 'https://github.com/codefresh-contrib/anchore-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/anchore-plugin
   graduationStage: incubating
   maintainers:
     - name: Jeremy Valance

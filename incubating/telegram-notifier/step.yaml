@@ -6,7 +6,8 @@ metadata:
     Telegram plugin which gives the opportunity send any messages to users via
     bot.
   sources:
-    - 'https://github.com/codefresh-contrib/telegram-notifier'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/telegram-notifier
   graduationStage: incubating
   maintainers:
     - name: Andrii Shaforostov

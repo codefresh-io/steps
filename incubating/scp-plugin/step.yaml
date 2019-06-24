@@ -4,7 +4,7 @@ metadata:
   name: scp-plugin
   description: Plugin to upload file or directory to remote machine using scp protocol.
   sources:
-    - 'https://github.com/codefresh-io/scp-plugin'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/scp-plugin'
   graduationStage: incubating
   maintainers:
     - name: Denys Voznyuk

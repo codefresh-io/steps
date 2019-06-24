@@ -4,7 +4,8 @@ metadata:
   name: cfstep-paclair
   description: 'Scan docker images with Clair - https://github.com/coreos/clair'
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-paclair'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-paclair
   graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk

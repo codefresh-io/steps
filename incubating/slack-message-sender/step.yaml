@@ -4,7 +4,8 @@ metadata:
   name: slack-message-sender
   description: Send message to slack channel
   sources:
-    - 'https://github.com/codefresh-plugins/slack-message-sender'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/slack-message-sender
   graduationStage: incubating
   maintainers:
     - name: Oleg Sucharevich

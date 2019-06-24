@@ -4,7 +4,8 @@ metadata:
   name: docker-service
   description: Codefresh docker-service plugin
   sources:
-    - 'https://github.com/codefresh-contrib/docker-service'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/docker-service
   graduationStage: incubating
   maintainers:
     - name: Kosta Klevensky

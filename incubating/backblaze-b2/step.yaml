@@ -4,7 +4,7 @@ metadata:
   name: backblaze-b2
   description: Upload files to Backblaze B2 bucket
   sources:
-    - 'https://github.com/codefresh-plugins/backblaze-b2'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/backblaze-b2'
   graduationStage: incubating
   maintainers:
     - name: andrii-codefresh

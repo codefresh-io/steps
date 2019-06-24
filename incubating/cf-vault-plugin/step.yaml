@@ -6,7 +6,8 @@ metadata:
     The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
     variables
   sources:
-    - 'https://github.com/codefresh-contrib/cf-vault-plugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cf-vault-plugin
   graduationStage: incubating
   maintainers:
     - name: Alexander Aladov

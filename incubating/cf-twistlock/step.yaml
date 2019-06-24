@@ -4,7 +4,7 @@ metadata:
   name: cf-twistlock
   description: Execute Twistlock CLI image scan as build step
   sources:
-    - 'https://github.com/SC-TechDev/docker-twistlock'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/cf-twistlock'
   graduationStage: incubating
   maintainers:
     - name: Dustin Van Buskirk

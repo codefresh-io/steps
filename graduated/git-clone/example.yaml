@@ -1,8 +1,0 @@
-Clone:
-    title: Running docker image
-    type: git-clone
-    arguments:
-      working_directory: ${{main_clone}}
-      repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
-      git: github
-      revision: ${{CF_REVISION}}

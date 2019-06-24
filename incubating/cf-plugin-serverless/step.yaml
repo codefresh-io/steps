@@ -4,7 +4,8 @@ metadata:
   name: cf-plugin-serverless
   description: Deploy a Serverless service (functions and resources)
   sources:
-    - 'https://github.com/codefresh-plugins/cf-plugin-serverless'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/cf-plugin-serverless
   graduationStage: incubating
   maintainers:
     - name: Francisco Cocozza

@@ -2,6 +2,23 @@ kind: step
 version: "1.0"
 metadata:
   name: push
+  description: Run freestyle commands on top of a docker image
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
+  graduationStage: graduated
+  maintainers:
+    - name: Codefresh INC
+  examples:
+    - workflow:
+        version: '1.0'
+        steps:
+          Freestyle:
+            title: Running docker image
+            arguments:
+              image: alpine:3.8
+              commands:
+                - echo "Hello world"
+                - echo "asdasd"
 spec:
   arguments: |
     {

@@ -4,7 +4,8 @@ metadata:
   name: sendgridplugin
   description: Send e-mail via Sendgrid
   sources:
-    - 'https://github.com/codefresh-contrib/sendgridplugin'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/sendgridplugin
   graduationStage: incubating
   maintainers:
     - name: Pavel Kostohrys

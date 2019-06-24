@@ -4,7 +4,8 @@ metadata:
   name: slack-notifier
   description: Send message to slack
   sources:
-    - 'https://github.com/codefresh-contrib/slack-notifier'
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/slack-notifier
   graduationStage: incubating
   maintainers:
     - name: Pavel Kostohrys

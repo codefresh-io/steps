@@ -14,7 +14,7 @@ sources:
 - https://github.com/codefresh-contrib/k8s-canary-deployment
 maintainers:
 - name: Kostis Kapelonis
-  email: ""
+  email: "support@codefresh.io"
 icon: https://raw.githubusercontent.com/codefresh-plugins/k8s-canary-deployment/master/icon.jpg
 envs:
 - name: KUBE_CONTEXT

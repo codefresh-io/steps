@@ -14,8 +14,7 @@ metadata:
   categories:
     - security
   tags: []
-  icons:
-    large: ''
+  icons: {}
   examples:
     - description: example-1
       workflow:

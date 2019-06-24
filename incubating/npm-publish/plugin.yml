@@ -10,7 +10,6 @@ sources:
 - https://github.com/codefresh-contrib/npm-publish
 maintainers:
 - name: Jakob Stuart
-  email: ""
 icon: https://raw.githubusercontent.com/codefresh-plugins/npm-publish/master/icon.jpg
 envs:
 - name: NPM_TOKEN

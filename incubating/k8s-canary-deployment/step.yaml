@@ -10,7 +10,7 @@ metadata:
   stage: incubating
   maintainers:
     - name: Kostis Kapelonis
-      email: ''
+      email: support@codefresh.io
   categories:
     - featured
     - deployment

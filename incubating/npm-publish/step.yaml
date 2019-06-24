@@ -9,7 +9,6 @@ metadata:
   stage: incubating
   maintainers:
     - name: Jakob Stuart
-      email: ''
   categories:
     - deployment
   tags: []

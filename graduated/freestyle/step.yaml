@@ -1,7 +1,7 @@
 kind: step
 version: "1.0"
 metadata:
-  name: push
+  name: freestyle
   isPublic: true
   description: Run freestyle commands on top of a docker image
   sources:

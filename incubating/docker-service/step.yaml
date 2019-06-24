@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: docker-service
+  isPublic: true
   description: Codefresh docker-service plugin
   sources:
     - >-

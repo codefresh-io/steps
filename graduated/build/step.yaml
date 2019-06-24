@@ -2,6 +2,7 @@ kind: step
 version: "1.0"
 metadata:
   name: build
+  isPublic: true
   description: Build a Docker image
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'

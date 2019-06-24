@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-azure-key-vault
+  isPublic: true
   description: Fetch Secrets from Azure Key Vault
   sources:
     - >-

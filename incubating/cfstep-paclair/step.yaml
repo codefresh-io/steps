@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-paclair
+  isPublic: true
   description: 'Scan docker images with Clair - https://github.com/coreos/clair'
   sources:
     - >-

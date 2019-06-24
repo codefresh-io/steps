@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-codecommit
+  isPublic: true
   description: Clone an AWS CodeCommit Git repository
   sources:
     - >-

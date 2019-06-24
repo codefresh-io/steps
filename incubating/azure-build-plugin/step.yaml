@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: azure-build-plugin
+  isPublic: true
   description: Docker build in Azure ACR
   sources:
     - >-

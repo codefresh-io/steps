@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: sendgridplugin
+  isPublic: true
   description: Send e-mail via Sendgrid
   sources:
     - >-

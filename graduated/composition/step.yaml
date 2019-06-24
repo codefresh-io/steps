@@ -2,6 +2,7 @@ kind: step
 version: "1.0"
 metadata:
   name: composition
+  isPublic: true
   description: Run a docker-compose
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/composition'

@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-import-image
+  isPublic: true
   description: Import metadata for existing Docker images into Codefresh
   sources:
     - >-

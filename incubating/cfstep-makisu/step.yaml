@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-makisu
+  isPublic: true
   description: The plugin makes using Makisu build tool easier in a Codefresh pipeline
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/cfstep-makisu'

@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: telegram-notifier
+  isPublic: true
   description: >-
     Telegram plugin which gives the opportunity send any messages to users via
     bot.

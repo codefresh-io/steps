@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: jira-cli-docker
+  isPublic: true
   description: Update a Jira ticket
   sources:
     - >-

@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-deploy-dcos
+  isPublic: true
   description: Deploy an application on dcos cluster
   sources:
     - >-

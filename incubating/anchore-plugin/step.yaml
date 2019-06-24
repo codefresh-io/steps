@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: anchore-plugin
+  isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore
   sources:
     - >-

@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-azure-files-plugin
+  isPublic: true
   description: Plugin for pushing files to Azure Files
   sources:
     - >-

@@ -2,6 +2,7 @@ kind: step
 version: "1.0"
 metadata:
   name: push
+  isPublic: true
   description: Deploy
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'

@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-plugin-example
+  isPublic: true
   description: Codefresh Plugin
   sources:
     - >-

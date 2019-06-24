@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: send-sms
+  isPublic: true
   description: Send SMS notifications via Twillio
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/send-sms'

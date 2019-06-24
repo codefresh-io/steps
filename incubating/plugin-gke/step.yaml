@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: plugin-gke
+  isPublic: true
   description: Codefresh gke plugin
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/plugin-gke'

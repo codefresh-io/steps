@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: slack-notifier
+  isPublic: true
   description: Send message to slack
   sources:
     - >-

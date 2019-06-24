@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-run-jenkins-jobs
+  isPublic: true
   description: Run jenkins job from codefresh pipeline
   sources:
     - >-

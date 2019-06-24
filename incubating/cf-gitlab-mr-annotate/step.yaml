@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-gitlab-mr-annotate
+  isPublic: true
   description: The plugin allows for easy applying labels to GitLab merge requests
   sources:
     - >-

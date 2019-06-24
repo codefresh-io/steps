@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-vault-plugin
+  isPublic: true
   description: >-
     The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
     variables

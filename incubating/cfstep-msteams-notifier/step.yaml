@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-msteams-notifier
+  isPublic: true
   description: Send Message to Microsoft Teams
   sources:
     - >-

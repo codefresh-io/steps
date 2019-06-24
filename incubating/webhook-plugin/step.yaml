@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: webhook-plugin
+  isPublic: true
   description: Plugin which simply send notification
   sources:
     - >-

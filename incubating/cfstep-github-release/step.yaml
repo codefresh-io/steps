@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cfstep-github-release
+  isPublic: true
   description: Plugin to make github releases
   sources:
     - >-

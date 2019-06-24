@@ -2,6 +2,7 @@ kind: step
 version: '1.0'
 metadata:
   name: cf-plugin-serverless
+  isPublic: true
   description: Deploy a Serverless service (functions and resources)
   sources:
     - >-

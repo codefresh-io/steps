@@ -8,6 +8,9 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
   stage: graduated
   official: true
+  visualization:
+    icon: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/freestyle/icon.svg
+    background: "#3A3A3A"
   maintainers:
     - name: Codefresh INC
   examples:

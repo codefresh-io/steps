@@ -8,6 +8,9 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/launch-composition'
   stage: graduated
   official: true
+  visualization:
+    icon: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/launch-composition/icon.svg
+    background: "#D9E6F8"
   maintainers:
     - name: Codefresh INC
   examples:

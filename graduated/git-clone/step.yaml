@@ -5,7 +5,7 @@ metadata:
   isPublic: true
   description: Clone a git repository
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
+    - 'https://raw.githubusercontent.com/codefresh-io/steps/master/graduated/git-clone/icon.svg'
   stage: graduated
   official: true
   icon:

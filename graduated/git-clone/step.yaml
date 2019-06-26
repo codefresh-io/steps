@@ -8,8 +8,9 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
   stage: graduated
   official: true
-  visualization:
-    icon: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon.svg
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon.svg
     background: "#DE4C36"
   maintainers:
     - name: Codefresh INC

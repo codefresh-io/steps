@@ -13,9 +13,12 @@ metadata:
     - featured
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/plugin-gke/master/icon.jpg
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/plugin-gke/master/icon.jpg
   examples:
     - description: example-1
       workflow:

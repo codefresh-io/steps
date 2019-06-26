@@ -15,7 +15,6 @@ metadata:
     - security
   official: false
   tags: []
-  icons: {}
   examples:
     - description: example-1
       workflow:

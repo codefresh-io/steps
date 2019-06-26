@@ -16,9 +16,12 @@ metadata:
     - utility
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitsubmodules/master/logo.png
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/cfstep-gitsubmodules/master/logo.png
   examples:
     - description: example-1
       workflow:

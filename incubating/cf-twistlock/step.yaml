@@ -16,9 +16,12 @@ metadata:
     - security
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/cf-twistlock/master/icon.jpg
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/cf-twistlock/master/icon.jpg
   examples:
     - description: example-1
       workflow:

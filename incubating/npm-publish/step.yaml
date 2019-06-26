@@ -13,9 +13,12 @@ metadata:
     - deployment
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/npm-publish/master/icon.jpg
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/npm-publish/master/icon.jpg
   examples:
     - description: example-1
       workflow:

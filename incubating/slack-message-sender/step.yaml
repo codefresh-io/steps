@@ -15,9 +15,12 @@ metadata:
     - notifications
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/slack-message-sender/master/icon.jpg
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/slack-message-sender/master/icon.jpg
   examples:
     - description: example-1
       workflow:

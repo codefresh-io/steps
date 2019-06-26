@@ -16,9 +16,12 @@ metadata:
     - deployment
   official: false
   tags: []
-  icons:
-    large: >-
-      https://raw.githubusercontent.com/codefresh-plugins/k8s-canary-deployment/master/icon.jpg
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/k8s-canary-deployment/master/icon.jpg
   examples:
     - description: example-1
       workflow:

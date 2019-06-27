@@ -30,13 +30,18 @@ spec:
     {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {},
-                "type": "object",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": ["candidate"],
         "properties": {
             "candidate": {
-                "type": "string"
+                "type": "string",
+                "description": "The identifier of the image to push to the remote Docker registry. It can be an explicit identifier of an image to push, or a variable that references a Build step."
             },
             "registry": {
-                "type": "string"
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your default registry."
             },
             "credentials": {
                 "type": "object",
@@ -53,19 +58,19 @@ spec:
                 "required": ["username", "password"]
             },
             "tag": {
-                "type": "string"
+                "type": "string",
+                "description": "The tag under which to push the image. Use either this or tags. The default is latest."
             },
             "tags": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "Multiple tags under which to push the image"
             },
             "image_name": {
-                "type": "string"
+                "type": "string",
+                "description": "The tagged image name that will be used The default value will be the same image name as of the candidate."
             }
-        },
-        "additionalProperties": false,
-        "patterns": [],
-        "required": ["candidate"]
+        }
     }

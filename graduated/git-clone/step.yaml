@@ -10,7 +10,7 @@ metadata:
   official: true
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/graduated/git-clone/icon.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon.svg
     background: "#1A0F14"
   maintainers:
     - name: Codefresh INC
@@ -32,15 +32,21 @@ spec:
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["repo"],
       "properties": {
           "working_directory": {
-              "type": "string"
+              "type": "string",
+              "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is ${{main_clone}}.	"
           },
           "repo": {
-              "type": "string"
+              "type": "string",
+              "description": "path of the repository without the domain name in the form of my_username/my_repo"
           },
           "revision": {
-              "type": "string"
+              "type": "string",
+              "description": "The revision of the repository you are checking out. It can be a revision hash or a branch name. The default value is master."
           },
           "credentials": {
               "type": "object",
@@ -54,13 +60,12 @@ spec:
               },
               "additionalProperties": false,
               "patterns": [],
-              "required": ["username", "password"]
+              "required": ["username", "password"],
+              "description": "Credentials to access the repository, if it requires authentication. It can an object containing username and password fields. Credentials are optional if you are using the built-in git integrations."
           },
           "git": {
-              "type": "string"
+              "type": "string",
+              "description": "The name of the git integration you want to use. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
           }
-      },
-      "additionalProperties": false,
-      "patterns": [],
-      "required": ["repo"]
+      }
     }

@@ -36,9 +36,13 @@ spec:
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {},
         "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["composition"],
         "properties": {
             "working_directory": {
-                "type": "string"
+                "type": "string",
+                "description": "The directory in which to search for the composition file. It can be an explicit path in the container’s file system, or a variable that references another step. The default is ${{main_clone}}."
             },
             "composition": {
                 "oneOf": [{
@@ -48,16 +52,15 @@ spec:
                     "patterns": []
                 }, {
                     "type": "string"
-                }]
+                }],
+                "description": "The composition you want to run. It can be an inline YAML definition, a path to a composition file on the file system, or the logical name of a composition stored in the Codefresh system."
             },
             "composition_variables": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "A set of environment variables to substitute in the composition."
             }
-        },
-        "additionalProperties": true,
-        "patterns": [],
-        "required": ["composition"]
+        }
     }

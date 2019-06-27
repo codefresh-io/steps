@@ -5,12 +5,12 @@ metadata:
   isPublic: true
   description: Clone a git repository
   sources:
-    - 'https://raw.githubusercontent.com/codefresh-io/steps/master/graduated/git-clone/icon.svg'
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
   stage: graduated
   official: true
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/graduated/git-clone/icon.svg
     background: "#1A0F14"
   maintainers:
     - name: Codefresh INC

@@ -33,22 +33,26 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": ["image"],
         "properties": {
             "working_directory": {
-                "type": "string"
+                "type": "string",
+                "description": "The directory from which the commands are executed. It can be an explicit path in the container’s file system, or a variable that references another step. The default working_directory is the cloned repository directory and not the working directory specified by the image. If you need to use the default working directory of the image use IMAGE_WORK_DIR.",
+                "example": ["/codefresh/volume"]
             },
             "image": {
                 "type": "string",
                 "examples": [
                   "alpine:latest"
-                ]
+                ],
+                "description": "The image from which the executable container is created. It can be an explicit ID of a Docker image, or a variable that references a Build or Push step."
             },
             "commands": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "One or more commands to execute in a shell in the container, as array of strings."
             },
             "cmd": {
                 "oneOf": [{
@@ -58,20 +62,23 @@ spec:
                     "items": {
                         "type": "string"
                     }
-                }]
+                }],
+                "description": "docker CMD arguments to use along with the container entrypoint. can be string or array of strings."
             },
             "volumes": {
                 "type": "array",
                 "items": {
                     "type": "string",
                     "pattern": ":"
-                }
+                },
+                "description": "One or more volumes for the container. All volumes must be mounted from the existing shared volume (see details below)."
             },
             "environment": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "A set of environment variables for the container."
             },
             "entry_point": {
                 "oneOf": [{
@@ -81,14 +88,13 @@ spec:
                     "items": {
                         "type": "string"
                     }
-                }]
+                }],
+                "description": "Override the default container entrypoint. can be string or array of strings."
             },
             "shell": {
                 "enum": ["sh", "bash"],
-                "type": "string"
+                "type": "string",
+                "description": "Explicitly set the executing shell to bash or sh. If not set the default will be sh."
             }
-        },
-        "additionalProperties": true,
-        "patterns": [],
-        "required": ["image"]
+        }
     }

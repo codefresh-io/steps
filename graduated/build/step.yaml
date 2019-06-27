@@ -30,14 +30,20 @@ spec:
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
+        "additionalProperties": false,
+         "patterns": [],
+         "required": [
+         "image_name"
+         ],
         "properties": {
             "working_directory": {
-                "type": "string"
+                "type": "string",
+                "description": "The directory in which the build command is executed. It can be an explicit path in the container’s file system, or a variable that references another step. The default is ${{main_clone}}."
             },
             "dockerfile": {
                 "oneOf": [
                 {
-                    "type": "string"
+                    "type": "string",
                 },
                 {
                     "type": "object",
@@ -51,33 +57,39 @@ spec:
 
                     ]
                 }
-                ]
+                ],
+                "default": "Dockerfile",
+                "description": "The path to the Dockerfile from which the image is built. The default is Dockerfile."
             },
             "no_cache": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Disable Docker engine cache for the build. <a href="https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/">more info</a>"
             },
             "no_cf_cache": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Disable Codefresh build optimization for the build. <a href="https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/">more info</a>"
             },
             "squash": {
                 "type": "boolean"
             },
             "image_name": {
-                "type": "string"
+                "type": "string",
+                "description": "The name for the image you build."
             },
             "build_arguments": {
                 "type": "array",
                 "items": {
                 "type": "string"
-                }
+                },
+                "description": "A set of <a href="https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg">Docker build arguments</a> to pass to the build process."
             },
             "tag": {
-                "type": "string"
+                "type": "string",
+                "description": "The tag that is assigned to the image you build. The default is the name of the branch or revision that is built."
+            },
+            "target": {
+                "type": "string",
+                "description": "target stage in a multistage build (build will run until this stage)"
             }
-        },
-        "additionalProperties": false,
-        "patterns": [],
-        "required": [
-        "image_name"
-        ]
+        }
     }

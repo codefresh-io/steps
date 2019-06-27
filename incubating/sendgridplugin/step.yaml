@@ -28,6 +28,14 @@ metadata:
           TestMail:
             title: Test Mail
             image: 'codefreshplugins/sendgridplugin:latest'
+            environment:
+            - SENDGRID_APIKEY=${{SENDGRID_APIKEY}}
+            - SENDGRID_MAIL=${{SENDGRID_MAIL}}
+            - SENDGRID_FROM=${{SENDGRID_FROM}}
+            - SENDGRID_SUBJECT=${{SENDGRID_SUBJECT}}
+            - SENDGRID_TYPE=${{SENDGRID_TYPE}}
+            - SENDGRID_MESSAGE=${{SENDGRID_MESSAGE}}
+            - SENDGRID_TEMPLATE=${{SENDGRID_TEMPLATE}}
 spec:
   arguments: |-
     {

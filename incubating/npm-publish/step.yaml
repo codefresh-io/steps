@@ -27,7 +27,8 @@ metadata:
           deploy_to_npm:
             title: Publishing To Npm
             image: codefresh/npm-publish
-            commands: null
+            environment:
+              - 'NPM_TOKEN=${{NPM_TOKEN}}'
 spec:
   arguments: |-
     {

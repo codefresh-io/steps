@@ -1,4 +1,4 @@
-kind: step
+kind: step-type
 version: '1.0'
 metadata:
   name: plugin-gke

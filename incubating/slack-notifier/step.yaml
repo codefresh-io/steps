@@ -1,4 +1,4 @@
-kind: step
+kind: step-type
 version: '1.0'
 metadata:
   name: slack-notifier
@@ -43,7 +43,9 @@ spec:
         "patterns": [],
         "required": [
             "SLACK_HOOK_URL",
-            "SLACK_TEXT"
+            "SLACK_TEXT",
+            "SLACK_TEMPLATE_BODY",
+            "SLACK_TEMPLATE_FIELDS"
         ],
         "properties": {
             "SLACK_HOOK_URL": {
@@ -56,23 +58,19 @@ spec:
             },
             "SLACK_ATTACHMENTS": {
                 "type": "string",
-                "description": "Attachments to send. Documentation https://api.slack.com/docs/message-attachments",
-                "default": ""
+                "description": "Attachments to send. Documentation https://api.slack.com/docs/message-attachments"
             },
             "MODE": {
                 "type": "string",
-                "description": "template | simple | default-template, by default - simple. In case with template mode you can have general body in attachment SLACK_TEMPLATE_BODY and different fields SLACK_TEMPLATE_FIELDS",
-                "default": ""
+                "description": "template | simple | default-template, by default - simple. In case with template mode you can have general body in attachment SLACK_TEMPLATE_BODY and different fields SLACK_TEMPLATE_FIELDS"
             },
             "SLACK_TEMPLATE_BODY": {
                 "type": "string",
-                "description": "Required in template mode, general body, should be not array. Support only one attachment in body. Documentation https://api.slack.com/docs/message-attachments",
-                "default": ""
+                "description": "Required in template mode, general body, should be not array. Support only one attachment in body. Documentation https://api.slack.com/docs/message-attachments"
             },
             "SLACK_TEMPLATE_FIELDS": {
                 "type": "string",
-                "description": "Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments",
-                "default": ""
+                "description": "Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments"
             }
         }
     }

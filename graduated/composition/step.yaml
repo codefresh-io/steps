@@ -42,7 +42,7 @@ spec:
         "type": "object",
         "additionalProperties": true,
         "patterns": [],
-        "required": ["composition", "composition_candidates"]
+        "required": ["composition", "composition_candidates"],
         "properties": {
             "working_directory": {
                 "type": "string",

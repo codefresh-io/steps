@@ -77,7 +77,7 @@ spec:
                 "additionalProperties": false,
                 "patterns": [],
                 "required": ["image", "registry"],
-                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href="https://codefresh.io/docs/docs/docker-registries/external-docker-registries/">registry integration page</a>."
+                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href=\"https://codefresh.io/docs/docs/docker-registries/external-docker-registries/\">registry integration page</a>."
             }
         }
     }

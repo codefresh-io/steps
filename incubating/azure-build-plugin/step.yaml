@@ -37,6 +37,7 @@ metadata:
               PASSWORD: ${{AZURE_PASSWORD}}
               TENANT: ${{TENANT}}
               DOCKERFILE_PATH: ${{DOCKERFILE}}
+              USER: ${{USER}}
 spec:
   arguments: |-
     {
@@ -53,7 +54,7 @@ spec:
             "APP_ID",
             "PASSWORD",
             "TENANT",
-            "DOCKERFILE_PATH"
+            "USER"
         ],
         "properties": {
             "AUTH": {

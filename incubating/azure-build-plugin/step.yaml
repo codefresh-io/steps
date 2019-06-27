@@ -37,17 +37,6 @@ metadata:
               PASSWORD: ${{AZURE_PASSWORD}}
               TENANT: ${{TENANT}}
               DOCKERFILE_PATH: ${{DOCKERFILE}}
-    - description: example-2
-      workflow:
-        version: '1.0'
-        steps:
-          image: codefresh/cf-azure-builder
-          environment:
-            - IMAGE=<image name>
-            - TAG=<tag name>
-            - ACR_NAME=<acr registry name>
-            - USER=<azure user name>
-            - PASSWORD=<azure user password>
 spec:
   arguments: |-
     {

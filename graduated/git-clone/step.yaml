@@ -11,7 +11,7 @@ metadata:
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon.svg
-    background: "#DE4C36"
+    background: "#1A0F14"
   maintainers:
     - name: Codefresh INC
   examples:

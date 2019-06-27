@@ -8,6 +8,8 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/composition'
   stage: graduated
   official: true
+  categories:
+    - docker
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/composition/icon.svg

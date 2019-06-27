@@ -7,6 +7,8 @@ metadata:
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
+  categories:
+    - docker
   official: true
   icon:
     type: svg

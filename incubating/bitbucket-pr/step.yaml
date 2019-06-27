@@ -26,10 +26,10 @@ metadata:
         version: '1.0'
         steps:
           BB_pr:
-            image: codefreshplugins/bitbucket-pr
-            environment:
-              - GIT_CONTEXT=my_bitbucket_context_name
-              - 'LABELS=my_label1,my_label2,my_label_n'
+            type: bitbucket-pr
+            arguments:
+              GIT_CONTEXT: my_bitbucket_context_name
+              LABELS: my_label1,my_label2,my_label_n
 spec:
   arguments: |-
     {
@@ -39,12 +39,17 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "MY_VAR"
+            "GIT_CONTEXT",
+            "LABELS"
         ],
         "properties": {
-            "MY_VAR": {
+            "GIT_CONTEXT": {
                 "type": "string",
-                "description": "placeholder"
+                "description": "Context name"
+            },
+            "LABELS": {
+                "type": "string",
+                "description": "Labels"
             }
         }
     }
@@ -53,4 +58,5 @@ spec:
       name: bitbucket-pr
       image: codefreshplugins/bitbucket-pr
       environment:
-        - 'MY_VAR=${{MY_VAR}}'
+        - GIT_CONTEXT=${{GIT_CONTEXT}}
+        - LABELS=${{LABELS}}

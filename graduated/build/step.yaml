@@ -63,11 +63,11 @@ spec:
             },
             "no_cache": {
                 "type": "boolean",
-                "description": "Disable Docker engine cache for the build. <a href="https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/">more info</a>"
+                "description": "Disable Docker engine cache for the build. <a href=\"https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/\">more info</a>"
             },
             "no_cf_cache": {
                 "type": "boolean",
-                "description": "Disable Codefresh build optimization for the build. <a href="https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/">more info</a>"
+                "description": "Disable Codefresh build optimization for the build. <a href=\"https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/\">more info</a>"
             },
             "squash": {
                 "type": "boolean"
@@ -81,7 +81,7 @@ spec:
                 "items": {
                 "type": "string"
                 },
-                "description": "A set of <a href="https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg">Docker build arguments</a> to pass to the build process."
+                "description": "A set of <a href=\"https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg\">Docker build arguments</a> to pass to the build process."
             },
             "tag": {
                 "type": "string",

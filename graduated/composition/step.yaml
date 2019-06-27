@@ -39,10 +39,14 @@ spec:
     {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {},
-                "type": "object",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["composition", "composition_candidates"]
         "properties": {
             "working_directory": {
-                "type": "string"
+                "type": "string",
+                "description": "The directory in which to search for the composition file. It can be an explicit path in the container’s file system, or a variable that references another step. The default is ${{main_clone}}. Note that this is completely different from working_dir which is on the service level."
             },
             "composition": {
                 "oneOf": [{
@@ -52,22 +56,22 @@ spec:
                     "patterns": []
                 }, {
                     "type": "string"
-                }]
+                }],
+                "description": "The composition you want to run. It can be an inline YAML definition, a path to a composition file on the file system, or the logical name of a composition stored in the Codefresh system. We support most features of <a href=\"https://docs.docker.com/compose/compose-file/compose-file-v2/\">Docker compose version 2.0</a> and <a href=\"https://docs.docker.com/compose/compose-file/\">3.0</a>"
             },
             "composition_candidates": {
                 "type": "object",
                 "properties": {},
                 "additionalProperties": true,
-                "patterns": []
+                "patterns": [],
+                "description": "The definition of the service to monitor. Each candidate has a single command parameter that decides what will be tested."
             },
             "composition_variables": {
                 "type": "array",
                 "items": {
                     "type": "string"
-                }
+                },
+                "description": "A set of environment variables to substitute in the composition. Notice that these variables are docker-compose variables and NOT environment variables"
             }
-        },
-        "additionalProperties": true,
-        "patterns": [],
-        "required": ["composition", "composition_candidates"]
+        }
     }

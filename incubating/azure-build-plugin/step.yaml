@@ -27,16 +27,16 @@ metadata:
         version: '1.0'
         steps:
           cf-az-build:
-            image: codefreshplugins/cf-azure-builder
-            environment:
-              - AUTH=service-principal
-              - IMAGE=<image name>
-              - TAG=<tag name>
-              - ACR_NAME=<acr registry name>
-              - APP_ID=<azure service principal application id>
-              - PASSWORD=<azure service principal password>
-              - TENANT=<azure ad tenant id>
-              - DOCKERFILE_PATH=<dockerfile path>
+            type: azure-build-plugin
+            arguments:
+              AUTH: service-principal
+              IMAGE: ${{IMAGE_NAME}}
+              TAG: ${{IMAGE_TAG}}
+              ACR_NAME: ${{REGISTRY}}
+              APP_ID: ${{AZURE_APP_ID}}
+              PASSWORD: ${{AZURE_PASSWORD}}
+              TENANT: ${{TENANT}}
+              DOCKERFILE_PATH: ${{DOCKERFILE}}
     - description: example-2
       workflow:
         version: '1.0'

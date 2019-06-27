@@ -32,28 +32,37 @@ spec:
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {},
         "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": ["kind", "cluster", "namespace"],
         "properties": {
             "kind": {
-                "type": "string"
+                "type": "string",
+                "description": "Currently only kubernetes is supported"
             },
             "cluster": {
-                "type": "string"
+                "type": "string",
+                "description": "Name of your K8s cluster as found in the dashboard"
             },
             "namespace": {
-                "type": "string"
+                "type": "string",
+                "description": "Namespace where the deployment will take place"
             },
             "file_path": {
-                "type": "string"
+                "type": "string",
+                "description": "A deployment manifest. You need to provide service OR file_path"
             },
             "timeout": {
-                "type": "number"
+                "type": "number",
+                "description": "Seconds to wait for the deployment to be completed. Default is 120 seconds"
             },
             "service": {
                 "oneOf": [{
                     "type": ["array", "boolean", "number", "object", "string", "null"]
                 }, {
                     "type": "string"
-                }]
+                }],
+                "description": "Name of the existing service that will updated. You need to provide service OR file_path"
             },
             "candidate": {
                 "type": "object",
@@ -67,10 +76,8 @@ spec:
                 },
                 "additionalProperties": false,
                 "patterns": [],
-                "required": ["image", "registry"]
+                "required": ["image", "registry"],
+                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href="https://codefresh.io/docs/docs/docker-registries/external-docker-registries/">registry integration page</a>."
             }
-        },
-        "additionalProperties": true,
-        "patterns": [],
-        "required": ["kind", "cluster", "namespace"]
+        }
     }

@@ -38,7 +38,7 @@ spec:
       "properties": {
           "working_directory": {
               "type": "string",
-              "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is ${{main_clone}}.	"
+              "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is ${{main_clone}}."
           },
           "repo": {
               "type": "string",

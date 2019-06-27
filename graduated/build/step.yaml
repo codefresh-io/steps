@@ -43,7 +43,7 @@ spec:
             "dockerfile": {
                 "oneOf": [
                 {
-                    "type": "string",
+                    "type": "string"
                 },
                 {
                     "type": "object",

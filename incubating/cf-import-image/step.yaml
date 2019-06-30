@@ -26,9 +26,16 @@ metadata:
         version: '1.0'
         steps:
           import_images:
+            type: cf-import-image
             title: Importing images ...
             description: import Docker images form external registry
-            image: codefreshplugins/import-images
+            arguments:
+              IMAGES: ${{IMAGES}}
+              REGISTRY: ${{REGISTRY}}
+              USERNAME: ${{USERNAME}}
+              PASSWORD: ${{PASSWORD}}
+              CF_API_TOKEN: ${{CF_API_TOKEN}}
+              
 spec:
   arguments: |-
     {
@@ -37,7 +44,13 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "IMAGES",
+          "REGISTRY",
+          "USERNAME",
+          "PASSWORD",
+          "CF_API_TOKEN"
+        ],
         "properties": {
             "IMAGES": {
                 "type": "string",
@@ -57,7 +70,8 @@ spec:
             },
             "CF_URL": {
                 "type": "string",
-                "description": "Codefresh URL, for example https://g.codefresh.io (required)"
+                "description": "Codefresh URL, for example https://g.codefresh.io (required)",
+                "default": "https://g.codefresh.io"
             },
             "CF_API_TOKEN": {
                 "type": "string",

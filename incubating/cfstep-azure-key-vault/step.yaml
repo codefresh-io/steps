@@ -28,14 +28,14 @@ metadata:
         steps:
           GetAzureSecret:
             title: Fetching Azure Secret from Key Vault
-            image: 'codefreshplugins/cfstep-azure-key-vault:latest'
-            environment:
-              - AZURE_CLIENT_ID=applicationid
-              - AZURE_SECRET=serviceprincipalsecret
-              - AZURE_TENANT=directoryid
-              - AZURE_SECRET_ID=mysecret
-              - AZURE_SECRET_VERSION=d9ccc49fadfe4f37b4039e7edd32aa41
-              - 'AZURE_VAULT_URL=https://dustinvb-kv.vault.azure.net/'
+            type: cfstep-azure-key-vault
+            arguments:
+              AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
+              AZURE_SECRET: ${{AZURE_SECRET}}
+              AZURE_TENANT: ${{AZURE_TENANT}}
+              AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
+              AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
+              AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
 spec:
   arguments: |-
     {

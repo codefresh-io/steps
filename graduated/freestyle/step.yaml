@@ -13,8 +13,8 @@ metadata:
   official: true
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/freestyle/icon.svg
-    background: "#3A3A3A"
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/freestyle/icon-1.svg
+    background: "#C8EFC3"
   maintainers:
     - name: Codefresh INC
   examples:

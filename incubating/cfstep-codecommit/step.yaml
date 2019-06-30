@@ -27,10 +27,10 @@ metadata:
         version: '1.0'
         steps:
           GitClone:
-            image: codefreshplugins/cfstep-codecommit
-            environment:
-              - GIT_USER=mygituser
-              - 'GIT_PASSWORD=#######'
+            type: cfstep-codecommit
+            arguments:
+              GIT_USER: ${{GIT_USER}}
+              GIT_PASSWORD: ${{GIT_PASSWORD}}
 spec:
   arguments: |-
     {

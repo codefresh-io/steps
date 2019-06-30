@@ -27,6 +27,7 @@ metadata:
         version: '1.0'
         steps:
           DeployToDcos:
+            type: cf-deploy-dcos
             arguments:
               WORKING_DIRECTORY: ${{WORKING_DIRECTORY}}
               DCOS_URL: ${{DCOS_URL}}

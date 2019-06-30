@@ -26,13 +26,13 @@ metadata:
         version: '1.0'
         steps:
           AquaSecurityScan:
-            image: codefreshplugins/cfstep-aqua
-            environment:
-              - 'AQUA_HOST=http://0.0.0.0'
-              - 'AQUA_PASSWORD=########'
-              - AQUA_USERNAME=administrator
-              - IMAGE=example-voting-app/worker
-              - 'TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+            type: cfstep-aqua
+            arguments:
+              AQUA_HOST: ${{AQUA_HOST}}
+              AQUA_PASSWORD: ${{AQUA_PASSWORD}}
+              AQUA_USERNAME: ${{AQUA_USERNAME}}
+              IMAGE: ${{IMAGE}}
+              TAG: ${{TAG}}
 spec:
   arguments: |-
     {

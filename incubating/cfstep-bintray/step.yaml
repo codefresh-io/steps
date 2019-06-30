@@ -27,13 +27,11 @@ metadata:
         version: '1.0'
         steps:
           DownloadNewVersion:
-            stage: Bintray download
             title: Download from Bintray
-            image: codefreshplugins/cfstep-bintray
-            working_directory: download-example/
-            environment:
-              - BINTRAY_COMMAND=dlv
-              - BINTRAY_ARGS= codefresh-demo/test/cf-demo/v4.0 --unpublished
+            type: cfstep-bintray
+            arguments:
+              BINTRAY_COMMAND: ${{BINTRAY_COMMAND}}
+              BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
 spec:
   arguments: |-
     {

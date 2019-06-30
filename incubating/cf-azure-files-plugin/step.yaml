@@ -28,14 +28,13 @@ metadata:
         steps:
           pushToAzure:
             title: Pushing to Azure files
-            image: codefresh/cf-azure-plugin
-            environment:
-              - 'ACCOUNT_NAME=${{AZ_NAME}}'
-              - 'ACCOUNT_KEY=${{AZ_ACCOUNT_KEY}}'
-              - 'SHARE_NAME=${{AZ_SHARE_NAME}}'
-              - 'DIRECTORY=${{AZ_DIRECTORY}}'
-              - 'PATH_TO_FILE=${{AZ_PATH_TO_FILE}}'
-              - ADD_TIMESTAMP=True
+            arguments:
+              ACCOUNT_NAME: ${{ACCOUNT_NAME}}
+              ACCOUNT_KEY: ${{ACCOUNT_KEY}}
+              SHARE_NAME: ${{SHARE_NAME}}
+              DIRECTORY: ${{AZ_DIRECTORY}}
+              PATH_TO_FILE: ${{PATH_TO_FILE}}
+              ADD_TIMESTAMP: "True"
 spec:
   arguments: |-
     {

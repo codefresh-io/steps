@@ -27,12 +27,12 @@ metadata:
         steps:
           RunJenkins:
             title: Triggering Jenkins Job
-            image: codefreshplugins/cf-run-jenkins-job
-            environment:
-              - 'JENKINS_URL=http://<jenkins host>:<jenkins port>'
-              - JENKINS_USER=<jenkins user name>
-              - JENKINS_TOKEN=<jenkins token>
-              - JENKINS_JOB=<jenkins job name>
+            type: cf-run-jenkins-jobs
+            arguments:
+              JENKINS_URL: ${{JENKINS_URL}}
+              JENKINS_TOKEN: ${{JENKINS_TOKEN}}
+              JENKINS_JOB: ${{JENKINS_JOB}}
+              JENKINS_USERNAME: ${{JENKINS_USERNAME}}
 spec:
   arguments: |-
     {
@@ -41,7 +41,12 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "JENKINS_USERNAME",
+          "JENKINS_TOKEN",
+          "JENKINS_URL",
+          "JENKINS_JOB"
+        ],
         "properties": {
             "JENKINS_USERNAME": {
                 "type": "string",

@@ -43,14 +43,15 @@ metadata:
                 serverless package --stage ${AWS_STAGE} --region ${AWS_REGION}
                 --package ${PACKAGE}
           deploy:
-            image: codefreshplugins/cf-plugin-serverless
+            type: cf-plugin-serverless
             title: deploy to AWS with serverless framework
-            working_directory: '${{main_clone}}/examples/aws-node-simple-http-endpoint'
-            commands:
-              - >-
-                serverless deploy --conceal --verbose --stage ${AWS_STAGE}
-                --region ${AWS_REGION} --aws-profile ${AWS_PROFILE} --package
-                ${PACKAGE}
+            arguments:
+              PACKAGE: ${{PACKAGE}}
+              AWS_CREDENTIALS_FILE: ${{AWS_CREDENTIALS_FILE}}
+              AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
+              AWS_REGION: ${{AWS_REGION}}
+              AWS_PROFILE: ${{AWS_PROFILE}}
+              AWS_STAGE: ${{AWS_STAGE}}
 spec:
   arguments: |-
     {
@@ -105,3 +106,7 @@ spec:
         - 'AWS_REGION=${{AWS_REGION}}'
         - 'AWS_PROFILE=${{AWS_PROFILE}}'
         - 'AWS_STAGE=${{AWS_STAGE}}'
+      commands:
+        - serverless deploy --conceal --verbose --stage ${{AWS_STAGE}}
+          --region ${{AWS_REGION}} --aws-profile ${{AWS_PROFILE}} --package
+          ${{PACKAGE}}

@@ -27,12 +27,12 @@ metadata:
         version: '1.0'
         steps:
           makisuBuildStep:
-            image: codefresh/cfstep-makisu
-            environment:
-              - REGISTRY_HOSTNAME=docker.io
-              - R_USER=my_username
-              - R_PASSWORD=my_password
-              - 'IMAGE_NAME_TAG=image/name:tag'
+            type: cfstep-makisu
+            arguments:
+              REGISTRY_HOSTNAME: ${{REGISTRY_HOSTNAME}}
+              R_USER: ${{R_USER}}
+              R_PASSWORD: ${{R_PASSWORD}}
+              IMAGE_NAME_TAG: ${{IMAGE_NAME_TAG}}
 spec:
   arguments: |-
     {

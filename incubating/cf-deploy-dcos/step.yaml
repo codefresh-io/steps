@@ -26,26 +26,17 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          BuildingDockerImage:
-            type: build
-            image_name: applcation/image
-          PushToRegistry:
-            type: push
-            candidate: '${{BuildingDockerImage}}'
           DeployToDcos:
-            image: 'codefreshplugins/cf-deploy-dcos:latest'
-            working_directory: '${{main_clone}}'
-            commands:
-              - /cf-deploy-dcos deployment.tmpl
-            environment:
-              - 'DCOS_URL=${{DCOS_URL}}'
-              - 'DCOS_CLUSTER_NAME=${{DCOS_CLUSTER_NAME}}'
-              - 'DCOS_CLUSTER_ID=${{DCOS_CLUSTER_ID}}'
-              - 'DCOS_DCOS_ACS_TOKEN=${{DCOS_DCOS_ACS_TOKEN}}'
-              - 'DCOS_SSL_VERIFY=${{DCOS_SSL_VERIFY}}'
-              - 'APP_ID=${{APP_ID}}'
-              - 'IMAGE_NAME=${{IMAGE_NAME}}'
-              - 'IMAGE_TAG=${{IMAGE_TAG}}'
+            arguments:
+              WORKING_DIRECTORY: ${{WORKING_DIRECTORY}}
+              DCOS_URL: ${{DCOS_URL}}
+              DCOS_CLUSTER_NAME: ${{DCOS_CLUSTER_NAME}}
+              DCOS_CLUSTER_ID: ${{DCOS_CLUSTER_ID}}
+              DCOS_DCOS_ACS_TOKEN: ${{DCOS_DCOS_ACS_TOKEN}}
+              DCOS_SSL_VERIFY: ${{DCOS_SSL_VERIFY}}
+              APP_ID: ${{APP_ID}}
+              IMAGE_NAME: ${{IMAGE_NAME}}
+              IMAGE_TAG: ${{IMAGE_TAG}}
 spec:
   arguments: |-
     {
@@ -90,7 +81,9 @@ spec:
   steps:
     main:
       name: cf-deploy-dcos
-      image: codefreshplugins/cf-deploy-dcos
+      image: codefreshplugins/cf-deploy-dcos:latest
+      commands:
+        - /cf-deploy-dcos ${{WORKING_DIRECTORY}}/deployment.tmpl
       environment:
         - 'DCOS_URL=${{DCOS_URL}}'
         - 'DCOS_CLUSTER_NAME=${{DCOS_CLUSTER_NAME}}'

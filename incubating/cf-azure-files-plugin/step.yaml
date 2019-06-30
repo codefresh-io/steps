@@ -32,7 +32,7 @@ metadata:
               ACCOUNT_NAME: ${{ACCOUNT_NAME}}
               ACCOUNT_KEY: ${{ACCOUNT_KEY}}
               SHARE_NAME: ${{SHARE_NAME}}
-              DIRECTORY: ${{AZ_DIRECTORY}}
+              DIRECTORY: ${{DIRECTORY}}
               PATH_TO_FILE: ${{PATH_TO_FILE}}
               ADD_TIMESTAMP: "True"
 spec:

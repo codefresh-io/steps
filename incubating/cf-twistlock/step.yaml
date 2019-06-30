@@ -25,47 +25,19 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        TwistlockScanImage:
-          type: composition
-          composition:
-            version: '2'
-            services:
-              targetimage:
-                image: '${{BuildingDockerImage}}'
-                command: sh -c "exit 0"
-                labels:
-                  build.image.id: '${{CF_BUILD_ID}}'
-          composition_candidates:
-            scan_service:
-              image: 'sctechdev/docker-twistcli:latest'
-              environment:
-                - 'CODEFRESH_CLI_KEY=${{CODEFRESH_CLI_KEY}}'
-                - 'CONSOLE_HOSTNAME=${{CONSOLE_HOSTNAME}}'
-                - 'CONSOLE_PORT=${{CONSOLE_PORT}}'
-                - 'CONSOLE_USERNAME=${{CONSOLE_USERNAME}}'
-                - 'CONSOLE_PASSWORD=${{CONSOLE_PASSWORD}}'
-                - 'COMPLIANCE_THRESHOLD=${{COMPLIANCE_THRESHOLD}}'
-                - 'VULNERABILITY_THRESHOLD=${{VULNERABILITY_THRESHOLD}}'
-              command: >-
-                python /twistlock-cli.py "docker inspect $$(docker inspect
-                $$(docker ps -aqf label=build.image.id=${{CF_BUILD_ID}}) -f
-                {{.Config.Image}}) -f {{.Id}} | sed 's/sha256://g'"
-              depends_on:
-                - targetimage
-              volumes:
-                - '/var/run/docker.sock:/var/run/docker.sock'
-                - '/var/lib/docker:/var/lib/docker'
-          add_flow_volume_to_composition: true
-          on_success:
-            metadata:
-              set:
-                - '${{BuildingDockerImage.imageId}}':
-                    - SECURITY_SCAN: true
-          on_fail:
-            metadata:
-              set:
-                - '${{BuildingDockerImage.imageId}}':
-                    - SECURITY_SCAN: false
+        version: '1.0'
+        steps:        
+          TwistlockScanImage:
+            type: cf-twistlock
+            arguments:
+              TEST_IMAGE: ${{TEST_IMAGE}}
+              CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
+              CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
+              CONSOLE_PORT: ${{CONSOLE_PORT}}
+              CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
+              CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
+              COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
+              VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
 spec:
   arguments: |-
     {
@@ -75,6 +47,7 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
+            "TEST_IMAGE",
             "CODEFRESH_CLI_KEY",
             "CONSOLE_HOSTNAME",
             "CONSOLE_PORT",
@@ -134,18 +107,34 @@ spec:
     }
   steps:
     main:
-      name: cf-twistlock
-      image: codefreshplugins/cf-twistlock
-      environment:
-        - 'CODEFRESH_CLI_KEY=${{CODEFRESH_CLI_KEY}}'
-        - 'CONSOLE_HOSTNAME=${{CONSOLE_HOSTNAME}}'
-        - 'CONSOLE_PORT=${{CONSOLE_PORT}}'
-        - 'CONSOLE_USERNAME=${{CONSOLE_USERNAME}}'
-        - 'CONSOLE_PASSWORD=${{CONSOLE_PASSWORD}}'
-        - 'TLSCACERT=${{TLSCACERT}}'
-        - 'HASH=${{HASH}}'
-        - 'DETAILS=${{DETAILS}}'
-        - 'INCLUDE_PACKAGE_FILES=${{INCLUDE_PACKAGE_FILES}}'
-        - 'ONLY_FIXED=${{ONLY_FIXED}}'
-        - 'COMPLIANCE_THRESHOLD=${{COMPLIANCE_THRESHOLD}}'
-        - 'VULNERABILITY_THRESHOLD=${{VULNERABILITY_THRESHOLD}}'
+      TwistlockScanImage:
+        type: composition
+        composition:
+          version: '2'
+          services:
+            targetimage:
+              image: '${{TEST_IMAGE}}'
+              command: sh -c "exit 0"
+              labels:
+                build.image.id: '${{CF_BUILD_ID}}'
+        composition_candidates:
+          scan_service:
+            image: 'sctechdev/docker-twistcli:latest'
+            environment:
+              - 'CODEFRESH_CLI_KEY=${{CODEFRESH_CLI_KEY}}'
+              - 'CONSOLE_HOSTNAME=${{CONSOLE_HOSTNAME}}'
+              - 'CONSOLE_PORT=${{CONSOLE_PORT}}'
+              - 'CONSOLE_USERNAME=${{CONSOLE_USERNAME}}'
+              - 'CONSOLE_PASSWORD=${{CONSOLE_PASSWORD}}'
+              - 'COMPLIANCE_THRESHOLD=${{COMPLIANCE_THRESHOLD}}'
+              - 'VULNERABILITY_THRESHOLD=${{VULNERABILITY_THRESHOLD}}'
+            command: >-
+              python /twistlock-cli.py "docker inspect $$(docker inspect
+              $$(docker ps -aqf label=build.image.id=${{CF_BUILD_ID}}) -f
+              {{.Config.Image}}) -f {{.Id}} | sed 's/sha256://g'"
+            depends_on:
+              - targetimage
+            volumes:
+              - '/var/run/docker.sock:/var/run/docker.sock'
+              - '/var/lib/docker:/var/lib/docker'
+        add_flow_volume_to_composition: true

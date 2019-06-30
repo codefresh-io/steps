@@ -1,8 +1,0 @@
-version: '1.0'
-steps:
-  UsePlugin:
-    title: running the plugin
-    description: This should succeed
-    image: ${{Name}}:${{Tag}}
-    environment:
-      - PLUGIN_RESULT=SUCCESS

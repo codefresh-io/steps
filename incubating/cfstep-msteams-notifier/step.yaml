@@ -27,10 +27,20 @@ metadata:
         version: '1.0'
         steps:
           MSTeamsNotification:
-            image: 'codefreshplugins/cfstep-msteams-notifier:latest'
-            environment:
-              - >-
-                MSTEAMS_WEBHOOK_URL=https://outlook.office.com/webhook/37a4ea3d...
+            type: cfstep-msteams-notifier
+            arguments:
+              CF_STATUS_MESSAGE: ${{CF_STATUS_MESSAGE}}
+              MSTEAMS_ACTIVITY_IMAGE: ${{MSTEAMS_ACTIVITY_IMAGE}}
+              MSTEAMS_ACTIVITY_SUBTITLE: ${{MSTEAMS_ACTIVITY_SUBTITLE}}
+              MSTEAMS_ACTIVITY_TEXT: ${{MSTEAMS_ACTIVITY_TEXT}}
+              MSTEAMS_LINK_TEXT: ${{MSTEAMS_LINK_TEXT}}
+              MSTEAMS_LINK_TEXT_2: ${{MSTEAMS_LINK_TEXT_2}}
+              MSTEAMS_LINK_URL: ${{MSTEAMS_LINK_URL}}
+              MSTEAMS_LINK_URL_2: ${{MSTEAMS_LINK_URL_2}}
+              MSTEAMS_NEW_WEBHOOK_URL: ${{MSTEAMS_NEW_WEBHOOK_URL}}
+              MSTEAMS_TEXT: ${{MSTEAMS_TEXT}}
+              MSTEAMS_TITLE: ${{MSTEAMS_TITLE}}
+              MSTEAMS_WEBHOOK_URL: ${{MSTEAMS_WEBHOOK_URL}}
 spec:
   arguments: |-
     {

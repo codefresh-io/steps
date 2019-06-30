@@ -26,10 +26,12 @@ metadata:
         version: '1.0'
         steps:
           AnnotateMR:
-            image: codefreshplugins/gitlab-mr-annotate
-            environment:
-              - GIT_CONTEXT=my_gitlab_context_name
-              - 'LABELS=my_label1,my_label2,my_label_n'
+            type: cf-gitlab-mr-annotate
+            arguments:
+              GIT_CONTEXT: ${{GIT_CONTEXT}}
+              LABELS: ${{LABELS}}
+              PROJECT_ID: ${{PROJECT_ID}}
+              MERGE_REQUEST_ID: ${{MERGE_REQUEST_ID}}
 spec:
   arguments: |-
     {
@@ -38,7 +40,12 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "GIT_CONTEXT",
+          "LABELS",
+          "PROJECT_ID",
+          "MERGE_REQUEST_ID"
+        ],
         "properties": {
             "GIT_CONTEXT": {
                 "type": "string",

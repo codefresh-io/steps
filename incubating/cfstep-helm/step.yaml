@@ -26,11 +26,11 @@ metadata:
         version: '1.0'
         steps:
           deploy:
-            image: 'codefresh/cfstep-helm:2.9.0'
-            environment:
-              - CHART_REF=mychart
-              - RELEASE_NAME=mychart-prod
-              - KUBE_CONTEXT=kube-prod
+            type: cfstep-helm
+            arguments:
+              CHART_REF: ${{CHART_REF}}
+              RELEASE_NAME: ${{RELEASE_NAME}}
+              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
   arguments: |-
     {

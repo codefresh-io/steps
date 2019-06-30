@@ -9,6 +9,7 @@ metadata:
   stage: graduated
   official: true
   categories:
+    - featured
     - docker
   icon:
     type: svg

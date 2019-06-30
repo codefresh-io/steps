@@ -8,6 +8,7 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/pending-approval'
   stage: graduated
   categories:
+    - featured
     - building-block
   official: true
   icon:

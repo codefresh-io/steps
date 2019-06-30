@@ -8,6 +8,7 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
   stage: graduated
   categories:
+    - featured
     - building-block
   official: true
   icon:

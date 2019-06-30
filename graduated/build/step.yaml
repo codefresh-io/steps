@@ -8,6 +8,7 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
   categories:
+    - featured
     - docker
   official: true
   icon:

@@ -26,15 +26,10 @@ metadata:
         version: '1.0'
         steps:
           Kompose:
-            image: codefreshplugins/plugin-kompose
-            working_directory: '${{CloneStep}}'
-            environment:
-              - KUBE_CONTEXT=myClusterName
-              - NAMESPACE=test-kompose
-              - FILE=./example/docker-compose.yaml
-              - DEBUG=true
-              - VOLUMES=emptyDir
-              - REPLICAS=2
+            type: cf-kompose-plugin
+            arguments:
+              KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
+              NAMESPACE: "${{NAMESPACE}}"
 spec:
   arguments: |-
     {
@@ -43,7 +38,10 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "KUBE_CONTEXT",
+          "NAMESPACE"
+        ],
         "properties": {
             "KUBE_CONTEXT": {
                 "type": "string",
@@ -51,7 +49,8 @@ spec:
             },
             "FILE": {
                 "type": "string",
-                "description": "Docker Compose file to deploy (default docker-compose.yaml file)"
+                "description": "Docker Compose file to deploy (default docker-compose.yaml file)",
+                "default": "docker-compose.yaml"
             },
             "NAMESPACE": {
                 "type": "string",
@@ -59,15 +58,17 @@ spec:
             },
             "VOLUMES": {
                 "type": "string",
-                "description": "volumes to be generated (\"persistentVolumeClaim\"|\"emptyDir\") (default \"persistentVolumeClaim\")"
+                "description": "volumes to be generated (\"persistentVolumeClaim\"|\"emptyDir\")",
+                "default": "persistentVolumeClaim"
             },
             "REPLICAS": {
                 "type": "string",
-                "description": "specify the number of replicas generated (default 1)"
+                "description": "specify the number of replicas generated",
+                "default": "1"
             },
             "DRY_RUN": {
                 "type": "string",
-                "description": "do a \"dry run\" (print out) deployment (do not install anything, useful for Debug)"
+                "description": "do a dry run (print out) deployment (do not install anything, useful for Debug)"
             },
             "DEBUG": {
                 "type": "string",
@@ -85,5 +86,3 @@ spec:
         - 'NAMESPACE=${{NAMESPACE}}'
         - 'VOLUMES=${{VOLUMES}}'
         - 'REPLICAS=${{REPLICAS}}'
-        - 'DRY_RUN=${{DRY_RUN}}'
-        - 'DEBUG=${{DEBUG}}'

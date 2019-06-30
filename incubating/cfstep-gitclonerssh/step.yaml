@@ -28,13 +28,13 @@ metadata:
         version: '1.0'
         steps:
           clone_repo_via_ssh:
-            image: codefresh/cfstep-gitclonerssh
-            environment:
-              - 'REMOTE_URL=git@github.com:my-user/my-repo.git'
-              - BRANCH=my-branch
-              - 'SSH_KEY=${{SSH_KEY}}'
-              - 'SPLIT_CHAR=${{SPLIT_CHAR}}'
-              - CLONE_PATH=/codefresh/volume
+            type: cfstep-gitclonerssh
+            arguments:
+              REMOTE_URL: ${{REMOTE_URL}}
+              BRANCH: ${{BRANCH}}
+              SSH_KEY: ${{SSH_KEY}}
+              SPLIT_CHAR: ${{SPLIT_CHAR}}
+              CLONE_PATH: ${{CLONE_PATH}}
 spec:
   arguments: |-
     {
@@ -46,7 +46,8 @@ spec:
         "required": [
             "REMOTE_URL",
             "SSH_KEY",
-            "SPLIT_CHAR"
+            "SPLIT_CHAR",
+            "CLONE_PATH"
         ],
         "properties": {
             "REMOTE_URL": {
@@ -55,7 +56,8 @@ spec:
             },
             "BRANCH": {
                 "type": "string",
-                "description": "Branch name to checkout (e.g. `master`)"
+                "description": "Branch name to checkout (e.g. `master`)",
+                "default": "master" 
             },
             "SSH_KEY": {
                 "type": "string",

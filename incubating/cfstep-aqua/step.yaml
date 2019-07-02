@@ -45,7 +45,6 @@ spec:
             "AQUA_HOST",
             "AQUA_PASSWORD",
             "AQUA_USERNAME",
-            "CF_ACCOUNT",
             "IMAGE",
             "TAG"
         ],

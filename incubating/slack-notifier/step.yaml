@@ -58,10 +58,12 @@ spec:
             },
             "SLACK_ATTACHMENTS": {
                 "type": "string",
+                "default": "",
                 "description": "Attachments to send. Documentation https://api.slack.com/docs/message-attachments"
             },
             "MODE": {
                 "type": "string",
+                "default": "simple",
                 "description": "template | simple | default-template, by default - simple. In case with template mode you can have general body in attachment SLACK_TEMPLATE_BODY and different fields SLACK_TEMPLATE_FIELDS"
             },
             "SLACK_TEMPLATE_BODY": {

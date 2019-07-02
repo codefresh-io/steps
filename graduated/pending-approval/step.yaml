@@ -30,7 +30,26 @@ spec:
         "$schema": "http://json-schema.org/draft-07/schema#",
         "definitions": {},
         "type": "object",
-        "properties": {},
+        "properties": {
+            "timeout": {
+              "type": "object",
+              "properties": {
+                "duration": {
+                  "type": "number"
+                },
+                "finalState": {
+                  "enum": [
+                    "terminated",
+                    "approved",
+                    "denied"
+                  ],
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "patterns": []
+            }
+        },
         "additionalProperties": false,
         "patterns": []
     }

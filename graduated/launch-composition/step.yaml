@@ -48,13 +48,15 @@ spec:
                 "description": "The directory in which to search for the composition file. It can be an explicit path in the container’s file system, or a variable that references another step. The default is ${{main_clone}}."
             },
             "composition": {
-                "oneOf": [{
+                "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
                     "type": "object",
                     "properties": {},
                     "additionalProperties": true,
                     "patterns": []
-                }, {
-                    "type": "string"
                 }],
                 "description": "The composition you want to run. It can be an inline YAML definition, a path to a composition file on the file system, or the logical name of a composition stored in the Codefresh system."
             },

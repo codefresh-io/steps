@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-kompose-plugin
+  name: kompose
   isPublic: true
   description: Release a Docker Compose to Kubernetes
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/cf-kompose-plugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/kompose
   stage: incubating
   maintainers:
     - name: Alexei Ledenev
@@ -19,14 +19,14 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/cf-kompose-plugin/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/kompose/master/icon.jpg
   examples:
     - description: example-1
       workflow:
         version: '1.0'
         steps:
           Kompose:
-            type: cf-kompose-plugin
+            type: kompose
             arguments:
               KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
               NAMESPACE: "${{NAMESPACE}}"
@@ -78,7 +78,7 @@ spec:
     }
   steps:
     main:
-      name: cf-kompose-plugin
+      name: kompose
       image: codefreshplugins/plugin-kompose
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'

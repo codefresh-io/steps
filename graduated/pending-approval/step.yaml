@@ -31,9 +31,9 @@ spec:
         "definitions": {},
         "type": "object",
         "properties": {
-            "description": "Define timeout behavior",
             "timeout": {
               "type": "object",
+              "description": "Define timeout behavior",
               "properties": {
                 "duration": {
                   "description": "Duration of the timeout in hours",

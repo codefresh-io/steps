@@ -31,13 +31,17 @@ spec:
         "definitions": {},
         "type": "object",
         "properties": {
+            "description": "Define timeout behavior",
             "timeout": {
               "type": "object",
               "properties": {
                 "duration": {
+                  "description": "Duration of the timeout in hours",
                   "type": "number"
                 },
                 "finalState": {
+                  "description": "The final state of the step once the timeout is reached",
+                  "default": "terminated",
                   "enum": [
                     "terminated",
                     "approved",

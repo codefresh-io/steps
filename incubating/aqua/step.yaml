@@ -1,0 +1,93 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: aqua
+  isPublic: true
+  description: Execute Aqua Security image scan as build step
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/aqua'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dev@vanbuskirk.me
+  categories:
+    - security
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/aqua/master/logo.png
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          AquaSecurityScan:
+            type: aqua
+            arguments:
+              AQUA_HOST: ${{AQUA_HOST}}
+              AQUA_PASSWORD: ${{AQUA_PASSWORD}}
+              AQUA_USERNAME: ${{AQUA_USERNAME}}
+              IMAGE: ${{IMAGE}}
+              TAG: ${{TAG}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "AQUA_HOST",
+            "AQUA_PASSWORD",
+            "AQUA_USERNAME",
+            "IMAGE",
+            "TAG"
+        ],
+        "properties": {
+            "AQUA_HOST": {
+                "type": "string",
+                "description": "Aqua Host URI including protocol ex. https://aqua.mydomain.com"
+            },
+            "AQUA_PASSWORD": {
+                "type": "string",
+                "description": "Aqua Password"
+            },
+            "AQUA_USERNAME": {
+                "type": "string",
+                "description": "Aqua Username"
+            },
+            "CF_ACCOUNT": {
+                "type": "string",
+                "description": "Auto pulled from pipeline also replaces REGISTRY if not provided"
+            },
+            "IMAGE": {
+                "type": "string",
+                "description": "Docker Image Name"
+            },
+            "TAG": {
+                "type": "string",
+                "description": "Docker Image Tag"
+            },
+            "REGISTRY": {
+                "type": "string",
+                "description": "Name of Codefresh Registry setup in Aqua"
+            }
+        }
+    }
+  steps:
+    main:
+      name: aqua
+      image: codefreshplugins/aqua
+      environment:
+        - 'AQUA_HOST=${{AQUA_HOST}}'
+        - 'AQUA_PASSWORD=${{AQUA_PASSWORD}}'
+        - 'AQUA_USERNAME=${{AQUA_USERNAME}}'
+        - 'CF_ACCOUNT=${{CF_ACCOUNT}}'
+        - 'IMAGE=${{IMAGE}}'
+        - 'TAG=${{TAG}}'
+        - 'REGISTRY=${{REGISTRY}}'

@@ -1,0 +1,69 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: git-submodules
+  isPublic: true
+  description: Update git submodules
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/git-submodules
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza
+      email: francisco@codefresh.io
+  categories:
+    - git
+    - utility
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/git-submodules/master/logo.png
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          updateSubmodules:
+            type: git-submodules
+            arguments:
+              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+              CF_SUBMODULE_SYNC: ${{CF_SUBMODULE_SYNC}}
+              CF_SUBMODULE_UPDATE_RECURSIVE: ${{CF_SUBMODULE_UPDATE_RECURSIVE}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GITHUB_TOKEN"
+        ],
+        "properties": {
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "GitHub Token required to access the repository"
+            },
+            "CF_SUBMODULE_SYNC": {
+                "type": "string",
+                "description": "if var is set to 'true', the step will perform 'git submodule sync' command"
+            },
+            "CF_SUBMODULE_UPDATE_RECURSIVE": {
+                "type": "string",
+                "description": "if set to 'true', the step will perform 'git submodule update --init' command with '--recursive' option"
+            }
+        }
+    }
+  steps:
+    main:
+      name: git-submodules
+      image: codefreshplugins/git-submodules
+      environment:
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'CF_SUBMODULE_SYNC=${{CF_SUBMODULE_SYNC}}'
+        - 'CF_SUBMODULE_UPDATE_RECURSIVE=${{CF_SUBMODULE_UPDATE_RECURSIVE}}'

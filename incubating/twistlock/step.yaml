@@ -1,0 +1,140 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: twistlock
+  isPublic: true
+  description: Execute Twistlock CLI image scan as build step
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/twistlock'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dev@vanbuskirk.me
+    - name: Varun Tagore
+      email: rondevops@gmail.com
+  categories:
+    - security
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/twistlock/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          TwistlockScanImage:
+            type: twistlock
+            arguments:
+              TEST_IMAGE: ${{TEST_IMAGE}}
+              CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
+              CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
+              CONSOLE_PORT: ${{CONSOLE_PORT}}
+              CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
+              CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
+              COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
+              VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "TEST_IMAGE",
+            "CODEFRESH_CLI_KEY",
+            "CONSOLE_HOSTNAME",
+            "CONSOLE_PORT",
+            "CONSOLE_USERNAME",
+            "CONSOLE_PASSWORD"
+        ],
+        "properties": {
+            "CODEFRESH_CLI_KEY": {
+                "type": "string",
+                "description": "https://g.codefresh.io/account/tokens"
+            },
+            "CONSOLE_HOSTNAME": {
+                "type": "string",
+                "description": "Twistlock hostname/ip"
+            },
+            "CONSOLE_PORT": {
+                "type": "string",
+                "description": "port"
+            },
+            "CONSOLE_USERNAME": {
+                "type": "string",
+                "description": "username"
+            },
+            "CONSOLE_PASSWORD": {
+                "type": "string",
+                "description": "password"
+            },
+            "TLSCACERT": {
+                "type": "string",
+                "description": "CA Cert if provided TLS will be used"
+            },
+            "HASH": {
+                "type": "string",
+                "description": "hashing algorithm (one of: md5, sha1, sha256)"
+            },
+            "DETAILS": {
+                "type": "string",
+                "description": "true|false - prints an itemized list of each vulnerability found by the scanner"
+            },
+            "INCLUDE_PACKAGE_FILES": {
+                "type": "string",
+                "description": "true|false - List all packages in the image."
+            },
+            "ONLY_FIXED": {
+                "type": "string",
+                "description": "true|false - reports just the vulnerabilites that have fixes available"
+            },
+            "COMPLIANCE_THRESHOLD": {
+                "type": "string",
+                "description": "[ low, medium, high ] sets the the minimal severity compliance issue that returns a fail exit code"
+            },
+            "VULNERABILITY_THRESHOLD": {
+                "type": "string",
+                "description": "[ low, medium, high, critical ] sets the minimal severity vulnerability that returns a fail exit code"
+            }
+        }
+    }
+  steps:
+    main:
+      TwistlockScanImage:
+        type: composition
+        composition:
+          version: '2'
+          services:
+            targetimage:
+              image: '${{TEST_IMAGE}}'
+              command: sh -c "exit 0"
+              labels:
+                build.image.id: '${{CF_BUILD_ID}}'
+        composition_candidates:
+          scan_service:
+            image: 'sctechdev/docker-twistcli:latest'
+            environment:
+              - 'CODEFRESH_CLI_KEY=${{CODEFRESH_CLI_KEY}}'
+              - 'CONSOLE_HOSTNAME=${{CONSOLE_HOSTNAME}}'
+              - 'CONSOLE_PORT=${{CONSOLE_PORT}}'
+              - 'CONSOLE_USERNAME=${{CONSOLE_USERNAME}}'
+              - 'CONSOLE_PASSWORD=${{CONSOLE_PASSWORD}}'
+              - 'COMPLIANCE_THRESHOLD=${{COMPLIANCE_THRESHOLD}}'
+              - 'VULNERABILITY_THRESHOLD=${{VULNERABILITY_THRESHOLD}}'
+            command: >-
+              python /twistlock-cli.py "docker inspect $$(docker inspect
+              $$(docker ps -aqf label=build.image.id=${{CF_BUILD_ID}}) -f
+              {{.Config.Image}}) -f {{.Id}} | sed 's/sha256://g'"
+            depends_on:
+              - targetimage
+            volumes:
+              - '/var/run/docker.sock:/var/run/docker.sock'
+              - '/var/lib/docker:/var/lib/docker'
+        add_flow_volume_to_composition: true

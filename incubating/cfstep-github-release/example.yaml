@@ -1,8 +1,0 @@
-version: '1.0'
-steps:
-  github_prerelease:
-    image: codefreshplugins/cfstep-github-release
-    commands:
-      - github-release edit --user $CF_REPO_OWNER --repo $CF_REPO_NAME --tag $CF_BRANCH_TAG_NORMALIZED --name "$CF_BRANCH_TAG_NORMALIZED" --target "$CF_TARGET_BRANCH"
-      - github-release delete --user $CF_REPO_OWNER --repo $CF_REPO_NAME --tag $CF_BRANCH_TAG_NORMALIZED
-      - github-release --help

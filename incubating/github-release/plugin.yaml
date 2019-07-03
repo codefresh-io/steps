@@ -1,0 +1,37 @@
+image: codefreshplugins/github-release
+tag: master
+version: 0.2.0
+description: Plugin to make github releases
+keywords:
+  - github
+  - release
+categories:
+  - git
+  - release
+# home: https://github.com/codefresh-contrib/github-release
+sources:
+  - https://github.com/codefresh-contrib/github-release
+maintainers:
+  - name: Alex Cheshko
+    email: a.cheshko@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-plugins/github-release/master/icon.jpg
+envs:
+  - name: GITHUB_TOKEN
+    type: required
+    description: Codefresh provided variable containing repository owner name
+  - name: CF_REPO_OWNER
+    type: required
+    description: Codefresh provided variable containing repository owner name
+  - name: CF_REPO_NAME
+    type: required
+    description: Codefresh provided variable containing repository name
+  - name: CF_BRANCH_TAG_NORMALIZED
+    type: required
+    description: Codefresh provided variable containing tag name
+  - name: CF_TARGET_BRANCH
+    type: optional
+    description: Codefresh provided variable containing target branch
+  - name: PRERELEASE
+    description: If true, this variable tells the plugin to create a pre-release
+  - name: FILES
+    description: A glob expression for the list of the files to be uploaded

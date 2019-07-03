@@ -1,0 +1,99 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: helm
+  isPublic: true
+  description: Release a Helm chart (update or install)
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/helm'
+  stage: incubating
+  maintainers:
+    - name: Itay Shakury
+      email: i.shakury@codefresh.io
+  categories:
+    - featured
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/helm/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          deploy:
+            type: helm
+            arguments:
+              CHART_REF: ${{CHART_REF}}
+              RELEASE_NAME: ${{RELEASE_NAME}}
+              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "KUBE_CONTEXT",
+            "CHART_NAME",
+            "RELEASE_NAME"
+        ],
+        "properties": {
+            "KUBE_CONTEXT": {
+                "type": "string",
+                "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
+            },
+            "CHART_NAME": {
+                "type": "string",
+                "description": "Helm chart name to release (path to chart folder, or name of packaged chart) (required)"
+            },
+            "RELEASE_NAME": {
+                "type": "string",
+                "description": "Helm release name"
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "target Kubernetes namespace"
+            },
+            "TILLER_NAMESPACE": {
+                "type": "string",
+                "description": "Kubernetes namespace where tiller is at"
+            },
+            "CHART_VERSION": {
+                "type": "string",
+                "description": "application chart version to install"
+            },
+            "CHART_REPO_URL": {
+                "type": "string",
+                "description": "Helm chart repository URL (overriden by injected Helm repository context)"
+            },
+            "CUSTOMFILE_<name>": {
+                "type": "string",
+                "description": "Values file to provide to Helm (as --file). see usage information below."
+            },
+            "CUSTOM_<name>": {
+                "type": "string",
+                "description": "Value to provide to Helm (as --set). see usage information below."
+            }
+        }
+    }
+  steps:
+    main:
+      name: helm
+      image: 'codefresh/helm:2.9.0'
+      environment:
+        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
+        - 'CHART_NAME=${{CHART_NAME}}'
+        - 'RELEASE_NAME=${{RELEASE_NAME}}'
+        - 'NAMESPACE=${{NAMESPACE}}'
+        - 'TILLER_NAMESPACE=${{TILLER_NAMESPACE}}'
+        - 'CHART_VERSION=${{CHART_VERSION}}'
+        - 'CHART_REPO_URL=${{CHART_REPO_URL}}'
+        - 'CUSTOMFILE_<name>=${{CUSTOMFILE_<name>}}'
+        - 'CUSTOM_<name>=${{CUSTOM_<name>}}'

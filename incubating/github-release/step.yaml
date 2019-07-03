@@ -1,0 +1,96 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: github-release
+  isPublic: true
+  description: Plugin to make github releases
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/github-release
+  stage: incubating
+  maintainers:
+    - name: Alex Cheshko
+      email: a.cheshko@codefresh.io
+  categories:
+    - git
+    - release
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-plugins/github-release/master/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          github_prerelease:
+            type: github-release
+            arguments:
+              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+              CF_REPO_OWNER: ${{CF_REPO_OWNER}}
+              CF_REPO_NAME: ${{CF_REPO_NAME}}
+              CF_BRANCH_TAG_NORMALIZED: ${{CF_BRANCH_TAG_NORMALIZED}}
+              CF_TARGET_BRANCH: ${{CF_TARGET_BRANCH}}
+              PRERELEASE: ${{PRERELEASE}}
+              FILES: ${{FILES}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "GITHUB_TOKEN",
+            "CF_REPO_OWNER",
+            "CF_REPO_NAME",
+            "CF_BRANCH_TAG_NORMALIZED"
+        ],
+        "properties": {
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "Codefresh provided variable containing repository owner name"
+            },
+            "CF_REPO_OWNER": {
+                "type": "string",
+                "description": "Codefresh provided variable containing repository owner name"
+            },
+            "CF_REPO_NAME": {
+                "type": "string",
+                "description": "Codefresh provided variable containing repository name"
+            },
+            "CF_BRANCH_TAG_NORMALIZED": {
+                "type": "string",
+                "description": "Codefresh provided variable containing tag name"
+            },
+            "CF_TARGET_BRANCH": {
+                "type": "string",
+                "description": "Codefresh provided variable containing target branch"
+            },
+            "PRERELEASE": {
+                "type": "string",
+                "description": "If true, this variable tells the plugin to create a pre-release"
+            },
+            "FILES": {
+                "type": "string",
+                "description": "A glob expression for the list of the files to be uploaded"
+            }
+        }
+    }
+  steps:
+    main:
+      name: github-release
+      image: codefreshplugins/github-release
+      environment:
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'
+        - 'CF_REPO_NAME=${{CF_REPO_NAME}}'
+        - 'CF_BRANCH_TAG_NORMALIZED=${{CF_BRANCH_TAG_NORMALIZED}}'
+        - 'CF_TARGET_BRANCH=${{CF_TARGET_BRANCH}}'
+        - 'PRERELEASE=${{PRERELEASE}}'
+        - 'FILES=${{FILES}}'

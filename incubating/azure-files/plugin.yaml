@@ -1,4 +1,4 @@
-name: cf-azure-files-plugin
+name: azure-files
 image: codefresh/cf-azure-plugin
 tag: master
 version: 1.0.0
@@ -10,11 +10,11 @@ keywords:
 - push
 - file
 sources:
-- https://github.com/codefresh-io/cf-azure-files-plugin
+- https://github.com/codefresh-io/azure-files
 maintainers:
 - name: Denys Voznyuk
   email: denys@codefresh.io
-icon: https://raw.githubusercontent.com/codefresh-plugins/cf-azure-files-plugin/master/icon.jpg
+icon: https://raw.githubusercontent.com/codefresh-plugins/azure-files/master/icon.jpg
 envs:
 - name: ACCOUNT_NAME
   type: required

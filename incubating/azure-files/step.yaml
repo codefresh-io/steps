@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-azure-files-plugin
+  name: azure-files
   isPublic: true
   description: Plugin for pushing files to Azure Files
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/cf-azure-files-plugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/azure-files
   stage: incubating
   maintainers:
     - name: Denys Voznyuk
@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/cf-azure-files-plugin/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/azure-files/master/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -78,7 +78,7 @@ spec:
     }
   steps:
     main:
-      name: cf-azure-files-plugin
+      name: azure-files
       image: codefresh/cf-azure-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'

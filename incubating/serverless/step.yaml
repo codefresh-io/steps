@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-plugin-serverless
+  name: serverless
   isPublic: true
   description: Deploy a Serverless service (functions and resources)
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/cf-plugin-serverless
+      https://github.com/codefresh-io/steps/tree/master/incubating/serverless
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/cf-plugin-serverless/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/serverless/master/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -35,7 +35,7 @@ metadata:
                 ${PWD}/.aws/credentials
               - 'cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials'
           package:
-            image: ccodefreshplugins/cf-plugin-serverless
+            image: ccodefreshplugins/serverless
             title: package serverless service
             working_directory: '${{main_clone}}/examples/aws-node-simple-http-endpoint'
             commands:
@@ -43,7 +43,7 @@ metadata:
                 serverless package --stage ${AWS_STAGE} --region ${AWS_REGION}
                 --package ${PACKAGE}
           deploy:
-            type: cf-plugin-serverless
+            type: serverless
             title: deploy to AWS with serverless framework
             arguments:
               PACKAGE: ${{PACKAGE}}
@@ -97,8 +97,8 @@ spec:
     }
   steps:
     main:
-      name: cf-plugin-serverless
-      image: codefresh-plugins/cf-plugin-serverless
+      name: serverless
+      image: codefresh-plugins/serverless
       environment:
         - 'PACKAGE=${{PACKAGE}}'
         - 'AWS_CREDENTIALS_FILE=${{AWS_CREDENTIALS_FILE}}'

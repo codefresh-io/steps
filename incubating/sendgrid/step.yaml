@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: sendgridplugin
+  name: sendgrid
   isPublic: true
   description: Send e-mail via Sendgrid
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/sendgridplugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/sendgrid
   stage: incubating
   maintainers:
     - name: Pavel Kostohrys
@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/sendgridplugin/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/sendgrid/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -27,7 +27,7 @@ metadata:
         steps:
           TestMail:
             title: Test Mail
-            image: 'codefreshplugins/sendgridplugin:latest'
+            image: 'codefreshplugins/sendgrid:latest'
             environment:
             - SENDGRID_APIKEY=${{SENDGRID_APIKEY}}
             - SENDGRID_MAIL=${{SENDGRID_MAIL}}
@@ -80,8 +80,8 @@ spec:
     }
   steps:
     main:
-      name: sendgridplugin
-      image: codefreshplugins/sendgridplugin
+      name: sendgrid
+      image: codefreshplugins/sendgrid
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
         - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'

@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: anchore-plugin
+  name: anchore
   isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/anchore-plugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/anchore
   stage: incubating
   maintainers:
     - name: Jeremy Valance
@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/anchore-plugin/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/anchore/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -31,7 +31,7 @@ metadata:
             image_name: '${{QA_IMAGE}}'
           ScanMyImage:
             title: Scanning Docker Image
-            type: anchore-plugin
+            type: anchore
             arguments:
               ANCHORE_CLI_URL: http://anchore-engine::8228/v1
               ANCHORE_CLI_IMAGE: alpine
@@ -70,8 +70,8 @@ spec:
     }
   steps:
     main:
-      name: anchore-plugin
-      image: codefreshplugins/anchore-plugin
+      name: anchore
+      image: codefreshplugins/anchore
       environment:
         - 'ANCHORE_CLI_URL=${{ANCHORE_CLI_URL}}'
         - 'ANCHORE_CLI_USER=${{ANCHORE_CLI_USER}}'

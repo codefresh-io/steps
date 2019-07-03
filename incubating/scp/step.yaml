@@ -1,11 +1,11 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: scp-plugin
+  name: scp
   isPublic: true
   description: Plugin to upload file or directory to remote machine using scp protocol.
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/scp-plugin'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/scp'
   stage: incubating
   maintainers:
     - name: Denys Voznyuk
@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/scp-plugin/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/scp/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -27,7 +27,7 @@ metadata:
         steps:
           SCP:
             title: scp
-            image: codefreshplugins/scp-plugin
+            image: codefreshplugins/scp
             environment:
               - CF_SCP_HOST=<your_host>
               - CF_SCP_USER_NAME=<name>
@@ -80,8 +80,8 @@ spec:
     }
   steps:
     main:
-      name: scp-plugin
-      image: codefreshplugins/scp-plugin
+      name: scp
+      image: codefreshplugins/scp
       environment:
         - 'CF_SCP_HOST=${{CF_SCP_HOST}}'
         - 'CF_SCP_USER_NAME=${{CF_SCP_USER_NAME}}'

@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: github-pr-plugin
+  name: github-pr
   isPublic: true
   description: Operates on GitHub pull requests
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/github-pr-plugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/github-pr
   stage: incubating
   maintainers:
     - name: Nick Sakovich
@@ -23,7 +23,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/github-pr-plugin/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/github-pr/icon.jpg
   examples:
     - description: example-1
       workflow:
@@ -37,7 +37,7 @@ metadata:
             candidate: '${{build-step}}'
             tag: '${{CF_BRANCH}}'
           github-pr:
-            image: codefreshplugins/github-pr-plugin
+            image: codefreshplugins/github-pr
             environment:
               - 'GITHUB_REPO_OWNER=${{CF_REPO_OWNER}}'
               - 'GITHUB_REPO_NAME=${{CF_REPO_NAME}}'
@@ -94,8 +94,8 @@ spec:
     }
   steps:
     main:
-      name: github-pr-plugin
-      image: codefreshplugins/github-pr-plugin
+      name: github-pr
+      image: codefreshplugins/github-pr
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'

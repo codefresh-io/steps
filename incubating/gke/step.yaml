@@ -1,11 +1,11 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: plugin-gke
+  name: gke
   isPublic: true
   description: Codefresh gke plugin
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/plugin-gke'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/gke'
   stage: incubating
   maintainers:
     - name: Kosta Klevensky
@@ -18,24 +18,24 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/plugin-gke/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/gke/icon.jpg
   examples:
     - description: example-1
       workflow:
         version: '1.0'
         steps:
           create-cluster:
-            image: codefreshplugins/plugin-gke
+            image: codefreshplugins/gke
             commands:
               - >-
                 gke-create gke-test-cluster-1 --zone=us-central1-a --num-nodes 2
                 --machine-type n1-standard-2
           deploy-my-service:
-            image: codefreshplugins/plugin-gke
+            image: codefreshplugins/gke
             commands:
               - kubectl get pods --all-namespaces -owide
           clean:
-            image: codefreshplugins/plugin-gke
+            image: codefreshplugins/gke
             commands:
               - gke-delete gke-test-cluster-1 --zone=us-central1-a
 spec:
@@ -72,8 +72,8 @@ spec:
     }
   steps:
     main:
-      name: plugin-gke
-      image: 'codefreshplugins/plugin-gke:latest'
+      name: gke
+      image: 'codefreshplugins/gke:latest'
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - >-

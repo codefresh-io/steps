@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/import-image/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/import-image/icon.jpg
   examples:
     - description: example-1
       workflow:

@@ -21,7 +21,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/vault/master/og-image.png
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/vault/og-image.png
   examples:
     - description: example-1
       workflow:

@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/webhook-plugin/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/webhook-plugin/icon.jpg
   examples:
     - description: example-1
       workflow:

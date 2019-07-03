@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/ecs-deploy/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/ecs-deploy/icon.jpg
   examples:
     - description: example-1
       workflow:

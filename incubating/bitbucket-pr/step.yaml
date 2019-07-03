@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/bitbucket-pr/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/bitbucket-pr/icon.jpg
   examples:
     - description: example-1
       workflow:

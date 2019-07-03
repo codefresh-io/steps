@@ -21,7 +21,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/git-submodules/master/logo.png
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-submodules/logo.png
   examples:
     - description: example-1
       workflow:

@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/gitter-notifier/master/logo2.png
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/gitter-notifier/logo2.png
   examples:
     - description: example-1
       workflow:

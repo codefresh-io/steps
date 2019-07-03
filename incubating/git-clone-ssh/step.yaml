@@ -21,7 +21,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/git-clone-ssh/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-clone-ssh/icon.jpg
   examples:
     - description: example-1
       workflow:

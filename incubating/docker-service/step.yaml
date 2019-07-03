@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/docker-service/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/docker-service/icon.jpg
   examples:
     - description: example-1
       workflow:

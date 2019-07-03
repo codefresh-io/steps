@@ -21,7 +21,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/k8s-canary-deployment/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/k8s-canary-deployment/icon.jpg
   examples:
     - description: example-1
       workflow:

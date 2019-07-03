@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/kompose/master/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kompose/icon.svg
   examples:
     - description: example-1
       workflow:

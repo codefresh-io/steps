@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-gitlab-mr-annotate
+  name: gitlab-mr-annotate
   isPublic: true
   description: The plugin allows for easy applying labels to GitLab merge requests
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/cf-gitlab-mr-annotate
+      https://github.com/codefresh-io/steps/tree/master/incubating/gitlab-mr-annotate
   stage: incubating
   maintainers:
     - name: Alex Kogan
@@ -19,14 +19,14 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/cf-gitlab-mr-annotate/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/gitlab-mr-annotate/master/icon.jpg
   examples:
     - description: example-1
       workflow:
         version: '1.0'
         steps:
           AnnotateMR:
-            type: cf-gitlab-mr-annotate
+            type: gitlab-mr-annotate
             arguments:
               GIT_CONTEXT: ${{GIT_CONTEXT}}
               LABELS: ${{LABELS}}
@@ -67,7 +67,7 @@ spec:
     }
   steps:
     main:
-      name: cf-gitlab-mr-annotate
+      name: gitlab-mr-annotate
       image: codefreshplugins/gitlab-mr-annotate
       environment:
         - 'GIT_CONTEXT=${{GIT_CONTEXT}}'

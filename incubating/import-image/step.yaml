@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-import-image
+  name: import-image
   isPublic: true
   description: Import metadata for existing Docker images into Codefresh
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/cf-import-image
+      https://github.com/codefresh-io/steps/tree/master/incubating/import-image
   stage: incubating
   maintainers:
     - name: Alexei Ledenev
@@ -19,14 +19,14 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/cf-import-image/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/import-image/master/icon.jpg
   examples:
     - description: example-1
       workflow:
         version: '1.0'
         steps:
           import_images:
-            type: cf-import-image
+            type: import-image
             title: Importing images ...
             description: import Docker images form external registry
             arguments:
@@ -35,7 +35,7 @@ metadata:
               USERNAME: ${{USERNAME}}
               PASSWORD: ${{PASSWORD}}
               CF_API_TOKEN: ${{CF_API_TOKEN}}
-              
+
 spec:
   arguments: |-
     {
@@ -81,7 +81,7 @@ spec:
     }
   steps:
     main:
-      name: cf-import-image
+      name: import-image
       image: codefreshplugins/import-images
       environment:
         - 'IMAGES=${{IMAGES}}'

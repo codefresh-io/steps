@@ -19,7 +19,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aqua/icon.png
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aqua/logo.png
   examples:
     - description: example-1
       workflow:

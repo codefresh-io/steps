@@ -1,12 +1,12 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: azure-build-plugin
+  name: azure-build
   isPublic: true
   description: Docker build in Azure ACR
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/azure-build-plugin
+      https://github.com/codefresh-io/steps/tree/master/incubating/azure-build
   stage: incubating
   maintainers:
     - name: Amir Gabay
@@ -20,14 +20,14 @@ metadata:
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/codefresh-plugins/azure-build-plugin/master/icon.jpg
+          https://raw.githubusercontent.com/codefresh-plugins/azure-build/master/icon.jpg
   examples:
     - description: example-1
       workflow:
         version: '1.0'
         steps:
           cf-az-build:
-            type: azure-build-plugin
+            type: azure-build
             arguments:
               AUTH: service-principal
               IMAGE: ${{IMAGE_NAME}}
@@ -53,8 +53,7 @@ spec:
             "ACR_NAME",
             "APP_ID",
             "PASSWORD",
-            "TENANT",
-            "USER"
+            "TENANT"
         ],
         "properties": {
             "AUTH": {
@@ -97,7 +96,7 @@ spec:
     }
   steps:
     main:
-      name: azure-build-plugin
+      name: azure-build
       image: codefreshplugins/cf-azure-builder
       environment:
         - 'AUTH=${{AUTH}}'

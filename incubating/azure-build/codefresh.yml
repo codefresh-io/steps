@@ -3,7 +3,7 @@ steps:
   BuildImage:
     title: Building Docker Image
     type: build
-    image_name: codefreshplugins/azure-build-plugin
+    image_name: codefreshplugins/azure-build
   PushingToRegistry:
     type: push
     title: Pushing To Registry

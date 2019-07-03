@@ -8,11 +8,11 @@ keywords:
   - docker
   - azure
 sources:
-  - https://github.com/codefresh-contrib/azure-build-plugin
+  - https://github.com/codefresh-contrib/azure-build
 maintainers:
   - name: Amir Gabay
     email: amir.gabay@codefresh.io
-icon: https://raw.githubusercontent.com/codefresh-plugins/azure-build-plugin/master/icon.jpg
+icon: https://raw.githubusercontent.com/codefresh-plugins/azure-build/master/icon.jpg
 envs:
   - name: AUTH
     type: optional

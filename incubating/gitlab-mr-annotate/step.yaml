@@ -15,11 +15,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/gitlab-mr-annotate/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/gitlab-mr-annotate/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

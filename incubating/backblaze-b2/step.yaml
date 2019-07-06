@@ -10,15 +10,13 @@ metadata:
   maintainers:
     - name: andrii-codefresh
   categories:
-    - utility
+    - storage
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/backblaze-b2/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/backblaze-b2/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

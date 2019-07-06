@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: twilio-sms
+  name: twilio
   isPublic: true
   description: Send SMS notifications via Twillio
   sources:
@@ -20,11 +20,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          TestSMS:
-            title: Test SMS
-            image: codefreshplugins/twilioplugin
+        twilio:
+          title: Test SMS
+          type: twilio
+          arguments:
+            TWILIO_SID: ID
+            TWILIO_TOKEN: ${{TWILIO_TOKEN}}
+            TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
 spec:
   arguments: |-
     {
@@ -33,7 +35,11 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "TWILIO_SID",
+          "TWILIO_TOKEN",
+          "TWILIO_PHONE_FROM"
+        ],
         "properties": {
             "TWILIO_SID": {
                 "type": "string",
@@ -59,7 +65,7 @@ spec:
     }
   steps:
     main:
-      name: send-sms
+      name: twilio
       image: codefreshplugins/twilioplugin
       environment:
         - 'TWILIO_SID=${{TWILIO_SID}}'

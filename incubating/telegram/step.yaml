@@ -1,28 +1,26 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: telegram-notifier
+  name: telegram
   isPublic: true
   description: >-
     Telegram plugin which gives the opportunity send any messages to users via
     bot.
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/telegram-notifier
+      https://github.com/codefresh-io/steps/tree/master/incubating/telegram
   stage: incubating
   maintainers:
     - name: Andrii Shaforostov
       email: andrii@codefresh.io
   categories:
-    - featured
+    - notifications
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/telegram-notifier/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/telegram/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:
@@ -118,7 +116,7 @@ spec:
     }
   steps:
     main:
-      name: telegram-notifier
+      name: telegram
       image: codefreshplugins/telegramnotifier
       environment:
         - 'TELEGRAM_TOKEN=${{TELEGRAM_TOKEN}}'

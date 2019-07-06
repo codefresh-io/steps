@@ -14,11 +14,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/npm-publish/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/npm-publish/icon.svg
+    background: "#CB3837"
   examples:
     - description: example-1
       workflow:

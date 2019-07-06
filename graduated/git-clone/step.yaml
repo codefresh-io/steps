@@ -13,7 +13,7 @@ metadata:
   official: true
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon-1.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/git-clone/icon-2.svg
     background: "#0B3E49"
   maintainers:
     - name: Codefresh INC

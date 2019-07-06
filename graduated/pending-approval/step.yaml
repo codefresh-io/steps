@@ -13,7 +13,7 @@ metadata:
   official: true
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/pending-approval/icon-1.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/pending-approval/icon-2.svg
     background: "#DBDBDB"
   maintainers:
     - name: Codefresh INC

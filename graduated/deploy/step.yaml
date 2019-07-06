@@ -13,7 +13,7 @@ metadata:
     - k8
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/deploy/icon-1.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/deploy/icon-2.svg
     background: "#326DE6"
   maintainers:
     - name: Codefresh INC

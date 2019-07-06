@@ -13,7 +13,7 @@ metadata:
     - docker
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/composition/icon-1.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/composition/icon-2.svg
     background: "#E9FFFD"
   maintainers:
     - name: Codefresh INC

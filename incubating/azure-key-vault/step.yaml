@@ -12,15 +12,14 @@ metadata:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
   categories:
-    - utility
+    - secret management
+    - azure
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-key-vault/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-key-vault/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

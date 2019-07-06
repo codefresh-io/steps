@@ -1,11 +1,11 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: send-sms
+  name: twilio-sms
   isPublic: true
   description: Send SMS notifications via Twillio
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/send-sms'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/twilio'
   stage: incubating
   maintainers:
     - name: Pasha Kostohrys
@@ -14,11 +14,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/send-sms/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/twilio/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

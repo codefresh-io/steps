@@ -34,6 +34,54 @@ metadata:
               IMAGE: ${{IMAGE}}
               TAG: ${{TAG}}
 spec:
+  returns:  |-
+  {
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "patterns": [],
+  "required": [
+    "AQUA_HOST",
+    "AQUA_PASSWORD",
+    "AQUA_USERNAME",
+    "IMAGE",
+    "TAG"
+  ],
+  "properties": {
+    "OUTPUT_URL": {
+      "type": "annotation",
+
+      "",
+      "description": "Aqua Host URI including protocol ex. https://aqua.mydomain.com"
+    },
+    "AQUA_PASSWORD": {
+      "type": "string",
+      "description": "Aqua Password"
+    },
+    "AQUA_USERNAME": {
+      "type": "string",
+      "description": "Aqua Username"
+    },
+    "CF_ACCOUNT": {
+      "type": "string",
+      "description": "Auto pulled from pipeline also replaces REGISTRY if not provided"
+    },
+    "IMAGE": {
+      "type": "string",
+      "description": "Docker Image Name"
+    },
+    "TAG": {
+      "type": "string",
+      "description": "Docker Image Tag"
+    },
+    "REGISTRY": {
+      "type": "string",
+      "description": "Name of Codefresh Registry setup in Aqua"
+    }
+  }
+}
+
   arguments: |-
     {
         "definitions": {},
@@ -83,6 +131,7 @@ spec:
     main:
       name: aqua
       image: codefreshplugins/aqua
+      type: build
       environment:
         - 'AQUA_HOST=${{AQUA_HOST}}'
         - 'AQUA_PASSWORD=${{AQUA_PASSWORD}}'

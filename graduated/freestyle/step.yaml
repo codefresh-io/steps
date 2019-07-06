@@ -42,7 +42,7 @@ spec:
             "working_directory": {
                 "type": "string",
                 "description": "The directory from which the commands are executed. It can be an explicit path in the container’s file system, or a variable that references another step. The default working_directory is the cloned repository directory and not the working directory specified by the image. If you need to use the default working directory of the image use IMAGE_WORK_DIR.",
-                "example": ["/codefresh/volume"]
+                "examples": ["/codefresh/volume"]
             },
             "image": {
                 "type": "string",

@@ -12,14 +12,12 @@ metadata:
     - name: Alexei Ledenev
   categories:
     - featured
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kompose/icon.svg
+    background: "#303030"
   official: false
   tags: []
-  icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kompose/icon.jpg
   examples:
     - description: example-1
       workflow:

@@ -1,26 +1,25 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: serverless
+  name: lambda
   isPublic: true
-  description: Deploy a Serverless service (functions and resources)
+  description: Deploy a Serverless service (functions and resources) to AWS lambda
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/serverless
+      https://github.com/codefresh-io/steps/tree/master/incubating/lambda
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
   categories:
-    - featured
+    - serveless
+    - aws
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/serverless/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/lambda/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

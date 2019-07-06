@@ -12,15 +12,13 @@ metadata:
     - name: Pavel Kostohrys
       email: pavel@codefresh.io
   categories:
-    - messaging
+    - notifications
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/slack-notifier/logo.png
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/slack-notifier/icon.svg
+    background: "#FFFFFF"
   examples:
     - description: example-1
       workflow:

@@ -15,7 +15,7 @@ metadata:
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kompose/icon.svg
-    background: "#303030"
+    background: "#326DE6"
   official: false
   tags: []
   examples:

@@ -1,27 +1,24 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: jira-cli-docker
+  name: jira-ticket
   isPublic: true
   description: Update a Jira ticket
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/jira-cli-docker
+      https://github.com/codefresh-io/steps/tree/master/incubating/jira-ticket
   stage: incubating
   maintainers:
     - name: Ant Weiss
       email: anton@otomato.link
   categories:
-    - utility
-    - project Management
+    - Issue Tracking
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-cli-docker/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-ticket/icon.svg
+    background: "#2254D1"
   examples:
     - description: example-1
       workflow:

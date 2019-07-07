@@ -23,16 +23,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          RunJenkins:
-            title: Triggering Jenkins Job
-            type: run-jenkins-jobs
-            arguments:
-              JENKINS_URL: ${{JENKINS_URL}}
-              JENKINS_TOKEN: ${{JENKINS_TOKEN}}
-              JENKINS_JOB: ${{JENKINS_JOB}}
-              JENKINS_USERNAME: ${{JENKINS_USERNAME}}
+        RunJenkins:
+          title: Triggering Jenkins Job
+          type: run-jenkins-jobs
+          arguments:
+            JENKINS_URL: ${{JENKINS_URL}}
+            JENKINS_TOKEN: ${{JENKINS_TOKEN}}
+            JENKINS_JOB: ${{JENKINS_JOB}}
+            JENKINS_USERNAME: ${{JENKINS_USERNAME}}
 spec:
   arguments: |-
     {

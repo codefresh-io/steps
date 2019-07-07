@@ -22,16 +22,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          TestPlugin:
-            title: TestPlugin
-            image: codefreshplugins/webhook
-            environment:
-              - 'WEBHOOK_URL=http://example.com/api/endpoint'
-              - HEADER_Content-Type=plain/text
-              - 'HEADER_X-Auth-Token={{apiKey}}'
-              - 'WEBHOOK_URL={{status}}'
+        TestPlugin:
+          type: webhook
+          arguments:
+            WEBHOOK_URL: http://example.com/api/endpoint
+            WEBHOOK_TOKEN: {{token}}
+            WEBHOOK_BODY: body
 spec:
   arguments: |-
     {

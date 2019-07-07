@@ -22,12 +22,10 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          sendMessage:
-            image: codefreshplugins/gitternotifier
-            environment:
-              - 'GITTER_WEBHOOK=https://webhooks.gitter.im/e/123abc'
+        sendMessage:
+          type: gitter-notifier
+          arguments:
+            GITTER_WEBHOOK: "https://webhooks.gitter.im/e/123abc"
 spec:
   arguments: |-
     {

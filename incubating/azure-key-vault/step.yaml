@@ -23,18 +23,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          GetAzureSecret:
-            title: Fetching Azure Secret from Key Vault
-            type: azure-key-vault
-            arguments:
-              AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
-              AZURE_SECRET: ${{AZURE_SECRET}}
-              AZURE_TENANT: ${{AZURE_TENANT}}
-              AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
-              AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
-              AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
+        GetAzureSecret:
+          title: Fetching Azure Secret from Key Vault
+          type: azure-key-vault
+          arguments:
+            AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
+            AZURE_SECRET: ${{AZURE_SECRET}}
+            AZURE_TENANT: ${{AZURE_TENANT}}
+            AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
+            AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
+            AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
 spec:
   arguments: |-
     {

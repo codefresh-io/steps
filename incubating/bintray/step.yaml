@@ -24,14 +24,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          DownloadNewVersion:
-            title: Download from Bintray
-            type: bintray
-            arguments:
-              BINTRAY_COMMAND: ${{BINTRAY_COMMAND}}
-              BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
+        DownloadNewVersion:
+          title: Download from Bintray
+          type: bintray
+          arguments:
+            BINTRAY_COMMAND: ${{BINTRAY_COMMAND}}
+            BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
 spec:
   arguments: |-
     {

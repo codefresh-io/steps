@@ -22,15 +22,11 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          sendSlack:
-            title: notifySlack
-            image: 'codefreshplugins/slack-message-sender:0.1'
-            commands:
-              - >-
-                slack-message-sender send --webhook-url https://my-webhook-url
-                --message "My message
+        sendSlack:
+          type: slack-message-sender
+          arguemnts:
+            WEBHOOK_URL: http://webhook.com
+            MESSAGE: message
 spec:
   arguments: |-
     {
@@ -40,10 +36,23 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [],
-        "properties": {}
+        "properties": {
+            "WEBHOOK_URL": {
+                "type": "string",
+                "description": "The webhook endpoint generated through slack"
+            },
+            "MESSAGE": {
+                "type": "string",
+                "description": "The message to send to the channel"
+            }
+        }
     }
   steps:
     main:
       name: slack-message-sender
       image: codefreshplugins/slack-message-sender
+      commands:
+        - >-
+          slack-message-sender send --webhook-url ${{WEBHOOK_URL}}
+          --message "${{MESSAGE}}"
       environment: []

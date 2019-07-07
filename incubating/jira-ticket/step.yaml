@@ -22,21 +22,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          UpdateJira:
-            title: Update Jira Issue
-            image: codefreshplugins/jira-cli
-            commands:
-              - >-
-                yes n | jira-cli update ${JIRAID} --comment 'New docker image
-                otomato/bringon:${{CF_SHORT_REVISION}}. Build log is here
-                ${{CF_BUILD_URL}}' --jira-url ${JIRA_URL} -u ${JIRA_USR} -p
-                ${JIRA_PWD}
-            when:
-              condition:
-                all:
-                  JiraIdFound: 'match("${JIRAID}", "[A-Z]+-[0-9]+", true)'
+        UpdateJira:
+          type: jira-ticket
+          arguments:
+            JIRA_ID: id
+            COMMENT: my nice comment
+            JIRA_URL: http://jira.com
+            JIRA_USR: user
+            JIRA_PWD: ${{JIRA_PASSWORD}}
 spec:
   arguments: |-
     {
@@ -48,9 +41,19 @@ spec:
         "required": [
             "JIRA_URL",
             "JIRA_USR",
-            "JIRA_PWD"
+            "JIRA_PWD",
+            "JIRA_ID",
+            "COMMENT"
         ],
         "properties": {
+            "JIRA_ID": {
+                "type": "string",
+                "description": "Id of jira ticket"
+            },
+            "COMMENT": {
+                "type": "string",
+                "description": "Comment to put inside ticket"
+            },
             "JIRA_URL": {
                 "type": "string",
                 "description": "Url to Jira instance"
@@ -69,7 +72,7 @@ spec:
     main:
       name: jira-cli-docker
       image: codefreshplugins/jira-cli
-      environment:
-        - 'JIRA_URL=${{JIRA_URL}}'
-        - 'JIRA_USR=${{JIRA_USR}}'
-        - 'JIRA_PWD=${{JIRA_PWD}}'
+      commands:
+        - >-
+          yes n | jira-cli update ${{JIRA_ID}} --comment ${{COMMENT}} --jira-url ${{JIRA_URL}} -u ${{JIRA_USR}} -p
+          ${{JIRA_PWD}}

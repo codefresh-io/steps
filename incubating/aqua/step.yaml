@@ -23,16 +23,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          AquaSecurityScan:
-            type: aqua
-            arguments:
-              AQUA_HOST: ${{AQUA_HOST}}
-              AQUA_PASSWORD: ${{AQUA_PASSWORD}}
-              AQUA_USERNAME: ${{AQUA_USERNAME}}
-              IMAGE: ${{IMAGE}}
-              TAG: ${{TAG}}
+        AquaSecurityScan:
+          type: aqua
+          arguments:
+            AQUA_HOST: ${{AQUA_HOST}}
+            AQUA_PASSWORD: ${{AQUA_PASSWORD}}
+            AQUA_USERNAME: ${{AQUA_USERNAME}}
+            IMAGE: ${{IMAGE}}
+            TAG: ${{TAG}}
 spec:
   arguments: |-
     {

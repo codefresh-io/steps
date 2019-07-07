@@ -21,18 +21,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          SCP:
-            title: scp
-            image: codefreshplugins/scp
-            environment:
-              - CF_SCP_HOST=<your_host>
-              - CF_SCP_USER_NAME=<name>
-              - CF_SCP_PASSWORD=<password>
-              - CF_SCP_TARGET=<path_to_target_file>
-              - CF_SCP_PORT=<port>
-              - CF_SCP_SOURCE=<path_to_source_file>
+        SCP:
+          type: scp
+          arguments:
+            CF_SCP_HOST: <your_host>
+            CF_SCP_USER_NAME: <name>
+            CF_SCP_PASSWORD: <password>
+            CF_SCP_TARGET: <path_to_target_file>
+            CF_SCP_PORT: <port>
+            CF_SCP_SOURCE: <path_to_source_file>
 spec:
   arguments: |-
     {

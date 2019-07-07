@@ -24,15 +24,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          makisuBuildStep:
-            type: makisu
-            arguments:
-              REGISTRY_HOSTNAME: ${{REGISTRY_HOSTNAME}}
-              R_USER: ${{R_USER}}
-              R_PASSWORD: ${{R_PASSWORD}}
-              IMAGE_NAME_TAG: ${{IMAGE_NAME_TAG}}
+        makisuBuildStep:
+          type: makisu
+          arguments:
+            REGISTRY_HOSTNAME: ${{REGISTRY_HOSTNAME}}
+            R_USER: ${{R_USER}}
+            R_PASSWORD: ${{R_PASSWORD}}
+            IMAGE_NAME_TAG: ${{IMAGE_NAME_TAG}}
 spec:
   arguments: |-
     {

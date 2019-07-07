@@ -25,23 +25,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          build-step:
-            type: build
-            image-name: 'repo/image:tag'
-          push_to_registry:
-            type: push
-            candidate: '${{build-step}}'
-            tag: '${{CF_BRANCH}}'
-          github-pr:
-            image: codefreshplugins/github-pr
-            environment:
-              - 'GITHUB_REPO_OWNER=${{CF_REPO_OWNER}}'
-              - 'GITHUB_REPO_NAME=${{CF_REPO_NAME}}'
-              - BASE=master
-              - 'HEAD=${{CF_BRANCH}}'
-              - 'TITLE=Codefresh PR for ${{CF_BRANCH}}'
+        github-pr:
+          type: github-pr
+          arguments:
+            GITHUB_REPO_OWNER: ${{GITHUB_REPO_OWNER}}
+            GITHUB_REPO_NAME: ${{GITHUB_REPO_NAME}}
+            HEAD: ${{CF_BRANCH}}
+            TITLE: Codefresh PR for ${{CF_BRANCH}}
+            BASE: master
 spec:
   arguments: |-
     {

@@ -22,17 +22,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          pushToAzure:
-            title: Pushing to Azure files
-            arguments:
-              ACCOUNT_NAME: ${{ACCOUNT_NAME}}
-              ACCOUNT_KEY: ${{ACCOUNT_KEY}}
-              SHARE_NAME: ${{SHARE_NAME}}
-              DIRECTORY: ${{DIRECTORY}}
-              PATH_TO_FILE: ${{PATH_TO_FILE}}
-              ADD_TIMESTAMP: "True"
+        pushToAzure:
+          title: Pushing to Azure files
+          arguments:
+            ACCOUNT_NAME: ${{ACCOUNT_NAME}}
+            ACCOUNT_KEY: ${{ACCOUNT_KEY}}
+            SHARE_NAME: ${{SHARE_NAME}}
+            DIRECTORY: ${{DIRECTORY}}
+            PATH_TO_FILE: ${{PATH_TO_FILE}}
+            ADD_TIMESTAMP: "True"
 spec:
   arguments: |-
     {

@@ -22,11 +22,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        codefresh-run:
-          title: Run a codefresh pipeline
-          type: codefresh-run
-          arguments:
-            PIPELINE_ID: PIP_NAME
+        version: '1.0'
+        steps:
+          codefresh-run:
+            title: Run a codefresh pipeline
+            type: codefresh-run
+            arguments:
+              PIPELINE_ID: PIP_NAME
 spec:
   arguments: |-
     {

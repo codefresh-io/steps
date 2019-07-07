@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefresh-run
+  name: itaicodefresh/codefresh-run
   isPublic: true
   description: Run a pipeline by id or name and attach the created build logs
   sources:
@@ -79,11 +79,6 @@ spec:
                   "description": "Reset pipeline cached volume",
                   "default": false
             },
-            "RESET_VOLUME": {
-                 "type": "boolean",
-                 "description": "Reset pipeline cached volume",
-                 "default": false
-             },
             "DETACH": {
                  "type": "boolean",
                  "description": "Run pipeline and print build ID",
@@ -128,6 +123,7 @@ spec:
       name: step1
       image: codefresh/cli
       commands:
+        - echo ${{VARIABLES}}
         - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} -d)
         - echo ${CF_STEP_NAME}_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
         - rm -rf ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output

@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/codefresh-run/icon.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/codefresh-run/icon-1.svg
     background: "#3CBFB0"
   examples:
     - description: example-1

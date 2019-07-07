@@ -14,7 +14,7 @@ metadata:
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/pending-approval/icon-2.svg
-    background: "#DBDBDB"
+    background: "#f4f4f4"
   maintainers:
     - name: Codefresh INC
   examples:

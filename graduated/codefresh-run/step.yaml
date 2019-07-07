@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: codefresh-run
   isPublic: true
-  description: Run a pipeline by id or name and attach the created workflow logs
+  description: Run a pipeline by id or name and attach the created build logs
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run

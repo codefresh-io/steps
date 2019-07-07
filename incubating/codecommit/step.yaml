@@ -16,11 +16,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/codecommit/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/codecommit/icon.svg
+    background: "#81D4FA"
   examples:
     - description: example-1
       workflow:

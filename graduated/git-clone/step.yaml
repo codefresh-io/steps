@@ -59,9 +59,9 @@ spec:
                   },
                   "password": {
                       "type": "string"
-                  },
-                  "examples": ["  credentials:\n    username: user\n    password: credentials"]
+                  }
               },
+              "examples": ["  credentials:\n    username: user\n    password: credentials"],
               "additionalProperties": false,
               "patterns": [],
               "required": ["username", "password"],

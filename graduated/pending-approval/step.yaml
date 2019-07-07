@@ -48,9 +48,9 @@ spec:
                     "denied"
                   ],
                   "type": "string"
-                },
-                "examples": ["  timeout:\n    duration: 1\n    finalState: approved"]
+                }
               },
+              "examples": ["  timeout:\n    duration: 1\n    finalState: approved"],
               "additionalProperties": false,
               "patterns": []
             }

@@ -19,7 +19,7 @@ metadata:
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-key-vault/icon.svg
-    background: "#FFFFFF"
+    background: "#DBDBDB"
   examples:
     - description: example-1
       workflow:

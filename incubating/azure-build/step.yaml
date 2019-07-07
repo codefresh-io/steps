@@ -16,11 +16,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-build/icon.svg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-build/icon.svg
+    background: "#f4f4f4"
   examples:
     - description: example-1
       workflow:

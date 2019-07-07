@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-files/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/azure-files/icon.svg
   examples:
     - description: example-1
       workflow:

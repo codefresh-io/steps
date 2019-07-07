@@ -1,0 +1,140 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefresh-run
+  isPublic: true
+  description: Run a pipeline by id or name and attach the created workflow logs
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run
+  stage: graduated
+  maintainers:
+    - name: Itai Gendler
+      email: itai@codefresh.io
+  categories:
+    - featured
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/codefresh-run/icon.svg
+    background: "#3CBFB0"
+  examples:
+    - description: example-1
+      workflow:
+        codefresh-run:
+          title: Run a codefresh pipeline
+          type: codefresh-run
+          arguments:
+            PIPELINE_ID: PIP_NAME
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "PIPELINE_ID"
+        ],
+        "properties": {
+            "PIPELINE_ID": {
+                "type": "string",
+                "description": "Pipeline name or id"
+            },
+            "TRIGGER_ID": {
+                "type": "string",
+                "description": "Trigger id or name"
+            },
+            "BRANCH": {
+                "type": "string",
+                "description": "Branch",
+                "examples": ["master"]
+            },
+            "SHA": {
+                "type": "string",
+                "description": "Set commit sha",
+                "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"]
+            },
+            "NO_CACHE": {
+                "type": "boolean",
+                "description": "Ignore cached images",
+                "default": false
+            },
+            "NO_CF_CACHE": {
+                   "type": "boolean",
+                   "description": "Ignore Codefresh cache optimizations",
+                   "default": false
+               },
+            "ENABLE_NOTIFICATIONS": {
+                "type": "boolean",
+                "description": "Report notifications about pipeline execution",
+                "default": false
+            },
+            "RESET_VOLUME": {
+                  "type": "boolean",
+                  "description": "Reset pipeline cached volume",
+                  "default": false
+            },
+            "RESET_VOLUME": {
+                 "type": "boolean",
+                 "description": "Reset pipeline cached volume",
+                 "default": false
+             },
+            "DETACH": {
+                 "type": "boolean",
+                 "description": "Run pipeline and print build ID",
+                 "default": false
+             },
+            "CONTEXT": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                 },
+                 "description": "Run pipeline with contexts",
+                  "examples": ["git-context-1"]
+             },
+            "VARIABLE": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                 },
+                 "description": "Set build variables",
+                 "examples": ["key=val"]
+             },
+            "ONLY": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  },
+                  "description": "run only specifc steps",
+                  "examples": ["step1", "step2"]
+              },
+            "SKIP": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  },
+                  "description": "skip specifc steps",
+                  "examples": ["step1", "step2"]
+              }
+        }
+    }
+  steps:
+    first:
+      name: step1
+      image: codefresh/cli
+      commands:
+        - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} -d)
+        - echo ${CF_STEP_NAME}_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
+        - rm -rf ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
+        - echo $BUILD_ID >> ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
+    second:
+      name: step1
+      image: codefresh/cli
+      commands:
+        - export BUILD_ID=$(cat ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output)
+        - echo "Retrieving logs for build $BUILD_ID"
+        - codefresh logs -f $BUILD_ID
+        - codefresh wait $BUILD_ID

@@ -18,7 +18,7 @@ metadata:
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/gitter-notifier/icon.svg
-    background: "#DBDBDB"
+    background: "#f4f4f4"
   examples:
     - description: example-1
       workflow:

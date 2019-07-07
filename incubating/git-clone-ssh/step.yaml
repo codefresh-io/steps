@@ -18,7 +18,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-clone-ssh/icon.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-clone-ssh/icon-1.svg
     background: "#FFFFFF"
   examples:
     - description: example-1

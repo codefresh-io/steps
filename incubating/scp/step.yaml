@@ -15,11 +15,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/scp/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/scp/icon.svg
+    background: "#f4f4f4"
   examples:
     - description: example-1
       workflow:

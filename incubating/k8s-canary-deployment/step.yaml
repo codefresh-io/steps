@@ -27,25 +27,18 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          BuildingDockerImage:
-            title: Building Docker Image
-            type: build
-            image_name: trivial-web
-            working_directory: ./example/
-            tag: '${{CF_SHORT_REVISION}}'
-            dockerfile: Dockerfile
-          canaryDeploy:
+          run:
             title: 'Deploying new version ${{CF_SHORT_REVISION}}'
-            image: codefreshplugins/k8s-canary
-            environment:
-              - WORKING_VOLUME=.
-              - SERVICE_NAME=my-demo-app
-              - DEPLOYMENT_NAME=my-demo-app
-              - TRAFFIC_INCREMENT=20
-              - 'NEW_VERSION=${{CF_SHORT_REVISION}}'
-              - SLEEP_SECONDS=40
-              - NAMESPACE=canary
-              - KUBE_CONTEXT=myDemoAKSCluster
+            type: k8s-canary-deployment
+            arguments:
+              WORKING_VOLUME: ${{WORKING_VOLUME}}
+              SERVICE_NAME: ${{SERVICE_NAME}}
+              DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
+              TRAFFIC_INCREMENT: ${{TRAFFIC_INCREMENT}}
+              NEW_VERSION: ${{NEW_VERSION}}
+              SLEEP_SECONDS: ${{SLEEP_SECONDS}}
+              NAMESPACE: ${{NAMESPACE}}
+              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
   arguments: |-
     {
@@ -59,6 +52,33 @@ spec:
             "KUBE_CONTEXT": {
                 "type": "string",
                 "description": "The name of your cluster (as found in the Codefresh Kubernetes dashboard)."
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "The name of the kubenretes namespace"
+            },
+            "TRAFFIC_INCREMENT": {
+                "type": "string"
+            },
+            "WORKING_VOLUME": {
+              "type": "string",
+              "description": "Path to directory",
+              "default": "."
+            },
+            "SERVICE_NAME": {
+              "type": "string",
+              "description": "Kubernetes service name"
+            },
+            "DEPLOYMENT_NAME": {
+              "type": "string",
+              "description": "Kubernetes deployment name"
+            },
+            "SLEEP_SECONDS": {
+              "type": "string",
+              "description": "Time to sleep"
+            },
+            "NEW_VERSION": {
+              "type": "string"
             }
         }
     }
@@ -67,4 +87,11 @@ spec:
       name: k8s-canary-deployment
       image: codefreshplugins/k8s-canary
       environment:
-        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
+        - WORKING_VOLUME=${{WORKING_VOLUME}}
+        - SERVICE_NAME=${{SERVICE_NAME}}
+        - DEPLOYMENT_NAME=${{DEPLOYMENT_NAME}}
+        - TRAFFIC_INCREMENT=${{TRAFFIC_INCREMENT}}
+        - NEW_VERSION=${{NEW_VERSION}}
+        - SLEEP_SECONDS=${{SLEEP_SECONDS}}
+        - NAMESPACE=${{NAMESPACE}}
+        - KUBE_CONTEXT=${{KUBE_CONTEXT}}

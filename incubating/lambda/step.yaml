@@ -23,6 +23,7 @@ metadata:
   examples:
     - description: example-1
       workflow:
+        version: '1.0'
         steps:
           setup:
             image: 'alpine:3.7'

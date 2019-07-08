@@ -26,42 +26,21 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          BuildingDockerImage:
-            title: Building Docker Image
-            type: build
-            image_name: codefresh/demochat
-            working_directory: ./
-            dockerfile: Dockerfile
-            tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
-          CheckClair:
-            image: codefreshplugins/paclair
-            environment:
-              - IMAGE=example-voting-app/worker
-              - 'TAG=${{CF_BRANCH_TAG_NORMALIZED}}'
-            on_success:
-              metadata:
-                set:
-                  - '${{BuildingDockerImage.imageId}}':
-                      - SECURITY_SCAN: true
-            on_fail:
-              metadata:
-                set:
-                  - '${{BuildingDockerImage.imageId}}':
-                      - SECURITY_SCAN: false
-          ArchiveReport:
-            image: mesosphere/aws-cli
-            commands:
-              - >-
-                aws s3 cp
-                ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html
-                s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html
-                --acl public-read
-            on_success:
-              metadata:
-                set:
-                  - '${{BuildingDockerImage.imageId}}':
-                      - CLAIR_REPORT: >-
-                          https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html
+          run:
+            type: paclair
+            arguments:
+              API_PREFIX: ${{API_PREFIX}}
+              CLAIR_URL: ${{CLAIR_URL}}
+              IMAGE: ${{IMAGE}}
+              PROTOCOL: ${{PROTOCOL}}
+              REGISTRY: ${{REGISTRY}}
+              REGISTRY_PASSWORD: ${{REGISTRY_PASSWORD}}
+              REGISTRY_USERNAME: ${{REGISTRY_USERNAME}}
+              SEVERITY_THRESHOLD: ${{SEVERITY_THRESHOLD}}
+              TOKEN: ${{TOKEN}}
+              TOKEN_TYPE: ${{TOKEN_TYPE}}
+              TOKEN_URL: ${{TOKEN_URL}}
+              TAG: ${{TAG}}
 spec:
   arguments: |-
     {
@@ -70,7 +49,20 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "API_PREFIX",
+          "CLAIR_URL",
+          "IMAGE",
+          "PROTOCOL",
+          "REGISTRY",
+          "REGISTRY_PASSWORD",
+          "REGISTRY_USERNAME",
+          "SEVERITY_THRESHOLD",
+          "TOKEN",
+          "TOKEN_TYPE",
+          "TOKEN_URL",
+          "TAG"
+        ],
         "properties": {
             "API_PREFIX": {
                 "type": "string",
@@ -127,15 +119,15 @@ spec:
       name: paclair
       image: codefreshplugins/paclair
       environment:
-        - 'API_PREFIX=${{API_PREFIX}}'
-        - 'CLAIR_URL=${{CLAIR_URL}}'
-        - 'IMAGE=${{IMAGE}}'
-        - 'PROTOCOL=${{PROTOCOL}}'
-        - 'REGISTRY=${{REGISTRY}}'
-        - 'REGISTRY_PASSWORD=${{REGISTRY_PASSWORD}}'
-        - 'REGISTRY_USERNAME=${{REGISTRY_USERNAME}}'
-        - 'SEVERITY_THRESHOLD=${{SEVERITY_THRESHOLD}}'
-        - 'TOKEN=${{TOKEN}}'
-        - 'TOKEN_TYPE=${{TOKEN_TYPE}}'
-        - 'TOKEN_URL=${{TOKEN_URL}}'
-        - 'TAG=${{TAG}}'
+        - API_PREFIX=${{API_PREFIX}}
+        - CLAIR_URL=${{CLAIR_URL}}
+        - IMAGE=${{IMAGE}}
+        - PROTOCOL=${{PROTOCOL}}
+        - REGISTRY=${{REGISTRY}}
+        - REGISTRY_PASSWORD=${{REGISTRY_PASSWORD}}
+        - REGISTRY_USERNAME=${{REGISTRY_USERNAME}}
+        - SEVERITY_THRESHOLD=${{SEVERITY_THRESHOLD}}
+        - TOKEN=${{TOKEN}}
+        - TOKEN_TYPE=${{TOKEN_TYPE}}
+        - TOKEN_URL=${{TOKEN_URL}}
+        - TAG=${{TAG}}

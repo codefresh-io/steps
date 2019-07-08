@@ -26,10 +26,16 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          google_kms:
-            image: codefreshplugins/google-kms
-            commands:
-              - kms encrypt VALUE_1 VALUE_n
+          run:
+            type: google-kms
+            arguments:
+              KMS_PROJECT: ${{KMS_PROJECT}}
+              KMS_LOCATION: ${{KMS_LOCATION}}
+              KMS_KEYRING: ${{KMS_KEYRING}}
+              KMS_KEY: ${{KMS_KEY}}
+              GCP_SA_KEY: ${{GCP_SA_KEY}}
+              VALUE: ${{VALUE}}
+
 spec:
   arguments: |-
     {
@@ -38,7 +44,14 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "KMS_PROJECT",
+          "KMS_LOCATION",
+          "KMS_KEYRING",
+          "KMS_KEY",
+          "GCP_SA_KEY",
+          "VALUE"
+        ],
         "properties": {
             "KMS_PROJECT": {
                 "type": "string",
@@ -67,8 +80,10 @@ spec:
       name: google-kms
       image: codefreshplugins/google-kms
       environment:
-        - 'KMS_PROJECT=${{KMS_PROJECT}}'
-        - 'KMS_LOCATION=${{KMS_LOCATION}}'
-        - 'KMS_KEYRING=${{KMS_KEYRING}}'
-        - 'KMS_KEY=${{KMS_KEY}}'
-        - 'GCP_SA_KEY=${{GCP_SA_KEY}}'
+        - KMS_PROJECT=${{KMS_PROJECT}}
+        - KMS_LOCATION=${{KMS_LOCATION}}
+        - KMS_KEYRING=${{KMS_KEYRING}}
+        - KMS_KEY=${{KMS_KEY}}
+        - GCP_SA_KEY=${{GCP_SA_KEY}}
+      commands:
+      - kms encrypt ${{VALUE}}

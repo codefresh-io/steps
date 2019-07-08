@@ -22,10 +22,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        sendMessage:
-          type: gitter-notifier
-          arguments:
-            GITTER_WEBHOOK: "https://webhooks.gitter.im/e/123abc"
+        version: '1.0'
+        steps:
+          sendMessage:
+            type: gitter-notifier
+            arguments:
+              GITTER_WEBHOOK: "https://webhooks.gitter.im/e/123abc"
 spec:
   arguments: |-
     {

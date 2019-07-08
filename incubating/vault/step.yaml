@@ -23,15 +23,17 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        Vault_to_Env:
-          title: Importing vault values
-          type: vault
-          arguments:
-            VAULT_ADDR: ${{VAULT_ADDR}}
-            VAULT_PATH: ${{VAULT_PATH}}
-            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
-            VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
-            VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+        version: '1.0'
+        steps:      
+          Vault_to_Env:
+            title: Importing vault values
+            type: vault
+            arguments:
+              VAULT_ADDR: ${{VAULT_ADDR}}
+              VAULT_PATH: ${{VAULT_PATH}}
+              VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+              VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
+              VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
 spec:
   arguments: |-
     {

@@ -22,11 +22,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        sendSlack:
-          type: slack-message-sender
-          arguemnts:
-            WEBHOOK_URL: http://webhook.com
-            MESSAGE: message
+        version: '1.0'
+        steps:      
+          sendSlack:
+            type: slack-message-sender
+            arguemnts:
+              WEBHOOK_URL: http://webhook.com
+              MESSAGE: message
 spec:
   arguments: |-
     {

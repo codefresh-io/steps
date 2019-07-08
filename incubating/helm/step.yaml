@@ -23,12 +23,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        deploy:
-          type: helm
-          arguments:
-            CHART_REF: ${{CHART_REF}}
-            RELEASE_NAME: ${{RELEASE_NAME}}
-            KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+        version: '1.0'
+        steps:        
+          deploy:
+            type: helm
+            arguments:
+              CHART_REF: ${{CHART_REF}}
+              RELEASE_NAME: ${{RELEASE_NAME}}
+              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
   arguments: |-
     {

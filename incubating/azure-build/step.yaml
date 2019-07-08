@@ -22,18 +22,20 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        cf-az-build:
-          type: azure-build
-          arguments:
-            AUTH: service-principal
-            IMAGE: ${{IMAGE_NAME}}
-            TAG: ${{IMAGE_TAG}}
-            ACR_NAME: ${{REGISTRY}}
-            APP_ID: ${{AZURE_APP_ID}}
-            PASSWORD: ${{AZURE_PASSWORD}}
-            TENANT: ${{TENANT}}
-            DOCKERFILE_PATH: ${{DOCKERFILE}}
-            USER: ${{USER}}
+        version: '1.0'
+        steps:
+          cf-az-build:
+            type: azure-build
+            arguments:
+              AUTH: service-principal
+              IMAGE: ${{IMAGE_NAME}}
+              TAG: ${{IMAGE_TAG}}
+              ACR_NAME: ${{REGISTRY}}
+              APP_ID: ${{AZURE_APP_ID}}
+              PASSWORD: ${{AZURE_PASSWORD}}
+              TENANT: ${{TENANT}}
+              DOCKERFILE_PATH: ${{DOCKERFILE}}
+              USER: ${{USER}}
 spec:
   arguments: |-
     {

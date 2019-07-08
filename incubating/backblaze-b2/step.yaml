@@ -20,14 +20,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        upload:
-          title: Upload files to Backblaze B2
-          type: backblaze-b2
-          arguments:
-            APPLICATION_KEY_ID: ${{APPLICATION_KEY_ID}}
-            APPLICATION_KEY: ${{APPLICATION_KEY}}
-            BUCKET_ID: ${{BUCKET_ID}}
-            UPLOAD_FILE_1: ${{UPLOAD_FILE_1}}
+        version: '1.0'
+        steps:
+          upload:
+            title: Upload files to Backblaze B2
+            type: backblaze-b2
+            arguments:
+              APPLICATION_KEY_ID: ${{APPLICATION_KEY_ID}}
+              APPLICATION_KEY: ${{APPLICATION_KEY}}
+              BUCKET_ID: ${{BUCKET_ID}}
+              UPLOAD_FILE_1: ${{UPLOAD_FILE_1}}
 spec:
   arguments: |-
     {

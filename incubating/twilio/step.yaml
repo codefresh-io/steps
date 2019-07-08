@@ -20,13 +20,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        twilio:
-          title: Test SMS
-          type: twilio
-          arguments:
-            TWILIO_SID: ID
-            TWILIO_TOKEN: ${{TWILIO_TOKEN}}
-            TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
+        version: '1.0'
+        steps:      
+          twilio:
+            title: Test SMS
+            type: twilio
+            arguments:
+              TWILIO_SID: ID
+              TWILIO_TOKEN: ${{TWILIO_TOKEN}}
+              TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
 spec:
   arguments: |-
     {

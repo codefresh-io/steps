@@ -22,12 +22,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        TestPlugin:
-          type: webhook
-          arguments:
-            WEBHOOK_URL: http://example.com/api/endpoint
-            WEBHOOK_TOKEN: {{token}}
-            WEBHOOK_BODY: body
+        version: '1.0'
+        steps:      
+          TestPlugin:
+            type: webhook
+            arguments:
+              WEBHOOK_URL: http://example.com/api/endpoint
+              WEBHOOK_TOKEN: {{token}}
+              WEBHOOK_BODY: body
 spec:
   arguments: |-
     {

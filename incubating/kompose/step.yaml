@@ -21,11 +21,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        Kompose:
-          type: kompose
-          arguments:
-            KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
-            NAMESPACE: "${{NAMESPACE}}"
+        version: '1.0'
+        steps:
+          Kompose:
+            type: kompose
+            arguments:
+              KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
+              NAMESPACE: "${{NAMESPACE}}"
 spec:
   arguments: |-
     {

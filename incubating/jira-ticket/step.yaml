@@ -22,14 +22,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        UpdateJira:
-          type: jira-ticket
-          arguments:
-            JIRA_ID: id
-            COMMENT: my nice comment
-            JIRA_URL: http://jira.com
-            JIRA_USR: user
-            JIRA_PWD: ${{JIRA_PASSWORD}}
+        version: '1.0'
+        steps:
+          UpdateJira:
+            type: jira-ticket
+            arguments:
+              JIRA_ID: id
+              COMMENT: my nice comment
+              JIRA_URL: http://jira.com
+              JIRA_USR: user
+              JIRA_PWD: ${{JIRA_PASSWORD}}
 spec:
   arguments: |-
     {

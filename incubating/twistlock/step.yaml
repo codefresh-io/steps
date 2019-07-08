@@ -25,17 +25,19 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        TwistlockScanImage:
-          type: twistlock
-          arguments:
-            TEST_IMAGE: ${{TEST_IMAGE}}
-            CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
-            CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
-            CONSOLE_PORT: ${{CONSOLE_PORT}}
-            CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
-            CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
-            COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
-            VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
+        version: '1.0'
+        steps:      
+          TwistlockScanImage:
+            type: twistlock
+            arguments:
+              TEST_IMAGE: ${{TEST_IMAGE}}
+              CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
+              CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
+              CONSOLE_PORT: ${{CONSOLE_PORT}}
+              CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
+              CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
+              COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
+              VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
 spec:
   arguments: |-
     {

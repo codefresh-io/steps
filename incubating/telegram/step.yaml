@@ -24,53 +24,59 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        sendMessage:
-          tyep: telegram
-          arguemnts:
-            TELEGRAM_TOKEN: ${{TOKEN}}
-            TELEGRAM_TO: 99999999
-            TELEGRAM_MESSAGE: Hello {{{userLink}}}, how are you
-            TELEGRAM_IMAGES: https://codefresh.io/docs/assets/brand/codefresh-social.png
+        version: '1.0'
+        steps:      
+          sendMessage:
+            tyep: telegram
+            arguemnts:
+              TELEGRAM_TOKEN: ${{TOKEN}}
+              TELEGRAM_TO: 99999999
+              TELEGRAM_MESSAGE: Hello {{{userLink}}}, how are you
+              TELEGRAM_IMAGES: https://codefresh.io/docs/assets/brand/codefresh-social.png
     - description: example-2
       workflow:
-        sendMessage:
-          type: telegram
-          arguments:
-            TELEGRAM_MESSAGE: message
-            buildTrigger: {{buildTrigger}}
-            buildInitiator: {{buildInitiator}}
-            buildId: {{buildId}}
-            buildTimestamp: {{buildTimestamp}}
-            buildUrl: {{buildUrl}}
-            repoOwner: {{repoOwner}}
-            repoName: {{repoName}}
-            branch: {{branch}}
-            revision: {{revision}}
-            commitAuthor: {{commitAuthor}}
-            commitUrl: {{commitUrl}}
-            commitMessage: {{commitMessage}}
-            userID: {{userID}}
-            userLink: {{{userLink}}}
+        version: '1.0'
+        steps:      
+          sendMessage:
+            type: telegram
+            arguments:
+              TELEGRAM_MESSAGE: message
+              buildTrigger: {{buildTrigger}}
+              buildInitiator: {{buildInitiator}}
+              buildId: {{buildId}}
+              buildTimestamp: {{buildTimestamp}}
+              buildUrl: {{buildUrl}}
+              repoOwner: {{repoOwner}}
+              repoName: {{repoName}}
+              branch: {{branch}}
+              revision: {{revision}}
+              commitAuthor: {{commitAuthor}}
+              commitUrl: {{commitUrl}}
+              commitMessage: {{commitMessage}}
+              userID: {{userID}}
+              userLink: {{{userLink}}}
     - description: example-3
       workflow:
-        sendMessage:
-          type: telegram
-          arguments:
-            TELEGRAM_MESSAGE: message
-            buildTrigger: {{buildTrigger}}
-            buildInitiator: {{buildInitiator}}
-            buildId: {{buildId}}
-            buildTimestamp: {{buildTimestamp}}
-            buildUrl: {{buildUrl}}
-            repoOwner: {{repoOwner}}
-            repoName: {{repoName}}
-            branch: {{branch}}
-            revision: {{revision}}
-            commitAuthor: {{commitAuthor}}
-            commitUrl: {{commitUrl}}
-            commitMessage: {{commitMessage}}
-            userID: {{userID}}
-            userLink: {{{userLink}}}
+        version: '1.0'
+        steps:      
+          sendMessage:
+            type: telegram
+            arguments:
+              TELEGRAM_MESSAGE: message
+              buildTrigger: {{buildTrigger}}
+              buildInitiator: {{buildInitiator}}
+              buildId: {{buildId}}
+              buildTimestamp: {{buildTimestamp}}
+              buildUrl: {{buildUrl}}
+              repoOwner: {{repoOwner}}
+              repoName: {{repoName}}
+              branch: {{branch}}
+              revision: {{revision}}
+              commitAuthor: {{commitAuthor}}
+              commitUrl: {{commitUrl}}
+              commitMessage: {{commitMessage}}
+              userID: {{userID}}
+              userLink: {{{userLink}}}
 spec:
   arguments: |-
     {

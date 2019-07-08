@@ -23,16 +23,18 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        import_images:
-          type: import-image
-          title: Importing images ...
-          description: import Docker images form external registry
-          arguments:
-            IMAGES: ${{IMAGES}}
-            REGISTRY: ${{REGISTRY}}
-            USERNAME: ${{USERNAME}}
-            PASSWORD: ${{PASSWORD}}
-            CF_API_TOKEN: ${{CF_API_TOKEN}}
+        version: '1.0'
+        steps:
+          import_images:
+            type: import-image
+            title: Importing images ...
+            description: import Docker images form external registry
+            arguments:
+              IMAGES: ${{IMAGES}}
+              REGISTRY: ${{REGISTRY}}
+              USERNAME: ${{USERNAME}}
+              PASSWORD: ${{PASSWORD}}
+              CF_API_TOKEN: ${{CF_API_TOKEN}}
 
 spec:
   arguments: |-

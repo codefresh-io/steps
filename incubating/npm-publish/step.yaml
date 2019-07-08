@@ -20,10 +20,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        deploy_to_npm:
-          type: npm-publish
-          arguments:
-            NPM_TOKEN: ${{NPM_TOKEN}}
+        version: '1.0'
+        steps:
+          deploy_to_npm:
+            type: npm-publish
+            arguments:
+              NPM_TOKEN: ${{NPM_TOKEN}}
 spec:
   arguments: |-
     {

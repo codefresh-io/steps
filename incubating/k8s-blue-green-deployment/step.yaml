@@ -26,16 +26,16 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          blueGreenDeploy:
+          run:
             title: 'Deploying new version ${{CF_SHORT_REVISION}}'
-            image: codefreshplugins/k8s-blue-green
-            environment:
-              - SERVICE_NAME=my-demo-app
-              - DEPLOYMENT_NAME=my-demo-app
-              - 'NEW_VERSION=${{CF_SHORT_REVISION}}'
-              - HEALTH_SECONDS=60
-              - NAMESPACE=colors
-              - KUBE_CONTEXT=myDemoAKSCluster
+            type: k8s-blue-green-deployment
+            arguments:
+              SERVICE_NAME: ${{SERVICE_NAME}}
+              DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
+              NEW_VERSION: ${{NEW_VERSION}}
+              HEALTH_SECONDS: ${{HEALTH_SECONDS}}
+              NAMESPACE: ${{NAMESPACE}}
+              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
   arguments: |-
     {
@@ -44,12 +44,39 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "SERVICE_NAME",
+          "DEPLOYMENT_NAME",
+          "NEW_VERSION",
+          "HEALTH_SECONDS",
+          "NAMESPACE",
+          "KUBE_CONTEXT"
+        ],
         "properties": {
             "KUBE_CONTEXT": {
                 "type": "string",
                 "description": "The name of your cluster (as found in the Codefresh Kubernetes dashboard)."
-            }
+            },
+            "SERVICE_NAME": {
+                "type": "string",
+                "description": "Name of the service"
+            },
+            "DEPLOYMENT_NAME": {
+                "type": "string",
+                "description": "Name of the deployment"
+            },
+            "NEW_VERSION": {
+                "type": "string",
+                "description": "New version"
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "The namespace in the cluster"
+            },
+            "HEALTH_SECONDS": {
+                "type": "string",
+                "description": "Number of seconds the mesure health"
+            },
         }
     }
   steps:
@@ -57,4 +84,10 @@ spec:
       name: k8s-blue-green-deployment
       image: codefreshplugins/k8s-blue-green
       environment:
-        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
+        - KUBE_CONTEXT=${{KUBE_CONTEXT}}
+        - SERVICE_NAME=${{SERVICE_NAME}}
+        - DEPLOYMENT_NAME=${{DEPLOYMENT_NAME}}
+        - NEW_VERSION=${{NEW_VERSION}}
+        - HEALTH_SECONDS=${{HEALTH_SECONDS}}
+        - NAMESPACE=${{NAMESPACE}}
+        - KUBE_CONTEXT=${{KUBE_CONTEXT}}

@@ -24,20 +24,16 @@ metadata:
       workflow:
         version: '1.0'
         steps:
-          create-cluster:
-            image: codefreshplugins/gke
-            commands:
-              - >-
-                gke-create gke-test-cluster-1 --zone=us-central1-a --num-nodes 2
-                --machine-type n1-standard-2
-          deploy-my-service:
-            image: codefreshplugins/gke
-            commands:
-              - kubectl get pods --all-namespaces -owide
-          clean:
-            image: codefreshplugins/gke
-            commands:
-              - gke-delete gke-test-cluster-1 --zone=us-central1-a
+          run:
+            type: gke
+            arguments:
+              GOOGLE_SERVICE_ACCOUNT_KEY: ${{GOOGLE_SERVICE_ACCOUNT_KEY}}
+              VAULT_ADDR: ${{VAULT_ADDR}}
+              GKE_CLUSTER_NAME: ${{GKE_CLUSTER_NAME}}
+              CLOUDSDK_COMPUTE_ZONE: ${{CLOUDSDK_COMPUTE_ZONE}}
+              CLOUDSDK_COMPUTE_REGION: ${{CLOUDSDK_COMPUTE_REGION}}
+              COMMAND: ${{COMMAND}}
+
 spec:
   arguments: |-
     {
@@ -46,7 +42,14 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": [
+          "GOOGLE_SERVICE_ACCOUNT_KEY",
+          "VAULT_ADDR",
+          "GKE_CLUSTER_NAME",
+          "CLOUDSDK_COMPUTE_ZONE",
+          "CLOUDSDK_COMPUTE_REGION"
+
+        ],
         "properties": {
             "VAULT_ADDR": {
                 "type": "string",
@@ -67,6 +70,11 @@ spec:
             "GKE_CLUSTER_NAME": {
                 "type": "string",
                 "description": "Name of the cluster to create/delete. Can be also set from gke-create command line. It is generated if not set"
+            },
+            "COMMAND": {
+              "type": "string",
+              "description": "The command to run once the cluster is ready",
+              "default": "kubectl get pods -o wide"
             }
         }
     }
@@ -76,9 +84,10 @@ spec:
       image: 'codefreshplugins/gke:latest'
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
-        - >-
-          GOOGLE_SERVICE_ACCOUNT_KEY (required)=${{GOOGLE_SERVICE_ACCOUNT_KEY
-          (required)}}
+        - GOOGLE_SERVICE_ACCOUNT_KEY=${{GOOGLE_SERVICE_ACCOUNT_KEY}}
         - 'CLOUDSDK_COMPUTE_ZONE=${{CLOUDSDK_COMPUTE_ZONE}}'
         - 'CLOUDSDK_COMPUTE_REGION=${{CLOUDSDK_COMPUTE_REGION}}'
         - 'GKE_CLUSTER_NAME=${{GKE_CLUSTER_NAME}}'
+      commands:
+      - gke-create --num-nodes 2 --machine-type n1-standard-2
+      - ${{COMMAND}}

@@ -1,3 +1,4 @@
+#TODO  support printing error in case of api call failure
 kind: step-type
 version: '1.0'
 metadata:
@@ -47,17 +48,20 @@ spec:
             },
             "TRIGGER_ID": {
                 "type": "string",
-                "description": "Trigger id or name"
+                "description": "Trigger id or name",
+                "default": ""
             },
             "BRANCH": {
                 "type": "string",
                 "description": "Branch",
-                "examples": ["master"]
+                "examples": ["master"],
+                "default": ""
             },
             "SHA": {
                 "type": "string",
                 "description": "Set commit sha",
-                "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"]
+                "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"],
+                "default": ""
             },
             "NO_CACHE": {
                 "type": "boolean",
@@ -90,7 +94,8 @@ spec:
                      "type": "string"
                  },
                  "description": "Run pipeline with contexts",
-                  "examples": ["git-context-1"]
+                 "examples": ["git-context-1"],
+                 "default": []
              },
             "VARIABLE": {
                  "type": "array",
@@ -98,7 +103,8 @@ spec:
                      "type": "string"
                  },
                  "description": "Set build variables",
-                 "examples": ["key=val"]
+                 "examples": ["key=val"],
+                 "default": []
              },
             "ONLY": {
                   "type": "array",
@@ -106,7 +112,8 @@ spec:
                       "type": "string"
                   },
                   "description": "run only specifc steps",
-                  "examples": ["step1", "step2"]
+                  "examples": ["step1", "step2"],
+                  "default": []
               },
             "SKIP": {
                   "type": "array",
@@ -114,7 +121,8 @@ spec:
                       "type": "string"
                   },
                   "description": "skip specifc steps",
-                  "examples": ["step1", "step2"]
+                  "examples": ["step1", "step2"],
+                  "default": []
               }
         }
     }
@@ -123,7 +131,7 @@ spec:
       name: step1
       image: codefresh/cli
       commands:
-        - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} -d)
+        - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} -d $([ "${{TRIGGER_ID}}" ] && echo "-t ${{TRIGGER_ID}}") $([ "${{BRANCH}}" ] && echo "-b ${{BRANCH}}") $([ "${{SHA}}" ] && echo "-s ${{SHA}}") $([ "${{NO_CACHE}}" == "true" ] && echo "--no-cache") $([ "${{NO_CF_CACHE}}" == "true" ] && echo "--no-cf-cache") $([ "${{ENABLE_NOTIFICATIONS}}" == "true" ] && echo "--enable-notifications") $([ "${{RESET_VOLUME}}" == "true" ] && echo "--reset-volume") )
         - echo ${CF_STEP_NAME}_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
         - rm -rf ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
         - echo $BUILD_ID >> ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
@@ -135,3 +143,7 @@ spec:
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f $BUILD_ID
         - codefresh wait $BUILD_ID
+      when:
+        condition:
+          all:
+            executeIfNotInDetached: "'${{DETACH}}' != 'true'"

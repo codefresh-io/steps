@@ -50,17 +50,8 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-          "API_PREFIX",
           "CLAIR_URL",
           "IMAGE",
-          "PROTOCOL",
-          "REGISTRY",
-          "REGISTRY_PASSWORD",
-          "REGISTRY_USERNAME",
-          "SEVERITY_THRESHOLD",
-          "TOKEN",
-          "TOKEN_TYPE",
-          "TOKEN_URL",
           "TAG"
         ],
         "properties": {

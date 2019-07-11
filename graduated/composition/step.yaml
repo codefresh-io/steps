@@ -70,7 +70,7 @@ spec:
                 "additionalProperties": true,
                 "patterns": [],
                 "description": "The definition of the service to monitor. Each candidate has a single command parameter that decides what will be tested.",
-                "examples": ["  composition_candidates:\n    test_service:\n      image: ${{build_step}}\n      command: gulp integration_test\n      working_dir: /app\n      environment:\n        - key=value"]
+                "examples": ["test_service:\n    image: ${{build_step}}\n    command: gulp integration_test\n    working_dir: /app\n    environment:\n      - key=value"]
             },
             "composition_variables": {
                 "type": "array",

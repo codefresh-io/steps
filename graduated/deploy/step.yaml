@@ -77,7 +77,7 @@ spec:
                         "type": "string"
                     }
                 },
-                "examples": ["image: ${{build_step}}\n  registry: dockerhub"],
+                "examples": ["image: ${{build_step}}\nregistry: dockerhub"],
                 "additionalProperties": false,
                 "patterns": [],
                 "required": ["image", "registry"],

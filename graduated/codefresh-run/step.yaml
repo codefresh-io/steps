@@ -29,7 +29,14 @@ metadata:
             title: Run a codefresh pipeline
             type: codefresh-run
             arguments:
-              PIPELINE_ID: PIP_NAME
+              PIPELINE_ID: pip_name
+              TRIGGER_ID: trigger_id
+              CONTEXT:
+                - context1
+                - context2
+              VARIABLE:
+                - key1=val1
+                - key2=val2
 spec:
   arguments: |-
     {

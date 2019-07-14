@@ -76,7 +76,7 @@ spec:
             "HEALTH_SECONDS": {
                 "type": "string",
                 "description": "Number of seconds the mesure health"
-            },
+            }
         }
     }
   steps:

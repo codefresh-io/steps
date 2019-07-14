@@ -61,7 +61,7 @@ spec:
                   "type": "string"
                 }
               },
-              "examples": ["duration: 1\n  finalState: approved"],
+              "examples": ["duration: 1\n    finalState: approved"],
               "additionalProperties": false,
               "patterns": []
             }

@@ -40,13 +40,9 @@ rm -rf $CLONE_PATH/$REPO_NAME/
 mkdir -p $CLONE_PATH
 
 echo "Cloning $REMOTE_URL"
-ssh-agent bash -c "ssh-add $ssh_key_file; git clone $REMOTE_URL $CLONE_PATH/$REPO_NAME"
+ssh-agent bash -c "ssh-add $ssh_key_file"
+ssh-agent bash -c "git clone --bare -b staging --single-branch $REMOTE_URL $CLONE_PATH/$REPO_NAME"
 cd $CLONE_PATH/$REPO_NAME
-if [ "$BRANCH" != "master" ]; then
-  echo "Checking out $BRANCH"
-  git checkout $BRANCH
-fi
-
 
 ## For the future: being aware of already cloned repo, intead of cloning it always:
 

@@ -18,7 +18,7 @@ else
 fi
 
 if [[ ! -z "${SPLIT_CHAR}" ]]; then
-  if [[ "${#SPLIT_CHAR}" > "1"  &&  "$( echo ${SPLIT_CHAR:0:1} )" = "$( echo ${SPLIT_CHAR: -1} )" ]]; then
+  if [[ "${#SPLIT_CHAR}" -gt 1  &&  "$( echo ${SPLIT_CHAR:0:1} )" = "$( echo ${SPLIT_CHAR: -1} )" ]]; then
     export encaps=${SPLIT_CHAR:0:1}
     export SPLIT_CHAR="$(echo $SPLIT_CHAR | cut -d$encaps -f 2)"
   fi
@@ -49,30 +49,34 @@ if [[ "$protocol" != "git" ]]; then
   exit 1
 fi
 
+if [[ ! -z "${SSH_KEY}" ]]; then
+  if [[ "${#SSH_KEY}" -lt 100 ]]; then
+    echo "SSH_KEY invalid, length: ${#SSH_KEY}"
+    exit 1
+  fi
+else
+  echo "SSH_KEY variable not set"
+  exit 1
+fi
+
 echo "GIT Hostname: $git_hostname"
 echo "REPO: $REPO_NAME"
 
 ## Use SSH_KEY environment variable to create key file, if it does not exist
 ssh_key_file="$HOME/.ssh/id_cfstep-gitclonerssh"
 if [[ ! -f "$ssh_key_file" ]]; then 
-  echo "Found $ssh_key_file file"
+  echo "Found $ssh_key_file file, removing it to replace it"
   rm -rf "$ssh_key_file"
 fi
 
-if [[ ! -z "${SSH_KEY}" ]]; then
-  echo "SSH key passed through SSH_KEY environment variable: length check ${#SSH_KEY}"
-  mkdir -p ~/.ssh
-  if [[ ! -z "${SPLIT_CHAR}" ]]; then
-    echo "SSH key split char: '${SPLIT_CHAR}'"
-    echo "${SSH_KEY}" | tr \'"${SPLIT_CHAR}"\' '\n' | sed '/^$/d' > "$ssh_key_file"
-  else
-    echo "${SSH_KEY}" > "$ssh_key_file"
-  fi
-  chmod 600 "$ssh_key_file"
+mkdir -p ~/.ssh
+if [[ ! -z "${SPLIT_CHAR}" && ${#SPLIT_CHAR} -ge 1 ]]; then
+  echo "Using SPLIT_CHAR to build key"
+  echo "${SSH_KEY}" | tr \'"${SPLIT_CHAR}"\' '\n' | sed '/^$/d' > "$ssh_key_file"
 else
-  echo "SSH_KEY variable not set"
-  exit 1
+  echo "${SSH_KEY}" > "$ssh_key_file"
 fi
+chmod 600 "$ssh_key_file"
 
 ## Delete existing $CLONE_PATH/$REPO_NAME/ dir, to be able to clone there later
 rm -rf $CLONE_PATH/$REPO_NAME/
@@ -80,13 +84,17 @@ rm -rf $CLONE_PATH/$REPO_NAME/
 ## Be sure the path set by the user exists, so it can be used for cloning later
 mkdir -p $CLONE_PATH
 
-echo "Cloning $REMOTE_URL"
+echo "Starting up SSH agent, adding remote host to known hosts, and adding SSH key."
 eval `ssh-agent -s`
 ssh-keyscan $git_hostname >> ~/.ssh/known_hosts
 ssh-add $ssh_key_file
-git clone --bare -b staging --single-branch $REMOTE_URL $CLONE_PATH/$REPO_NAME
-cd $CLONE_PATH/$REPO_NAME
-find . --maxdepth 1 -exec mv {} .. \; && cd .. && rm -rf $REPO_NAME
+
+
+echo "Cloning $REMOTE_URL"
+git clone -b $BRANCH --single-branch $REMOTE_URL $CLONE_PATH/$REPO_NAME
+export main_clone="$CLONE_PATH/$REPO_NAME"
+cd $main_clone
+echo "WORKING_DIR: $main_clone"
 
 ## For the future: being aware of already cloned repo, intead of cloning it always:
 

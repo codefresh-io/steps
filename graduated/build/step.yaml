@@ -19,6 +19,7 @@ metadata:
     - name: Codefresh INC
   examples:
     - description: Basic usage of build step to build step based on parameter Codefresh injects with tag master and dockerfile named 'Dockerfile'
+      name: Basic
       workflow:
         version: '1.0'
         steps:

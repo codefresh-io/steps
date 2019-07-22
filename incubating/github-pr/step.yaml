@@ -86,7 +86,7 @@ spec:
   steps:
     main:
       name: github-pr
-      image: codefreshplugins/github-pr
+      image: codefresh/github-pr-plugin
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'

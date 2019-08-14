@@ -1,5 +1,5 @@
 title: Send e-mail via Sendgrid
-image: codefreshplugins/sendgridplugin
+image: codefresh/sendgrid
 version: 0.1.0
 description: Send e-mail via Sendgrid
 categories:

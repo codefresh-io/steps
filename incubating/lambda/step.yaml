@@ -35,7 +35,7 @@ metadata:
                 ${PWD}/.aws/credentials
               - 'cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials'
           package:
-            image: ccodefreshplugins/serverless
+            image: codefreshplugins/cf-plugin-serverless
             title: package serverless service
             working_directory: '${{main_clone}}/examples/aws-node-simple-http-endpoint'
             commands:
@@ -98,7 +98,7 @@ spec:
   steps:
     main:
       name: serverless
-      image: codefresh-plugins/serverless
+      image: codefreshplugins/cf-plugin-serverless
       environment:
         - 'PACKAGE=${{PACKAGE}}'
         - 'AWS_CREDENTIALS_FILE=${{AWS_CREDENTIALS_FILE}}'

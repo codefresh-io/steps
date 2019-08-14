@@ -83,7 +83,7 @@ spec:
   steps:
     main:
       name: github-release
-      image: codefreshplugins/github-release
+      image: codefresh/github-release
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'

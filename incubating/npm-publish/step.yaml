@@ -45,6 +45,6 @@ spec:
   steps:
     main:
       name: npm-publish
-      image: 'codefresh/npm-publish:latest'
+      image: 'codefreshplugins/npm-publish:latest'
       environment:
         - 'NPM_TOKEN=${{NPM_TOKEN}}'

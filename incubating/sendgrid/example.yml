@@ -2,4 +2,4 @@ version: '1.0'
 steps:
   TestMail:
     title: Test Mail
-    image: 'codefreshplugins/sendgridplugin:latest'
+    image: 'codefresh/sendgrid:latest'

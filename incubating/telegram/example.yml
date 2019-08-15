@@ -1,7 +1,7 @@
 - version: '1.0'
   steps:
     sendMessage:
-      image: codefreshplugins/telegramnotifier
+      image: codefres/telegramnotifier
       environment:
         - TELEGRAM_TOKEN=${{TOKEN}}
         - TELEGRAM_TO=99999999
@@ -11,14 +11,14 @@
 - version: '1.0'
   steps:
     sendMessage:
-      image: codefreshplugins/telegramnotifier
+      image: codefresh/telegramnotifier
       environment:
         - "TELEGRAM_MESSAGE=buildTrigger: {{buildTrigger}}\nbuildInitiator: {{buildInitiator}}\nbuildId: {{buildId}}\nbuildTimestamp: {{buildTimestamp}}\nbuildUrl: {{buildUrl}}\nrepoOwner: {{repoOwner}}\nrepoName: {{repoName}}\nbranch: {{branch}}\nrevision: {{revision}}\ncommitAuthor: {{commitAuthor}}\ncommitUrl: {{commitUrl}}\ncommitMessage: {{commitMessage}}\nuserID: {{userID}}\nuserLink: {{{userLink}}}"
 
 - version: '1.0'
   steps:
     sendMessage:
-      image: codefreshplugins/telegramnotifier
+      image: codefresh/telegramnotifier
       environment:
         - |-
           TELEGRAM_MESSAGE=

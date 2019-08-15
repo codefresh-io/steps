@@ -4,11 +4,11 @@ steps:
     title: Building Docker Image
     type: build
     dockerfile: Dockerfile
-    image_name: codefreshplugins/telegram-notifier
+    image_name: codefresh/telegram-notifier
   PushDockerHub:
     title: Pushing to dockerhub
     type: push
     candidate: '${{BuildingDockerImage}}'
     tag: "0.1"
     registry: dockerhub
-    image_name: codefreshplugins/telegram-notifier
+    image_name: codefresh/telegram-notifier

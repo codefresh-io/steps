@@ -3,7 +3,7 @@ steps:
   BuildImage:
     title: Building Docker Image
     type: build
-    image_name: codefresh/sendgrid
+    image_name: codefreshplugins/sendgrid
   PushingToRegistry:
     type: push
     title: Pushing To Registry

@@ -27,8 +27,8 @@ metadata:
         version: '1.0'
         steps:      
           sendMessage:
-            tyep: telegram
-            arguemnts:
+            type: telegram
+            arguments:
               TELEGRAM_TOKEN: ${{TOKEN}}
               TELEGRAM_TO: 99999999
               TELEGRAM_MESSAGE: Hello {{{userLink}}}, how are you

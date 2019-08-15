@@ -24,4 +24,4 @@ envs:
   - name: TELEGRAM_MESSAGE
     description: text of message which will be sent to user
   - name: TELEGRAM_IMAGES
-    description: array of image links for attaching to message
+    description: array of image   links for attaching to message

@@ -78,7 +78,7 @@ spec:
   steps:
     main:
       name: sendgrid
-      image: codefresh/sendgrid
+      image: codefreshplugins/sendgrid
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
         - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'

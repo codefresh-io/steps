@@ -23,7 +23,7 @@ metadata:
         version: '1.0'
         steps:
           deployToHeroku:
-            type: nazarcodefresh/heroku-deployer
+            type: heroku-deployer
             description: Deploy to heroku
             title: Deploy to heroku
             stage: "deploy"

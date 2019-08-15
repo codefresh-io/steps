@@ -115,7 +115,7 @@ spec:
   steps:
     main:
       name: telegram
-      image: codefreshplugins/telegramnotifier
+      image: codefresh/telegramnotifier
       environment:
         - 'TELEGRAM_TOKEN=${{TELEGRAM_TOKEN}}'
         - 'TELEGRAM_TO=${{TELEGRAM_TO}}'

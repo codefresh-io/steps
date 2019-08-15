@@ -10,7 +10,7 @@ version: '1.0'
 steps:
   ...
   sendMessage:
-    image: codefreshplugins/telegramnotifier
+    image: codefresh/telegramnotifier
     environment:
       - TELEGRAM_TOKEN=${{TOKEN}}
       - TELEGRAM_TO=99999999

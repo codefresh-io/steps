@@ -1,4 +1,4 @@
-image: codefreshplugins/telegramnotifier
+image: codefresh/telegramnotifier
 version: 0.1.0
 description: Telegram plugin which gives the opportunity send any messages to users via bot.
 keywords:

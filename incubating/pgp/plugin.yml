@@ -1,0 +1,64 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: pgp
+  isPublic: true
+  description: Ability to sign file with pgp
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run
+  stage: graduated
+  maintainers:
+    - name: Pasha Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - security
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://image.flaticon.com/icons/svg/65/65220.svg
+    background: "#ffffff"
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          sign:
+            title: Sign a password file
+            type: pgp
+            arguments:
+              PUBLIC_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
+              GLOB: "*.txt"
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "PUBLIC_KEY",
+            "GLOB"
+        ],
+        "properties": {
+            "PUBLIC_KEY": {
+                "type": "string",
+                "description": "Public gpg key (Base 64 encoded)",
+                "examples": ["LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQoNCm1RR05CRjFWSWtvQkRBQ"]
+            },
+            "GLOB": {
+                "type": "string",
+                "description": "Glob file expression",
+                "examples": ["/**/*.txt"]
+            }
+        }
+    }
+  steps:
+    pgp:
+      title: pgp
+      image: codefresh/pgp
+      environments:
+        - PUBLIC_KEY=${{PUBLIC_KEY}}
+        - GLOB=${{GLOB}}

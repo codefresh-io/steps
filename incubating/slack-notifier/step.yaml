@@ -30,6 +30,7 @@ metadata:
               SLACK_HOOK_URL: ${{SLACK_WEBHOOK_URL}}
               SLACK_TEXT: ${{SLACK_TEXT}}
               SLACK_ATTACHMENTS: ${{SLACK_ATTACHMENTS}}
+              SLACK_CHANNEL: ${{SLACK_CHANNEL}}
 spec:
   arguments: |-
     {
@@ -70,6 +71,10 @@ spec:
             "SLACK_TEMPLATE_FIELDS": {
                 "type": "string",
                 "description": "Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments"
+            },
+            "SLACK_CHANNEL": {
+                "type": "string",
+                "description": "Optional channel name to send message to instead of the default channel for the SLACK_HOOK_URL."
             }
         }
     }
@@ -84,3 +89,4 @@ spec:
         - 'MODE=${{MODE}}'
         - 'SLACK_TEMPLATE_BODY=${{SLACK_TEMPLATE_BODY}}'
         - 'SLACK_TEMPLATE_FIELDS=${{SLACK_TEMPLATE_FIELDS}}'
+        - 'SLACK_CHANNEL=${{SLACK_CHANNEL}}'

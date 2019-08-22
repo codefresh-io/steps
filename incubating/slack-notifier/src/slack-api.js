@@ -4,12 +4,13 @@ const slack = new SlackWebhook(process.env.SLACK_HOOK_URL);
 
 class SlackApi {
 
-    static send(text, attachments, username, icon){
+    static send(text, attachments, username, icon, channel){
         slack.send({
             text: text,
             attachments: attachments,
             username: username,
             icon_emoji: icon,
+            channel: channel,
         }).catch(function (err) {
            console.error(`Cant send notification to slack , error : ${err}, check your SLACK_HOOK_URL`);
            process.exitCode = 0;

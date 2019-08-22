@@ -14,7 +14,7 @@ class SimpleMode {
             process.exit(1);
         }
 
-        SlackApi.send(process.env.SLACK_TEXT, attachments, process.env.SLACK_USER_NAME, process.env.SLACK_ICON_EMOJI);
+        SlackApi.send(process.env.SLACK_TEXT, attachments, process.env.SLACK_USER_NAME, process.env.SLACK_ICON_EMOJI, process.env.SLACK_CHANNEL);
     }
 
 }

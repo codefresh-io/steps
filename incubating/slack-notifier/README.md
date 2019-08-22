@@ -43,9 +43,10 @@ List of env variables
 ```
 
 SLACK_HOOK_URL - required
-SLACK_ATTACHMENTS    - optional
-SLACK_TEXT     - optional
+SLACK_ATTACHMENTS - optional
+SLACK_TEXT - optional
 SLACK_USER_NAME - optional
 SLACK_ICON_EMOJI - optional
+SLACK_CHANNEL - optional
 
 ```

@@ -28,3 +28,5 @@ envs:
   - name: SLACK_TEMPLATE_FIELDS
     type: required
     description: Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments
+  - name: SLACK_CHANNEL
+    description: Optional channel name to send message to instead of the default channel for the SLACK_HOOK_URL.

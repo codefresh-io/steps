@@ -2,6 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: pending-approval
+  version: 0.0.1
   isPublic: true
   description: Pause a running build until an approve or deny action
   sources:

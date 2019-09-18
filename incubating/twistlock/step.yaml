@@ -2,6 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twistlock
+  version: 0.0.1
   isPublic: true
   description: Execute Twistlock CLI image scan as build step
   sources:

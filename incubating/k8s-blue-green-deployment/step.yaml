@@ -2,6 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-blue-green-deployment
+  version: 0.0.1
   isPublic: true
   description: Perform blue/green deployments on a Kubernetes cluster
   sources:

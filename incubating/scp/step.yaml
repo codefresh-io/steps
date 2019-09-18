@@ -2,6 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: scp
+  version: 0.0.1
   isPublic: true
   description: Plugin to upload file or directory to remote machine using scp protocol.
   sources:

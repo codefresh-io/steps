@@ -8,8 +8,11 @@ steps:
       BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
       BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
       CF_BUILD_STATUS: 'INPROGRESS'
+
     ## [Some more steps...]
+
     BB_Update_BuildStatus_Finished:
+    type: parallel
     fail_fast: false
     when:
       condition:

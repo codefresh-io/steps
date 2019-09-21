@@ -1,0 +1,20 @@
+version: "1.0"
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/bitbucket-buildstatus
+    working_directory: ./
+    dockerfile: Dockerfile
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    tags:
+    - latest
+    - 0.0.1
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

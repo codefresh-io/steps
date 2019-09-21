@@ -1,0 +1,27 @@
+name: bitbucket-buildstatus
+image: codefreshplugins/bitbucket-buildstatus
+tag: 0.0.1
+version: 0.0.1
+description: Update BitBucket Commit Build Status
+categories:
+- git
+keywords:
+- git
+- bitbucket
+- buildstatus
+sources:
+- https://github.com/codefresh-contrib/bitbucket-buildstatus
+maintainers:
+- name: Yiannis Demetriades
+  email: yiannis.demetriades@gmail.com
+icon: https://raw.githubusercontent.com/codefresh-plugins/bitbucket-buildstatus/master/icon.jpg
+envs:
+- name: BB_BSN_REPO_AUTH_USER
+  type: optional
+  description: Bitbucket API Authorization Username
+- name: BB_BSN_REPO_AUTH_PASSWORD
+  type: required
+  description: Bitbucket API Authorization Password
+- name: BB_BSN_REPO_AUTH_USER
+  type: required
+  description: Build Status. Must be one of ['SUCCESSFUL', 'FAILED', 'INPROGRESS', 'STOPPED']

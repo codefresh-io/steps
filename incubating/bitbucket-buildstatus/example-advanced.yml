@@ -6,7 +6,7 @@ steps:
     fail_fast: false
     arguments:
       BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-      BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+      BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
       CF_BUILD_STATUS: 'INPROGRESS'
 
     ## [Some more steps...]
@@ -27,7 +27,7 @@ steps:
               myCondition: workflow.result == 'success'
         arguments:
           BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-          BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+          BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
           CF_BUILD_STATUS: 'SUCCESSFULL'
       BB_Update_BuildStatus_Failed:
         type: bitbucket-buildstatus
@@ -37,5 +37,5 @@ steps:
               myCondition: workflow.result == 'failure'
         arguments:
           BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-          BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+          BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
           CF_BUILD_STATUS: 'FAILED'

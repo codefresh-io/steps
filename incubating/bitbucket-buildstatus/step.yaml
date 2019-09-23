@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bitbucket-buildstatus
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Update Bitbucket Commit Build Status
   sources:
@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/bitbucket-pr/icon.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/bitbucket-buildstatus/icon.svg
     background: "#f4f4f4"
   examples:
     - description: bitbucket-buildstatus-basic-example
@@ -35,16 +35,6 @@ metadata:
         version: '1.0'
         mode: parallel
         steps:
-          BB_Update_BuildStatus_InProgress:
-            type: bitbucket-buildstatus
-            fail_fast: false
-            arguments:
-              BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-              BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
-              CF_BUILD_STATUS: 'INPROGRESS'
-
-           ## [Some more steps...]
-
            BB_Update_BuildStatus_Finished:
             type: parallel
             fail_fast: false
@@ -61,7 +51,7 @@ metadata:
                       myCondition: workflow.result == 'success'
                 arguments:
                   BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-                  BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+                  BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
                   CF_BUILD_STATUS: 'SUCCESSFULL'
               BB_Update_BuildStatus_Failed:
                 type: bitbucket-buildstatus
@@ -71,7 +61,7 @@ metadata:
                       myCondition: workflow.result == 'failure'
                 arguments:
                   BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-                  BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+                  BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
                   CF_BUILD_STATUS: 'FAILED'
 spec:
   arguments: |-
@@ -82,8 +72,7 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "GIT_CONTEXT",
-            "LABELS"
+            "BB_BSN_REPO_AUTH_PASSWORD"
         ],
         "properties": {
             "BB_BSN_REPO_AUTH_USER": {
@@ -97,7 +86,7 @@ spec:
             "CF_BUILD_STATUS": {
                 "type": "string",
                 "description": "Build Status. Must be one of ['SUCCESSFUL', 'FAILED', 'INPROGRESS', 'STOPPED']"
-            },
+            }
         }
     }
   steps:
@@ -106,5 +95,5 @@ spec:
       image: codefreshplugins/bitbucket-buildstatus
       environment:
         - BB_BSN_REPO_AUTH_USER=${{BB_BSN_REPO_AUTH_USER}}
-        - BB_BSN_REPO_AUTH_PASSWORD=${{BB_BSN_REPO_AUTH_USER}}
+        - BB_BSN_REPO_AUTH_PASSWORD=${{BB_BSN_REPO_AUTH_PASSWORD}}
         - CF_BUILD_STATUS=${{CF_BUILD_STATUS}}

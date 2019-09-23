@@ -41,3 +41,8 @@ response = requests.post(api_url, auth=(repo_auth_user, repo_auth_password), jso
 print('Response:')
 print(response)
 print(response.text)
+
+if response:
+    exit(0)
+else:
+    exit(1)

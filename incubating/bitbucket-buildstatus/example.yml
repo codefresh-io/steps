@@ -4,5 +4,5 @@ steps:
     type: bitbucket-buildstatus
     arguments:
       BB_BSN_REPO_AUTH_USER: ${{BB_BSN_REPO_AUTH_USER}}
-      BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_USER}}
+      BB_BSN_REPO_AUTH_PASSWORD: ${{BB_BSN_REPO_AUTH_PASSWORD}}
       CF_BUILD_STATUS: ${{CF_BUILD_STATUS}}

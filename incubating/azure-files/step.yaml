@@ -76,7 +76,7 @@ spec:
   steps:
     main:
       name: azure-files
-      image: codefresh/cf-azure-plugin
+      image: codefresh/azure-files-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'
         - 'ACCOUNT_KEY=${{ACCOUNT_KEY}}'

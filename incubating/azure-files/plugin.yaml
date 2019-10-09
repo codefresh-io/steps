@@ -1,5 +1,5 @@
 name: azure-files
-image: codefresh/cf-azure-plugin
+image: codefresh/azure-files-plugin
 tag: master
 version: 1.0.0
 description: Plugin for pushing files to Azure Files

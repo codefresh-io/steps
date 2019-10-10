@@ -11,7 +11,7 @@ sendSlack:
       - slack-message-sender send --webhook-url https://my-webhook-url --message "My message"
 ```
 ## Run locally
-`go get codefresh-io/slack-message-sender`
+`go get github.com/codefresh-io/slack-message-sender`
 `slack-message-sender send --help`
 ```
 NAME:

@@ -12,6 +12,9 @@ sendSlack:
 ```
 ## Run locally
 `go get github.com/codefresh-io/slack-message-sender`
+
+and run
+
 `slack-message-sender send --help`
 ```
 NAME:

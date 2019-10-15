@@ -59,3 +59,4 @@ spec:
       environment:
         - GIT_CONTEXT=${{GIT_CONTEXT}}
         - LABELS=${{LABELS}}
+        - PLUGIN_RESULT=SUCCESS

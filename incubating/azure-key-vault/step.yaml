@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Fetch Secrets from Azure Key Vault
   sources:
@@ -75,7 +75,7 @@ spec:
   steps:
     main:
       name: azure-key-vault
-      image: codefreshplugins/azure-key-vault
+      image: codefreshplugins/cfstep-azure-key-vault
       environment:
         - 'AZURE_CLIENT_ID=${{AZURE_CLIENT_ID}}'
         - 'AZURE_SECRET=${{AZURE_SECRET}}'

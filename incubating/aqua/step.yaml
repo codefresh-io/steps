@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aqua
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Execute Aqua Security image scan as build step
   sources:
@@ -83,7 +83,7 @@ spec:
   steps:
     main:
       name: aqua
-      image: codefreshplugins/aqua
+      image: codefreshplugins/cfstep-aqua
       environment:
         - 'AQUA_HOST=${{AQUA_HOST}}'
         - 'AQUA_PASSWORD=${{AQUA_PASSWORD}}'

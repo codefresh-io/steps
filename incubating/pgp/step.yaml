@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: codefresh-inc/pgp
+  name: pgp
   isPublic: true
   description: Ability to sign file with pgp
   sources:
@@ -25,7 +25,7 @@ metadata:
         steps:
           sign:
             title: Sign a password file
-            type: codefresh-inc/pgp
+            type: pgp
             arguments:
               PUBLIC_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
               GLOB: '*.txt'
@@ -36,7 +36,7 @@ metadata:
         steps:
           sign:
             title: Decrypt a password file
-            type: codefresh-inc/pgp
+            type: pgp
             arguments:
               PRIVATE_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
               PASS_PHRASE: LS0t***

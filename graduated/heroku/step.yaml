@@ -1,6 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
+  version: '0.0.2'
   name: heroku-deployer
   isPublic: true
   description: Deploy to heroku via codefresh pipeline
@@ -76,4 +77,4 @@ spec:
         - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
         - heroku create ${{APP_NAME}} || true
         - heroku git:remote --app ${{APP_NAME}}
-        - git push heroku master
+        - git push heroku master --force

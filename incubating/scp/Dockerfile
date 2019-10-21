@@ -2,7 +2,6 @@ FROM node:10.13.0-alpine
 
 # Create app directory
 WORKDIR /app/
-VOLUME /app
 
 COPY package.json ./
 

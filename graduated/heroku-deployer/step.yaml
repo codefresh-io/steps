@@ -1,0 +1,80 @@
+kind: step-type
+version: '1.0'
+metadata:
+  version: '0.0.2'
+  name: heroku-deployer
+  isPublic: true
+  description: Deploy to heroku via codefresh pipeline
+  sources:
+    - https://github.com/codefresh-io/heroku-deployer.git
+  stage: graduated
+  maintainers:
+    - name: Nazar Rohozhuk
+      email: nazar@codefresh.io
+  categories:
+    - deployment
+  official: false
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/heroku-deployer/icon.svg
+    background: "#333D47"
+  examples:
+    - description: Deploy app from current repo
+      workflow:
+        version: '1.0'
+        steps:
+          deployToHeroku:
+            type: heroku-deployer
+            description: Deploy to heroku
+            title: Deploy to heroku
+            stage: "deploy"
+            arguments:
+              APP_NAME: codefresh-test
+              EMAIL: example@codefresh.io
+              API_TOKEN: 00000000-0aa0-0a00-a000-00a00aa00000
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "APP_NAME",
+            "EMAIL",
+            "API_TOKEN"
+        ],
+        "properties": {
+            "APP_NAME": {
+                "type": "string",
+                "description": "Name of application",
+                "examples": ["codefresh"]
+            },
+            "EMAIL": {
+                "type": "string",
+                "description": "User email",
+                "examples": ["example@codefresh.io"]
+            },
+            "API_TOKEN": {
+                "type": "string",
+                "description": "Token from heroku account settings",
+                "examples": ["eee30059-2dd1-4b06-a895-32e11bd71053"]
+            },
+            "PATH": {
+                "type": "string",
+                "examples": ["${{CF_VOLUME_PATH}}/build"],
+                "description": "Path to source for deploy"
+            }
+        }
+    }
+  steps:
+    herokuDeployer:
+      title: herokuDeployer
+      image: nazarcodefresh/heroku-cli:alpine
+      commands:
+        - printf "machine api.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\nmachine git.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\n" > ~/.netrc
+        - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
+        - heroku create ${{APP_NAME}} || true
+        - heroku git:remote --app ${{APP_NAME}}
+        - git push heroku master --force

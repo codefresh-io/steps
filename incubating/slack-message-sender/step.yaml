@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-message-sender
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Send message to slack channel
   sources:
@@ -24,10 +24,10 @@ metadata:
     - description: example-1
       workflow:
         version: '1.0'
-        steps:      
+        steps:
           sendSlack:
             type: slack-message-sender
-            arguemnts:
+            arguments:
               WEBHOOK_URL: http://webhook.com
               MESSAGE: message
 spec:

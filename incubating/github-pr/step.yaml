@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: github-pr
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Operates on GitHub pull requests
   sources:
@@ -27,10 +27,11 @@ metadata:
     - description: example-1
       workflow:
         version: '1.0'
-        steps:      
+        steps:
           github-pr:
             type: github-pr
             arguments:
+              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
               GITHUB_REPO_OWNER: ${{GITHUB_REPO_OWNER}}
               GITHUB_REPO_NAME: ${{GITHUB_REPO_NAME}}
               HEAD: ${{CF_BRANCH}}
@@ -63,12 +64,13 @@ spec:
                 "description": "Name of repo"
             },
             "GITHUB_PR_NUMBER": {
-                "type": "string",
+                "type": "number",
                 "description": "The number of updated pull request. Required for open/close/update operations"
             },
             "GITHUB_PR_OPERATION": {
                 "type": "string",
-                "description": "Operation on pull request. Options - create, update, open, close. Default - create."
+                "description": "Operation on pull request. Options - create, update, open, close. Default - create.",
+                "default": "create"
             },
             "HEAD": {
                 "type": "string",

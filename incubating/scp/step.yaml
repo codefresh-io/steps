@@ -2,6 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: scp
+  version: 0.0.2
   isPublic: true
   description: Plugin to upload file or directory to remote machine using scp protocol.
   sources:
@@ -22,7 +23,7 @@ metadata:
     - description: example-1
       workflow:
         version: '1.0'
-        steps:      
+        steps:
           SCP:
             type: scp
             arguments:
@@ -70,7 +71,7 @@ spec:
                 "description": "path to resource on remote machine where resource will be created, example /home/test.txt"
             },
             "CF_SCP_PORT": {
-                "type": "string",
+                "type": "number",
                 "description": "default port is 22, use this variable to specify different port."
             }
         }
@@ -78,7 +79,7 @@ spec:
   steps:
     main:
       name: scp
-      image: codefreshplugins/scp
+      image: codefreshplugins/scp-plugin
       environment:
         - 'CF_SCP_HOST=${{CF_SCP_HOST}}'
         - 'CF_SCP_USER_NAME=${{CF_SCP_USER_NAME}}'

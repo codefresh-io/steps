@@ -32,7 +32,7 @@ AZ_ADD_TIMESTAMP=True
     push_to_azure:
       title: Pushing to Azure files
       stage: azure
-      image: tomlesh/cf-azure-plugin:purpose
+      image: codefresh/azure-files-plugin
       environment:
         - ACCOUNT_NAME=${{AZ_NAME}}
         - ACCOUNT_KEY=${{AZ_ACCOUNT_KEY}}

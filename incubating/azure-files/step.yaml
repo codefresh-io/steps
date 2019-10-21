@@ -1,7 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: azure-files
+  name: codefresh-inc/azure-files
+  version: 0.0.1
   isPublic: true
   description: Plugin for pushing files to Azure Files
   sources:
@@ -74,8 +75,8 @@ spec:
     }
   steps:
     main:
-      name: azure-files
-      image: codefresh/cf-azure-plugin
+      title: azure-files
+      image: codefresh/azure-files-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'
         - 'ACCOUNT_KEY=${{ACCOUNT_KEY}}'

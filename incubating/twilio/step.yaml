@@ -2,6 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twilio
+  version: 0.0.1
   isPublic: true
   description: Send SMS notifications via Twillio
   sources:

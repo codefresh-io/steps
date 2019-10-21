@@ -1,0 +1,108 @@
+#TODO  support printing error in case of api call failure
+kind: step-type
+version: '1.0'
+metadata:
+  name: cf-firebase-messaging
+  version: 0.0.1
+  isPublic: true
+  description: Send firebase notifications
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run
+  stage: graduated
+  maintainers:
+    - name: Yaroslav Drachenko
+      email: yaroslav@codefresh.io
+  categories:
+    - notifications
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/firebase-messaging/firebase.svg
+    background: "#C7DCFF"
+  examples:
+    - description: Subscribe registration tokens to topic 'test' and send 'data' and 'notification'
+      workflow:
+        version: '1.0'
+        steps:
+          send-message:
+            title: Send firebase notification
+            type: firebase-messaging
+            arguments:
+              FIREBASE_MESSAGE_TOPIC: test
+              FIREBASE_REGISTRATION_TOKENS: |-
+                [
+                  "AldineoDI2Ldio....",
+                  "AldineoDI2Ldio....",
+                ]
+              FIREBASE_MESSAGE_DATA: |-
+                {
+                	"test": "test"
+                }
+              FIREBASE_NOTIFICATION: |-
+                {
+                	"title": "test",
+                	"body": "test"
+                }
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+        ],
+        "properties": {
+            "FIREBASE_SERVICE_ACCOUNT_KEY_JSON": {
+                "type": "string",
+                "description": "Service account token json from firebase console (should be passed through env variabli)",
+                "examples": ["ALidSOmnepdi...."],
+                "default": ""
+            },
+            "FIREBASE_MESSAGE_TOPIC": {
+                "type": "string",
+                "description": "Topic for sending messages",
+                "examples": ["test"],
+                "default": ""
+            },
+            "FIREBASE_MESSAGE_DATA": {
+                "type": "string",
+                "description": "Data in json format",
+                "examples": ["{\"test\": \"test\"}"],
+                "default": ""
+            },
+            "FIREBASE_NOTIFICATION": {
+                "type": "string",
+                "description": "Notification with properties 'title' and 'body' in json format",
+                "examples": ["{\"title\": \"test\", \"body\": \"test\"}"],
+                "default": ""
+            },
+            "FIREBASE_REGISTRATION_TOKENS": {
+                  "type": "string",
+                  "description": "Firebase registration tokens",
+                  "examples": ["AlkdeLEJjpd....."],
+                  "default": "[]"
+            },
+            "FIREBASE_REGISTRATION_TOKENS_URL": {
+                  "type": "string",
+                  "description": "Url for getting firebase registration tokens",
+                  "examples": ["http://example.com/registration-tokens"],
+                  "default": ""
+            }
+        }
+    }
+  steps:
+    send-message:
+      name: send-message
+      image: codefresh/cf-firebase-messaging
+      environment:
+        - FIREBASE_MESSAGE_TOPIC=${{FIREBASE_MESSAGE_TOPIC}}
+        - FIREBASE_MESSAGE_DATA=${{FIREBASE_MESSAGE_DATA}}
+        - FIREBASE_NOTIFICATION=${{FIREBASE_NOTIFICATION}}
+        - FIREBASE_REGISTRATION_TOKENS=${{FIREBASE_REGISTRATION_TOKENS}}
+        - FIREBASE_REGISTRATION_TOKENS_URL=${{FIREBASE_REGISTRATION_TOKENS_URL}}
+      commands:
+        - node /messaging/cf-firebase-messaging

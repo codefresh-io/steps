@@ -1,0 +1,111 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: aws-parameter-store
+  version: 0.0.1
+  isPublic: false
+  description: Gathers parameters from AWS Parameter Store
+  sources:
+    - >-
+      https://github.com/codefresh-contrib/cfstep-aws-parameter-store/tree/master/
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustinb@codefresh.io
+  categories:
+    - utility
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-contrib/cfstep-aws-parameter-store/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: AWS CLI Credentials
+      workflow:
+        version: '1.0'
+        steps:
+          GetParameters:
+            type: aws-parameter-store
+            arguments:
+              AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+              AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
+              AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+              PARAMETERS: param1 param2
+    - description: AWS Credentials file
+      workflow:
+        version: '1.0'
+        steps:
+          CreateAWSCredentialsFile:
+            image: alpine:3.10
+            title: Creating AWS Credentials File...
+            working_directory: ${{main_clone}}
+            commands:
+              - mkdir -p ${CF_VOLUME_PATH}/.aws
+              - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
+              - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
+          GetParameters:
+            type: aws-parameter-store
+            arguments:
+              AWS_DEFAULT_REGION: us-west-2
+              AWS_SHARED_CREDENTIALS_FILE: ${CF_VOLUME_PATH}/.aws/credentials
+              AWS_PROFILE: default
+              PARAMETERS: param1 param2
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "AWS_DEFAULT_REGION",
+            "PARAMETERS"
+        ],
+        "properties": {
+            "AWS_ACCESS_KEY_ID": {
+                "type": "string",
+                "default": "",
+                "description": "AWS Access Key, used for CLI Credentials."
+            },
+            "AWS_DEFAULT_REGION": {
+                "type": "string",
+                "default": "us-east-1",
+                "description": "AWS Region, used for CLI Credentials."
+            },
+            "AWS_PROFILE": {
+                "type": "string",
+                "default": "default",
+                "description": "AWS Profile, used for Credentials file."
+            },
+            "AWS_SECRET_ACCESS_KEY": {
+                "type": "string",
+                "default": "",
+                "description": "AWS Secret Access Key, used for CLI Credentials."
+            },
+            "AWS_SHARED_CREDENTIALS_FILE": {
+                "type": "string",
+                "default": "/codefresh/volume/.aws/credentials",
+                "description": "Location of AWS Credentials file, used for Credentials file."
+            },
+            "PARAMETERS": {
+                "type": "string",
+                "description": "Space delimited list of parameter names."
+            }
+        }
+    }
+  steps:
+    main:
+      name: aws-parameter-store
+      image: codefreshplugins/cfstep-aws-parameter-store
+      environment:
+        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
+        - 'AWS_DEFAULT_REGION=${{AWS_DEFAULT_REGION}}'
+        - 'AWS_PROFILE=${{AWS_PROFILE}}'
+        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
+        - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
+        - 'PARAMETERS=${{PARAMETERS}}'
+      commands:
+        - >-
+          aws ssm get-parameters --names ${PARAMETERS} --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" | jq '.[] | {"key": .Name, "value": .Value} | "\(.key)=\(.value)"' | tr -d '"' >> /codefresh/volume/env_vars_to_export

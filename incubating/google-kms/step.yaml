@@ -73,6 +73,10 @@ spec:
             "GCP_SA_KEY": {
                 "type": "string",
                 "description": "Google Service Account Key (JSON)"
+            },
+            "VALUE": {
+                "type": "string",
+                "description": "value to encrypt"
             }
         }
     }

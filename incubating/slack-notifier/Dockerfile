@@ -4,7 +4,6 @@ RUN apk add --no-cache bash git openssh-client
 
 # Create app directory
 WORKDIR /app/
-VOLUME /app
 
 COPY package.json ./
 
@@ -19,6 +18,9 @@ RUN apk add --no-cache --virtual deps python make g++ krb5-dev && \
 
 # copy app files
 COPY . ./
+
+# mount volume
+VOLUME /app
 
 # run application
 CMD ["node", "/app/index.js"]

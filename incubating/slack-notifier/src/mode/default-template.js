@@ -32,7 +32,7 @@ class DefaultTemplateMode {
         }
         console.log('Choose default-template mode');
 
-        SlackApi.send(process.env.SLACK_TEXT, [template], process.env.SLACK_USER_NAME, process.env.SLACK_ICON_EMOJI);
+        SlackApi.send(process.env.SLACK_TEXT, [template], process.env.SLACK_USER_NAME, process.env.SLACK_ICON_EMOJI, process.env.SLACK_CHANNEL);
     }
 
 }

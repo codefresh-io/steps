@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: aws-parameter-store
   version: 0.0.1
-  isPublic: false
+  isPublic: true
   description: Gathers parameters from AWS Parameter Store
   sources:
     - >-

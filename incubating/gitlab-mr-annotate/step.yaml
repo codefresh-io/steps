@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitlab-mr-annotate
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: The plugin allows for easy applying labels to GitLab merge requests
   sources:
@@ -67,7 +67,7 @@ spec:
   steps:
     main:
       name: gitlab-mr-annotate
-      image: codefreshplugins/gitlab-mr-annotate
+      image: codefreshplugins/cf-gitlab-mr-annotate
       environment:
         - 'GIT_CONTEXT=${{GIT_CONTEXT}}'
         - 'LABELS=${{LABELS}}'

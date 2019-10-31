@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: backblaze-b2
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Upload files to Backblaze B2 bucket
   sources:
@@ -30,7 +30,7 @@ metadata:
               APPLICATION_KEY_ID: ${{APPLICATION_KEY_ID}}
               APPLICATION_KEY: ${{APPLICATION_KEY}}
               BUCKET_ID: ${{BUCKET_ID}}
-              UPLOAD_FILE_1: ${{UPLOAD_FILE_1}}
+              UPLOAD_FILE_1: ["/codefresh/volume/test.txt", "test.txt"]
 spec:
   arguments: |-
     {

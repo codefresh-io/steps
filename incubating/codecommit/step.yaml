@@ -56,7 +56,7 @@ spec:
   steps:
     main:
       name: codecommit
-      image: codefreshplugins/codecommit
+      image: codefreshplugins/cfstep-codecommit
       environment:
         - 'GIT_USER=${{GIT_USER}}'
         - 'GIT_PASSWORD=${{GIT_PASSWORD}}'

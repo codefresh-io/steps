@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bintray
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: A Codefresh freestyle step to manage releases in JFrog Bintray
   sources:
@@ -33,6 +33,9 @@ metadata:
             arguments:
               BINTRAY_COMMAND: ${{BINTRAY_COMMAND}}
               BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
+              BINTRAY_USER: 'test'
+              BINTRAY_KEY: '******'
+
 spec:
   arguments: |-
     {
@@ -53,6 +56,14 @@ spec:
             "BINTRAY_KEY": {
                 "type": "string",
                 "description": "API key for bintray"
+            },
+            "BINTRAY_COMMAND": {
+                "type": "string",
+                "description": "Command for bintray"
+            },
+            "BINTRAY_ARGS": {
+                "type": "string",
+                "description": "Args for bintray"
             }
         }
     }
@@ -63,3 +74,5 @@ spec:
       environment:
         - 'BINTRAY_USER=${{BINTRAY_USER}}'
         - 'BINTRAY_KEY=${{BINTRAY_KEY}}'
+        - 'BINTRAY_COMMAND=${{BINTRAY_COMMAND}}'
+        - 'BINTRAY_ARGS=${{BINTRAY_ARGS}}'

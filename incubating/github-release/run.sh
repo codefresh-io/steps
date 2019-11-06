@@ -1,19 +1,108 @@
 # !/bin/bash
 
-# check if the required vars are set
-for reqVar in GITHUB_TOKEN CF_REPO_OWNER CF_REPO_NAME; do
-    if [ -z ${!reqVar} ]; then echo "The variable $reqVar is not set, stopping..."; exit 1; fi
-done
+set -o pipefail
 
-if [ "$PRERELEASE" = "true" ]; then PRERELEASE="-p"; else PRERELEASE=""; fi
-if [ "$FILES" = '${{FILES}}' ]; then FILES=""; fi
-if [ "$CF_TARGET_BRANCH" ]; then CF_TARGET_BRANCH="--target $CF_TARGET_BRANCH"; fi
+bold() { echo -e "\e[1m$@\e[0m" ; }
+red() { echo -e "\e[31m$@\e[0m" ; }
+green() { echo -e "\e[32m$@\e[0m" ; }
+yellow() { echo -e "\e[33m$@\e[0m" ; }
 
-github-release release --user $CF_REPO_OWNER --repo $CF_REPO_NAME --tag $RELEASE_TAG --name $RELEASE_NAME --description $RELEASE_DESCRIPTION
+ok() { green OK ; }
 
-if [ ! -z "$FILES" ]; then
- for file in $FILES; do
-     echo "Uploading file $file........"
-     github-release upload --user $CF_REPO_OWNER --repo $CF_REPO_NAME --tag $CF_BRANCH_TAG_NORMALIZED --name $(basename $file) --file $file
- done
-fi
+REQUIRED_VARS=(
+    GIT_CONTEXT
+    REPO_OWNER
+    REPO_NAME
+    RELEASE_TAG
+    RELEASE_NAME
+)
+
+OPTIONAL_VARS=(
+    RELEASE_DESCRIPTION
+    FILES
+)
+
+function getTokenFromContext() {
+    bold "Getting a git token from the context \"${GIT_CONTEXT}\"..."
+    GITHUB_TOKEN=$(codefresh get contexts --type git.github $1 --decrypt -o json | jq -r '.spec.data.auth.password') || return 1
+    export GITHUB_TOKEN
+    ok
+}
+
+function getContextFromTrigger() {
+    checkTrigger || return 1
+    result=$(codefresh get pipeline "$CF_PIPELINE_NAME" -o json | jq --arg triggerId "${CF_PIPELINE_TRIGGER_ID}" -r '.spec.triggers[] | select(.id == $triggerId) | .context') || return 1 
+    eval $1=$result
+}
+
+function checkTrigger() {
+    if [ -z "$CF_PIPELINE_TRIGGER_ID" ]; then
+        red "Failed to get the trigger data - the pipeline hasn't been started by a trigger"
+        yellow "If the pipeline is not started by a trigger, the variables GIT_CONTEXT, REPO_NAME and REPO_OWNER must be set manually"
+        return 1
+    fi
+}
+
+function setDefaultVarValues() {
+
+    if [ -z "$GIT_CONTEXT" ]; then
+        yellow "GIT_CONTEXT var is not set explicitly. Trying to get it from the trigger by default..."
+        getContextFromTrigger GIT_CONTEXT
+        [ $? != 0 ] && return 1
+        ok
+    fi
+
+    if [ -z "$REPO_OWNER" ]; then
+        yellow "REPO_OWNER var is not set explicitly. Trying to get it from the trigger by default..."
+        checkTrigger || return 1
+        REPO_OWNER="$CF_REPO_OWNER"
+        ok
+    fi
+
+    if [ -z "$REPO_NAME" ]; then
+        yellow "REPO_NAME var is not set explicitly. Trying to get it from the trigger by default..."
+        checkTrigger || return 1
+        REPO_NAME="$CF_REPO_NAME"
+        ok
+    fi
+}
+
+# There might be values for cf empty vars, like ${{VAR}} substituted like this into
+# the script. We want them to be really empty
+function handleCfEmptyVars() {
+    local allVars=(`echo "${REQUIRED_VARS[@]}"` `echo "${OPTIONAL_VARS[@]}"`)
+    for var in ${allVars[*]}; do
+        if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
+    done
+}
+
+function validateReqVars() {
+    for reqVar in ${REQUIRED_VARS[*]}; do
+        if [ -z ${!reqVar} ]; then echo "The variable $reqVar is not set, stopping..."; exit 1; fi
+    done
+}
+
+function main() {
+
+    handleCfEmptyVars
+    setDefaultVarValues
+    [ $? != 0 ] && red "Failed to set default value for one of the required variables, exiting..." && return 1
+
+    getTokenFromContext $GIT_CONTEXT
+
+    validateReqVars
+
+    if [ "$PRERELEASE" = "true" ]; then PRERELEASE="-p"; else PRERELEASE=""; fi
+    if [ ! -z $FILES ]; then FILES=$(echo "$FILES" | tr "," " "); fi
+
+    github-release upload --token $GITHUB_TOKEN --owner "$REPO_OWNER" --repo "$REPO_NAME" --tag "$RELEASE_TAG" --name "$RELEASE_NAME" --body "$RELEASE_DESCRIPTION" $FILES
+    
+    if [ $? != 0 ]; then 
+        return 1
+    else
+        green "Release has been successfully created/updated"
+    fi
+
+}
+
+main

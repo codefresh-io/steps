@@ -22,22 +22,35 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/github-release/icon.svg
     background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: ordinal
       workflow:
         version: '1.0'
         steps:
           github_prerelease:
             type: github-release
             arguments:
-              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
-              CF_REPO_OWNER: ${{CF_REPO_OWNER}}
-              CF_REPO_NAME: ${{CF_REPO_NAME}}
-              RELEASE_NAME: ${{RELEASE_NAME}}
-              RELEASE_TAG: ${{RELEASE_TAG}}
-              RELEASE_DESCRIPTION: ${{RELEASE_DESCRIPTION}}
-              CF_TARGET_BRANCH: ${{CF_TARGET_BRANCH}}
-              PRERELEASE: ${{PRERELEASE}}
-              FILES: ${{FILES}}
+              GIT_CONTEXT: my-github-context
+              RELEASE_NAME: my-release
+              RELEASE_TAG: my-tag-0.1.0
+              RELEASE_DESCRIPTION: "My description"
+              PRERELEASE: true
+              REPO_OWNER: some-owner
+              REPO_NAME: my-repo
+              FILES:
+                - /codefresh/volume/my-file1
+                - /codefresh/volume/my-file2
+    - description: simplest
+      workflow:
+        version: '1.0'
+        steps:
+          github_prerelease:
+            type: github-release
+            arguments:
+              # when pipeline is started by a git trigger, the
+              # GIT_CONTEXT, REPO_OWNER and REPO_NAME can be taken from
+              # trigger automatically
+              RELEASE_NAME: my-release
+              RELEASE_TAG: my-tag-0.1.0
 spec:
   arguments: |-
     {
@@ -47,24 +60,13 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "GITHUB_TOKEN",
-            "CF_REPO_OWNER",
-            "CF_REPO_NAME",
             "RELEASE_TAG",
             "RELEASE_NAME"
         ],
         "properties": {
-            "GITHUB_TOKEN": {
+            "GIT_CONTEXT": {
                 "type": "string",
-                "description": "Codefresh provided variable containing repository owner name"
-            },
-            "CF_REPO_OWNER": {
-                "type": "string",
-                "description": "Codefresh provided variable containing repository owner name"
-            },
-            "CF_REPO_NAME": {
-                "type": "string",
-                "description": "Codefresh provided variable containing repository name"
+                "description": "Codefresh Git Context to be used by the plugin. Must be a github git context. If empty, it will try to get the context from the pipeline trigger"
             },
             "RELEASE_TAG": {
                 "type": "string",
@@ -78,17 +80,24 @@ spec:
                 "type": "string",
                 "description": "Release description"
             },
-            "CF_TARGET_BRANCH": {
+            "REPO_OWNER": {
                 "type": "string",
-                "description": "Codefresh provided variable containing target branch"
+                "description": "Codefresh provided variable containing repository owner name"
+            },
+            "REPO_NAME": {
+                "type": "string",
+                "description": "Codefresh provided variable containing repository name"
             },
             "PRERELEASE": {
-                "type": "string",
+                "type": "boolean",
                 "description": "If true, this variable tells the plugin to create a pre-release"
             },
             "FILES": {
-                "type": "string",
-                "description": "A glob expression for the list of the files to be uploaded"
+                "type": "array",
+                 "items": {
+                     "type": "string"
+                 },
+                "description": "A list of files to be uploaded"
             }
         }
     }
@@ -97,12 +106,13 @@ spec:
       name: github-release
       image: codefresh/github-release
       environment:
-        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'GIT_CONTEXT=${{GIT_CONTEXT}}'
         - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'
         - 'CF_REPO_NAME=${{CF_REPO_NAME}}'
+        - 'REPO_OWNER=${{REPO_OWNER}}'
+        - 'REPO_NAME=${{REPO_NAME}}'
         - 'RELEASE_NAME=${{RELEASE_NAME}}'
         - 'RELEASE_TAG=${{RELEASE_TAG}}'
         - 'RELEASE_DESCRIPTION=${{RELEASE_DESCRIPTION}}'
-        - 'CF_TARGET_BRANCH=${{CF_TARGET_BRANCH}}'
         - 'PRERELEASE=${{PRERELEASE}}'
         - 'FILES=${{FILES}}'

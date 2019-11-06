@@ -1,14 +1,18 @@
-FROM alpine:3.7
+FROM node:13.0-alpine
 
-ENV GITHUB_RELEASE_VERSION=v0.7.2
+ARG CF_CLI_VERSION=v0.35.0
 
-RUN apk add --no-cache openssl bash curl
-RUN wget https://github.com/aktau/github-release/releases/download/${GITHUB_RELEASE_VERSION}/linux-amd64-github-release.tar.bz2 -O - \
-  | tar -xjf - -C /tmp \
-  && mv /tmp/bin/linux/amd64/github-release /usr/local/bin \
-  && rm -rf /tmp/
+RUN apk add -U --no-cache openssl bash wget jq libgcc libstdc++
+
+RUN wget https://github.com/codefresh-io/cli/releases/download/v0.35.0/codefresh-${CF_CLI_VERSION}-alpine-x64.tar.gz -O - \
+  | tar -xzf - -C /usr/local/bin 
 
 WORKDIR /plugin
+
+COPY github-release-cli/ ./
+
+RUN npm install && npm run build && npm install -g
+
 COPY run.sh run.sh
 
 SHELL ["/bin/bash"]

@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.0.1
+  version: 0.1.0
   name: github-action-executor
   description: Execute github action
   maintainers:
@@ -24,7 +24,7 @@ metadata:
         steps:
           runtime-executor:
             title: Notify slack channel
-            type: github-action
+            type: github-action-executor
             arguments:
               url: 'https://github.com/marketplace/actions/slack-notify'
               env:

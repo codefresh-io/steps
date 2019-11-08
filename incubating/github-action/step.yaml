@@ -1,8 +1,8 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.0.7
-  name: github-action
+  version: 0.0.1
+  name: github-action-executor
   description: Execute github action
   maintainers:
     - name: Pavel Kostohrys

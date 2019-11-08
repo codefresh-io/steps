@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.1.1
+  version: 0.1.2
   name: github-action-executor
   description: Execute github action
   maintainers:
@@ -47,7 +47,7 @@ spec:
       "required": [
         "url",
         "registry",
-        "namespace"
+        "registry_repo"
       ],
       "properties": {
         "url": {

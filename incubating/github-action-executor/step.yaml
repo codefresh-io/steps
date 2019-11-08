@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.1.2
+  version: 0.1.3
   name: github-action-executor
   description: Execute github action
   maintainers:
@@ -84,7 +84,7 @@ spec:
          [[ if .Arguments.envs ]]- ENVS="[[ .Arguments.envs ]]"[[ end ]]
          [[ if .Arguments.url ]]- REPO_URL=[[ .Arguments.url ]][[ end ]]
          [[ if .Arguments.registry ]]- REGISTRY=[[ .Arguments.registry ]][[ end ]]
-         [[ if .Arguments.registry_repo ]]- GA_DOCKER_REPO=[[ .Arguments.registry_repo ]][[ end ]]
+         [[ if .Arguments.registry_repo ]]- DOCKERHUB_REPO=[[ .Arguments.registry_repo ]][[ end ]]
          [[ if .Arguments.cache ]]- CACHE=[[ .Arguments.cache ]][[ end ]]
          [[ if .Arguments.debug ]]- LOG_LEVEL=debug[[ end ]]
       commands:

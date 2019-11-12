@@ -9,9 +9,11 @@ RUN wget https://github.com/codefresh-io/cli/releases/download/v0.35.0/codefresh
 
 WORKDIR /plugin
 
-COPY github-release-cli/ ./
+COPY github-release-cli/package* ./
+RUN npm install 
 
-RUN npm install && npm run build && npm install -g
+COPY github-release-cli/ ./
+RUN npm run build && npm install -g
 
 COPY run.sh run.sh
 

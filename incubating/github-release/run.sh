@@ -20,7 +20,11 @@ REQUIRED_VARS=(
 OPTIONAL_VARS=(
     RELEASE_DESCRIPTION
     FILES
+    DRAFT
+    PRERELEASE
 )
+
+ALL_VARS=(`echo "${REQUIRED_VARS[@]}"` `echo "${OPTIONAL_VARS[@]}"`)
 
 function getTokenFromContext() {
     bold "Getting a git token from the context \"${GIT_CONTEXT}\"..."
@@ -38,7 +42,7 @@ function getContextFromTrigger() {
 function checkTrigger() {
     if [ -z "$CF_PIPELINE_TRIGGER_ID" ]; then
         red "Failed to get the trigger data - the pipeline hasn't been started by a trigger"
-        yellow "If the pipeline is not started by a trigger, the variables GIT_CONTEXT, REPO_NAME and REPO_OWNER must be set manually"
+        yellow "If the pipeline is not started by a trigger, the arguments git_context, release_tag, repo_name and repo_owner must be set manually"
         return 1
     fi
 }
@@ -49,6 +53,13 @@ function setDefaultVarValues() {
         yellow "GIT_CONTEXT var is not set explicitly. Trying to get it from the trigger by default..."
         getContextFromTrigger GIT_CONTEXT
         [ $? != 0 ] && return 1
+        ok
+    fi
+
+    if [ -z "$RELEASE_TAG" ]; then
+        yellow "RELEASE_TAG var is not set explicitly. Trying to get it from the trigger by default..."
+        checkTrigger || return 1
+        RELEASE_TAG="$CF_BRANCH_TAG_NORMALIZED"
         ok
     fi
 
@@ -65,13 +76,24 @@ function setDefaultVarValues() {
         REPO_NAME="$CF_REPO_NAME"
         ok
     fi
+
+    if [ "$PRERELEASE" = "true" ]; then
+        PRERELEASE="-p true";
+    else 
+        PRERELEASE="";
+    fi
+
+    if [ "$DRAFT" = "true" ]; then
+        DRAFT="-d true";
+    else 
+        DRAFT="";
+    fi
 }
 
 # There might be values for cf empty vars, like ${{VAR}} substituted like this into
 # the script. We want them to be really empty
 function handleCfEmptyVars() {
-    local allVars=(`echo "${REQUIRED_VARS[@]}"` `echo "${OPTIONAL_VARS[@]}"`)
-    for var in ${allVars[*]}; do
+    for var in ${ALL_VARS[*]}; do
         if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
     done
 }
@@ -92,10 +114,18 @@ function main() {
 
     validateReqVars
 
-    if [ "$PRERELEASE" = "true" ]; then PRERELEASE="-p"; else PRERELEASE=""; fi
     if [ ! -z $FILES ]; then FILES=$(echo "$FILES" | tr "," " "); fi
 
-    github-release upload --token $GITHUB_TOKEN --owner "$REPO_OWNER" --repo "$REPO_NAME" --tag "$RELEASE_TAG" --name "$RELEASE_NAME" --body "$RELEASE_DESCRIPTION" $FILES
+    github-release upload \
+        $DRAFT \
+        $PRERELEASE \
+        --token $GITHUB_TOKEN \
+        --owner "$REPO_OWNER" \
+        --repo "$REPO_NAME" \
+        --tag "$RELEASE_TAG" \
+        --name "$RELEASE_NAME" \
+        --body "$RELEASE_DESCRIPTION" \
+        $FILES
     
     if [ $? != 0 ]; then 
         return 1

@@ -55,6 +55,7 @@ metadata:
               prerelease: false
               repo_owner: some-owner
               repo_name: my-repo
+              base_url: "https://api.github.com"
               files:
               - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
               - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
@@ -135,6 +136,10 @@ spec:
                      "type": "string"
                  },
                 "description": "A list of files to be uploaded"
+            },
+            "base_url": {
+                "type": "string",
+                "description": "API endpoint (default: \"https://api.github.com\")"
             }
         }
     }
@@ -155,3 +160,4 @@ spec:
         - 'DRAFT=${{draft}}'
         - 'PRERELEASE=${{prerelease}}'
         - 'FILES=${{files}}'
+        - 'BASE_URL=${{base_url}}'

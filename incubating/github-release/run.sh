@@ -22,6 +22,7 @@ OPTIONAL_VARS=(
     FILES
     DRAFT
     PRERELEASE
+    BASE_URL
 )
 
 ALL_VARS=(`echo "${REQUIRED_VARS[@]}"` `echo "${OPTIONAL_VARS[@]}"`)
@@ -88,6 +89,12 @@ function setDefaultVarValues() {
     else 
         DRAFT="";
     fi
+
+    if [ ! -z "$BASE_URL" ]; then
+        BASE_URL="--base-url $BASE_URL";
+    else 
+        BASE_URL="";
+    fi
 }
 
 # There might be values for cf empty vars, like ${{VAR}} substituted like this into
@@ -119,6 +126,7 @@ function main() {
     github-release upload \
         $DRAFT \
         $PRERELEASE \
+        $BASE_URL \
         --token $GITHUB_TOKEN \
         --owner "$REPO_OWNER" \
         --repo "$REPO_NAME" \

@@ -1,9 +1,0 @@
-_registry_host:
-  .*:
-    security:
-      tls:
-        client:
-          disabled: false
-      basic:
-        username: _usr
-        password: _passwd

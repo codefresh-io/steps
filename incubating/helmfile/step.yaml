@@ -1,0 +1,237 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: helmfile
+  version: 0.0.1
+  isPublic: true
+  description: Use helmfile from Codefresh pipeline
+  sources:
+    - 'https://github.com/codefresh-contrib/cfstep-helmfile'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustinvb@codefresh.io
+  categories:
+    - deployment
+  official: true
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/helm/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:        
+          deploy:
+            type: helmfile
+            arguments:
+              WORKING_DIRECTORY: /codefresh/volume/${{CF_REPO_NAME}}
+              COMMANDS: diff
+              ENVIRONMENT: development
+              KUBE_CONTEXT: dev_cluster
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+          "COMMANDS"
+        ],
+        "properties": {
+            "COMMANDS": {
+                "type": "string",
+                "description": "helmfle commands, executed in order provided",
+                "examples": ["diff","diff,apply"],
+                "default": "version"
+            },
+            "WORKING_DIRECTORY": {
+                "type": "string",
+                "description": "",
+                "examples": ["/codefresh/volume/${{CF_REPO_NAME}}"],
+                "default": "/codefresh/volume"
+            },
+            "HELMFILE_VERSION": {
+                "type": "string",
+                "description": "Version of helmfile binary",
+                "default": "0.90.2",
+                "enum": [ "0.90.2", "0.90.7" ]
+            },           
+            "HELM_BINARY": {
+                "type": "string",
+                "description": "path to helm binary",
+                "default": ""
+            },
+            "FILE": {
+                "type": "string",
+                "description": "load config from file or directory. defaults to helmfile.yaml or `helmfile.d`(means `helmfile.d/*.yaml`) in this preference",
+                "default": ""
+            },
+            "ENVIRONMENT": {
+                "type": "string",
+                "description": "specify the environment name. defaults to default",
+                "default": ""
+            },
+            "STATE_VALUES_SET": {
+                "type": "string",
+                "description": "set state values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)",
+                "default": ""
+            },
+            "STATE_VALUES_FILE": {
+                "type": "string",
+                "description": "specify state values in a YAML file",
+                "default": ""
+            },
+            "QUIET": {
+                "type": "boolean",
+                "description": "Silence output. Equivalent to log-level warn",
+                "default": false
+            },
+            "KUBE_CONTEXT": {
+                "type": "string",
+                "description": "Set kubectl context. Uses current context by default",
+                "default": ""
+            },
+            "NO_COLOR": {
+                "type": "boolean",
+                "description": "Output without color",
+                "default": false
+            },
+            "LOG_LEVEL": {
+                "type": "string",
+                "description": "Set log level, default info",
+                "default": ""
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "Set namespace. Uses the namespace set in the context by default, and is available in templates as {{ .Namespace }}",
+                "default": ""
+            },
+            "SELECTOR": {
+                "type": "string",
+                "description": "Only run using the releases that match labels. Labels can take the form of foo=bar or foo!=bar.  A release must match all labels in a group in order to be used. Multiple groups can be specified at once.  --selector tier=frontend,tier!=proxy --selector tier=backend. Will match all frontend, non-proxy releases AND all backend releases. The name of a release can be used as a label. --selector name=myrelease",
+                "default": ""
+            },
+            "ALLOW_NO_MATCHING_RELEASE": {
+                "type": "boolean",
+                "description": "Do not exit with an error code if the provided selector has no matching releases.",
+                "default": false
+            },
+            "INTERACTIVE": {
+                "type": "boolean",
+                "description": "Request confirmation before attempting to modify clusters",
+                "default": false
+            },
+            "HELP": {
+                "type": "boolean",
+                "description": "show help",
+                "default": false
+            },
+            "VERSION": {
+                "type": "boolean",
+                "description": "print the version",
+                "default": false
+            },
+            "DEPS_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile deps - update charts based on the contents of requirements.yaml",
+                "default": ""
+            },
+            "REPOS_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile repos - sync repositories from state file (helm repo add && helm repo update)",
+                "default": ""
+            },
+            "CHARTS_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile charts - DEPRECATED: sync releases from state file (helm upgrade --install)",
+                "default": ""
+            },
+            "DIFF_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile diff - diff releases from state file against env (helm diff)",
+                "default": ""
+            },
+            "TEMPLATE_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile template - template releases from state file against env (helm template)",
+                "default": ""
+            },
+            "LINT_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile lint - lint charts from state file (helm lint)",
+                "default": ""
+            },
+            "SYNC_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile sync - sync all resources from state file (repos, releases and chart deps)",
+                "default": ""
+            },
+            "APPLY_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile apply - apply all resources from state file only when there are changes",
+                "default": ""
+            },
+            "STATUS_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile status - retrieve status of releases in state file",
+                "default": ""
+            },
+            "DELETE_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile delete - DEPRECATED: delete releases from state file (helm delete)",
+                "default": ""
+            },
+            "DESTROY_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile destroy - deletes and then purges releases",
+                "default": ""
+            },
+            "TEST_PS": {
+                "type": "string",
+                "description": "String of command options and arguments for, helmfile test - test releases from state file (helm test)",
+                "default": ""
+            }
+        }
+    }
+  steps:
+    main:
+      name: helmfile
+      image: 'codefreshplugins/cfstep-helmfile:${{HELMFILE_VERSION}}'
+      environment:
+        - 'COMMANDS=${{COMMANDS}}'
+        - 'WORKING_DIRECTORY=${{WORKING_DIRECTORY}}'
+        - 'HELMFILE_VERSION=${{HELMFILE_VERSION}}'
+        - 'HELM_BINARY=${{HELM_BINARY}}'
+        - 'FILE=${{FILE}}'
+        - 'ENVIRONMENT=${{ENVIRONMENT}}'
+        - 'STATE_VALUES_SET=${{STATE_VALUES_SET}}'
+        - 'STATE_VALUES_FILE=${{STATE_VALUES_FILE}}'
+        - 'QUIET=${{QUIET}}'
+        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
+        - 'NO_COLOR=${{NO_COLOR}}'
+        - 'LOG_LEVEL=${{LOG_LEVEL}}'
+        - 'NAMESPACE=${{NAMESPACE}}'
+        - 'SELECTOR=${{SELECTOR}}'
+        - 'ALLOW_NO_MATCHING_RELEASE=${{ALLOW_NO_MATCHING_RELEASE}}'
+        - 'INTERACTIVE=${{INTERACTIVE}}'
+        - 'HELP=${{HELP}}'
+        - 'VERSION=${{VERSION}}'
+        - 'DEPS_PS=${{DEPS_PS}}'
+        - 'REPOS_PS=${{REPOS_PS}}'
+        - 'CHARTS_PS=${{CHARTS_PS}}'
+        - 'DIFF_PS=${{DIFF_PS}}'
+        - 'TEMPLATE_PS=${{TEMPLATE_PS}}'
+        - 'LINT_PS=${{LINT_PS}}'
+        - 'SYNC_PS=${{SYNC_PS}}'
+        - 'APPLY_PS=${{APPLY_PS}}'
+        - 'STATUS_PS=${{STATUS_PS}}'
+        - 'DELETE_PS=${{DELETE_PS}}'
+        - 'DESTROY_PS=${{DESTROY_PS}}'
+        - 'TEST_PS=${{TEST_PS}}'

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Send message to gitter
   sources:
@@ -30,29 +30,28 @@ metadata:
           sendMessage:
             type: gitter-notifier
             description: |-
-              "In this example only the gitter_webhook argument is set. All other parameters are taken from the git trigger"
+              In this example only the gitter_webhook argument is set.
+              All other parameters are taken from the git trigger
             arguments:
               gitter_webhook: "https://webhooks.gitter.im/e/123abc"
-    - description: example-1
+    - description: example-2
       workflow:
         version: '1.0'
         steps:
           sendMessage:
             type: gitter-notifier
             description: |-
-              "Manually set the message and status arguments..."
+              Manually set the message and status arguments...
             arguments:
               gitter_webhook: "https://webhooks.gitter.im/e/123abc"
-              gitter_message: "Don't be so serious"
+              gitter_message: "Dont be so serious"
               gitter_status: "info"
-
 spec:
   arguments: |-
     {
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "additionalProperties": false,
         "patterns": [],
         "required": [
             "gitter_webhook"
@@ -60,15 +59,17 @@ spec:
         "arguments": {
             "gitter_webhook": {
                 "type": "string",
-                "description": "gitter webhook URL. Can be take from the gitter chat room integration settings."
+                "description": "gitter webhook"
             },
             "gitter_status": {
                 "type": "string",
-                "description": "Send info about current build. Might be `error`, `info` and some other types (see the gitter API spec)"
+                "defatult": "",
+                "description": "send info about current build"
             },
             "gitter_message": {
                 "type": "string",
-                "description": "Text of message which will be sent in room. If omitted, the plugin will try set it automatically, using info from the git webhook"
+                "default": "",
+                "description": "text of message which will be sent in room"
             }
         }
     }
@@ -80,7 +81,7 @@ spec:
         - 'GITTER_WEBHOOK=${{gitter_webhook}}'
         - 'GITTER_STATUS=${{gitter_status}}'
         - 'GITTER_MESSAGE=${{gitter_message}}'
-        - 'BUILD_TRIGGER=${{CF_BUILD_TRIGGER}}'
+        - 'CF_BUILD_TRIGGER=${{CF_BUILD_TRIGGER}}'
         - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
         - 'CF_BUILD_TIMESTAMP=${{CF_BUILD_TIMESTAMP}}'
         - 'CF_BUILD_URL=${{CF_BUILD_URL}}'

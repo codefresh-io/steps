@@ -18,6 +18,14 @@ class Controller {
     }
 
     async sendNotify() {
+        let commitUrl = process.env.CF_COMMIT_URL;
+        if (!commitUrl) {
+            throw Error(
+            "The pipeline is supposed to be triggered by a git trigger " +
+            "in case if there is no gitterMessage argument set by the user"
+            );
+        }   
+
         if (this._message) {
             return this._sendMessage(this._message);
         }

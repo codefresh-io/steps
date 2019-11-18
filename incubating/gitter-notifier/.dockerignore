@@ -1,0 +1,6 @@
+./.*
+Dockerfile
+node_modules
+*.yml
+*.yaml
+icon.svg

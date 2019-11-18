@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 0.0.1
+  version: 1.0.0
   isPublic: true
   description: Send message to gitter
   sources:
@@ -12,6 +12,8 @@ metadata:
   maintainers:
     - name: Andrii Shaforostov
       email: andrii@codefresh.io
+    - name: Alexander Cheshko
+      email: a.cheshko@codefresh.io
   categories:
     - notifications
   official: false
@@ -27,8 +29,23 @@ metadata:
         steps:
           sendMessage:
             type: gitter-notifier
+            description: |-
+              "In this example only the gitter_webhook argument is set. All other parameters are taken from the git trigger"
             arguments:
-              GITTER_WEBHOOK: "https://webhooks.gitter.im/e/123abc"
+              gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          sendMessage:
+            type: gitter-notifier
+            description: |-
+              "Manually set the message and status arguments..."
+            arguments:
+              gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+              gitter_message: "Don't be so serious"
+              gitter_status: "info"
+
 spec:
   arguments: |-
     {
@@ -38,28 +55,40 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "GITTER_WEBHOOK"
+            "gitter_webhook"
         ],
-        "properties": {
-            "GITTER_WEBHOOK": {
+        "arguments": {
+            "gitter_webhook": {
                 "type": "string",
-                "description": "gitter webhook"
+                "description": "gitter webhook URL. Can be take from the gitter chat room integration settings."
             },
-            "GITTER_STATUS": {
+            "gitter_status": {
                 "type": "string",
-                "description": "send info about current build"
+                "description": "Send info about current build. Might be `error`, `info` and some other types (see the gitter API spec)"
             },
-            "GITTER_MESSAGE": {
+            "gitter_message": {
                 "type": "string",
-                "description": "text of message which will be sent in room"
+                "description": "Text of message which will be sent in room. If omitted, the plugin will try set it automatically, using info from the git webhook"
             }
         }
     }
   steps:
     main:
       name: gitter-notifier
-      image: codefreshplugins/gitternotifier
+      image: codefresh/gitternotifier
       environment:
-        - 'GITTER_WEBHOOK=${{GITTER_WEBHOOK}}'
-        - 'GITTER_STATUS=${{GITTER_STATUS}}'
-        - 'GITTER_MESSAGE=${{GITTER_MESSAGE}}'
+        - 'GITTER_WEBHOOK=${{gitter_webhook}}'
+        - 'GITTER_STATUS=${{gitter_status}}'
+        - 'GITTER_MESSAGE=${{gitter_message}}'
+        - 'BUILD_TRIGGER=${{CF_BUILD_TRIGGER}}'
+        - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
+        - 'CF_BUILD_TIMESTAMP=${{CF_BUILD_TIMESTAMP}}'
+        - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+        - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'
+        - 'CF_REPO_NAME=${{CF_REPO_NAME}}'
+        - 'CF_BRANCH_TAG_NORMALIZED=${{CF_BRANCH_TAG_NORMALIZED}}'
+        - 'CF_REVISION=${{CF_REVISION}}'
+        - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
+        - 'CF_COMMIT_URL=${{CF_COMMIT_URL}}'
+        - 'CF_COMMIT_MESSAGE=${{CF_COMMIT_MESSAGE}}'
+        - 'CF_API_KEY=${{CF_API_KEY}}'

@@ -1,6 +1,8 @@
 {{#if failure}}
 ## Build failed
-Failure on {{#each buildCauses}}`{{this}}` {{/each}}
+Failure on one ore more steps:
+{{#each buildCauses}}`{{this}}`
+{{/each}}
 {{else}}
 ## Build successful
 {{/if}}

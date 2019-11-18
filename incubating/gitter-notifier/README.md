@@ -11,23 +11,23 @@ fail_fast: false
 steps:
   ...
   sendMessage:
-    image: codefreshplugins/gitternotifier
-    environment:
-      - GITTER_WEBHOOK=https://webhooks.gitter.im/e/123abc
+    type: gitter-notifier
+    arguments:
+      gitter_webhook: "https://webhooks.gitter.im/e/123abc"
 ```
 
 ## Required variables
 
-- `GITTER_WEBHOOK` - webhook uri from  your [gitter](https://gitter.im) room integration
+- `gitter_webhook` - webhook uri from  your [gitter](https://gitter.im) room integration settings. Use "custom" integration type.
 
 ## Optional variables
 
 **if you not provide this variables, plugin send info about build**
 
-- `GITTER_STATUS`
+- `gitter_status`
   - **ok** - for info messages
   - **error** - for error messages (red icon, red text)
-- `GITTER_MESSAGE` - text of custom message which will be send, with [Handlebars.js](https://github.com/wycats/handlebars.js/) 
+- `gitter_message` - text of custom message which will be send, with [Handlebars.js](https://github.com/wycats/handlebars.js/) 
   - available vars:
       - `{{buildTrigger}}` 
       - `{{buildInitiator}}`  

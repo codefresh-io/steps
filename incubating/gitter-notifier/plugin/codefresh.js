@@ -24,18 +24,17 @@ class Codefresh {
     }
 
     static async buildCauses(buildId, token) {
-        const data = await request({
-            uri: `https://g.codefresh.io/api/workflow/${buildId}/context-revision`,
-            method: 'GET',
-            headers: {
-                'x-access-token': token,
-            },
-            json: true,
-        });
-
-        return Object.entries(data.pop().context.stepsMetadata)
-            .filter(([, stepInfo]) => stepInfo.status === 'failure')
-            .map(([step]) => step);
+            const data = await request({
+                uri: `https://g.codefresh.io/api/builds/${buildId}?noAccount=true`,
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                },
+                json: true,
+            });
+            return Object.entries(data.systemEvents)
+            .filter(([, sysEvent]) => sysEvent.kind === 'error')
+            .map(([, sysEvent]) => sysEvent.step);
     }
 }
 

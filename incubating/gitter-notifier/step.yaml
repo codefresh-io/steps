@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Send message to gitter
   sources:
@@ -25,27 +25,23 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          sendMessage:
-            type: gitter-notifier
-            description: |-
-              In this example only the gitter_webhook argument is set.
-              All other parameters are taken from the git trigger
-            arguments:
-              gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+        sendMessage:
+          type: gitter-notifier
+          description: |-
+            In this example only the gitter_webhook argument is set.
+            All other parameters are taken from the git trigger
+          arguments:
+            gitter_webhook: "https://webhooks.gitter.im/e/123abc"
     - description: example-2
       workflow:
-        version: '1.0'
-        steps:
-          sendMessage:
-            type: gitter-notifier
-            description: |-
-              Manually set the message and status arguments...
-            arguments:
-              gitter_webhook: "https://webhooks.gitter.im/e/123abc"
-              gitter_message: "Dont be so serious"
-              gitter_status: "info"
+        sendMessage:
+          type: gitter-notifier
+          description: |-
+            Manually set the message and status arguments...
+          arguments:
+            gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+            gitter_message: "Dont be so serious"
+            gitter_status: "info"
 spec:
   arguments: |-
     {

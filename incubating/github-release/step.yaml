@@ -24,67 +24,59 @@ metadata:
   examples:
     - description: typical
       workflow:
-        version: '1.0'
-        steps:
-          github_release:
-            type: github-release
-            title: Typical usage example 
-            description: |-
-              The git_context_name, repo_owner and repo_name vars
-              will be taken automatically from the trigger.
-              Requires the pipeline to be started by a github trigger 
-            arguments:
-              release_name: my-release
-              release_tag: my-tag-0.1.0
-              files:
-              - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
-              - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
+        github_release:
+          type: github-release
+          title: Typical usage example 
+          description: |-
+            The git_context_name, repo_owner and repo_name vars
+            will be taken automatically from the trigger.
+            Requires the pipeline to be started by a github trigger 
+          arguments:
+            release_name: my-release
+            release_tag: my-tag-0.1.0
+            files:
+            - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
+            - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
     - description: full
       workflow:
-        version: '1.0'
-        steps:
-          github_release:
-            type: github-release
-            title: 'Full example'
-            arguments:
-              git_context_name: my-github-context
-              release_name: my-release
-              release_tag: my-tag-0.1.0
-              release_description: "My description"
-              draft: true
-              prerelease: false
-              repo_owner: some-owner
-              repo_name: my-repo
-              base_url: "https://api.github.com"
-              files:
-              - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
-              - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
+        github_release:
+          type: github-release
+          title: 'Full example'
+          arguments:
+            git_context_name: my-github-context
+            release_name: my-release
+            release_tag: my-tag-0.1.0
+            release_description: "My description"
+            draft: true
+            prerelease: false
+            repo_owner: some-owner
+            repo_name: my-repo
+            base_url: "https://api.github.com"
+            files:
+            - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
+            - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
     - description: simplest
       workflow:
-        version: '1.0'
-        steps:
-          github_release:
-            type: github-release
-            title: A simplest example with minimum arguments provided
-            description: |-
-              Minimum arguments.
-              The git_context_name, release_tag, repo_owner and repo_name vars
-              will be taken from the trigger automatically.
-              Requires the pipeline to be started by a github trigger 
-            arguments:
-              release_name: my-release
+        github_release:
+          type: github-release
+          title: A simplest example with minimum arguments provided
+          description: |-
+            Minimum arguments.
+            The git_context_name, release_tag, repo_owner and repo_name vars
+            will be taken from the trigger automatically.
+            Requires the pipeline to be started by a github trigger 
+          arguments:
+            release_name: my-release
     - description: override-cmd
       workflow:
-        version: '1.0'
-        steps:
-          github_release:
-            type: freestyle
-            title: An example showing how to override the commands to be executed
-            arguments:
-              image: codefresh/github-release
-              commands:
-                - github-release --help
-                - github-release list --token ${{MY_GITHUB_TOKEN}} --owner john-snow --repo night-watch
+        github_release:
+          type: freestyle
+          title: An example showing how to override the commands to be executed
+          arguments:
+            image: codefresh/github-release
+            commands:
+              - github-release --help
+              - github-release list --token ${{MY_GITHUB_TOKEN}} --owner john-snow --repo night-watch
 spec:
   arguments: |-
     {

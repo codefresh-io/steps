@@ -15,9 +15,9 @@ REQUIRED_VARS=(
 
 # There might be values for cf empty vars, like ${{VAR}} substituted like this into
 # the script. We want them to be really empty
-  for var in ${REQUIRED_VARS[*]}; do
-      if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
-  done
+for var in ${REQUIRED_VARS[*]}; do
+    if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
+done
 
 #### Checking
 [ -z "$VAULT_ADDR" ] && err "Need to set VAULT_ADDR"
@@ -39,6 +39,8 @@ echo "Vault URL is: $VAULT_ADDR"
 #vault status
 
 msg "Authenticating Vault"
+
+vault token lookup $VAULT_AUTH_TOKEN
 vault login $VAULT_AUTH_TOKEN  >/dev/null
 
 if [ $? == 0 ]; then

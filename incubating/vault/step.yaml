@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: >-
     The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
@@ -24,17 +24,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:      
-          Vault_to_Env:
-            title: Importing vault values
-            type: vault
-            arguments:
-              VAULT_ADDR: ${{VAULT_ADDR}}
-              VAULT_PATH: ${{VAULT_PATH}}
-              VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
-              VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
-              VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
+            VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
 spec:
   arguments: |-
     {
@@ -74,7 +72,7 @@ spec:
   steps:
     main:
       name: vault
-      image: codefreshplugins/vault
+      image: codefresh/vault
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - 'VAULT_PATH=${{VAULT_PATH}}'

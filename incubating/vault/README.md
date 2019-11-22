@@ -22,22 +22,13 @@ VAULT_AUTH_TOKEN=s.4wtaMJuZ7dv0c4XuRaasLUOG
 
 ```yaml
 ---
-version: '1.0'
-
-steps:
-
-  ...
-
   Vault_to_Env:
     title: Importing vault values
-    image: codefreshplugins/cf-vault-plugin
-    environment:
-      - VAULT_ADDR=${{VAULT_ADDR}}
-      - VAULT_PATH=${{VAULT_PATH}}
-      - VAULT_AUTH_TOKEN=${{VAULT_AUTH_TOKEN}}
-
-  ...
-
+    type: vault
+    arguments:
+      VAULT_ADDR: ${{VAULT_ADDR}}
+      VAULT_PATH: ${{VAULT_PATH}}
+      VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
 ```
 
 ## Environment Variables

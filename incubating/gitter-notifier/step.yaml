@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Send message to gitter
   sources:
@@ -27,7 +27,7 @@ metadata:
       workflow:
         sendMessage:
           type: gitter-notifier
-          description: |-
+          title: |-
             In this example only the gitter_webhook argument is set.
             All other parameters are taken from the git trigger
           arguments:
@@ -36,11 +36,13 @@ metadata:
       workflow:
         sendMessage:
           type: gitter-notifier
-          description: |-
+          title: |-
             Manually set the message and status arguments...
           arguments:
             gitter_webhook: "https://webhooks.gitter.im/e/123abc"
-            gitter_message: "Dont be so serious"
+            gitter_message: |-
+                Hello, how are you? There was a build triggered by ${{CF_BUILD_INITIATOR}}
+                You could see the build [here](${{CF_BUILD_URL}}) and the commit [here](${{CF_COMMIT_URL}})
             gitter_status: "info"
 spec:
   arguments: |-
@@ -52,7 +54,7 @@ spec:
         "required": [
             "gitter_webhook"
         ],
-        "arguments": {
+        "properties": {
             "gitter_webhook": {
                 "type": "string",
                 "description": "gitter webhook"

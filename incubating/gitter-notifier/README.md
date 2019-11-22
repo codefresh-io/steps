@@ -4,16 +4,26 @@ Gitter plugin which gives the opportunity send any messages to activity feed.
 
 ## Using example
 
+An example below sends a notification with information about the current build. A few Codefresh variables values are automaticly added to the message. Requires a git trigger
+
 ```yaml
-version: '1.0'
-fail_fast: false
-...
-steps:
-  ...
+ ...
   sendMessage:
     type: gitter-notifier
     arguments:
       gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+```
+The example below shows how you can customize your notification message and the gitter status.:
+
+```yaml
+  sendMessage:
+    type: gitter-notifier
+    arguments:
+      gitter_webhook: "https://webhooks.gitter.im/e/123abc"
+      gitter_message: |-
+          Hello, how are you? There was a build triggered by ${{CF_BUILD_INITIATOR}}
+          You could see the build [here](${{CF_BUILD_URL}}) and the commit [here](${{CF_COMMIT_URL}})
+      gitter_status: "info"
 ```
 
 ## Required variables
@@ -27,19 +37,4 @@ steps:
 - `gitter_status`
   - **ok** - for info messages
   - **error** - for error messages (red icon, red text)
-- `gitter_message` - text of custom message which will be send, with [Handlebars.js](https://github.com/wycats/handlebars.js/) 
-  - available vars:
-      - `{{buildTrigger}}` 
-      - `{{buildInitiator}}`  
-      - `{{buildId}}` 
-      - `{{buildTimestamp}}`  
-      - `{{buildUrl}}` 
-      - `{{repoOwner}}`  
-      - `{{repoName}}`  
-      - `{{branch}}` 
-      - `{{revision}}` 
-      - `{{commitAuthor}}` 
-      - `{{commitUrl}}` 
-      - `{{commitMessage}}`  
-  
-  - for text markup use **Markdown**
+- `gitter_message` - text of custom message which will be send. You can substitute CF vars into it. For text markup use **Markdown**

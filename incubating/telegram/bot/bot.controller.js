@@ -25,7 +25,7 @@ class BotController {
      * @return {Promise}
      */
     sendStatus(uid) {
-        return this.bot.sendPhoto(uid, './buildBanner.png', {
+        return this.bot.sendPhoto(uid, '/app/buildBanner.png', {
             parse_mode: 'Markdown',
             reply_markup: {
                 inline_keyboard: BotLogic.keyboardBuildLinks(),
@@ -58,7 +58,9 @@ class BotController {
                     media: item,
                 }));
                 media[0] = { ...media[0], caption: text, parse_mode: 'Markdown' };
-                return this.bot.sendMediaGroup(uid, media);
+                return this.bot.sendMediaGroup(uid, media).catch((e) => {
+                    throw Error(`\x1b[31mError on attempt to handle one of the images to be sent. Might be due to unsupported image format\n${e}\x1b[0m`);
+                });
             }
             else {
                 return this.bot.sendPhoto(uid, options.images[0], {

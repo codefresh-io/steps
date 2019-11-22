@@ -2,11 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: telegram
-  version: 0.0.1
+  version: 1.0.0
   isPublic: true
   description: >-
-    Telegram plugin which gives the opportunity send any messages to users via
-    bot.
+    A plugin, allowing to send any messages to Telegram users via a bot.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/telegram
@@ -14,6 +13,8 @@ metadata:
   maintainers:
     - name: Andrii Shaforostov
       email: andrii@codefresh.io
+    - name: Alexander Cheshko
+      email: a.cheshko@codefresh.io
   categories:
     - notifications
   official: false
@@ -23,93 +24,66 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/telegram/icon.svg
     background: "#bceaff"
   examples:
-    - description: example-1
+    - description: typical
       workflow:
-        version: '1.0'
-        steps:      
           sendMessage:
             type: telegram
+            title: |-
+              Sends a notification with information about the current build.
+              Requires a git trigger
             arguments:
-              TELEGRAM_TOKEN: ${{TOKEN}}
-              TELEGRAM_TO: 99999999
-              TELEGRAM_MESSAGE: Hello {{{userLink}}}, how are you
-              TELEGRAM_IMAGES: https://codefresh.io/docs/assets/brand/codefresh-social.png
-    - description: example-2
+              telegram_token: ${{TOKEN}}
+              telegram_to:
+                - 99999999
+    - description: override-message
       workflow:
-        version: '1.0'
-        steps:      
           sendMessage:
             type: telegram
+            title: |-
+              Sends a notification with your customized message
+              and images to be attached
             arguments:
-              TELEGRAM_MESSAGE: message
-              buildTrigger: {{buildTrigger}}
-              buildInitiator: {{buildInitiator}}
-              buildId: {{buildId}}
-              buildTimestamp: {{buildTimestamp}}
-              buildUrl: {{buildUrl}}
-              repoOwner: {{repoOwner}}
-              repoName: {{repoName}}
-              branch: {{branch}}
-              revision: {{revision}}
-              commitAuthor: {{commitAuthor}}
-              commitUrl: {{commitUrl}}
-              commitMessage: {{commitMessage}}
-              userID: {{userID}}
-              userLink: {{{userLink}}}
-    - description: example-3
-      workflow:
-        version: '1.0'
-        steps:      
-          sendMessage:
-            type: telegram
-            arguments:
-              TELEGRAM_MESSAGE: message
-              buildTrigger: {{buildTrigger}}
-              buildInitiator: {{buildInitiator}}
-              buildId: {{buildId}}
-              buildTimestamp: {{buildTimestamp}}
-              buildUrl: {{buildUrl}}
-              repoOwner: {{repoOwner}}
-              repoName: {{repoName}}
-              branch: {{branch}}
-              revision: {{revision}}
-              commitAuthor: {{commitAuthor}}
-              commitUrl: {{commitUrl}}
-              commitMessage: {{commitMessage}}
-              userID: {{userID}}
-              userLink: {{{userLink}}}
+              telegram_token: ${{TOKEN}}
+              telegram_to:
+                - 99999999
+              telegram_message: |-
+                Hello, how are you? There was a build triggered by ${{CF_BUILD_INITIATOR}}
+                You could see the build [here](${{CF_BUILD_URL}}) and the commit [here](${{CF_COMMIT_URL}})
+              telegram_images:
+                - https://codefresh.io/docs/assets/brand/codefresh-social.png
 spec:
   arguments: |-
     {
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "additionalProperties": false,
         "patterns": [],
         "required": [
-            "TELEGRAM_TOKEN",
-            "TELEGRAM_TO"
+            "telegram_token",
+            "telegram_to"
         ],
         "properties": {
-            "TELEGRAM_TOKEN": {
+            "telegram_token": {
                 "type": "string",
-                "description": "token of your bot"
+                "description": "The token of your Telegram bot"
             },
-            "TELEGRAM_TO": {
-                "type": "string",
-                "description": "array of user ids who will receive a message separated by comma"
+            "telegram_to": {
+                "type": "array",
+                "items": {
+                     "type": "integer"
+                 },
+                "description": "An array of user ids, who will receive a message"
             },
-            "TELEGRAM_STATUS": {
+            "telegram_message": {
                 "type": "string",
-                "description": "send info about current build"
+                "description": "Overrides the message text to be sent. Handlebar templates are supported (see README for details)"
             },
-            "TELEGRAM_MESSAGE": {
-                "type": "string",
-                "description": "text of message which will be sent to user"
-            },
-            "TELEGRAM_IMAGES": {
-                "type": "string",
-                "description": "array of image links for attaching to message"
+            "telegram_images": {
+                "type": "array",
+                "items": {
+                     "type": "string"
+                 },
+                "description": "An array of local or web paths for images to be attached to the message"
             }
         }
     }
@@ -118,8 +92,19 @@ spec:
       name: telegram
       image: codefresh/telegramnotifier
       environment:
-        - 'TELEGRAM_TOKEN=${{TELEGRAM_TOKEN}}'
-        - 'TELEGRAM_TO=${{TELEGRAM_TO}}'
-        - 'TELEGRAM_STATUS=${{TELEGRAM_STATUS}}'
-        - 'TELEGRAM_MESSAGE=${{TELEGRAM_MESSAGE}}'
-        - 'TELEGRAM_IMAGES=${{TELEGRAM_IMAGES}}'
+        - 'TELEGRAM_TOKEN=${{telegram_token}}'
+        - 'TELEGRAM_TO=${{telegram_to}}'
+        - 'TELEGRAM_MESSAGE=${{telegram_message}}'
+        - 'TELEGRAM_IMAGES=${{telegram_images}}'
+        - 'CF_BUILD_TRIGGER=${{CF_BUILD_TRIGGER}}'
+        - 'CF_BUILD_INITIATOR=${{CF_BUILD_INITIATOR}}'
+        - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
+        - 'CF_BUILD_TIMESTAMP=${{CF_BUILD_TIMESTAMP}}'
+        - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+        - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'
+        - 'CF_REPO_NAME=${{CF_REPO_NAME}}'
+        - 'CF_BRANCH_TAG_NORMALIZED=${{CF_BRANCH_TAG_NORMALIZED}}'
+        - 'CF_REVISION=${{CF_REVISION}}'
+        - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
+        - 'CF_COMMIT_URL=${{CF_COMMIT_URL}}'
+        - 'CF_COMMIT_MESSAGE${{CF_COMMIT_MESSAGE}}'

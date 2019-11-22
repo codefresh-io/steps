@@ -4,7 +4,7 @@ const CfInfo = require('./bot.data');
 
 class BotLogic {
     static buildStatusMessage() {
-        return `Dear _${CfInfo.buildInfo.buildInitiator}_, you have new build via _${CfInfo.buildInfo.buildTrigger}_\n\n` +
+        return `You have a new build, triggered by _${CfInfo.buildInfo.buildInitiator}_: \n\n` +
             `*Repository*: ${CfInfo.buildInfo.repoName}\n` +
             `*Author*: ${CfInfo.buildInfo.commitAuthor}\n` +
             `*Branch*: ${CfInfo.buildInfo.branch}\n` +

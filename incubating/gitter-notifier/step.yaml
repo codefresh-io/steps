@@ -57,17 +57,17 @@ spec:
         "properties": {
             "gitter_webhook": {
                 "type": "string",
-                "description": "gitter webhook"
+                "description": "Webhook uri from  your [gitter](https://gitter.im) room integration settings. Use `custom` integration type."
             },
             "gitter_status": {
                 "type": "string",
-                "defatult": "",
-                "description": "send info about current build"
+                "default": "info",
+                "description": "Defines the notification status (`error` or `info`)"
             },
             "gitter_message": {
                 "type": "string",
-                "default": "",
-                "description": "text of message which will be sent in room"
+                "default": "Hi there",
+                "description": "Overrides the text of message to be sent"
             }
         }
     }

@@ -5,6 +5,20 @@ msg() { echo -e "\e[32mINFO [$(date +%F_%H-%M-%S)] ---> $1\e[0m"; }
 yellow() { echo -e "\e[33m$1\e[0m"; }
 err() { echo -e "\e[31mERR [$(date +%F_%H-%M-%S)] ---> $1\e[0m" ; exit 1; }
 
+REQUIRED_VARS=(
+    VAULT_ADDR
+    VAULT_PATH
+    VAULT_AUTH_TOKEN
+    VAULT_CLIENT_CERT_BASE64
+    VAULT_CLIENT_KEY_BASE64
+)
+
+# There might be values for cf empty vars, like ${{VAR}} substituted like this into
+# the script. We want them to be really empty
+  for var in ${REQUIRED_VARS[*]}; do
+      if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
+  done
+
 #### Checking
 [ -z "$VAULT_ADDR" ] && err "Need to set VAULT_ADDR"
 [ -z "$VAULT_PATH" ] && err "Need to set VAULT_PATH"

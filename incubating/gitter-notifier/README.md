@@ -1,19 +1,18 @@
 # Gitter notify plugin
 
-Gitter plugin which gives the opportunity send any messages to activity feed.
+A plugin allowing to send any messages to Gitter activity feed.
 
 ## Using example
 
 An example below sends a notification with information about the current build. A few Codefresh variables values are automaticly added to the message. Requires a git trigger
 
 ```yaml
- ...
   sendMessage:
     type: gitter-notifier
     arguments:
       gitter_webhook: "https://webhooks.gitter.im/e/123abc"
 ```
-The example below shows how you can customize your notification message and the gitter status.:
+The example below shows how you can customize your notification message and the gitter status:
 
 ```yaml
   sendMessage:
@@ -37,4 +36,6 @@ The example below shows how you can customize your notification message and the 
 - `gitter_status`
   - **ok** - for info messages
   - **error** - for error messages (red icon, red text)
-- `gitter_message` - text of custom message which will be send. You can substitute CF vars into it. For text markup use **Markdown**
+- `gitter_message` - text of custom message which will be send.
+  - You can substitute CF vars into it
+  - For text markup use **Markdown**

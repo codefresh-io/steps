@@ -36,7 +36,6 @@ echo "Vault URL is: $VAULT_ADDR"
 
 msg "Authenticating Vault"
 
-vault token lookup $VAULT_AUTH_TOKEN
 vault login $VAULT_AUTH_TOKEN  >/dev/null
 
 if [ $? == 0 ]; then

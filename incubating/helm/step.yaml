@@ -2,15 +2,15 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 0.0.1
+  version: 0.1.0
   isPublic: true
   description: Release a Helm chart (update or install)
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/helm'
+    - 'https://github.com/codefresh-contrib/cfstep-helm'
   stage: incubating
   maintainers:
-    - name: Itay Shakury
-      email: i.shakury@codefresh.io
+    - name: Roman Kuchuk
+      email: r.kuchuk@codefresh.io
   categories:
     - featured
   official: false
@@ -24,14 +24,33 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:        
           deploy:
             type: helm
             arguments:
-              CHART_REF: ${{CHART_REF}}
-              RELEASE_NAME: ${{RELEASE_NAME}}
-              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+              chart_name: test_chart
+              release_name: first
+              kube_context: my-kubernetes-context
+              custom_values:
+                - KEY1=VAL1
+                - KEY2=VAL2
+                - KEY3=VAL3
+              custom_value_files:
+                - /path/to/values.yaml
+                - /path/to/values2.yaml
+              tiller_namespace: kube-system
+              namespace: project
+    - description: example-2
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              ACTION: install
+              chart_name: test_chart
+              release_name: first
+              kube_context: my-kubernetes-context
+              custom_values:
+                - pat.arr="{one,two,three}"
+                - STR_WITH_COMAS="one\,two\,three"
 spec:
   arguments: |-
     {
@@ -41,60 +60,81 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "KUBE_CONTEXT",
-            "CHART_NAME",
-            "RELEASE_NAME"
+            "kube_context",
+            "chart_name",
+            "release_name"
         ],
         "properties": {
-            "KUBE_CONTEXT": {
+            "kube_context": {
                 "type": "string",
                 "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
             },
-            "CHART_NAME": {
+            "chart_name": {
                 "type": "string",
                 "description": "Helm chart name to release (path to chart folder, or name of packaged chart) (required)"
             },
-            "RELEASE_NAME": {
+            "release_name": {
                 "type": "string",
                 "description": "Helm release name"
             },
-            "NAMESPACE": {
+            "action": {
                 "type": "string",
-                "description": "target Kubernetes namespace"
+                "description": "The helm operation mode is set by the ACTION variable, where the value is install/auth/push."
             },
-            "TILLER_NAMESPACE": {
+            "namespace": {
+                "type": "string",
+                "description": "Target Kubernetes namespace"
+            },
+            "tiller_namespace": {
                 "type": "string",
                 "description": "Kubernetes namespace where tiller is at"
             },
-            "CHART_VERSION": {
+            "chart_version": {
                 "type": "string",
                 "description": "application chart version to install"
             },
-            "CHART_REPO_URL": {
+            "helm_version": {
+                "type": "string",
+                "examples": ["2.9.1", "2.9.0"],
+                "default": "2.9.1",
+                "description": "Version of cfstep-helm image(also helm-cli version). You can choose specific image at https://hub.docker.com/r/codefresh/cfstep-helm/tags"
+            },
+            "chart_repo_url": {
                 "type": "string",
                 "description": "Helm chart repository URL (overriden by injected Helm repository context)"
             },
-            "CUSTOMFILE_<name>": {
-                "type": "string",
-                "description": "Values file to provide to Helm (as --file). see usage information below."
+            "custom_value_files": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Values file to provide to Helm (as --values or -f). see usage information below."
             },
-            "CUSTOM_<name>": {
-                "type": "string",
-                "description": "Value to provide to Helm (as --set). see usage information below."
+            "custom_values": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Variables to provide to Helm (as --set). see usage information below."
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: helm
-      image: 'codefresh/helm:2.9.0'
+      image: codefresh/cfstep-helm:[[ .Arguments.helm_version ]]
       environment:
-        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
-        - 'CHART_NAME=${{CHART_NAME}}'
-        - 'RELEASE_NAME=${{RELEASE_NAME}}'
-        - 'NAMESPACE=${{NAMESPACE}}'
-        - 'TILLER_NAMESPACE=${{TILLER_NAMESPACE}}'
-        - 'CHART_VERSION=${{CHART_VERSION}}'
-        - 'CHART_REPO_URL=${{CHART_REPO_URL}}'
-        - 'CUSTOMFILE_<name>=${{CUSTOMFILE_<name>}}'
-        - 'CUSTOM_<name>=${{CUSTOM_<name>}}'
+      [[- range $key, $val := .Arguments -]]
+      [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]
+        - '[[ toUpper $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- end -]]
+      [[ range $arg := .Arguments.custom_values ]]
+        - 'CUSTOM_[[ $arg ]]'
+      [[- end -]]
+      [[ range $key, $val := .Arguments.custom_value_files ]]
+        - 'CUSTOMFILE_[[ toUpper $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

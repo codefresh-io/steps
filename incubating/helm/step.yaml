@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 0.1.0
+  version: 0.1.1
   isPublic: true
   description: Release a Helm chart (update or install)
   sources:
@@ -30,6 +30,8 @@ metadata:
               chart_name: test_chart
               release_name: first
               kube_context: my-kubernetes-context
+              tiller_namespace: kube-system
+              namespace: project
               custom_values:
                 - KEY1=VAL1
                 - KEY2=VAL2
@@ -37,8 +39,7 @@ metadata:
               custom_value_files:
                 - /path/to/values.yaml
                 - /path/to/values2.yaml
-              tiller_namespace: kube-system
-              namespace: project
+              cmd_ps: --wait --timeout 5
     - description: example-2
       workflow:
           deploy:
@@ -79,7 +80,7 @@ spec:
             },
             "action": {
                 "type": "string",
-                "description": "The helm operation mode is set by the ACTION variable, where the value is install/auth/push."
+                "description": "The helm operation mode is set by the ACTION variable, where the value is install/auth/push"
             },
             "namespace": {
                 "type": "string",
@@ -91,7 +92,7 @@ spec:
             },
             "chart_version": {
                 "type": "string",
-                "description": "application chart version to install"
+                "description": "Application chart version to install"
             },
             "helm_version": {
                 "type": "string",
@@ -108,14 +109,18 @@ spec:
                  "items": {
                      "type": "string"
                   },
-                  "description": "Values file to provide to Helm (as --values or -f). see usage information below."
+                  "description": "Values file to provide to Helm (as --values or -f). see usage information below"
             },
             "custom_values": {
                  "type": "array",
                  "items": {
                      "type": "string"
                   },
-                  "description": "Variables to provide to Helm (as --set). see usage information below."
+                  "description": "Variables to provide to Helm (as --set). see usage information below"
+            },
+            "cmd_ps": {
+                "type": "string",
+                "description": "Variable to provide other Helm cli flags. For example: '--wait --timeout', etc"
             }
         }
     }

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: run-jenkins-jobs
-  version: 0.0.1
+  version: 0.1.0
   isPublic: true
   description: Run jenkins job from codefresh pipeline
   sources:
@@ -10,6 +10,7 @@ metadata:
       https://github.com/codefresh-io/steps/tree/master/incubating/run-jenkins-jobs
   stage: incubating
   maintainers:
+    - name: Roman Kuchuk
     - name: Vadim Waisman
   categories:
     - build
@@ -24,16 +25,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
         steps:      
           RunJenkins:
             title: Triggering Jenkins Job
             type: run-jenkins-jobs
             arguments:
-              JENKINS_URL: ${{JENKINS_URL}}
-              JENKINS_TOKEN: ${{JENKINS_TOKEN}}
-              JENKINS_JOB: ${{JENKINS_JOB}}
-              JENKINS_USERNAME: ${{JENKINS_USERNAME}}
+              JENKINS_URL: 'http://yourjenkins.com:80'
+              JENKINS_TOKEN: 'usertoken'
+              JENKINS_JOB: 'jobname'
+              JENKINS_USERNAME: 'username'
 spec:
   arguments: |-
     {
@@ -46,7 +46,7 @@ spec:
           "JENKINS_USERNAME",
           "JENKINS_TOKEN",
           "JENKINS_URL",
-          "JENKINS_JOB"
+          "JENKINS_JOB_NAME"
         ],
         "properties": {
             "JENKINS_USERNAME": {
@@ -61,7 +61,7 @@ spec:
                 "type": "string",
                 "description": "jenkins machine url (required)"
             },
-            "JENKINS_JOB": {
+            "JENKINS_JOB_NAME": {
                 "type": "string",
                 "description": "list of jenkins jobs to run separated by spaces (required)"
             }
@@ -70,9 +70,9 @@ spec:
   steps:
     main:
       name: run-jenkins-jobs
-      image: codefreshplugins/run-jenkins-jobs
+      image: codefreshplugins/run-jenkins-jobs:0.1.0
       environment:
         - 'JENKINS_USERNAME=${{JENKINS_USERNAME}}'
         - 'JENKINS_TOKEN=${{JENKINS_TOKEN}}'
         - 'JENKINS_URL=${{JENKINS_URL}}'
-        - 'JENKINS_JOB=${{JENKINS_JOB}}'
+        - 'JENKINS_JOB_NAME=${{JENKINS_JOB_NAME}}'

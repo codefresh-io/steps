@@ -22,18 +22,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:      
-          TestMail:
-            type: sendgrid
-            arguments:
-              SENDGRID_APIKEY: ${{SENDGRID_APIKEY}}
-              SENDGRID_MAIL: ${{SENDGRID_MAIL}}
-              SENDGRID_FROM: ${{SENDGRID_FROM}}
-              SENDGRID_SUBJECT: ${{SENDGRID_SUBJECT}}
-              SENDGRID_TYPE: ${{SENDGRID_TYPE}}
-              SENDGRID_MESSAGE: ${{SENDGRID_MESSAGE}}
-              SENDGRID_TEMPLATE: ${{SENDGRID_TEMPLATE}}
+        TestMail:
+          type: sendgrid
+          arguments:
+            SENDGRID_APIKEY: ${{SENDGRID_APIKEY}}
+            SENDGRID_MAIL: ${{SENDGRID_MAIL}}
+            SENDGRID_FROM: ${{SENDGRID_FROM}}
+            SENDGRID_SUBJECT: ${{SENDGRID_SUBJECT}}
+            SENDGRID_TYPE: ${{SENDGRID_TYPE}}
+            SENDGRID_MESSAGE: ${{SENDGRID_MESSAGE}}
+            SENDGRID_TEMPLATE: ${{SENDGRID_TEMPLATE}}
 spec:
   arguments: |-
     {

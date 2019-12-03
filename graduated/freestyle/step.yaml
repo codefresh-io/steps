@@ -20,16 +20,14 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-          Freestyle:
-            title: Running docker image
-            type: freestyle
-            arguments:
-              image: alpine:3.8
-              commands:
-                - echo "Hello world"
-                - echo "asdasd"
+        Freestyle:
+          title: Running docker image
+          type: freestyle
+          arguments:
+            image: alpine:3.8
+            commands:
+              - echo "Hello world"
+              - echo "asdasd"
 spec:
   arguments: |
     {

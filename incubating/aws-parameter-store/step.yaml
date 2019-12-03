@@ -23,15 +23,13 @@ metadata:
   examples:
     - description: AWS CLI Credentials
       workflow:
-        version: '1.0'
-        steps:
-          GetParameters:
-            type: aws-parameter-store
-            arguments:
-              AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
-              AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
-              AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
-              PARAMETERS: param1 param2
+        GetParameters:
+          type: aws-parameter-store
+          arguments:
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            PARAMETERS: param1 param2
     - description: AWS Credentials file
       workflow:
         version: '1.0'

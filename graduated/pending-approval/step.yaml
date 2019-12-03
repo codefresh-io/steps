@@ -21,21 +21,17 @@ metadata:
   examples:
     - description: basic examples
       workflow:
-        version: '1.0'
-        steps:
-          Approve:
-            type: pending-approval
-            title: Wait for approval
+        Approve:
+          type: pending-approval
+          title: Wait for approval
     - description: using timeout
       workflow:
-        version: '1.0'
-        steps:
-          Approve:
-            type: pending-approval
-            title: Wait for approval
-            timeout:
-              duration: 1
-              finalState: denied
+        Approve:
+          type: pending-approval
+          title: Wait for approval
+          timeout:
+            duration: 1
+            finalState: denied
 spec:
   arguments: |
     {

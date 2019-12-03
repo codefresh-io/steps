@@ -27,15 +27,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        steps:      
-          RunJenkins:
-            title: Triggering Jenkins Job
-            type: run-jenkins-jobs
-            arguments:
-              jenkins_url: 'http://yourjenkins.com:80'
-              jenkins_token: 'usertoken'
-              jenkins_job_name: 'jobname'
-              jenkins_username: 'username'
+        RunJenkins:
+          title: Triggering Jenkins Job
+          type: run-jenkins-jobs
+          arguments:
+            jenkins_url: 'http://yourjenkins.com:80'
+            jenkins_token: 'usertoken'
+            jenkins_job_name: 'jobname'
+            jenkins_username: 'username'
 spec:
   arguments: |-
     {

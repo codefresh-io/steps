@@ -26,17 +26,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          github-pr:
-            type: github-pr
-            arguments:
-              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
-              GITHUB_REPO_OWNER: ${{GITHUB_REPO_OWNER}}
-              GITHUB_REPO_NAME: ${{GITHUB_REPO_NAME}}
-              HEAD: ${{CF_BRANCH}}
-              TITLE: Codefresh PR for ${{CF_BRANCH}}
-              BASE: master
+        github-pr:
+          type: github-pr
+          arguments:
+            GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+            GITHUB_REPO_OWNER: ${{GITHUB_REPO_OWNER}}
+            GITHUB_REPO_NAME: ${{GITHUB_REPO_NAME}}
+            HEAD: ${{CF_BRANCH}}
+            TITLE: Codefresh PR for ${{CF_BRANCH}}
+            BASE: master
 spec:
   arguments: |-
     {

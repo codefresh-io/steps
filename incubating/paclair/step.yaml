@@ -25,23 +25,21 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          run:
-            type: paclair
-            arguments:
-              API_PREFIX: ${{API_PREFIX}}
-              CLAIR_URL: ${{CLAIR_URL}}
-              IMAGE: ${{IMAGE}}
-              PROTOCOL: ${{PROTOCOL}}
-              REGISTRY: ${{REGISTRY}}
-              REGISTRY_PASSWORD: ${{REGISTRY_PASSWORD}}
-              REGISTRY_USERNAME: ${{REGISTRY_USERNAME}}
-              SEVERITY_THRESHOLD: ${{SEVERITY_THRESHOLD}}
-              TOKEN: ${{TOKEN}}
-              TOKEN_TYPE: ${{TOKEN_TYPE}}
-              TOKEN_URL: ${{TOKEN_URL}}
-              TAG: ${{TAG}}
+        run:
+          type: paclair
+          arguments:
+            API_PREFIX: ${{API_PREFIX}}
+            CLAIR_URL: ${{CLAIR_URL}}
+            IMAGE: ${{IMAGE}}
+            PROTOCOL: ${{PROTOCOL}}
+            REGISTRY: ${{REGISTRY}}
+            REGISTRY_PASSWORD: ${{REGISTRY_PASSWORD}}
+            REGISTRY_USERNAME: ${{REGISTRY_USERNAME}}
+            SEVERITY_THRESHOLD: ${{SEVERITY_THRESHOLD}}
+            TOKEN: ${{TOKEN}}
+            TOKEN_TYPE: ${{TOKEN_TYPE}}
+            TOKEN_URL: ${{TOKEN_URL}}
+            TAG: ${{TAG}}
 spec:
   arguments: |-
     {

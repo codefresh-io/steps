@@ -20,20 +20,18 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-          Launch-Composition:
-            title: Running docker image
-            type: launch-composition
-            arguments:
-              composition:
-                version: '2'
-                services:
-                  app:
-                    image: owner/app:latest
-                  db:
-                    image: mongo
-              environment_name: 'environment name'
+        Launch-Composition:
+          title: Running docker image
+          type: launch-composition
+          arguments:
+            composition:
+              version: '2'
+              services:
+                app:
+                  image: owner/app:latest
+                db:
+                  image: mongo
+            environment_name: 'environment name'
 spec:
   arguments: |
     {

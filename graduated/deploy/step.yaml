@@ -20,16 +20,14 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-            Deploy:
-              title: deploying to cluster
-              type: deploy
-              arguments:
-                kind: kubernetes
-                cluster:  myDemoAKSCluster
-                namespace: demo
-                service: my-python-app
+        Deploy:
+          title: deploying to cluster
+          type: deploy
+          arguments:
+            kind: kubernetes
+            cluster:  myDemoAKSCluster
+            namespace: demo
+            service: my-python-app
 spec:
   arguments: |
     {

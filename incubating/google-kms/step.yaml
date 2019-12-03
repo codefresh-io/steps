@@ -25,17 +25,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          run:
-            type: google-kms
-            arguments:
-              KMS_PROJECT: ${{KMS_PROJECT}}
-              KMS_LOCATION: ${{KMS_LOCATION}}
-              KMS_KEYRING: ${{KMS_KEYRING}}
-              KMS_KEY: ${{KMS_KEY}}
-              GCP_SA_KEY: ${{GCP_SA_KEY}}
-              VALUE: ${{VALUE}}
+        run:
+          type: google-kms
+          arguments:
+            KMS_PROJECT: ${{KMS_PROJECT}}
+            KMS_LOCATION: ${{KMS_LOCATION}}
+            KMS_KEYRING: ${{KMS_KEYRING}}
+            KMS_KEY: ${{KMS_KEY}}
+            GCP_SA_KEY: ${{GCP_SA_KEY}}
+            VALUE: ${{VALUE}}
 
 spec:
   arguments: |-

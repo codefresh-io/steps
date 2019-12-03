@@ -21,13 +21,11 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          TestPlugin:
-            type: webhook
-            arguments:
-              WEBHOOK_URL: 'http://example.com/api/endpoint'
-              WEBHOOK_BODY: body
+        TestPlugin:
+          type: webhook
+          arguments:
+            WEBHOOK_URL: 'http://example.com/api/endpoint'
+            WEBHOOK_BODY: body
   created_at: '2019-07-03T15:27:04.093Z'
   updated_at: '2019-09-18T08:15:28.752Z'
   latest: true

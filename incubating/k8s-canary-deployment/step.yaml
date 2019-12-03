@@ -26,20 +26,18 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          run:
-            title: 'Deploying new version ${{CF_SHORT_REVISION}}'
-            type: k8s-canary-deployment
-            arguments:
-              WORKING_VOLUME: ${{WORKING_VOLUME}}
-              SERVICE_NAME: ${{SERVICE_NAME}}
-              DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
-              TRAFFIC_INCREMENT: ${{TRAFFIC_INCREMENT}}
-              NEW_VERSION: ${{NEW_VERSION}}
-              SLEEP_SECONDS: ${{SLEEP_SECONDS}}
-              NAMESPACE: ${{NAMESPACE}}
-              KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+        run:
+          title: 'Deploying new version ${{CF_SHORT_REVISION}}'
+          type: k8s-canary-deployment
+          arguments:
+            WORKING_VOLUME: ${{WORKING_VOLUME}}
+            SERVICE_NAME: ${{SERVICE_NAME}}
+            DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
+            TRAFFIC_INCREMENT: ${{TRAFFIC_INCREMENT}}
+            NEW_VERSION: ${{NEW_VERSION}}
+            SLEEP_SECONDS: ${{SLEEP_SECONDS}}
+            NAMESPACE: ${{NAMESPACE}}
+            KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
   arguments: |-
     {

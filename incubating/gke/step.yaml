@@ -23,17 +23,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          run:
-            type: gke
-            arguments:
-              GOOGLE_SERVICE_ACCOUNT_KEY: ${{GOOGLE_SERVICE_ACCOUNT_KEY}}
-              VAULT_ADDR: ${{VAULT_ADDR}}
-              GKE_CLUSTER_NAME: ${{GKE_CLUSTER_NAME}}
-              CLOUDSDK_COMPUTE_ZONE: ${{CLOUDSDK_COMPUTE_ZONE}}
-              CLOUDSDK_COMPUTE_REGION: ${{CLOUDSDK_COMPUTE_REGION}}
-              COMMAND: ${{COMMAND}}
+        run:
+          type: gke
+          arguments:
+            GOOGLE_SERVICE_ACCOUNT_KEY: ${{GOOGLE_SERVICE_ACCOUNT_KEY}}
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            GKE_CLUSTER_NAME: ${{GKE_CLUSTER_NAME}}
+            CLOUDSDK_COMPUTE_ZONE: ${{CLOUDSDK_COMPUTE_ZONE}}
+            CLOUDSDK_COMPUTE_REGION: ${{CLOUDSDK_COMPUTE_REGION}}
+            COMMAND: ${{COMMAND}}
 
 spec:
   arguments: |-

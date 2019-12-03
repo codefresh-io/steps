@@ -20,20 +20,18 @@ metadata:
   examples:
     - description: Execute github action created with Dockerfile
       workflow:
-        version: '1.0'
-        steps:
-          runtime-executor:
-            title: Notify slack channel
-            type: github-action-executor
-            arguments:
-              url: 'https://github.com/marketplace/actions/slack-notify'
-              env:
-                SLACK_WEBHOOK: '${{SLACK_WEBHOOK}}'
-                SLACK_CHANNEL: general
-                SLACK_MESSAGE: Hello from codefresh!
-                SLACK_TITLE: Custom Title
-                SLACK_USERNAME: rtCamp
-              registry: dockerhub
+        runtime-executor:
+          title: Notify slack channel
+          type: github-action-executor
+          arguments:
+            url: 'https://github.com/marketplace/actions/slack-notify'
+            env:
+              SLACK_WEBHOOK: '${{SLACK_WEBHOOK}}'
+              SLACK_CHANNEL: general
+              SLACK_MESSAGE: Hello from codefresh!
+              SLACK_TITLE: Custom Title
+              SLACK_USERNAME: rtCamp
+            registry: dockerhub
   official: false
   stage: incubating
   latest: true

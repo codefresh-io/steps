@@ -11,7 +11,9 @@ metadata:
   stage: incubating
   maintainers:
     - name: Roman Kuchuk
+      email: r.kuchuk@codefresh.io
     - name: Vadim Waisman
+      email: vadim@codefresh.io
   categories:
     - build
   official: false

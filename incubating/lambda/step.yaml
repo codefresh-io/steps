@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: lambda
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Deploy a Serverless service (functions and resources) to AWS lambda
   sources:

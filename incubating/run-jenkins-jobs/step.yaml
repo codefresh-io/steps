@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: run-jenkins-jobs
-  version: 0.1.1
+  version: 0.1.2
   isPublic: true
   description: Run jenkins job from codefresh pipeline
   sources:

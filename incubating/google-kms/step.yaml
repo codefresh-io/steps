@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: google-kms
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: >-
     Facilitates work with Google Key Management Service for such operations as

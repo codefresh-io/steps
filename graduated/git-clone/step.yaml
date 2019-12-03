@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: git-clone
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Clone a git repository
   sources:

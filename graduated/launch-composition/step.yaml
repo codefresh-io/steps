@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: launch-composition
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Run and externaly expose a docker-compose
   sources:

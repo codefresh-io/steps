@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: telegram
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: >-
     A plugin, allowing to send any messages to Telegram users via a bot.

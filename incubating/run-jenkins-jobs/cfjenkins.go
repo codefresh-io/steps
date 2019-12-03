@@ -25,10 +25,10 @@ type (
 
 func main() {
 
-	host := os.Getenv("JENKINS_URL")
-	token := os.Getenv("JENKINS_TOKEN")
-	user := os.Getenv("JENKINS_USERNAME")
-	job := os.Getenv("JENKINS_JOB_NAME")
+	host := os.Getenv("jenkins_url")
+	token := os.Getenv("jenkins_token")
+	user := os.Getenv("jenkins_username")
+	job := os.Getenv("jenkins_job_name")
 	jobparams := ""
 
 	jenkins := NewJenkinsJobParams(user, token, host, job, jobparams)
@@ -114,16 +114,16 @@ func (jenkins *JenkinsJobParams) parseResponse(resp *http.Response, body interfa
 
 func (jenkins *JenkinsJobParams) validate() bool {
 	if len(jenkins.Host) == 0 && !strings.HasPrefix(jenkins.Host, "${{") {
-		log.Error("JENKINS_URL is required!")
+		log.Error("jenkins_url is required!")
 		return false
 	} else if len(jenkins.Token) == 0 && !strings.HasPrefix(jenkins.Token, "${{") {
-		log.Error("JENKINS_TOKEN is required!")
+		log.Error("jenkins_token is required!")
 		return false
 	} else if len(jenkins.Username) == 0 && !strings.HasPrefix(jenkins.Username, "${{") {
-		log.Error("JENKINS_USERNAME is required!")
+		log.Error("jenkins_username is required!")
 		return false
 	} else if len(jenkins.Job) == 0 && !strings.HasPrefix(jenkins.Job, "${{") {
-		log.Error("JENKINS_JOB is required!")
+		log.Error("jenkins_job_name is required!")
 		return false
 	} else {
 		return true

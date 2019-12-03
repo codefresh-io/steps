@@ -30,10 +30,10 @@ metadata:
             title: Triggering Jenkins Job
             type: run-jenkins-jobs
             arguments:
-              JENKINS_URL: 'http://yourjenkins.com:80'
-              JENKINS_TOKEN: 'usertoken'
-              JENKINS_JOB: 'jobname'
-              JENKINS_USERNAME: 'username'
+              jenkins_url: 'http://yourjenkins.com:80'
+              jenkins_token: 'usertoken'
+              jenkins_job_name: 'jobname'
+              jenkins_username: 'username'
 spec:
   arguments: |-
     {
@@ -43,25 +43,25 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-          "JENKINS_USERNAME",
-          "JENKINS_TOKEN",
-          "JENKINS_URL",
-          "JENKINS_JOB_NAME"
+          "jenkins_username",
+          "jenkins_token",
+          "jenkins_url",
+          "jenkins_job_name"
         ],
         "properties": {
-            "JENKINS_USERNAME": {
+            "jenkins_username": {
                 "type": "string",
                 "description": "jenkins username (required)"
             },
-            "JENKINS_TOKEN": {
+            "jenkins_token": {
                 "type": "string",
                 "description": "jenkins token (required)"
             },
-            "JENKINS_URL": {
+            "jenkins_url": {
                 "type": "string",
                 "description": "jenkins machine url (required)"
             },
-            "JENKINS_JOB_NAME": {
+            "jenkins_job_name": {
                 "type": "string",
                 "description": "list of jenkins jobs to run separated by spaces (required)"
             }
@@ -70,9 +70,9 @@ spec:
   steps:
     main:
       name: run-jenkins-jobs
-      image: codefreshplugins/run-jenkins-jobs:0.1.0
+      image: codefresh/run-jenkins-jobs:0.1.0
       environment:
-        - 'JENKINS_USERNAME=${{JENKINS_USERNAME}}'
-        - 'JENKINS_TOKEN=${{JENKINS_TOKEN}}'
-        - 'JENKINS_URL=${{JENKINS_URL}}'
-        - 'JENKINS_JOB_NAME=${{JENKINS_JOB_NAME}}'
+        - 'jenkins_username=${{jenkins_username}}'
+        - 'jenkins_token=${{jenkins_token}}'
+        - 'jenkins_url=${{jenkins_url}}'
+        - 'jenkins_job_name=${{jenkins_job_name}}'

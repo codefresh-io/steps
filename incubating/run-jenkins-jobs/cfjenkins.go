@@ -113,16 +113,16 @@ func (jenkins *JenkinsJobParams) parseResponse(resp *http.Response, body interfa
 }
 
 func (jenkins *JenkinsJobParams) validate() bool {
-	if len(jenkins.Host) == 0 && !strings.HasPrefix(jenkins.Host, "${{") {
+	if len(jenkins.Host) == 0 || strings.HasPrefix(jenkins.Host, "${{") {
 		log.Error("jenkins_url is required!")
 		return false
-	} else if len(jenkins.Token) == 0 && !strings.HasPrefix(jenkins.Token, "${{") {
+	} else if len(jenkins.Token) == 0 || strings.HasPrefix(jenkins.Token, "${{") {
 		log.Error("jenkins_token is required!")
 		return false
-	} else if len(jenkins.Username) == 0 && !strings.HasPrefix(jenkins.Username, "${{") {
+	} else if len(jenkins.Username) == 0 || strings.HasPrefix(jenkins.Username, "${{") {
 		log.Error("jenkins_username is required!")
 		return false
-	} else if len(jenkins.Job) == 0 && !strings.HasPrefix(jenkins.Job, "${{") {
+	} else if len(jenkins.Job) == 0 || strings.HasPrefix(jenkins.Job, "${{") {
 		log.Error("jenkins_job_name is required!")
 		return false
 	} else {

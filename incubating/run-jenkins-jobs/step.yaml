@@ -32,9 +32,24 @@ metadata:
           type: run-jenkins-jobs
           arguments:
             jenkins_url: 'http://yourjenkins.com:80'
-            jenkins_token: 'usertoken'
-            jenkins_job_name: 'jobname'
-            jenkins_username: 'username'
+            jenkins_token: usertoken
+            jenkins_job_name: jobname1
+            jenkins_username: username
+    - description: example-2
+      workflow:
+        RunJenkins:
+          title: Triggering Jenkins Job
+          type: run-jenkins-jobs
+          arguments:
+            jenkins_url: 'http://yourjenkins.com:80'
+            jenkins_token: usertoken
+            jenkins_job_name: jobname2
+            jenkins_username: username
+            jenkins_parameterized_job: true
+            jenkins_build_params:
+              - KEY1=VAL1
+              - KEY2=VAL2
+              - KEY3=VAL3
 spec:
   arguments: |-
     {
@@ -47,33 +62,52 @@ spec:
           "jenkins_username",
           "jenkins_token",
           "jenkins_url",
-          "jenkins_job_name"
+          "jenkins_job_name",
+          "jenkins_parameterized_job"
         ],
         "properties": {
             "jenkins_username": {
                 "type": "string",
-                "description": "jenkins username (required)"
+                "description": "Jenkins username (required)."
             },
             "jenkins_token": {
                 "type": "string",
-                "description": "jenkins token (required)"
+                "description": "Jenkins token (required)."
             },
             "jenkins_url": {
                 "type": "string",
-                "description": "jenkins machine url (required)"
+                "description": "Jenkins machine url (required)."
             },
             "jenkins_job_name": {
                 "type": "string",
-                "description": "list of jenkins jobs to run separated by spaces (required)"
+                "description": "Jenkins job to run (required)."
+            },
+            "jenkins_parameterized_job": {
+                "type": "boolean",
+                "description": "Type of jenkins job."
+            },
+            "jenkins_build_params": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Variables providing to jenkins job, uses when jenkins_parameterized_job is true. Variables should be declared in jenkins job settings(undeclared variables will be ignored by jenkins)."
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: run-jenkins-jobs
-      image: codefresh/run-jenkins-jobs:0.1.0
+      image: codefresh/run-jenkins-jobs:0.1.2
       environment:
-        - 'jenkins_username=${{jenkins_username}}'
-        - 'jenkins_token=${{jenkins_token}}'
-        - 'jenkins_url=${{jenkins_url}}'
-        - 'jenkins_job_name=${{jenkins_job_name}}'
+      [[- range $key, $val := .Arguments -]]
+      [[ if hasPrefix $key "jenkins_" ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- end -]]
+      [[ range $arg := .Arguments.jenkins_build_params ]]
+        - 'build_param_[[ $arg ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

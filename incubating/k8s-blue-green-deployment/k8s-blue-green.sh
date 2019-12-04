@@ -78,14 +78,14 @@ if [ "$1" != "" ] && [ "$2" != "" ] && [ "$3" != "" ] && [ "$4" != "" ] && [ "$5
     HEALTH_SECONDS=$5
     NAMESPACE=$6
 else
-    
-    echo "USAGE\n k8s-blue-green-rollout.sh [SERVICE_NAME] [DEPLOYMENT_NAME] [NEW_VERSION] [HEALTH_COMMAND] [HEALTH_SECONDS] [NAMESPACE]"
-    echo "\t [SERVICE_NAME] - Name of the current service"
-    echo "\t [DEPLOYMENT_NAME] - The name of the current deployment"
-    echo "\t [NEW_VERSION] - The next version of the Docker image"
-    echo "\t [HEALTH_COMMAND] - command to use as a health check (unused)"
-    echo "\t [HEALTH_SECONDS] - Time to wait before checking health"
-    echo "\t [NAMESPACE] - Namespace of the application"
+
+    printf "USAGE\n k8s-blue-green-rollout.sh [SERVICE_NAME] [DEPLOYMENT_NAME] [NEW_VERSION] [HEALTH_COMMAND] [HEALTH_SECONDS] [NAMESPACE]\n"
+    printf "\t [SERVICE_NAME] - Name of the current service\n"
+    printf "\t [DEPLOYMENT_NAME] - The name of the current deployment\n"
+    printf "\t [NEW_VERSION] - The next version of the Docker image\n"
+    printf "\t [HEALTH_COMMAND] - command to use as a health check (unused)\n"
+    printf "\t [HEALTH_SECONDS] - Time to wait before checking health\n"
+    printf "\t [NAMESPACE] - Namespace of the application\n"
     exit 1;
 fi
 

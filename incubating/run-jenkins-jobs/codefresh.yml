@@ -5,17 +5,27 @@ steps:
     arguments:
       repo: codefresh-io/steps
       git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/run-jenkins-jobs
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
   BuildImage:
     title: Building Docker Image
     type: build
     working_directory: steps/incubating/run-jenkins-jobs
     image_name: codefresh/run-jenkins-jobs
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
   PushingToRegistry:
     type: push
     registry: dockerhub
     title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tags: [ "latest", "0.1.0" ]
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
     when:
       branch:
         only:

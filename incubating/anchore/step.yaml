@@ -25,12 +25,30 @@ metadata:
     - description: example-1
       workflow:
         ScanMyImage:
-          title: Scanning Docker Image
+          title: Scanning Docker Image with the anchore Codefresh plugin
           type: anchore
           arguments:
             ANCHORE_CLI_URL: http://anchore-engine:8228/v1/
+            ANCHORE_CLI_USER: admin
+            ANCHORE_CLI_PASS: foobar
             ANCHORE_CLI_IMAGE: alpine
             ANCHORE_CLI_FAIL_ON_POLICY: "true"
+    - description: example-2
+      workflow:
+        ScanMyImage:
+          title: Scanning Docker Image with anchore-cli
+          image: anchore/engine-cli
+          commands:
+          - anchore-cli system wait --timeout 30
+          - anchore-cli image add ${ANCHORE_CLI_IMAGE}
+          - anchore-cli image wait ${ANCHORE_CLI_IMAGE}
+          - anchore-cli evaluate check ${ANCHORE_CLI_IMAGE};
+          environment:
+          - ANCHORE_CLI_URL=http://anchore-engine:8228/v1/
+          - ANCHORE_CLI_USER=admin
+          - ANCHORE_CLI_PASS=foobar
+          - ANCHORE_CLI_IMAGE=alpine:latest
+          - ANCHORE_FAIL_ON_POLICY=true
 spec:
   arguments: |-
     {

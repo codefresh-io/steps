@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
 set -e
 #### Prepare functions for prettier output
 msg()  { echo -e "\e[32mINFO [$(date +%F_%H-%M-%S)] ---> $1\e[0m"; }
@@ -15,6 +16,10 @@ anchore-cli image add ${ANCHORE_CLI_IMAGE}
 msg "Waiting for analysis to complete"
 anchore-cli image wait ${ANCHORE_CLI_IMAGE}
 msg "Analysis complete"
- if [ "${ANCHORE_FAIL_ON_POLICY}" == "true" ] ; then 
-   anchore-cli evaluate check ${ANCHORE_CLI_IMAGE}; 
+
+if [ "${ANCHORE_FAIL_ON_POLICY}" == "true" ] ; then
+  ERROR_ON_FAIL=true
 fi
+
+msg "Evaluate check"
+anchore-cli evaluate check --detail ${ANCHORE_CLI_IMAGE} || [ ! ${ERROR_ON_FAIL} ]

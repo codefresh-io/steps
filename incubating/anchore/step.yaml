@@ -49,6 +49,20 @@ metadata:
           - ANCHORE_CLI_PASS=foobar
           - ANCHORE_CLI_IMAGE=alpine:latest
           - ANCHORE_FAIL_ON_POLICY=true
+    - description: example-3
+      workflow:
+        ScanMyImage:
+          title: Scanning Docker Image without external Anchore engine
+          image: anchore/inline-scan:v0.3.3
+          shell: bash
+          commands:
+          - docker-entrypoint.sh start > /dev/null 2>&1 & anchore_ci_tools.py --wait --timeout 300
+          - anchore_ci_tools.py --analyze --report --image ${IMAGE_NAME} --timeout 300
+          - anchore-cli image get ${IMAGE_NAME}
+          - anchore-cli evaluate check ${IMAGE_NAME} || true
+          # - anchore-cli evaluate check ${IMAGE_NAME} # The step exits with the error if the image status is 'fail'
+          environment:
+          - IMAGE_NAME=mysql:5.7
 spec:
   arguments: |-
     {

@@ -1,0 +1,29 @@
+General:
+  clair_url: '{{ clair_url }}'
+Plugins:
+  Docker:
+    class: paclair.plugins.docker_plugin.DockerPlugin
+    registries:
+      {{ registry }}:
+        {%- if registry_username != '' %}
+        auth:
+          - "{{ registry_username }}"
+        {%- endif %}
+        {%- if registry_password != '' %}
+          - "{{ registry_password }}"
+        {%- endif %}
+        {%- if token != '' %}
+        token: "{{ token }}"
+        {%- endif %}
+        {%- if protocol != '' %}
+        protocol: '{{ protocol }}'
+        {%- endif %}
+        {%- if api_prefix != '' %}
+        api_prefix: '{{ api_prefix }}'
+        {%- endif %}
+        {%- if token_type != '' %}
+        token_type: {{ token_type }}
+        {%- endif %}
+        {%- if token_url != '' %}
+        token_type: {{ token_url }}
+        {%- endif %}

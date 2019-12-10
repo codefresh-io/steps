@@ -1,22 +1,31 @@
 version: '1.0'
 steps:
-  BuildingDockerImage:
+  Clone_repo:
+    type: git-clone
+    arguments:
+      repo: codefresh-io/steps
+      git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/paclair
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
+  BuildImage:
     title: Building Docker Image
     type: build
-    image_name: codefreshplugins/cfstep-paclair
-    working_directory: ./
-    tag: "0.1"
-    dockerfile: Dockerfile
-    build_arguments:
-      - PACLAIR_VERSION=3.1.0
-  PushingToDockerRegistry:
-    title: Pushing to Docker Registry
+    working_directory: steps/incubating/paclair
+    image_name: codefresh/paclair
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+  PushingToRegistry:
     type: push
-    candidate: '${{BuildingDockerImage}}'
-    tags:
-      - "3.1.0"
-      - "latest"
     registry: dockerhub
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
     when:
       branch:
         only:

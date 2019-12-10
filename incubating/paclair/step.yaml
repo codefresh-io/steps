@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: paclair
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: 'Scan docker images with Clair - https://github.com/coreos/clair'
   sources:
@@ -12,6 +12,8 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
+    - name: Roman Kuchuk
+      email: r.kuchuk@codefresh.io
   categories:
     - security
   official: false
@@ -56,58 +58,70 @@ spec:
         "properties": {
             "API_PREFIX": {
                 "type": "string",
-                "description": "Prefix for API to Docker Registry"
+                "description": "Prefix for API to Docker Registry",
+                "default": ""
             },
             "CLAIR_URL": {
                 "type": "string",
-                "description": "https://clair.domain.com:6060"
+                "description": "https://clair.domain.com:6060",
+                "default": "http://clair:6060"
             },
             "IMAGE": {
                 "type": "string",
-                "description": "Docker Image Name"
+                "description": "Docker Image Name",
+                "default": ""
             },
             "PROTOCOL": {
                 "type": "string",
-                "description": "Docker Registry Protocol"
+                "description": "Docker Registry Protocol",
+                "default": "https"
             },
             "REGISTRY": {
                 "type": "string",
-                "description": "For ECR use `ecr` else use domain name for Docker Registry"
+                "description": "For ECR use `ecr` else use domain name for Docker Registry",
+                "default": "r.cfcr.io"
             },
             "REGISTRY_PASSWORD": {
                 "type": "string",
-                "description": "Docker Registry Password"
+                "description": "Docker Registry Password",
+                "default": ""
             },
             "REGISTRY_USERNAME": {
                 "type": "string",
-                "description": "Docker Registry Username"
+                "description": "Docker Registry Username",
+                "default": ""
             },
             "SEVERITY_THRESHOLD": {
                 "type": "string",
-                "description": "critical, high, medium, low, negligible, unknown"
+                "description": "critical, high, medium, low, negligible, unknown",
+                "default": ""
             },
             "TOKEN": {
                 "type": "string",
-                "description": "Docker Registry Auth Token"
+                "description": "Docker Registry Auth Token",
+                "default": ""
             },
             "TOKEN_TYPE": {
                 "type": "string",
-                "description": "Docker Registry Auth Token Type"
+                "description": "Docker Registry Auth Token Type",
+                "default": ""
             },
             "TOKEN_URL": {
                 "type": "string",
-                "description": "Docker Registry Auth Token URL"
+                "description": "Docker Registry Auth Token URL",
+                "default": "Bearer"
             },
             "TAG": {
                 "type": "string",
-                "description": "Docker Image Tag"
+                "description": "Docker Image Tag",
+                "default": ""
             }
         }
     }
   steps:
     main:
       name: paclair
-      image: codefreshplugins/paclair
+      image: codefresh/paclair:0.0.3
       environment:
         - API_PREFIX=${{API_PREFIX}}
         - CLAIR_URL=${{CLAIR_URL}}

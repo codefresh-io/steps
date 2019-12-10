@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aqua
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Execute Aqua Security image scan as build step
   sources:
@@ -24,16 +24,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          AquaSecurityScan:
-            type: aqua
-            arguments:
-              AQUA_HOST: ${{AQUA_HOST}}
-              AQUA_PASSWORD: ${{AQUA_PASSWORD}}
-              AQUA_USERNAME: ${{AQUA_USERNAME}}
-              IMAGE: ${{IMAGE}}
-              TAG: ${{TAG}}
+        AquaSecurityScan:
+          type: aqua
+          arguments:
+            AQUA_HOST: ${{AQUA_HOST}}
+            AQUA_PASSWORD: ${{AQUA_PASSWORD}}
+            AQUA_USERNAME: ${{AQUA_USERNAME}}
+            IMAGE: ${{IMAGE}}
+            TAG: ${{TAG}}
 spec:
   arguments: |-
     {

@@ -3,7 +3,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-run
-  version: 0.0.1  
+  version: 0.0.2
   isPublic: true
   description: Run a pipeline by id or name and attach the created build logs
   sources:
@@ -24,20 +24,18 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          codefresh-run:
-            title: Run a codefresh pipeline
-            type: codefresh-run
-            arguments:
-              PIPELINE_ID: project-name/pip_name
-              TRIGGER_ID: trigger_id
-              CONTEXT:
-                - context1
-                - context2
-              VARIABLE:
-                - key1=val1
-                - key2=val2
+        codefresh-run:
+          title: Run a codefresh pipeline
+          type: codefresh-run
+          arguments:
+            PIPELINE_ID: project-name/pip_name
+            TRIGGER_ID: trigger_id
+            CONTEXT:
+              - context1
+              - context2
+            VARIABLE:
+              - key1=val1
+              - key2=val2
 spec:
   arguments: |-
     {

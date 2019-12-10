@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: deploy
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Deploy
   sources:
@@ -20,16 +20,14 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-            Deploy:
-              title: deploying to cluster
-              type: deploy
-              arguments:
-                kind: kubernetes
-                cluster:  myDemoAKSCluster
-                namespace: demo
-                service: my-python-app
+        Deploy:
+          title: deploying to cluster
+          type: deploy
+          arguments:
+            kind: kubernetes
+            cluster:  myDemoAKSCluster
+            namespace: demo
+            service: my-python-app
 spec:
   arguments: |
     {

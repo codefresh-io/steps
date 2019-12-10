@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codecommit
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Clone an AWS CodeCommit Git repository
   sources:
@@ -23,13 +23,11 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          GitClone:
-            type: codecommit
-            arguments:
-              GIT_USER: ${{GIT_USER}}
-              GIT_PASSWORD: ${{GIT_PASSWORD}}
+        GitClone:
+          type: codecommit
+          arguments:
+            GIT_USER: ${{GIT_USER}}
+            GIT_PASSWORD: ${{GIT_PASSWORD}}
 spec:
   arguments: |-
     {

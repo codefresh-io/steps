@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-notifier
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Send message to slack
   sources:
@@ -23,14 +23,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:      
-          SendToSlack:
-            type: slack-notifier
-            arguments:
-              SLACK_HOOK_URL: ${{SLACK_WEBHOOK_URL}}
-              SLACK_TEXT: ${{SLACK_TEXT}}
-              SLACK_ATTACHMENTS: ${{SLACK_ATTACHMENTS}}
+        SendToSlack:
+          type: slack-notifier
+          arguments:
+            SLACK_HOOK_URL: ${{SLACK_WEBHOOK_URL}}
+            SLACK_TEXT: ${{SLACK_TEXT}}
+            SLACK_ATTACHMENTS: ${{SLACK_ATTACHMENTS}}
 spec:
   arguments: |-
     {

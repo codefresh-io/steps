@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Fetch Secrets from Azure Key Vault
   sources:
@@ -24,18 +24,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          GetAzureSecret:
-            title: Fetching Azure Secret from Key Vault
-            type: azure-key-vault
-            arguments:
-              AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
-              AZURE_SECRET: ${{AZURE_SECRET}}
-              AZURE_TENANT: ${{AZURE_TENANT}}
-              AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
-              AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
-              AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
+        GetAzureSecret:
+          title: Fetching Azure Secret from Key Vault
+          type: azure-key-vault
+          arguments:
+            AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
+            AZURE_SECRET: ${{AZURE_SECRET}}
+            AZURE_TENANT: ${{AZURE_TENANT}}
+            AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
+            AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
+            AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
 spec:
   arguments: |-
     {

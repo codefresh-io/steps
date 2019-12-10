@@ -21,32 +21,28 @@ metadata:
   examples:
     - description: encrypt files
       workflow:
-        version: '1.0'
-        steps:
-          sign:
-            title: Sign a password file
-            type: pgp
-            arguments:
-              PUBLIC_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
-              GLOB: '*.txt'
-              ACTION: encrypt
+        sign:
+          title: Sign a password file
+          type: pgp
+          arguments:
+            PUBLIC_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
+            GLOB: '*.txt'
+            ACTION: encrypt
     - description: decrypt files
       workflow:
-        version: '1.0'
-        steps:
-          sign:
-            title: Decrypt a password file
-            type: pgp
-            arguments:
-              PRIVATE_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
-              PASS_PHRASE: LS0t***
-              GLOB: '*.txt'
-              ACTION: decrypt
+        sign:
+          title: Decrypt a password file
+          type: pgp
+          arguments:
+            PRIVATE_KEY: LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0t*********
+            PASS_PHRASE: LS0t***
+            GLOB: '*.txt'
+            ACTION: decrypt
   accountId: 5672d8deb6724b6e359adf62
   created_at: '2019-09-02T08:09:23.037Z'
   updated_at: '2019-09-02T08:09:23.037Z'
   latest: true
-  version: 0.0.1
+  version: 0.0.2
   id: 5d6cce33e9472c2c9a57c3bc
 spec:
   arguments: |-

@@ -2,131 +2,122 @@ package main
 
 import (
 	"fmt"
-	"strings"
-	"net/url"
 	"net/http"
-	"io/ioutil"
-	"encoding/json"
+	"net/url"
 	"os"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 )
 
 type (
 	// Jenkins Job parameters
-	JenkinksJobParams struct {
-		Username string
-		Token    string
-		Host	string
-		Job	string
-		JobParams	string
+	JenkinsJobParams struct {
+		Username         string
+		Token            string
+		Host             string
+		Job              string
+		Buildparams      string
+		Parameterizedjob string
 	}
-
 )
 
 func main() {
-
-	host:= os.Getenv("JENKINS_URL")
-	token:= os.Getenv("JENKINS_TOKEN")
-	user:= os.Getenv("JENKINS_USER")
-	job:= os.Getenv("JENKINS_JOB")
-
-	jenkins := NewJenkinksJobParams(user, token, host,job,"")
+	host := os.Getenv("jenkins_url")
+	token := os.Getenv("jenkins_token")
+	user := os.Getenv("jenkins_username")
+	job := os.Getenv("jenkins_job_name")
+	buildParams := GetBuildParams()
+	parameterizedJob := os.Getenv("jenkins_parameterized_job")
+	fmt.Println(buildParams)
+	fmt.Println(parameterizedJob)
+	jenkins := NewJenkinsJobParams(user, token, host, job, buildParams, parameterizedJob)
 	jenkins.trigger()
-
 }
 
-
-func NewJenkinksJobParams(user string, token string, host string, job string, jobparams string) *JenkinksJobParams {
-	host = strings.TrimRight(host, "/")
-	return &JenkinksJobParams{
-		Username:    user,
-		Token:	token,
-		Host: host,
-		Job:job,
-		JobParams:jobparams,
-	}
-}
-func (jenkins *JenkinksJobParams) trigger() {
-	if !jenkins.validate() {
-		return
-	}
-	path := fmt.Sprintf("%s/job/%s/%s", jenkins.Host, jenkins.Job,"build")
-	log.Info(fmt.Sprintf("Going to trigger %s job on %s", jenkins.Job, jenkins.Host))
-	requestURL := jenkins.buildURL(path, url.Values{})
-	req, err := http.NewRequest("POST", requestURL, nil)
-	if err != nil {
-		log.Error(err.Error())
-		return
-	}
-
-	resp, err := jenkins.sendRequest(req)
-	if err != nil {
-		log.Error(err.Error())
-		return
-	}
-	if resp.StatusCode == 404 {
-		log.Error(fmt.Sprintf("The trigger is failed! Job '%s' not found!", jenkins.Job))
-		return
-	}
-	if resp.StatusCode == 201 || resp.StatusCode == 200{
-		log.Info(resp.Status)
-		log.Info(fmt.Sprintf("The %s is triggered successfully", jenkins.Job))
-	}else{
-		log.Error(fmt.Sprintf("The trigger is failed with status: %s", resp.Status))
-	}
-
-}
-
-
-func (jenkins *JenkinksJobParams) buildURL(path string, params url.Values) (requestURL string) {
-	requestURL = path
-	if params != nil {
-		queryString := params.Encode()
-		if queryString != "" {
-			requestURL = requestURL + "?" + queryString
+func GetBuildParams() string {
+	Values := url.Values{}
+	for _, line := range os.Environ() {
+		if strings.HasPrefix(line, "build_param_") {
+			s := strings.TrimPrefix(line, "build_param_")
+			pair := strings.SplitN(s, "=", 2)
+			Values.Add(pair[0], pair[1])
 		}
 	}
-	return
+	return Values.Encode()
 }
 
-func (jenkins *JenkinksJobParams) sendRequest(req *http.Request) (*http.Response, error) {
-
-	req.SetBasicAuth(jenkins.Username, jenkins.Token)
-	return http.DefaultClient.Do(req)
+func NewJenkinsJobParams(user string, token string, host string, job string, buildParams string, parameterizedJob string) *JenkinsJobParams {
+	host = strings.TrimRight(host, "/")
+	return &JenkinsJobParams{
+		Username:         user,
+		Token:            token,
+		Host:             host,
+		Job:              job,
+		Buildparams:      buildParams,
+		Parameterizedjob: parameterizedJob,
+	}
 }
 
-func (jenkins *JenkinksJobParams) parseResponse(resp *http.Response, body interface{}) (err error) {
-	defer resp.Body.Close()
-
-	if body == nil {
-		return
+func (jenkins *JenkinsJobParams) trigger() {
+	if err := jenkins.validate(); err == false {
+		os.Exit(1)
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	requestUrl := fmt.Sprintf("%s/job/%s/%s", jenkins.Host, jenkins.Job, "build")
+	if jenkins.Parameterizedjob == "true" {
+		if jenkins.Buildparams == "" {
+			log.Info(fmt.Sprintf("No build parameters provided!"))
+			log.Info(fmt.Sprintf("Continue with default parameters!"))
+			requestUrl = fmt.Sprintf("%s/job/%s/%s", jenkins.Host, jenkins.Job, "buildWithParameters")
+		} else {
+			log.Info(fmt.Sprintf("Parameters provided!"))
+			requestUrl = fmt.Sprintf("%s/job/%s/%s", jenkins.Host, jenkins.Job, "buildWithParameters"+"?"+jenkins.Buildparams)
+		}
+	}
+	log.Info(fmt.Sprintf("Going to trigger %s job on %s", jenkins.Job, jenkins.Host))
+
+	req, err := http.NewRequest("POST", requestUrl, nil)
 	if err != nil {
-		return
+		log.Error(err.Error())
+		os.Exit(1)
 	}
-
-	return json.Unmarshal(data, body)
+	req.SetBasicAuth(jenkins.Username, jenkins.Token)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
+	switch resp.StatusCode {
+	case 404:
+		log.Error(fmt.Sprintf("The trigger is failed! Job \"%s\" not found", jenkins.Job))
+		os.Exit(1)
+	case 200:
+		log.Info(fmt.Sprintf("Jenkins job \"%s\" is triggered successfully", jenkins.Job))
+		os.Exit(0)
+	case 201:
+		log.Info(fmt.Sprintf("Jenkins job \"%s\" is triggered successfully", jenkins.Job))
+		os.Exit(0)
+	default:
+		log.Error(fmt.Sprintf("The trigger is failed with status: %s", resp.Status))
+		os.Exit(1)
+	}
 }
 
-func (jenkins *JenkinksJobParams) validate() bool{
-
-	if len(jenkins.Host) == 0 {
-		log.Error("JENKINS_URL is mandatory!")
+func (jenkins *JenkinsJobParams) validate() bool {
+	if len(jenkins.Host) == 0 || strings.HasPrefix(jenkins.Host, "${{") {
+		log.Error("jenkins_url is required!")
 		return false
-	}
-	if len(jenkins.Token) == 0 {
-		log.Error("JENKINS_TOKEN is mandatory!")
+	} else if len(jenkins.Token) == 0 || strings.HasPrefix(jenkins.Token, "${{") {
+		log.Error("jenkins_token is required!")
 		return false
-	}
-	if len(jenkins.Username) == 0 {
-		log.Error("JENKINS_USER is mandatory!")
+	} else if len(jenkins.Username) == 0 || strings.HasPrefix(jenkins.Username, "${{") {
+		log.Error("jenkins_username is required!")
 		return false
-	}
-	if len(jenkins.Job) == 0 {
-		log.Error("JENKINS_JOB is mandatory!")
+	} else if len(jenkins.Job) == 0 || strings.HasPrefix(jenkins.Job, "${{") {
+		log.Error("jenkins_job_name is required!")
 		return false
+	} else {
+		return true
 	}
-	return true
 }

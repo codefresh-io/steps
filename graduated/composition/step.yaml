@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: composition
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Run a docker-compose
   sources:
@@ -20,24 +20,22 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-            Composition:
-              title: Running Composition
-              type: composition
-              arguments:
-                composition:
-                  version: '2'
-                  services:
-                    db:
-                      image: postgres
-                composition_candidates:
-                  test_service:
-                    image: ${{build_step}}
-                    command: gulp integration_test
-                    working_dir: /app
-                    environment:
-                      - key=value
+        Composition:
+          title: Running Composition
+          type: composition
+          arguments:
+            composition:
+              version: '2'
+              services:
+                db:
+                  image: postgres
+            composition_candidates:
+              test_service:
+                image: ${{build_step}}
+                command: gulp integration_test
+                working_dir: /app
+                environment:
+                  - key=value
 spec:
   arguments: |
     {

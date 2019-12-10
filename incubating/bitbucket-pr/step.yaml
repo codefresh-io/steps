@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bitbucket-pr
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Open and Annotate BitBucket PullRequests
   sources:
@@ -22,13 +22,11 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          BB_pr:
-            type: bitbucket-pr
-            arguments:
-              GIT_CONTEXT: my_bitbucket_context_name
-              LABELS: my_label1,my_label2,my_label_n
+        BB_pr:
+          type: bitbucket-pr
+          arguments:
+            GIT_CONTEXT: my_bitbucket_context_name
+            LABELS: my_label1,my_label2,my_label_n
 spec:
   arguments: |-
     {

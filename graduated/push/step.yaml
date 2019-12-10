@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: push
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Push a docker image to a registry
   sources:
@@ -20,15 +20,13 @@ metadata:
     - name: Codefresh INC
   examples:
     - workflow:
-        version: '1.0'
-        steps:
-          Push:
-            type: push
-            arguments:
-              candidate: ${{build_step_name}}
-              tag: latest
-              image_name: codefresh/app
-              registry: my-registry
+        Push:
+          type: push
+          arguments:
+            candidate: ${{build_step_name}}
+            tag: latest
+            image_name: codefresh/app
+            registry: my-registry
 spec:
   arguments: |
     {

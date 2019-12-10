@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twistlock
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Execute Twistlock CLI image scan as build step
   sources:
@@ -26,19 +26,17 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:      
-          TwistlockScanImage:
-            type: twistlock
-            arguments:
-              TEST_IMAGE: ${{TEST_IMAGE}}
-              CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
-              CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
-              CONSOLE_PORT: ${{CONSOLE_PORT}}
-              CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
-              CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
-              COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
-              VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
+        TwistlockScanImage:
+          type: twistlock
+          arguments:
+            TEST_IMAGE: ${{TEST_IMAGE}}
+            CODEFRESH_CLI_KEY: ${{CODEFRESH_CLI_KEY}}
+            CONSOLE_HOSTNAME: ${{CONSOLE_HOSTNAME}}
+            CONSOLE_PORT: ${{CONSOLE_PORT}}
+            CONSOLE_USERNAME: ${{CONSOLE_USERNAME}}
+            CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
+            COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
+            VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
 spec:
   arguments: |-
     {

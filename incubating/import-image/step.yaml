@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: import-image
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Import metadata for existing Docker images into Codefresh
   sources:
@@ -24,18 +24,16 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          import_images:
-            type: import-image
-            title: Importing images ...
-            description: import Docker images form external registry
-            arguments:
-              IMAGES: ${{IMAGES}}
-              REGISTRY: ${{REGISTRY}}
-              USERNAME: ${{USERNAME}}
-              PASSWORD: ${{PASSWORD}}
-              CF_API_TOKEN: ${{CF_API_TOKEN}}
+        import_images:
+          type: import-image
+          title: Importing images ...
+          description: import Docker images form external registry
+          arguments:
+            IMAGES: ${{IMAGES}}
+            REGISTRY: ${{REGISTRY}}
+            USERNAME: ${{USERNAME}}
+            PASSWORD: ${{PASSWORD}}
+            CF_API_TOKEN: ${{CF_API_TOKEN}}
 
 spec:
   arguments: |-

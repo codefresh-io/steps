@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-ticket
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Update a Jira ticket
   sources:
@@ -23,16 +23,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          UpdateJira:
-            type: jira-ticket
-            arguments:
-              JIRA_ID: id
-              COMMENT: my nice comment
-              JIRA_URL: http://jira.com
-              JIRA_USR: user
-              JIRA_PWD: ${{JIRA_PASSWORD}}
+        UpdateJira:
+          type: jira-ticket
+          arguments:
+            JIRA_ID: id
+            COMMENT: my nice comment
+            JIRA_URL: http://jira.com
+            JIRA_USR: user
+            JIRA_PWD: ${{JIRA_PASSWORD}}
 spec:
   arguments: |-
     {

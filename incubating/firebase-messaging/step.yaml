@@ -3,7 +3,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-firebase-messaging
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Send firebase notifications
   sources:
@@ -24,27 +24,25 @@ metadata:
   examples:
     - description: Subscribe registration tokens to topic 'test' and send 'data' and 'notification'
       workflow:
-        version: '1.0'
-        steps:
-          send-message:
-            title: Send firebase notification
-            type: firebase-messaging
-            arguments:
-              FIREBASE_MESSAGE_TOPIC: test
-              FIREBASE_REGISTRATION_TOKENS: |-
-                [
-                  "AldineoDI2Ldio....",
-                  "AldineoDI2Ldio....",
-                ]
-              FIREBASE_MESSAGE_DATA: |-
-                {
-                	"test": "test"
-                }
-              FIREBASE_NOTIFICATION: |-
-                {
-                	"title": "test",
-                	"body": "test"
-                }
+        send-message:
+          title: Send firebase notification
+          type: firebase-messaging
+          arguments:
+            FIREBASE_MESSAGE_TOPIC: test
+            FIREBASE_REGISTRATION_TOKENS: |-
+              [
+                "AldineoDI2Ldio....",
+                "AldineoDI2Ldio....",
+              ]
+            FIREBASE_MESSAGE_DATA: |-
+              {
+                  "test": "test"
+              }
+            FIREBASE_NOTIFICATION: |-
+              {
+                  "title": "test",
+                  "body": "test"
+              }
 spec:
   arguments: |-
     {

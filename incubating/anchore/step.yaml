@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: anchore
-  version: 0.0.1
+  version: 0.0.4
   isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore
   sources:
@@ -24,15 +24,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          ScanMyImage:
-            title: Scanning Docker Image
-            type: anchore
-            arguments:
-              ANCHORE_CLI_URL: http://anchore-engine::8228/v1
-              ANCHORE_CLI_IMAGE: alpine
-              ANCHORE_CLI_FAIL_ON_POLICY: "true"
+        ScanMyImage:
+          title: Scanning Docker Image with the anchore Codefresh plugin
+          type: anchore
+          arguments:
+            ANCHORE_CLI_URL: http://anchore-engine:8228/v1/
+            ANCHORE_CLI_USER: admin
+            ANCHORE_CLI_PASS: foobar
+            ANCHORE_CLI_IMAGE: alpine
+            ANCHORE_CLI_FAIL_ON_POLICY: "true"
 spec:
   arguments: |-
     {
@@ -68,7 +68,7 @@ spec:
   steps:
     main:
       name: anchore
-      image: codefreshplugins/anchore
+      image: codefresh/anchore-plugin
       environment:
         - 'ANCHORE_CLI_URL=${{ANCHORE_CLI_URL}}'
         - 'ANCHORE_CLI_USER=${{ANCHORE_CLI_USER}}'

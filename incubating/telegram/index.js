@@ -3,7 +3,7 @@ const config = require('./config');
 
 // a workaround for the unset vars substituted as ${{VAR}}
 for (var arg in process.env) {
-    if (process.env[arg].includes("${{")) {
+    if (process.env[arg].match(/^\${{.*}}$/g)) {
         process.env[arg]='';
     }
 }

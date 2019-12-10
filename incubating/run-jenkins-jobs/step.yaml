@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: run-jenkins-jobs
-  version: 0.0.1
+  version: 0.1.3
   isPublic: true
   description: Run jenkins job from codefresh pipeline
   sources:
@@ -10,7 +10,10 @@ metadata:
       https://github.com/codefresh-io/steps/tree/master/incubating/run-jenkins-jobs
   stage: incubating
   maintainers:
+    - name: Roman Kuchuk
+      email: r.kuchuk@codefresh.io
     - name: Vadim Waisman
+      email: vadim@codefresh.io
   categories:
     - build
   official: false
@@ -24,16 +27,30 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:      
-          RunJenkins:
-            title: Triggering Jenkins Job
-            type: run-jenkins-jobs
-            arguments:
-              JENKINS_URL: ${{JENKINS_URL}}
-              JENKINS_TOKEN: ${{JENKINS_TOKEN}}
-              JENKINS_JOB: ${{JENKINS_JOB}}
-              JENKINS_USERNAME: ${{JENKINS_USERNAME}}
+        RunJenkins:
+          title: Triggering Jenkins Job
+          type: run-jenkins-jobs
+          arguments:
+            jenkins_url: 'http://yourjenkins.com:80'
+            jenkins_token: usertoken
+            jenkins_job_name: jobname1
+            jenkins_username: username
+            jenkins_parameterized_job: false
+    - description: example-2
+      workflow:
+        RunJenkins:
+          title: Triggering Jenkins Job
+          type: run-jenkins-jobs
+          arguments:
+            jenkins_url: 'http://yourjenkins.com:80'
+            jenkins_token: usertoken
+            jenkins_job_name: jobname2
+            jenkins_username: username
+            jenkins_parameterized_job: true
+            jenkins_build_params:
+              - KEY1=VAL1
+              - KEY2=VAL2
+              - KEY3=VAL3
 spec:
   arguments: |-
     {
@@ -43,36 +60,55 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-          "JENKINS_USERNAME",
-          "JENKINS_TOKEN",
-          "JENKINS_URL",
-          "JENKINS_JOB"
+          "jenkins_username",
+          "jenkins_token",
+          "jenkins_url",
+          "jenkins_job_name",
+          "jenkins_parameterized_job"
         ],
         "properties": {
-            "JENKINS_USERNAME": {
+            "jenkins_username": {
                 "type": "string",
-                "description": "jenkins username (required)"
+                "description": "Jenkins username (required)."
             },
-            "JENKINS_TOKEN": {
+            "jenkins_token": {
                 "type": "string",
-                "description": "jenkins token (required)"
+                "description": "Jenkins token (required)."
             },
-            "JENKINS_URL": {
+            "jenkins_url": {
                 "type": "string",
-                "description": "jenkins machine url (required)"
+                "description": "Jenkins machine url (required)."
             },
-            "JENKINS_JOB": {
+            "jenkins_job_name": {
                 "type": "string",
-                "description": "list of jenkins jobs to run separated by spaces (required)"
+                "description": "Jenkins job to run (required)."
+            },
+            "jenkins_parameterized_job": {
+                "type": "boolean",
+                "description": "Type of jenkins job."
+            },
+            "jenkins_build_params": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Variables providing to jenkins job, uses when jenkins_parameterized_job is true. Variables should be declared in jenkins job settings(undeclared variables will be ignored by jenkins)."
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: run-jenkins-jobs
-      image: codefreshplugins/run-jenkins-jobs
+      image: codefresh/run-jenkins-jobs:0.1.3
       environment:
-        - 'JENKINS_USERNAME=${{JENKINS_USERNAME}}'
-        - 'JENKINS_TOKEN=${{JENKINS_TOKEN}}'
-        - 'JENKINS_URL=${{JENKINS_URL}}'
-        - 'JENKINS_JOB=${{JENKINS_JOB}}'
+      [[- range $key, $val := .Arguments -]]
+      [[ if hasPrefix $key "jenkins_" ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- end -]]
+      [[ range $arg := .Arguments.jenkins_build_params ]]
+        - 'build_param_[[ $arg ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

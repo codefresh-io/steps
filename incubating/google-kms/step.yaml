@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: google-kms
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: >-
     Facilitates work with Google Key Management Service for such operations as
@@ -25,17 +25,15 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          run:
-            type: google-kms
-            arguments:
-              KMS_PROJECT: ${{KMS_PROJECT}}
-              KMS_LOCATION: ${{KMS_LOCATION}}
-              KMS_KEYRING: ${{KMS_KEYRING}}
-              KMS_KEY: ${{KMS_KEY}}
-              GCP_SA_KEY: ${{GCP_SA_KEY}}
-              VALUE: ${{VALUE}}
+        run:
+          type: google-kms
+          arguments:
+            KMS_PROJECT: ${{KMS_PROJECT}}
+            KMS_LOCATION: ${{KMS_LOCATION}}
+            KMS_KEYRING: ${{KMS_KEYRING}}
+            KMS_KEY: ${{KMS_KEY}}
+            GCP_SA_KEY: ${{GCP_SA_KEY}}
+            VALUE: ${{VALUE}}
 
 spec:
   arguments: |-

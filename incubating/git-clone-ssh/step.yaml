@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-clone-ssh
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: clone git repositories via SSH.
   sources:
@@ -24,16 +24,14 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          clone_repo_via_ssh:
-            type: git-clone-ssh
-            arguments:
-              REMOTE_URL: ${{REMOTE_URL}}
-              BRANCH: ${{BRANCH}}
-              SSH_KEY: ${{SSH_KEY}}
-              SPLIT_CHAR: ${{SPLIT_CHAR}}
-              CLONE_PATH: ${{CLONE_PATH}}
+        clone_repo_via_ssh:
+          type: git-clone-ssh
+          arguments:
+            REMOTE_URL: ${{REMOTE_URL}}
+            BRANCH: ${{BRANCH}}
+            SSH_KEY: ${{SSH_KEY}}
+            SPLIT_CHAR: ${{SPLIT_CHAR}}
+            CLONE_PATH: ${{CLONE_PATH}}
 spec:
   arguments: |-
     {

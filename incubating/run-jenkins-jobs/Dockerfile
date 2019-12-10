@@ -18,10 +18,10 @@ FROM alpine:3.6
 
 COPY --from=go /cfjenkins /usr/local/bin/
 
-ENV JENKINS_HOST ${JENKINS_HOST}
-ENV USER ${USER}
-ENV TOKEN ${TOKEN}
-ENV JOB ${JOB}
+ENV JENKINS_URL ${JENKINS_HOST}
+ENV JENKINS_USER ${JENKINS_USER}
+ENV JENKINS_TOKEN ${JENKINS_TOKEN}
+ENV JENKINS_JOB_NAME ${JENKINS_JOB_NAME}
 
-# Run locally docker run -it --rm -e JENKINS_URL="http://192.168.1.73:8080" -e JENKINS_USER="vadim" -e JENKINS_TOKEN="testpassword" -e JENKINS_JOB="testjob" local/cfjenkins
+# Run locally docker run -it --rm -e JENKINS_URL="http://192.168.1.73:8080" -e JENKINS_USER="vadim" -e JENKINS_TOKEN="testtoken" -e JENKINS_JOB_NAME="testjob" local/cfjenkins
 CMD ["/usr/local/bin/cfjenkins"]

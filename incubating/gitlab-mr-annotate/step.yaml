@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitlab-mr-annotate
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: The plugin allows for easy applying labels to GitLab merge requests
   sources:
@@ -22,15 +22,13 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          AnnotateMR:
-            type: gitlab-mr-annotate
-            arguments:
-              GIT_CONTEXT: ${{GIT_CONTEXT}}
-              LABELS: ${{LABELS}}
-              PROJECT_ID: ${{PROJECT_ID}}
-              MERGE_REQUEST_ID: ${{MERGE_REQUEST_ID}}
+        AnnotateMR:
+          type: gitlab-mr-annotate
+          arguments:
+            GIT_CONTEXT: ${{GIT_CONTEXT}}
+            LABELS: ${{LABELS}}
+            PROJECT_ID: ${{PROJECT_ID}}
+            MERGE_REQUEST_ID: ${{MERGE_REQUEST_ID}}
 spec:
   arguments: |-
     {

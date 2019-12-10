@@ -9,6 +9,8 @@ import time
 import warnings
 import boto3
 import base64
+import jinja2
+import shutil
 
 def get_ecr_credentials(image):
     client = boto3.client('ecr')
@@ -85,53 +87,42 @@ def annotate_image(docker_image_id, annotation_list):
 
 
 def main(command):
-    api_prefix = os.getenv('API_PREFIX', '')
-    clair_url = os.getenv('CLAIR_URL', 'http://clair:6060')
-    image = os.getenv('IMAGE')
-    protocol = os.getenv('PROTOCOL', 'https')
-    registry = os.getenv('REGISTRY', 'r.cfcr.io') 
-    registry_username = os.getenv('REGISTRY_USERNAME')
-    registry_password = os.getenv('REGISTRY_PASSWORD')
-    severity_threshold = os.getenv('SEVERITY_THRESHOLD')
-    tag = os.getenv('TAG')
-    token = os.getenv('TOKEN')
-    token_type = os.getenv('TOKEN_TYPE', 'Bearer')
-    token_url = os.getenv('TOKEN_URL')
+    env_dict = os.environ.items()
+    for k, v in env_dict:
+        if v == '${{' or v == '\'${{':
+            os.environ[k] = ""
+    envs = dict(env_dict)
+
+    api_prefix = envs['API_PREFIX']
+    clair_url = envs['CLAIR_URL']
+    image = envs['IMAGE']
+    protocol = envs['PROTOCOL']
+    registry = envs['REGISTRY']
+    registry_username = envs['REGISTRY_USERNAME']
+    registry_password = envs['REGISTRY_PASSWORD']
+    severity_threshold = envs['SEVERITY_THRESHOLD']
+    tag = envs['TAG']
+    token = envs['TOKEN']
+    token_type = envs['TOKEN_TYPE']
+    token_url = envs['TOKEN_URL']
 
     # Build paclair config
-
     if registry == 'ecr':
         registry, token, token_type, token_url = get_ecr_credentials(image)
         cf_account = None
     else:
         cf_account = os.getenv('CF_ACCOUNT')
 
-    data = {
-                'General': {
-                    'clair_url':clair_url,
-                },
-                'Plugins': {
-                    'Docker': {
-                        'class': 'paclair.plugins.docker_plugin.DockerPlugin',
-                        'registries': { 
-                            registry: {
-                                'api_prefix': api_prefix,
-                                'auth': [
-                                    registry_username,
-                                    registry_password
-                                ],
-                                'protocol':protocol,
-                                'token':token,
-                                'token_type':token_type,
-                                'token_url':token_url,
-                            }
-                        }
-                    }
-                }
-            }
+    template_file_path = "/paclair.conf.j2"
+    rendered_file_path = "/etc/paclair.conf"
 
-    with open('/etc/paclair.conf', 'w') as outfile:
-        yaml.dump(data, outfile, default_flow_style=False)
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(template_file_path)), keep_trailing_newline=True)
+    template = env.get_template(os.path.basename(template_file_path))
+    output_from_parsed_template = template.render(api_prefix=api_prefix, clair_url=clair_url, image=image, protocol=protocol, registry=registry, registry_username=registry_username, registry_password=registry_password, severity_threshold=severity_threshold, tag=tag, token=token, token_type=token_type, token_url=token_url)
+    open(rendered_file_path, "w").close()
+    with open(rendered_file_path, 'w') as outfile:
+        outfile.write(output_from_parsed_template)
+    outfile.close()
 
     if cf_account:
         full_registry = '/'.join([registry, cf_account])
@@ -146,7 +137,6 @@ def main(command):
                                 docker_image_id
                                 )
                         )
-    
     if command == 'scan':
         command_array = ['push', 'analyse --output-format html', 'analyse --output-format stats', 'delete']
         for command in command_array:
@@ -168,7 +158,6 @@ def main(command):
                         warnings.warn('No Vulnerabilities Returned from Clair Scan.')
                 else:
                     output = run_command(' '.join([base_command, command]))
-                    print(output)
             if 'html' in command:
                 if not os.path.exists('reports'):
                     os.makedirs('reports')

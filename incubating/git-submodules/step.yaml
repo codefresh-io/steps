@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-submodules
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Update git submodules
   sources:
@@ -24,14 +24,12 @@ metadata:
   examples:
     - description: example-1
       workflow:
-        version: '1.0'
-        steps:
-          updateSubmodules:
-            type: git-submodules
-            arguments:
-              GITHUB_TOKEN: ${{GITHUB_TOKEN}}
-              CF_SUBMODULE_SYNC: ${{CF_SUBMODULE_SYNC}}
-              CF_SUBMODULE_UPDATE_RECURSIVE: ${{CF_SUBMODULE_UPDATE_RECURSIVE}}
+        updateSubmodules:
+          type: git-submodules
+          arguments:
+            GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+            CF_SUBMODULE_SYNC: ${{CF_SUBMODULE_SYNC}}
+            CF_SUBMODULE_UPDATE_RECURSIVE: ${{CF_SUBMODULE_UPDATE_RECURSIVE}}
 spec:
   arguments: |-
     {

@@ -16,11 +16,9 @@ metadata:
   official: true
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/helm/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-contrib/cfstep-helmfile/helm-logo.svg
+    background: "#f4f4f4"
   examples:
     - description: example-1
       workflow:
@@ -55,11 +53,17 @@ spec:
                 "examples": ["/codefresh/volume/${{CF_REPO_NAME}}"],
                 "default": "/codefresh/volume"
             },
+            "HELM_VERSION": {
+                "type": "string",
+                "description": "Version of helmfile binary",
+                "default": "3.0.0",
+                "enum": [ "2.14.3", "3.0.0" ]
+            },    
             "HELMFILE_VERSION": {
                 "type": "string",
                 "description": "Version of helmfile binary",
-                "default": "0.90.2",
-                "enum": [ "0.90.2", "0.90.7" ]
+                "default": "0.90.7",
+                "enum": [ "0.90.2", "0.90.7", "0.93.2" ]
             },
             "HELM_BINARY": {
                 "type": "string",
@@ -201,7 +205,7 @@ spec:
   steps:
     main:
       name: helmfile
-      image: 'codefreshplugins/cfstep-helmfile:${{HELMFILE_VERSION}}'
+      image: 'codefreshplugins/cfstep-helmfile:${{HELM_VERSION}}-${{HELMFILE_VERSION}}'
       environment:
         - 'COMMANDS=${{COMMANDS}}'
         - 'WORKING_DIRECTORY=${{WORKING_DIRECTORY}}'

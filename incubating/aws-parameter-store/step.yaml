@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: aws-parameter-store
   version: 0.0.2
-  isPublic: true
+  isPublic: false
   description: Gathers parameters from AWS Parameter Store
   sources:
     - >-
@@ -12,6 +12,8 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustinb@codefresh.io
+    - name: Roman Kuchuk
+      email: r.kuchuk@codefresh.io
   categories:
     - utility
   official: true
@@ -26,29 +28,19 @@ metadata:
         GetParameters:
           type: aws-parameter-store
           arguments:
-            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
-            AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
-            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            AWS_ACCESS_KEY_ID: '${{access_key}}'
+            AWS_DEFAULT_REGION: '${{region}}'
+            AWS_SECRET_ACCESS_KEY: '${{secret}}'
             PARAMETERS: param1 param2
-    - description: AWS Credentials file
+    - description: AWS Credentials files
       workflow:
-        version: '1.0'
-        steps:
-          CreateAWSCredentialsFile:
-            image: alpine:3.10
-            title: Creating AWS Credentials File...
-            working_directory: ${{main_clone}}
-            commands:
-              - mkdir -p ${CF_VOLUME_PATH}/.aws
-              - 'echo -n $AWS_CREDENTIALS_FILE | base64 -d > ${CF_VOLUME_PATH}/.aws/credentials'
-              - cf_export AWS_SHARED_CREDENTIALS_FILE=${CF_VOLUME_PATH}/.aws/credentials
-          GetParameters:
-            type: aws-parameter-store
-            arguments:
-              AWS_DEFAULT_REGION: us-west-2
-              AWS_SHARED_CREDENTIALS_FILE: ${CF_VOLUME_PATH}/.aws/credentials
-              AWS_PROFILE: default
-              PARAMETERS: param1 param2
+        GetParameters:
+          type: aws-parameter-store
+          arguments:
+            AWS_CREDENTIALS: '${{my_credentials}}'
+            AWS_CONFIG: '{{my_config}}'
+            AWS_PROFILE: staging
+            PARAMETERS: param1 param2
 spec:
   arguments: |-
     {
@@ -67,14 +59,22 @@ spec:
                 "default": "",
                 "description": "AWS Access Key, used for CLI Credentials."
             },
+            "AWS_CREDENTIALS": {
+                "type": "string",
+                "default": "",
+                "description": "base64 encoded .aws/credentials file. Should be provided as a pipeline variable. (If defined, will be used instead aws keys)"
+            },
+            "AWS_CONFIG": {
+              "type": "string",
+              "default": "",
+              "description": "base64 encoded .aws/config file. Should be provided as a pipeline variable. (If defined, will be used instead aws keys)"
+          },
             "AWS_DEFAULT_REGION": {
                 "type": "string",
-                "default": "us-east-1",
                 "description": "AWS Region, used for CLI Credentials."
             },
             "AWS_PROFILE": {
                 "type": "string",
-                "default": "default",
                 "description": "AWS Profile, used for Credentials file."
             },
             "AWS_SECRET_ACCESS_KEY": {
@@ -87,23 +87,26 @@ spec:
                 "default": "/codefresh/volume/.aws/credentials",
                 "description": "Location of AWS Credentials file, used for Credentials file."
             },
+            "AWS_CONFIG_FILE": {
+              "type": "string",
+              "default": "/codefresh/volume/.aws/config",
+              "description": "Location of AWS Config file."
+            },
             "PARAMETERS": {
                 "type": "string",
+                "default": "",
                 "description": "Space delimited list of parameter names."
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: aws-parameter-store
-      image: codefreshplugins/cfstep-aws-parameter-store
+      image: codefresh/aws-parameter-store:0.0.2
       environment:
-        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
-        - 'AWS_DEFAULT_REGION=${{AWS_DEFAULT_REGION}}'
-        - 'AWS_PROFILE=${{AWS_PROFILE}}'
-        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
-        - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
-        - 'PARAMETERS=${{PARAMETERS}}'
-      commands:
-        - >-
-          aws ssm get-parameters --names ${PARAMETERS} --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" | jq '.[] | {"key": .Name, "value": .Value} | "\(.key)=\(.value)"' | tr -d '"' >> /codefresh/volume/env_vars_to_export
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

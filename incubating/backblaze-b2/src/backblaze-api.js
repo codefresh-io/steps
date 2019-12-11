@@ -3,6 +3,7 @@ const Promise = require('bluebird');
 const fs = require('fs');
 const util = require('util');
 const crypto = require('crypto');
+const path = require('path');
 
 const BASE_URL = 'https://api.backblazeb2.com';
 const AUTH_URL = '/b2api/v2/b2_authorize_account';
@@ -52,22 +53,22 @@ async function uploadFiles(authData, bucketId, files) {
         const uploadConfig = await getUploadUrl(authData, bucketId);
         const { authorizationToken, uploadUrl } = uploadConfig;
 
-        const sha1 = await getSha1(file.path);
+        const sha1 = await getSha1(file);
         const fileStat = util.promisify(fs.stat);
-        const stat = await fileStat(file.path);
+        const stat = await fileStat(file);
         const request = rp({
             uri: uploadUrl,
             method: 'post',
             headers: {
                 Authorization: authorizationToken,
-                'X-Bz-File-Name': file.name,
-                'Content-Type': file.contentType || 'b2/x-auto',
+                'X-Bz-File-Name': path.basename(file),
+                'Content-Type': 'b2/x-auto',
                 'Content-Length': stat.size,
                 'X-Bz-Content-Sha1': sha1,
             },
             json: true,
         });
-        await fs.createReadStream(file.path).pipe(request);
+        await fs.createReadStream(file).pipe(request);
         result.push(request.response.body);
     });
     return result;

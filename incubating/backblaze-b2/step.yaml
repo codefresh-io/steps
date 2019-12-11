@@ -25,12 +25,22 @@ metadata:
           title: Upload files to Backblaze B2
           type: backblaze-b2
           arguments:
+            FILES:
+              - /codefresh/volume/myfile-1.txt
+              - /codefresh/volume/myfile-2.txt
+    - description: example-2
+      workflow:
+        upload:
+          title: Upload files to Backblaze B2
+          type: backblaze-b2
+          arguments:
             APPLICATION_KEY_ID: ${{APPLICATION_KEY_ID}}
             APPLICATION_KEY: ${{APPLICATION_KEY}}
             BUCKET_ID: ${{BUCKET_ID}}
             FILES:
               - /codefresh/volume/myfile-1.txt
               - /codefresh/volume/myfile-2.txt
+
 spec:
   arguments: |-
     {
@@ -40,9 +50,6 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "APPLICATION_KEY_ID",
-            "APPLICATION_KEY",
-            "BUCKET_ID",
             "FILES"
         ],
         "properties": {

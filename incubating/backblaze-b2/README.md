@@ -2,16 +2,11 @@ Backblaze B2 upload step
 
 This plugin helps to upload files to Backblaze B2 in any stage of pipeline.
 
-You can upload several files at once. Use UPLOAD_FILE_ prefix for file variables.
-Each file variable is an array of:
-- file path (required)
-- file name in bucket (required)
-- file MIME type (optional, if omitted type will be detected from file extension)
+The **APPLICATION_KEY**, **APPLICATION_KEY_ID** and **BUCKET_ID** must be set as the pipeline variables or as the step arguments.
 
+To upload - add list of file paths to the **FILES** arguments: 
 ```
-List of env variables:
-APPLICATION_KEY_ID - required
-APPLICATION_KEY    - required
-BUCKET_ID          - required
-UPLOAD_FILE_N      - required, one or several file descriptions
+FILES:
+ - /path/to/file-1
+ - /path/to/file-2
 ```

@@ -8,15 +8,13 @@ COPY package.json ./
 
 COPY yarn.lock ./
 
-# install cf-api required binaries
-RUN apk add --no-cache --virtual deps python make g++ krb5-dev && \
-    yarn install --frozen-lockfile --production && \
+RUN yarn install --frozen-lockfile --production && \
     yarn cache clean && \
-    apk del deps && \
     rm -rf /tmp/*
 
 # copy app files
-COPY . ./
+COPY index.js ./
+COPY src/ src/
 
 # run application
 CMD ["node", "/root/backblaze-b2/index.js"]

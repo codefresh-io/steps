@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-deploy
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
-  description: Release a Helm chart (update or install)
+  description: Deploy an image to ECS service
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-deploy'
   stage: incubating
@@ -29,19 +29,21 @@ metadata:
           arguments:
             AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
             AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            aws-region: us-east-2
+            cluster_name: MY_ECS_CLUSTER
+            service_name: MY_ECS_SERVICE
 spec:
   arguments: |-
     {
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "patterns": [],
         "required": [
             "AWS_ACCESS_KEY_ID",
             "AWS_SECRET_ACCESS_KEY",
             "aws-region",
-            "region",
             "cluster_name",
             "service_name"
         ],
@@ -55,10 +57,6 @@ spec:
                 "description": "amazon secret key (make sure it's encrypted)"
             },
             "aws-region": {
-                "type": "string",
-                "description": "Helm release name"
-            },
-            "region": {
                 "type": "string",
                 "description": "aws region"
             },
@@ -76,10 +74,11 @@ spec:
     main:
       name: ecs-deploy
       image: codefreshplugins/cf-deploy-ecs
+      commands:
+        - cfecs-update ${{aws-region}} ${{cluster_name}} ${{service_name}}
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
         - 'aws-region=${{aws-region}}'
-        - 'region=${{region}}'
         - 'cluster_name=${{cluster_name}}'
         - 'service_name=${{service_name}}'

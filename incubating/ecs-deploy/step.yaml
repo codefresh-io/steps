@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-deploy
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Release a Helm chart (update or install)
   sources:
@@ -29,6 +29,7 @@ metadata:
           arguments:
             AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
             AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            COMMAND: cfecs-update  <AWS REGION>  <ECS CLUSTER NAME>  <ECS SERVICE NAME>
 spec:
   arguments: |-
     {
@@ -40,10 +41,7 @@ spec:
         "required": [
             "AWS_ACCESS_KEY_ID",
             "AWS_SECRET_ACCESS_KEY",
-            "aws-region",
-            "region",
-            "cluster_name",
-            "service_name"
+            "COMMAND"
         ],
         "properties": {
             "AWS_ACCESS_KEY_ID": {
@@ -54,21 +52,9 @@ spec:
                 "type": "string",
                 "description": "amazon secret key (make sure it's encrypted)"
             },
-            "aws-region": {
+            "COMMAND": {
                 "type": "string",
-                "description": "Helm release name"
-            },
-            "region": {
-                "type": "string",
-                "description": "aws region"
-            },
-            "cluster_name": {
-                "type": "string",
-                "description": "ecs cluster name"
-            },
-            "service_name": {
-                "type": "string",
-                "description": "ecs service name"
+                "description": "Command to execute"
             }
         }
     }
@@ -76,10 +62,8 @@ spec:
     main:
       name: ecs-deploy
       image: codefreshplugins/cf-deploy-ecs
+      commands:
+        - '${{COMMAND}}'
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
-        - 'aws-region=${{aws-region}}'
-        - 'region=${{region}}'
-        - 'cluster_name=${{cluster_name}}'
-        - 'service_name=${{service_name}}'

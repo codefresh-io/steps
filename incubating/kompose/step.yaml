@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: kompose
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Release a Docker Compose to Kubernetes
   sources:
@@ -76,7 +76,7 @@ spec:
   steps:
     main:
       name: kompose
-      image: codefreshplugins/plugin-kompose
+      image: codefreshplugins/plugin-kompose:0.0.3
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
         - 'FILE=${{FILE}}'

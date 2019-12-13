@@ -1,21 +1,31 @@
----
 version: '1.0'
-
 steps:
-  build:
+  Clone_repo:
+    type: git-clone
+    arguments:
+      repo: codefresh-io/steps
+      git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/kompose
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
+  BuildImage:
+    title: Building Docker Image
     type: build
-    image_name: codefreshplugins/plugin-kompose
-    build_arguments:
-      - KOMPOSE_VERSION=v1.5.0
-  push_latest:
+    working_directory: steps/incubating/kompose
+    image_name: codefresh/plugin-kompose
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+  PushingToRegistry:
     type: push
-    title: "Pushing plugin-kompose:latest ..."
-    description: Push Codefresh Plugin-Kompose image to the DockerHub
-    candidate: ${{build}}
-    tags:
-      - "0.1"
-      - "latest"
-    image_name: codefreshplugins/plugin-kompose
+    registry: dockerhub
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
     when:
       branch:
         only:

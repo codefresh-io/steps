@@ -4,7 +4,7 @@ metadata:
   name: ecs-deploy
   version: 0.0.3
   isPublic: true
-  description: Release a Helm chart (update or install)
+  description: Deploy an image to ECS service
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-deploy'
   stage: incubating
@@ -29,19 +29,23 @@ metadata:
           arguments:
             AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
             AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
-            COMMAND: cfecs-update  <AWS REGION>  <ECS CLUSTER NAME>  <ECS SERVICE NAME>
+            aws-region: us-east-2
+            cluster_name: MY_ECS_CLUSTER
+            service_name: MY_ECS_SERVICE
 spec:
   arguments: |-
     {
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "patterns": [],
         "required": [
             "AWS_ACCESS_KEY_ID",
             "AWS_SECRET_ACCESS_KEY",
-            "COMMAND"
+            "aws-region",
+            "cluster_name",
+            "service_name"
         ],
         "properties": {
             "AWS_ACCESS_KEY_ID": {
@@ -52,9 +56,17 @@ spec:
                 "type": "string",
                 "description": "amazon secret key (make sure it's encrypted)"
             },
-            "COMMAND": {
+            "aws-region": {
                 "type": "string",
-                "description": "Command to execute"
+                "description": "aws region"
+            },
+            "cluster_name": {
+                "type": "string",
+                "description": "ecs cluster name"
+            },
+            "service_name": {
+                "type": "string",
+                "description": "ecs service name"
             }
         }
     }
@@ -63,7 +75,10 @@ spec:
       name: ecs-deploy
       image: codefreshplugins/cf-deploy-ecs
       commands:
-        - '${{COMMAND}}'
+        - cfecs-update ${{aws-region}} ${{cluster_name}} ${{service_name}}
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
+        - 'aws-region=${{aws-region}}'
+        - 'cluster_name=${{cluster_name}}'
+        - 'service_name=${{service_name}}'

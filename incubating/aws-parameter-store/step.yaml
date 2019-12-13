@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aws-parameter-store
-  version: 0.0.2
+  version: 0.0.3
   isPublic: false
   description: Gathers parameters from AWS Parameter Store
   sources:
@@ -102,7 +102,7 @@ spec:
   stepsTemplate: |-
     main:
       name: aws-parameter-store
-      image: codefresh/aws-parameter-store:0.0.2
+      image: codefresh/aws-parameter-store:0.0.3
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

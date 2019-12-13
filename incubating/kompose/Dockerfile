@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 go build -o /kompose main.go
 FROM dtzar/helm-kubectl:${HELM_VERSION} as helm
 
 # main image
-FROM alpine:3.6
+FROM alpine:3.10
 
 # copy kompose
 COPY --from=go /kompose /usr/local/bin/

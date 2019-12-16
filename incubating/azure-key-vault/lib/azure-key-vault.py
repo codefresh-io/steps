@@ -16,20 +16,19 @@ def main():
 
   vault_name = os.getenv('AZURE_VAULT_NAME')
 
-  cf_volume_path = os.getenv('CF_VOLUME_PATH')
-
   vault_url = "https://{}.vault.azure.net/".format(vault_name)
 
   secret_client = SecretClient(vault_url=vault_url, credential=credential)
 
   secrets = os.getenv('SECRETS').split(",")
 
+  file_env_to_export_path = '/meta/env_vars_to_export'
+
   for secret_name in secrets:
     secret = secret_client.get_secret(secret_name)
 
-    print("Export '{}' secret".format(secret_name))
-    file_path = '{}/env_vars_to_export'.format(cf_volume_path)
-    with open(file_path, 'a') as file:
+    print("Exporting '{}' secret".format(secret_name))
+    with open(file_env_to_export_path, 'a') as file:
         file.write("{}={}\n".format(secret_name, secret.value))
 
 

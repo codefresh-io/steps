@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Fetch Secrets from Azure Key Vault
   sources:
@@ -28,12 +28,26 @@ metadata:
           title: Fetching Azure Secret from Key Vault
           type: azure-key-vault
           arguments:
+            AZURE_VAULT_NAME: 'MY_AZURE_VAULT_NAME'
+            SECRETS:
+              - secret_1
+              - secret_2
+              - secret_3
+    - description: example-2
+      workflow:
+        GetAzureSecret:
+          title: Fetching Azure Secret from Key Vault
+          type: azure-key-vault
+          arguments:
+            AZURE_VAULT_NAME: 'MY_AZURE_VAULT_NAME'
+            SECRETS:
+              - secret_1
+              - secret_2
+              - secret_3
             AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
-            AZURE_SECRET: ${{AZURE_SECRET}}
-            AZURE_TENANT: ${{AZURE_TENANT}}
-            AZURE_SECRET_ID: ${{AZURE_SECRET_ID}}
-            AZURE_SECRET_VERSION: ${{AZURE_SECRET_VERSION}}
-            AZURE_VAULT_URL: ${{AZURE_VAULT_URL}}
+            AZURE_CLIENT_SECRET: ${{AZURE_CLIENT_SECRET}}
+            AZURE_TENANT_ID: ${{AZURE_TENANT_ID}}
+
 spec:
   arguments: |-
     {
@@ -42,31 +56,30 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [],
+        "required": ["AZURE_VAULT_NAME", "SECRETS"],
         "properties": {
             "AZURE_CLIENT_ID": {
                 "type": "string",
                 "description": "Application (client) ID for Service Principal"
             },
-            "AZURE_SECRET": {
+            "AZURE_CLIENT_SECRET": {
                 "type": "string",
                 "description": "Secret for Service Principal"
             },
-            "AZURE_TENANT": {
+            "AZURE_TENANT_ID": {
                 "type": "string",
                 "description": "Directory (tenant) ID for Service Principal"
             },
-            "AZURE_SECRET_ID": {
+            "AZURE_VAULT_NAME": {
                 "type": "string",
-                "description": "Secret ID from Azure Key Vault"
+                "description": "Name of the Azure vault"
             },
-            "AZURE_SECRET_VERSION": {
-                "type": "string",
-                "description": "Secret Version from Azure Key Vault"
-            },
-            "AZURE_VAULT_URL": {
-                "type": "string",
-                "description": "URL for Azure Key Vault"
+            "SECRETS": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of the secrets to get"
             }
         }
     }
@@ -75,9 +88,8 @@ spec:
       name: azure-key-vault
       image: codefreshplugins/cfstep-azure-key-vault
       environment:
-        - 'AZURE_CLIENT_ID=${{AZURE_CLIENT_ID}}'
-        - 'AZURE_SECRET=${{AZURE_SECRET}}'
-        - 'AZURE_TENANT=${{AZURE_TENANT}}'
-        - 'AZURE_SECRET_ID=${{AZURE_SECRET_ID}}'
-        - 'AZURE_SECRET_VERSION=${{AZURE_SECRET_VERSION}}'
-        - 'AZURE_VAULT_URL=${{AZURE_VAULT_URL}}'
+        - "AZURE_CLIENT_ID=${{AZURE_CLIENT_ID}}"
+        - "AZURE_CLIENT_SECRET=${{AZURE_CLIENT_SECRET}}"
+        - "AZURE_TENANT_ID=${{AZURE_TENANT_ID}}"
+        - "AZURE_VAULT_NAME=${{AZURE_VAULT_NAME}}"
+        - "SECRETS=${{SECRETS}}"

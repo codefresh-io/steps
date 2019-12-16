@@ -1,39 +1,36 @@
-import json
 import os
 import sys
-import subprocess
-from azure.keyvault import KeyVaultClient
-from azure.common.credentials import ServicePrincipalCredentials
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
 
 def main():
-    client_id = os.getenv('AZURE_CLIENT_ID')
-    service_principal_secret = os.getenv('AZURE_SECRET')
-    tenant = os.getenv('AZURE_TENANT')
-    secret_id = os.getenv('AZURE_SECRET_ID')
-    secret_version = os.getenv('AZURE_SECRET_VERSION')
-    vault_url = os.getenv('AZURE_VAULT_URL')
+# To make default credentials work, ensure that environment variables 'AZURE_CLIENT_ID',
+# 'AZURE_CLIENT_SECRET' and 'AZURE_TENANT_ID' are set with the service principal credentials
+  for azure_var in ['AZURE_CLIENT_ID','AZURE_CLIENT_SECRET','AZURE_TENANT_ID']:
+    if os.getenv(azure_var) is None:
+      print("The '{}' variable is not set".format(azure_var))
+      sys.exit(1)
 
-    # Get Service Principal Credentials
+  credential = DefaultAzureCredential()
 
-    credentials = ServicePrincipalCredentials(
-        client_id = client_id,
-        secret = service_principal_secret,
-        tenant = tenant
-    )
-    
-    # Auth with Service Principal
-    client = KeyVaultClient(credentials)
+  vault_name = os.getenv('AZURE_VAULT_NAME')
 
-    # Get Azure Secret from Azure Vault
-    # VAULT_URL must be in the format 'https://<vaultname>.vault.azure.net'
-    # SECRET_VERSION is required, and can be obtained with the KeyVaultClient.get_secret_versions(self, vault_url, secret_id) API
-    secret_bundle = client.get_secret(vault_url, secret_id, secret_version)
-    secret = secret_bundle.value
+  vault_url = "https://{}.vault.azure.net/".format(vault_name)
 
-    file_path = '/codefresh/volume/env_vars_to_export'
-    with open(file_path, 'a') as file:
-        file.write("{}={}\n".format(secret_id, secret))
+  secret_client = SecretClient(vault_url=vault_url, credential=credential)
+
+  secrets = os.getenv('SECRETS').split(",")
+
+  file_env_to_export_path = '/meta/env_vars_to_export'
+
+  for secret_name in secrets:
+    secret = secret_client.get_secret(secret_name)
+
+    print("Exporting '{}' secret".format(secret_name))
+    with open(file_env_to_export_path, 'a') as file:
+        file.write("{}={}\n".format(secret_name, secret.value))
+
 
 if __name__ == "__main__":
     main()

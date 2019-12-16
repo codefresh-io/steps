@@ -10,8 +10,8 @@ RUN apk update && \
         libffi-dev \openssl-dev \
         python3-dev && \
     pip install \
-        azure-common \
-        azure-keyvault
+        azure-identity \
+        'azure-keyvault-secrets==4.0.0'
 
 COPY lib/azure-key-vault.py /azure-key-vault.py
 

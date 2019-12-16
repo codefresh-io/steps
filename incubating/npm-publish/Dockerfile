@@ -1,11 +1,13 @@
 FROM node:8.8.0-alpine
 
-WORKDIR .
+WORKDIR /publish
 
-COPY . .
+COPY package.json /publish
+
+COPY npm-publish.js /publish
 
 RUN ["npm", "install"]
 
-ENTRYPOINT ["node","npm-publish.js"]
+ENTRYPOINT ["node","/publish/npm-publish.js"]
 
 

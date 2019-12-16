@@ -23,12 +23,8 @@ const argv = yargs
                 publishOptions.tag = argv.tag
 
             npm.setAuthToken()
-                .then(npm.publish(publishOptions))
+                .then(npm.publish)
                 .catch(onError);
-    })
-    .option('tag', {
-        alias: 't',
-        describe: 'optional tag to add to your npm package. npmjs.com default to \'latest\'',
     })
     .argv;
 

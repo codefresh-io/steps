@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: npm-publish
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Publishes a nodejs package to NPM registry
   sources:
@@ -25,6 +25,7 @@ metadata:
           type: npm-publish
           arguments:
             NPM_TOKEN: ${{NPM_TOKEN}}
+            DIR: ${{MY_GITHUB_REPO_NAME}}
 spec:
   arguments: |-
     {
@@ -38,6 +39,10 @@ spec:
             "NPM_TOKEN": {
                 "type": "string",
                 "description": "token of npm account (required)"
+            },
+            "DIR": {
+                "type": "string",
+                "description": "Directory to publish from"
             }
         }
     }
@@ -47,3 +52,4 @@ spec:
       image: 'codefreshplugins/npm-publish:latest'
       environment:
         - 'NPM_TOKEN=${{NPM_TOKEN}}'
+      cmd: '${{DIR}}'

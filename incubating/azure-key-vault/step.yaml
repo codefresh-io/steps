@@ -33,12 +33,6 @@ metadata:
               - secret_1
               - secret_2
               - secret_3
-        export_vars:
-          image: alpine:latest
-          description: >-
-            In order for secrets to be available as environment variables for the next steps, any freestyle step should be run to export new variables.
-          commands:
-          - echo "Export vars"
     - description: example-2
       workflow:
         GetAzureSecret:
@@ -53,12 +47,6 @@ metadata:
             AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
             AZURE_CLIENT_SECRET: ${{AZURE_CLIENT_SECRET}}
             AZURE_TENANT_ID: ${{AZURE_TENANT_ID}}
-        export_vars:
-          image: alpine:latest
-          description: >-
-            In order for secrets to be available as environment variables for the next steps, any freestyle step should be run to export new variables.
-          commands:
-          - echo "Export vars"
 
 spec:
   arguments: |-

@@ -16,21 +16,3 @@ You must grant the Service Principal `Get` permissions for `Keys` for the Key Va
 | AZURE_TENANT_ID | null | string | Yes | Directory (tenant) ID for Service Principal|
 | AZURE_VAUTL_NAME | null | string | Yes | Name of the Azure vault |
 | SECRETS | null | string | Yes | Comma separated list the secrets to get |
-
-## Limitations
-In order for secrets to be available as environment variables for the next steps, a freestyle step should be run to export new variables.
-```yaml
-version: '1.0'
-steps:
-  azure-key-vault:
-    type: azure-key-vault
-    arguments:
-      AZURE_VAULT_NAME: MY_VAULT_NAME
-      SECRETS:
-        - secret_1
-        - secret_2
-  export_vars:
-    image: 'alpine:latest'
-    commands:
-      - echo "Export vars"
-```

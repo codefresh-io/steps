@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twilio
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Send SMS notifications via Twillio
   sources:
@@ -22,12 +22,21 @@ metadata:
     - description: example-1
       workflow:
         twilio:
-          title: Test SMS
           type: twilio
           arguments:
             TWILIO_SID: ID
             TWILIO_TOKEN: ${{TWILIO_TOKEN}}
             TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
+            TWILIO_TYPE: build
+    - description: example-2
+      workflow:
+        twilio:
+          type: twilio
+          arguments:
+            TWILIO_SID: ID
+            TWILIO_TOKEN: ${{TWILIO_TOKEN}}
+            TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
+            TWILIO_MESSAGE: 'my message'
 spec:
   arguments: |-
     {
@@ -60,15 +69,22 @@ spec:
             },
             "TWILIO_TYPE": {
                 "type": "string",
+                "default": "default",
                 "description": "Type of your message [build - send info about your build via Codefresh, default - Send message with statc text]"
+            },
+            "TWILIO_MESSAGE": {
+                "type": "string",
+                "default": "",
+                "description": "Text of your message"
             }
         }
     }
   steps:
     main:
       name: twilio
-      image: codefreshplugins/twilioplugin
+      image: codefresh/twilio
       environment:
+        - 'TWILIO_MESSAGE=${{TWILIO_MESSAGE}}'
         - 'TWILIO_SID=${{TWILIO_SID}}'
         - 'TWILIO_TOKEN=${{TWILIO_TOKEN}}'
         - 'TWILIO_PHONE_FROM=${{TWILIO_PHONE_FROM}}'

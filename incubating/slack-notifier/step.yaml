@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-notifier
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Send message to slack
   sources:
@@ -39,9 +39,7 @@ spec:
         "patterns": [],
         "required": [
             "SLACK_HOOK_URL",
-            "SLACK_TEXT",
-            "SLACK_TEMPLATE_BODY",
-            "SLACK_TEMPLATE_FIELDS"
+            "SLACK_TEXT"
         ],
         "properties": {
             "SLACK_HOOK_URL": {
@@ -75,7 +73,7 @@ spec:
   steps:
     main:
       name: slack-notifier
-      image: codefresh/slacknotifier:0.0.3
+      image: codefresh/slacknotifier:0.0.4
       environment:
         - 'SLACK_HOOK_URL=${{SLACK_HOOK_URL}}'
         - 'SLACK_TEXT=${{SLACK_TEXT}}'

@@ -1,11 +1,32 @@
 version: '1.0'
 steps:
+  Clone_repo:
+    type: git-clone
+    arguments:
+      repo: codefresh-io/steps
+      git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/twilio
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
   BuildImage:
     title: Building Docker Image
     type: build
-    image_name: codefreshplugins/send-sms
+    working_directory: steps/incubating/twilio
+    image_name: codefresh/twilio
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
   PushingToRegistry:
     type: push
+    registry: dockerhub
     title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tag: "0.1"
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
+    when:
+      branch:
+        only:
+          - master

@@ -2,6 +2,8 @@ version: '1.0'
 kind: step-type
 metadata:
   name: webhook
+  latest: true
+  version: 0.0.5
   isPublic: true
   description: Plugin which simply send notification
   sources:
@@ -28,8 +30,6 @@ metadata:
             WEBHOOK_BODY: body
   created_at: '2019-07-03T15:27:04.093Z'
   updated_at: '2019-09-18T08:15:28.752Z'
-  latest: true
-  version: 0.0.4
   id: 5d1cc948a7e22ee62c7ea76e
 spec:
   arguments: |-
@@ -40,7 +40,8 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "WEBHOOK_BODY"
+            "WEBHOOK_BODY",
+            "WEBHOOK_URL"
         ],
         "properties": {
             "WEBHOOK_USERNAME": {
@@ -68,7 +69,7 @@ spec:
   steps:
     main:
       name: webhook
-      image: codefreshplugins/webhook-plugin
+      image: codefresh/webhook-plugin:0.0.5
       environment:
         - 'WEBHOOK_USERNAME=${{WEBHOOK_USERNAME}}'
         - 'WEBHOOK_PASSWORD=${{WEBHOOK_PASSWORD}}'

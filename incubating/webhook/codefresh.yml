@@ -1,23 +1,32 @@
-version: "1.0"
-stages:
-- build
-- push
+version: '1.0'
 steps:
-  build_step:
-    title: Building production image
-    stage: build
+  Clone_repo:
+    type: git-clone
+    arguments:
+      repo: codefresh-io/steps
+      git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/webhook
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
+  BuildImage:
+    title: Building Docker Image
     type: build
-    dockerfile: Dockerfile
-    image_name: codefreshplugins/webhook-plugin
-  PushingToDockerRegistry:
-    title: Pushing to Docker Registry
+    working_directory: steps/incubating/webhook
+    image_name: codefresh/webhook-plugin
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+  PushingToRegistry:
     type: push
-    candidate: ${{build_step}}
-    tags:
-    - latest
-    - master
     registry: dockerhub
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
     when:
       branch:
         only:
-        - master
+          - master

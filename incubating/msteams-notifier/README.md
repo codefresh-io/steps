@@ -2,7 +2,7 @@
 Codefresh Pipeline Step to Send Notification to Microsoft Teams
 
 EXAMPLE CARD
-![Microsoft Teams Example Card](/images/msteams_example_card.png)
+![Microsoft Teams Example Card](/incubating/msteams-notifier/images/msteams_example_card.png)
 
 YAML Step
 ``` yaml

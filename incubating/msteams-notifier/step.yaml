@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Send Message to Microsoft Teams
   sources:
@@ -103,7 +103,7 @@ spec:
   steps:
     main:
       name: msteams-notifier
-      image: icon.jpg
+      image: codefreshplugins/cfstep-msteams-notifier
       environment:
         - 'CF_STATUS_MESSAGE=${{CF_STATUS_MESSAGE}}'
         - 'MSTEAMS_ACTIVITY_IMAGE=${{MSTEAMS_ACTIVITY_IMAGE}}'

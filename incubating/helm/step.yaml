@@ -45,7 +45,7 @@ metadata:
           deploy:
             type: helm
             arguments:
-              ACTION: install
+              action: install
               chart_name: test_chart
               release_name: first
               kube_context: my-kubernetes-context

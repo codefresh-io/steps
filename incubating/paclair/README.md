@@ -33,13 +33,13 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 
 Registries with Basic auth and Token based auth should work.
 
-### Full List of Options
+### Full List of Arguments
 
-To use an ENVIRONMENT VARIABLE you need to add the variables to your Codefresh Pipeline and also to your codefresh.yml.
+To use an Arguments you need to add the variables to your Codefresh Pipeline and also to your codefresh.yml.
 
-Example `codefresh.yml` build is below with required ENVIRONMENT VARIABLES in place.
+Example `codefresh.yml` build is below with required Arguments in place.
 
-| ENVIRONMENT VARIABLE | DEFAULT | TYPE | REQUIRED | DESCRIPTION |
+| Arguments | DEFAULT | TYPE | REQUIRED | DESCRIPTION |
 |----------------------------|----------|---------|----------|---------------------------------------------------------------------------------------------------------------------------------|
 | API_PREFIX | null | string | No | Prefix for API to Docker Registry |
 | CF_ACCOUNT | Codefresh Account Name | string | No | Codefresh Account Name (Skipped for ECR) |
@@ -73,25 +73,18 @@ steps:
   BuildingDockerImage:
     title: Building Docker Image
     type: build
-    image_name: codefresh/demochat # Replace with your Docker image name
+    image_name: my_image # Replace with your Docker image name
     working_directory: ./
     dockerfile: Dockerfile
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
   CheckClair:
-    image: codefreshplugins/cfstep-paclair:3.1.0
-    environment:
-      - IMAGE=example-voting-app/worker # Replace with your Docker image name
-      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
-    on_success: # Execute only once the step succeeded
-      metadata: # Declare the metadata attribute
-        set: # Specify the set operation
-          - ${{BuildingDockerImage.imageId}}: # Select any number of target images
-            - SECURITY_SCAN: true
-    on_fail: # Execute only once the step failed
-      metadata: # Declare the metadata attribute
-        set: # Specify the set operation
-          - ${{BuildingDockerImage.imageId}}: # Select any number of target images
-            - SECURITY_SCAN: false
+    type: paclair
+    arguments:
+      REGISTRY_USERNAME: 'username'
+      REGISTRY_PASSWORD: 'password'
+      CLAIR_URL: 'http://my-clair.com:6060'
+      IMAGE: my_image
+      TAG: 'master'
   ArchiveReport:
     image: mesosphere/aws-cli
     commands:

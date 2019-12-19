@@ -1,17 +1,16 @@
-Slack notifications step
+Slack notifications plugin
 
 
 
 
 ```steps:
 
- SendToSlack:
-    title: Sending message to slack
-    image: codefreshplugins/slacknotifier
-    environment:
-    - SLACK_HOOK_URL=${{SLACK_WEBHOOK_URL}}
-    - SLACK_TEXT=${{SLACK_TEXT}}
-    - SLACK_ATTACHMENTS=${{SLACK_ATTACHMENTS}}
+SendToSlack:
+    type: slack-notifier
+    arguments:
+    SLACK_HOOK_URL: ${{SLACK_WEBHOOK_URL}}
+    SLACK_TEXT: ${{SLACK_TEXT}}
+    SLACK_ATTACHMENTS: ${{SLACK_ATTACHMENTS}}
 ```
 
 Abilities: 
@@ -38,13 +37,13 @@ Example
 }]
 ```
  
-List of env variables
+List of arguments
 
 ```
 
 SLACK_HOOK_URL - required
+SLACK_TEXT     - required
 SLACK_ATTACHMENTS    - optional
-SLACK_TEXT     - optional
 SLACK_USER_NAME - optional
 SLACK_ICON_EMOJI - optional
 

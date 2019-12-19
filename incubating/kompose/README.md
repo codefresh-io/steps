@@ -15,17 +15,20 @@ steps:
   ...
 
   release_to_env:
-    image: codefreshplugins/plugin-kompose
+    type: kompose
+    arguments:
+      KUBE_CONTEXT: "my_cluster"
+      NAMESPACE: "default"
 
   ...
 
 ```
 
-## Environment Variables
+## Arguments
 
 - **required** `KUBE_CONTEXT` - Kubernetes context to use
+- **required** `NAMESPACE` - target Kubernetes namespace (default `default` namespace)
 - `FILE` - Docker Compose file to deploy (default `docker-compose.yaml` file)
-- `NAMESPACE` - target Kubernetes namespace (default `default` namespace)
 - `REPLICAS` - specify the number of replicas generated (default `1`)
 - `VOLUMES` - volumes to be generated (`persistentVolumeClaim`|`emptyDir`) (default `persistentVolumeClaim`)
 - `DRY_RUN` - do a "dry run" (print out) deployment (do not install anything, useful for Debug)

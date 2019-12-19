@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sendgrid
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Send e-mail via Sendgrid
   sources:
@@ -41,7 +41,11 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "SENDGRID_MAIL"
+            "SENDGRID_MAIL",
+            "SENDGRID_APIKEY",
+            "SENDGRID_FROM",
+            "SENDGRID_SUBJECT",
+            "SENDGRID_TYPE"
         ],
         "properties": {
             "SENDGRID_APIKEY": {
@@ -77,7 +81,7 @@ spec:
   steps:
     main:
       name: sendgrid
-      image: codefresh/sendgrid
+      image: codefresh/sendgrid:0.0.3
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
         - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'

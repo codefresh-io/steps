@@ -1,11 +1,32 @@
 version: '1.0'
 steps:
+  Clone_repo:
+    type: git-clone
+    arguments:
+      repo: codefresh-io/steps
+      git: github
+      revision: '${{CF_REVISION}}'
+  GetImageVersion:
+    title: "Export package version"
+    image: codefresh/cli
+    working_directory: steps/incubating/sendgrid
+    commands:
+    - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
+    - "echo Current version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
   BuildImage:
     title: Building Docker Image
     type: build
+    working_directory: steps/incubating/sendgrid
     image_name: codefresh/sendgrid
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
   PushingToRegistry:
     type: push
+    registry: dockerhub
     title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tags: [ "latest", "0.1.0" ]
+    tags: [ "latest", "${{IMAGE_VERSION}}" ]
+    when:
+      branch:
+        only:
+          - master

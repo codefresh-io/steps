@@ -9,24 +9,7 @@ For more information view the github repo here: https://github.com/anchore/ancho
 - Codefresh subscription
 - Running Anchore Engine service
 
-### Reference
-
-- Example `codefresh.yml`: https://raw.githubusercontent.com/valancej/plugins/master/plugins/anchore/codefresh.yml
-- Github repo containing Dockerfile: https://github.com/valancej/node_critical_fail
-- Anchore Documentation: https://anchore.freshdesk.com/support/home
-- Anchore CLI Image: https://hub.docker.com/r/anchore/engine-cli/
-
-## Example
-
-In this example, we will scan an image built by Codefresh. Depending on the result of the Anchore policy evaluation, we will choose to push the image to Dockerhub or not. 
-
-### Setup
-
-The example setup is described below. 
-
-### Environment Variables
-
-These environment variables can be set within Codefresh pipeline configuration.
+### Steps arguments
 
 Name|Required|Description
 ---|---|---
@@ -34,44 +17,20 @@ ANCHORE_CLI_URL|Yes|The address of the Anchore server
 ANCHORE_CLI_USER|Yes|Anchore account name
 ANCHORE_CLI_PASS|Yes|Anchore account password
 ANCHORE_FAIL_ON_POLICY|No|Fail build if policy evaluation fails
-QA_IMAGE|No|Image built and scanned
-dockerhubUsername|No|Dockerhub account name
-dockerhubPassword|No|Dockerhub account password
+ANCHORE_CLI_IMAGE|No|Image to scan
 
 ### Codefresh.yml
 
 ```yaml
 version: '1.0'
 steps:
-  MyDockerImage:
-    title: Building Docker Image
-    type: build
-    image_name: ${{QA_IMAGE}}
-    working_directory: ./
-    tag: latest
-    dockerfile: Dockerfile
-    metadata:
-      set:
-      	- QA: Pending Anchore scan before push to Dockerhub..
   ScanMyImage:
     title: Scanning Docker Image
-    image: anchore/engine-cli:latest
-    commands:
-      - echo "Scanning image with Anchore"
-      - anchore-cli image add ${{QA_IMAGE}}
-      - echo "Waiting for analysis to complete"
-      - anchore-cli image wait ${{QA_IMAGE}}
-      - echo "Analysis complete"
-      - if [ "${{ANCHORE_FAIL_ON_POLICY}}" == "true" ] ; then anchore-cli evaluate check ${{QA_IMAGE}}; fi
-  PushImage:
-    title: Pushing Docker Image
-    description: Pushing Docker Image to Dockerhub...
-    type: push
-    candidate: '${{MyDockerImage}}'
-    image_name: jvalance/node_critical_fail
-    tag: latest
-    registry: docker.io
-    credentials:
-      username: '${{dockerhubUsername}}'
-      password: '${{dockerhubPassword}}'
+    type: anchore
+    arguments:
+      ANCHORE_CLI_URL: http://<URL_TO_ANCHORE_ENGINE>
+      ANCHORE_CLI_USER: admin
+      ANCHORE_CLI_PASS: foobar
+      ANCHORE_CLI_IMAGE: alpine:latest
+      ANCHORE_FAIL_ON_POLICY: "false"
 ```

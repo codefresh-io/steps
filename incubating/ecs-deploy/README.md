@@ -37,8 +37,7 @@ Deployment to Amazon ECS Service
 - Add encrypted environment variables for aws credentials.
      * AWS_ACCESS_KEY_ID
      * AWS_SECRET_ACCESS_KEY
-- Add "deploy to ecs" step to codefresh.yml which runs codefresh/cf-deploy-ecs image with command cfecs-update
-  Specify the aws region, ecs cluster and service names. See `cfecs-update -h` for parameter references
+- Add "deploy to ecs" step to codefresh.yml which runs codefresh/cf-deploy-ecs image.
 
 ```yaml
 # codefresh.yml example with deploy to ecs step
@@ -55,13 +54,13 @@ steps:
     tag: ${{CF_BRANCH}}
 
   deploy to ecs:
-    image: codefreshplugins/cf-deploy-ecs
-    commands:
-      - cfecs-update <aws-region> <ecs-cluster-name> <ecs-service-name>
-    environment:
-      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}
-      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}
-
+    type: ecs-deploy
+    arguments:
+      AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+      aws-region: us-east-2
+      cluster_name: MY_ECS_CLUSTER
+      service_name: MY_ECS_SERVICE
     when:
       - name: "Execute for 'master' branch"
         condition: "'${{CF_BRANCH}}' == 'master'"
@@ -72,17 +71,18 @@ steps:
 - get ECS service by specified aws region, ecs cluster and service names
 - create new revision from current task definition of the service. If --image-name and --image-tag are provided, replace the tag of the image
 - launch update-service with new task definition revision
-- wait for deployment to complete (by default, if running withou --no-wait)
-    * deployment is considered as completed successfully if runningCount == desiredCount for PRIMARY deployment - see `aws ecs describe-service`
-    * cfecs-update exits with timeout if after --timeout (default = 900s) runningCount != desiredCount script exits with timeout
-    * cfecs-update exits with error if --max-failed (default = 2) or more ecs tasks were stopped with error for the task definition being deployed.
-      ECS retries failed tasks continuously
 
 ### Usage with docker
 
 ```bash
 docker run --rm -it -e AWS_ACCESS_KEY_ID=**** -e AWS_SECRET_ACCESS_KEY=**** codefresh/cf-ecs-deploy cfecs-update [options] <aws-region> <ecs-cluster-name> <ecs-service-name>
 ```
+- wait for deployment to complete
+    * deployment is considered as completed successfully if runningCount == desiredCount for PRIMARY deployment - see `aws ecs describe-service`
+    * cfecs-update exits with timeout if after --timeout (default = 900s) runningCount != desiredCount script exits with timeout
+    * cfecs-update exits with error if --max-failed (default = 2) or more ecs tasks were stopped with error for the task definition being deployed.
+      ECS retries failed tasks continuously
+
 
 ### cfecs-update -h
 ```

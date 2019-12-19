@@ -55,13 +55,13 @@ steps:
     tag: ${{CF_BRANCH}}
 
   deploy to ecs:
-    image: codefreshplugins/cf-deploy-ecs
-    commands:
-      - cfecs-update <aws-region> <ecs-cluster-name> <ecs-service-name>
-    environment:
-      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}
-      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}
-
+    type: ecs-deploy
+    arguments:
+      AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+      aws-region: us-east-2
+      cluster_name: MY_ECS_CLUSTER
+      service_name: MY_ECS_SERVICE
     when:
       - name: "Execute for 'master' branch"
         condition: "'${{CF_BRANCH}}' == 'master'"

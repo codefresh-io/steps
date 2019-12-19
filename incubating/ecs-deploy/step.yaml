@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-deploy
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Deploy an image to ECS service
   sources:
@@ -73,7 +73,7 @@ spec:
   steps:
     main:
       name: ecs-deploy
-      image: codefreshplugins/cf-deploy-ecs
+      image: codefresh/cf-deploy-ecs
       commands:
         - cfecs-update ${{aws-region}} ${{cluster_name}} ${{service_name}}
       environment:

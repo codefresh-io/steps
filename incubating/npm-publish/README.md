@@ -13,11 +13,11 @@ version: '1.0'
 steps:
 
   ...
-
-     deploy_to_npm:  
-      title: Publishing To Npm 
-      image: codefresh/npm-publish
-      commands:
+  deploy_to_npm:
+    type: npm-publish
+    arguments:
+      NPM_TOKEN: '${{NPM_TOKEN}}'
+      DIR: <MY_REPO_DIR>
   ...
 
 ```
@@ -42,19 +42,6 @@ npm login --registry http://registry.npmjs.org
 see how to extracting the NPM_TOKEN https://docs.npmjs.com/private-modules/ci-server-config#getting-an-authentication-token
 
 - Set the token as environment variable
-
-- Add script command
-
-Create a script command to run the npm-publish, in your `package.json`
-
-```json
-{
-    "scripts": {
-        "npm-publish": "npm-publish"
-    }
-}
-```
-
 
 
 

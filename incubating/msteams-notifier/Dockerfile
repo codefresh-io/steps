@@ -2,7 +2,7 @@ FROM python:3.6.4-alpine3.7
 
 ENV LANG C.UTF-8
 
-ARG PYMSTEAMS_VERSION
+ARG PYMSTEAMS_VERSION=0.1.9
 
 RUN apk update && \
     apk upgrade && \
@@ -14,4 +14,3 @@ RUN apk update && \
 COPY script/pymsteams-notifier.py /pymsteams-notifier.py
 
 ENTRYPOINT ["python", "/pymsteams-notifier.py"]
-CMD ["scan"]

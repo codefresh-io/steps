@@ -72,7 +72,7 @@ def main():
     myTeamsMessage.addSection(myMessageSection)
 
     # Send to additional room
-    myTeamsMessage.newhookurl(msteams_webhook_url)
+    myTeamsMessage.newhookurl(msteams_new_webhook_url)
 
     myTeamsMessage.printme()
 

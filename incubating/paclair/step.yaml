@@ -42,6 +42,16 @@ metadata:
             TOKEN_TYPE: ${{TOKEN_TYPE}}
             TOKEN_URL: ${{TOKEN_URL}}
             TAG: ${{TAG}}
+    - description: example-2
+      workflow:
+        run:
+          type: paclair
+          arguments:
+            REGISTRY_USERNAME: 'username'
+            REGISTRY_PASSWORD: 'password'
+            CLAIR_URL: 'http://my-clair.com:6060'
+            IMAGE: 'paclair-test'
+            TAG: 'master'
 spec:
   arguments: |-
     {

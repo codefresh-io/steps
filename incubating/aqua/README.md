@@ -1,6 +1,6 @@
 ## Overview
-Codefresh Step for Aqua Docker Image Scans.
-The step adds an image from Codefresh the interanl Docker [registry](https://codefresh.io/docs/docs/docker-registries/codefresh-registry/) to Aqua CSP. 
+Codefresh Step for Aqua Docker Image Scans.  
+The step adds an image from Codefresh internal Docker [registry](https://codefresh.io/docs/docs/docker-registries/codefresh-registry/) to Aqua CSP. 
 
 ## Requirements
 

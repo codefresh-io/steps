@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: gke
   version: 0.0.2
-  isPublic: true
+  isPublic: false
   description: Codefresh gke plugin
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/gke'

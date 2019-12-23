@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: git-clone-ssh
   version: 0.0.2
-  isPublic: true
+  isPublic: false
   description: clone git repositories via SSH.
   sources:
     - >-

@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: docker-service
   version: 0.0.2
-  isPublic: true
+  isPublic: false
   description: Codefresh docker-service plugin
   sources:
     - >-

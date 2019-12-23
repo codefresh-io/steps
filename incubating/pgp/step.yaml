@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: pgp
-  isPublic: true
+  isPublic: false
   description: Ability to sign file with pgp
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run'

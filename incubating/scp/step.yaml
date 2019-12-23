@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: scp
   version: 0.0.3
-  isPublic: true
+  isPublic: false
   description: Plugin to upload file or directory to remote machine using scp protocol.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/scp'

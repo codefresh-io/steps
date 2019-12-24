@@ -3,7 +3,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-run
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Run a pipeline by id or name and attach the created build logs
   sources:
@@ -156,10 +156,15 @@ spec:
       name: step1
       image: codefresh/cli
       commands:
-        - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} $([ "${{CONTEXT}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter c "${{CONTEXT}}") $([ "${{VARIABLE}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter v "${{VARIABLE}}") $([ "${{ONLY}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter only "${{ONLY}}") $([ "${{SKIP}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter skip "${{SKIP}}") -d $([ "${{TRIGGER_ID}}" ] && echo "-t ${{TRIGGER_ID}}") $([ "${{BRANCH}}" ] && echo "-b ${{BRANCH}}") $([ "${{SHA}}" ] && echo "-s ${{SHA}}") $([ "${{NO_CACHE}}" == "true" ] && echo "--no-cache") $([ "${{NO_CF_CACHE}}" == "true" ] && echo "--no-cf-cache") $([ "${{ENABLE_NOTIFICATIONS}}" == "true" ] && echo "--enable-notifications") $([ "${{RESET_VOLUME}}" == "true" ] && echo "--reset-volume") )
+        # Pass CF_ROOT_BUILD_ID in `codefresh run` command
+        - if [[ -z "$CF_ROOT_BUILD_ID" ]]; then export CF_ROOT_BUILD_ID=$CF_BUILD_ID; fi
+        - export BUILD_ID=$(codefresh run ${{PIPELINE_ID}} $([ "${{CONTEXT}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter c "${{CONTEXT}}") $([ "${{VARIABLE}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter v "${{VARIABLE}}") $([ "${{ONLY}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter only "${{ONLY}}") $([ "${{SKIP}}" ] && bash /codefresh/volume/${CF_BLOCK_NAME}/exporter skip "${{SKIP}}") -d $([ "${{TRIGGER_ID}}" ] && echo "-t ${{TRIGGER_ID}}") $([ "${{BRANCH}}" ] && echo "-b ${{BRANCH}}") $([ "${{SHA}}" ] && echo "-s ${{SHA}}") $([ "${{NO_CACHE}}" == "true" ] && echo "--no-cache") $([ "${{NO_CF_CACHE}}" == "true" ] && echo "--no-cf-cache") $([ "${{ENABLE_NOTIFICATIONS}}" == "true" ] && echo "--enable-notifications") $([ "${{RESET_VOLUME}}" == "true" ] && echo "--reset-volume") -v CF_ROOT_BUILD_ID=${CF_ROOT_BUILD_ID} )
         - echo ${CF_STEP_NAME}_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
         - rm -rf ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
         - echo $BUILD_ID >> ${{CF_VOLUME_PATH}}/${CF_BLOCK_NAME}-step1-output
+        # Create CF_ROOT_BUILD_ID and PARENT_BUILD_ID annotations for child workflow
+        - codefresh create annotation build $BUILD_ID PARENT_BUILD_ID=$CF_BUILD_ID
+        - codefresh create annotation build $BUILD_ID ROOT_BUILD_ID=$CF_ROOT_BUILD_ID
     second:
       name: step1
       image: codefresh/cli

@@ -2,8 +2,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: andriicodefresh/codefresh-run
-  version: 0.0.2
+  name: codefresh-run
+  version: 0.0.3
   isPublic: true
   description: Run a pipeline by id or name and attach the created build logs
   sources:

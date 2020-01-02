@@ -33,6 +33,8 @@ metadata:
             CLUSTER_NAME: MY_ECS_CLUSTER
             SERVICE_NAME: MY_ECS_SERVICE
             IMAGE: IMAGE:TAG
+            CODEDEPLOY_APPLICATION: AppECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            CODEDEPLOY_DEPLOYMENT_GROUP: DgpECS-${CLUSTER_NAME}-${SERVICE_NAME}
 spec:
   arguments: |-
     {
@@ -43,7 +45,9 @@ spec:
         "patterns": [],
         "required": [
             "CLUSTER_NAME",
-            "SERVICE_NAME"
+            "SERVICE_NAME",
+            "CODEDEPLOY_APPLICATION",
+            "CODEDEPLOY_DEPLOYMENT_GROUP"
         ],
         "properties": {
             "AWS_ACCESS_KEY_ID": {
@@ -84,14 +88,15 @@ spec:
     main:
       name: ecs-deploy
       image: codefresh/ecs-bluegreen-deploy:0.0.1
+      shell: bash
       commands:
         - |-
           entrypoint.sh \
             --cluster ${{CLUSTER_NAME}} \
             --service ${{SERVICE_NAME}} \
-            --image ${{IMAGE}}
-            --codedeploy-application "${CODEDEPLOY_APPLICATION:-AppECS-$CLUSTER_NAME-$SERVICE_NAME}" \
-            --codedeploy-deployment-group "${CODEDEPLOY_DEPLOYMENT_GROUP:-DgpECS-$CLUSTER_NAME-$SERVICE_NAME}"
+            --image ${{IMAGE}} \
+            --codedeploy-application ${{CODEDEPLOY_APPLICATION}} \
+            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}}
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'

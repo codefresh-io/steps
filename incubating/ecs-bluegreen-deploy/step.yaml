@@ -92,9 +92,9 @@ spec:
           entrypoint.sh \
             --cluster ${{CLUSTER_NAME}} \
             --service ${{SERVICE_NAME}} \
-            --image ${{IMAGE}} \
-            $(if [ ! -z $CODEDEPLOY_APPLICATION ];then echo --codedeploy-application "${CODEDEPLOY_APPLICATION}";fi) \
-            $(if [ ! -z $CODEDEPLOY_DEPLOYMENT_GROUP];then echo --codedeploy-deployment-group "${CODEDEPLOY_DEPLOYMENT_GROUP}";fi
+            --image ${{IMAGE}}
+            --codedeploy-application "${CODEDEPLOY_APPLICATION:-AppECS-$CLUSTER_NAME-$SERVICE_NAME}" \
+            --codedeploy-deployment-group "${CODEDEPLOY_DEPLOYMENT_GROUP:-DgpECS-$CLUSTER_NAME-$SERVICE_NAME}"
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'

@@ -157,8 +157,8 @@ function ecs_deploy_service() {
           --service "$service" \
           --task-definition "$TASK_DEF_FILENAME" \
           --codedeploy-appspec "$APPSPEC_FILENAME" \
-          $(if [ ! -z $codedeploy_application ];then echo --codedeploy-application "${codedeploy_application}";fi) \
-          $(if [ ! -z $codedeploy_deployment_group];then echo --codedeploy-deployment-group "${codedeploy_deployment_group}";fi) 
+          --codedeploy-application "${codedeploy_application}" \
+          --codedeploy-deployment-group "${codedeploy_deployment_group}"
 }
 
 #function waitDeployment() {
@@ -223,6 +223,8 @@ function ecs_deploy {
   assert_not_empty "--cluster" "$cluster"
   assert_not_empty "--service" "$service"
   assert_not_empty "--image" "$image"
+  assert_not_empty "--codedeploy-application" "$codedeploy_application"
+  assert_not_empty "--codedeploy-deployment-group" "$codedeploy_deployment_group"
 
   # Use specified IAM role or the one which comes from global env variables
   local AWS_ASSUME_ROLE=${iam_role:-${AWS_ROLE_TO_ASSUME_DURING_DEPLOY:-false}}
@@ -233,6 +235,8 @@ function ecs_deploy {
   echo "Cluster: $cluster"
   echo "Service: $service"
   echo "Image: $image"
+  echo "Code Deploy Application: $codedeploy_application"
+  echo "Code Deploy Deployment Group: $codedeploy_deployment_group"
   echo
 
 

@@ -42,11 +42,8 @@ spec:
         "additionalProperties": true,
         "patterns": [],
         "required": [
-            "AWS_ACCESS_KEY_ID",
-            "AWS_SECRET_ACCESS_KEY",
-            "aws-region",
-            "cluster_name",
-            "service_name"
+            "CLUSTER_NAME",
+            "SERVICE_NAME"
         ],
         "properties": {
             "AWS_ACCESS_KEY_ID": {

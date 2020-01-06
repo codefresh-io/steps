@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   version: 1.0.0
   name: codefresh-run
-  isPublic: true
+  isPublic: false
   description: Run a pipeline by id or name and attach the created build logs
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run'

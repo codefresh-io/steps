@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 #######################################################################
+# This script is fixed version of the original
+# https://gist.github.com/antonbabenko/632b54e8e488b9f48d016238792a9193 script
+#######################################################################
 # This script performs deployment of ECS Service using AWS CodeDeploy
 #
 # Heavily inspired by https://github.com/silinternational/ecs-deploy ,
@@ -12,8 +15,6 @@
 #######################################################################
 
 set -e
-
-#set -x
 
 ####################################################################
 # DO NOT TOUCH BELOW THIS LINE if you don't know what you are doing
@@ -160,10 +161,6 @@ function ecs_deploy_service() {
           --codedeploy-application "${codedeploy_application}" \
           --codedeploy-deployment-group "${codedeploy_deployment_group}"
 }
-
-#function waitDeployment() {
-#  aws deploy wait deployment-successful --deployment-id d-LKDSY5WVV
-#}
 
 function ecs_deploy {
   assert_is_installed "jq"

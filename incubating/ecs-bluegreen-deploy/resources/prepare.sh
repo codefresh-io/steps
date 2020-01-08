@@ -22,11 +22,12 @@ defaults() {
   PREFIX="ecs-bg-update"
   APPLICATION_PORT="8081"
   APPLICATION_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com/simple-server:latest"
-
-# Defaults related to Codefresh
   AWS_REGION="us-east-2"
-
+  VPC_ID="vpc-0a50cbcc947d3da2a"
+  AWS_SUBNET_A="subnet-0f487eefd0c4172e0"
+  AWS_SUBNET_B="subnet-03f1316aae259bd59"
   ECS_CLUSTER_NAME="fargatedemo"
+
   ECS_SERVICE_NAME="${PREFIX}-service"
   ECS_SERVICE_ARN=""
   TASK_DEFINITION_FAMILY="${PREFIX}-td"
@@ -34,9 +35,6 @@ defaults() {
   CONTAINER_NAME="${PREFIX}-app"
   EXECUTION_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole"
 
-  VPC_ID="vpc-0a50cbcc947d3da2a"
-  AWS_SUBNET_A="subnet-0f487eefd0c4172e0"
-  AWS_SUBNET_B="subnet-03f1316aae259bd59"
   AWS_SECURRITY_GROUP_NAME="${PREFIX}-sg"
   AWS_SECURRITY_GROUP_ID=""
 

@@ -11,7 +11,7 @@ The step allows to deploy to Amazon ECS Service that uses CodeDeploy to manage B
 - _AWS\_ACCESS\_KEY\_ID_ and _AWS\_SECRET\_ACCESS\_KEY_;
 
 ## Demo environment
-See the [prepare.sh](ecs-bluegreen-deploy/resources/prepare.sh) script to create test AWS resources.  
+See the [prepare.sh](resources/prepare.sh) script to create test AWS resources.  
 
 The following variables in the `defaults()` function should be updated regarding to your case:
 - `PREFIX`;

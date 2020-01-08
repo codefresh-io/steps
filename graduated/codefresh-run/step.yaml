@@ -179,6 +179,7 @@ spec:
           - export BUILD_ID=$([[ $cmd ]]); if [ -z "$BUILD_ID" ]; then exit 1; fi
           - cf_export first_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID"
           - cf_export BUILD_ID
+          - codefresh create annotation build $BUILD_ID PARENT_BUILD_ID=$CF_BUILD_ID
       [[- if eq .Arguments.DETACH false ]]
     second:
       name: step1

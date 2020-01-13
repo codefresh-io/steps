@@ -79,6 +79,7 @@ main() {
     scan_image $IMAGE
     echo "Get the json"
     local SCAN_OBJECT=$(scan_image $IMAGE json)
+    echo "Json object: ${SCAN_OBJECT}"
     echo "Merge merge json with the main report file"
     jq \
       --arg image_name "${IMAGE}" \

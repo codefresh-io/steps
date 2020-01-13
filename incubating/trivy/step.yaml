@@ -1,0 +1,87 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefresh-plugins/trivy-scan
+  version: 0.0.1
+  isPublic: false
+  description: A Codefresh freestyle step to manage releases in JFrog Bintray
+  sources:
+    - >-
+      https://github.com/palson-cf/trivy-scan-images.git
+  stage: incubating
+  maintainers:
+    - name: Pavel Nosovets
+      email: pavel.nosovets@codefresh.io
+  categories:
+    - featured
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/aquasecurity/trivy/master/imgs/logo.png
+  examples:
+    - description: example-1
+      workflow:
+        scan:
+          title: Scan images
+          type: codefresh-plugins/trivy-scan
+          arguments:
+            IMAGES_LIST: ${{IMAGES_LIST}}
+            GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "IMAGES_LIST"
+        ],
+        "properties": {
+            "IMAGES_LIST": {
+                "type": ["string", "array"],
+                "description": "Images to scan"
+            },
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "GitHub API token"
+            },
+            "TRIVY_USERNAME": {
+                "type": "string",
+                "description": "DockerHub username"
+            },
+            "TRIVY_PASSWORD": {
+                "type": "string",
+                "description": "DockerHub password"
+            },
+            "TRIVY_IGNORE_LIST": {
+                "type": ["string", "array"],
+                "description": "List of CVEs to ingnore"
+            },
+            "TRIVY_IGNOREFILE": {
+                "type": "string",
+                "description": "specify .trivyignore file"
+            },
+            "TRIVY_OUTPUT": {
+                "type": "string",
+                "description": "Output json file name"
+            }
+        }
+    }
+  steps:
+    main:
+      name: scan
+      image: codefresh/trivy-scan:latest
+      environment:
+        - 'IMAGES_LIST=${{IMAGES_LIST}}'
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'TRIVY_USERNAME=${{TRIVY_USERNAME}}'
+        - 'TRIVY_PASSWORD=${{TRIVY_PASSWORD}}'
+        - 'TRIVY_IGNORE_LIST=${{TRIVY_IGNORE_LIST}}'
+        - 'TRIVY_IGNOREFILE=${{TRIVY_IGNOREFILE}}'
+        - 'TRIVY_OUTPUT=${{TRIVY_OUTPUT}}'

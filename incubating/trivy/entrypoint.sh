@@ -10,7 +10,7 @@ DATE=$(date +%F)
 TRIVY_DIR="/codefresh/volume/trivy"
 CACHE_DIR="${TRIVY_DIR}/cache"
 REPORT_DIR="${TRIVY_DIR}/reports"
-TRIVY_OUTPUT=${TRIVY_OUTPUT:-`echo ${REPORT_DIR}/report-${DATE}.json`}
+TRIVY_OUTPUT_FILE=${TRIVY_OUTPUT_FILE:-`echo ${REPORT_DIR}/report-${DATE}.json`}
 TRIVY_IGNOREFILE=${TRIVY_IGNOREFILE:-${TRIVY_DIR}/.trivyignore}
 
 echoSection() {
@@ -67,7 +67,7 @@ main() {
   fi
 
   echoSection "Create the main report file"
-  echo '{"IMAGES": {}}' | jq . > ${TRIVY_OUTPUT}
+  echo '{"IMAGES": {}}' | jq . > ${TRIVY_OUTPUT_FILE}
 
   echoSection "Update trivy DB"
   trivy --download-db-only --cache-dir ${CACHE_DIR}
@@ -79,16 +79,15 @@ main() {
     scan_image $IMAGE
     echo "Get the json"
     local SCAN_OBJECT=$(scan_image $IMAGE json)
-    echo "Json object: ${SCAN_OBJECT}"
     echo "Merge merge json with the main report file"
     jq \
       --arg image_name "${IMAGE}" \
       --argjson scanObject "${SCAN_OBJECT}" \
       '.IMAGES |= .+ {($image_name): $scanObject}' \
-      $TRIVY_OUTPUT > /tmp/tmp.json && mv /tmp/tmp.json $TRIVY_OUTPUT
+      $TRIVY_OUTPUT_FILE > /tmp/tmp.json && mv /tmp/tmp.json $TRIVY_OUTPUT_FILE
   done
 
-  echoSection "Trivy output json file - ${TRIVY_OUTPUT}"
+  echoSection "Trivy output json file - ${TRIVY_OUTPUT_FILE}"
 
 }
 

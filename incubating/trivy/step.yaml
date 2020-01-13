@@ -67,7 +67,7 @@ spec:
                 "type": "string",
                 "description": "specify .trivyignore file"
             },
-            "TRIVY_OUTPUT": {
+            "TRIVY_OUTPUT_FILE": {
                 "type": "string",
                 "description": "Output json file name"
             }
@@ -84,4 +84,4 @@ spec:
         - 'TRIVY_PASSWORD=${{TRIVY_PASSWORD}}'
         - 'TRIVY_IGNORE_LIST=${{TRIVY_IGNORE_LIST}}'
         - 'TRIVY_IGNOREFILE=${{TRIVY_IGNOREFILE}}'
-        - 'TRIVY_OUTPUT=${{TRIVY_OUTPUT}}'
+        - 'TRIVY_OUTPUT_FILE=${{TRIVY_OUTPUT_FILE}}'

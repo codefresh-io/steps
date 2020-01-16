@@ -4,7 +4,8 @@ set -e
 set -o pipefail
 
 # DATE=$(date +%F)
-CACHE_DIR="/codefresh/volume/.trivy"
+# CACHE_DIR="/codefresh/volume/.trivy"
+CACHE_DIR="~/.trivy"
 # REPORT_DIR="${TRIVY_DIR}/reports"
 # TRIVY_OUTPUT_FILE=${TRIVY_OUTPUT_FILE:-`echo ${REPORT_DIR}/report-${DATE}.json`}
 TRIVY_IGNOREFILE="/tmp/.trivyignore" # default

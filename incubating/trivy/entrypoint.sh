@@ -100,7 +100,7 @@ main() {
 
   local images=$(generate_images_list)
   echoSection "List of images: ${images}"
-  for image in $images; do
+  for cfimage in $images; do
     echoSection "Scanning $cfimage image"
     local section=$(slack_image_section "$cfimage")
     SLACK_REPORT_MESSAGE=$( jq --argjson insert "${section}" '.blocks[.blocks|length] |= .+ $insert' <<< "$SLACK_REPORT_MESSAGE" )

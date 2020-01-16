@@ -4,8 +4,7 @@ set -e
 set -o pipefail
 
 # DATE=$(date +%F)
-TRIVY_DIR="/codefresh/volume/trivy"
-CACHE_DIR="${TRIVY_DIR}/cache"
+CACHE_DIR="/codefresh/volume/.trivy"
 # REPORT_DIR="${TRIVY_DIR}/reports"
 # TRIVY_OUTPUT_FILE=${TRIVY_OUTPUT_FILE:-`echo ${REPORT_DIR}/report-${DATE}.json`}
 TRIVY_IGNOREFILE="/tmp/.trivyignore" # default
@@ -44,7 +43,6 @@ generate_images_list() {
   local IMAGES
   # merge from file
   if [[ ! -z $IMAGES_FILE ]]; then
-    stat -c "%n" "$IMAGES_FILE"
     IMAGES=$(cat $IMAGES_FILE | tr '\n' ' ')
   fi
   # merge from list
@@ -90,6 +88,10 @@ main() {
   unset_empty_vars
 
   set_trivy_ignore
+
+  if [[ ! -d "$CACHE_DIR" ]]; then
+    mkdir -p ${CACHE_DIR}
+  fi
 
   echoSection "Update trivy DB"
   trivy --download-db-only --cache-dir ${CACHE_DIR}

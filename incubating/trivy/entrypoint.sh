@@ -96,7 +96,9 @@ main() {
 
   SLACK_REPORT_MESSAGE='{"blocks":[]}'
 
-  for image in $(generate_images_list); do
+  local images=$(generate_images_list)
+  echoSection "List of images: ${images}"
+  for image in $images; do
     echoSection "Scanning $cfimage image"
     local section=$(slack_image_section "$cfimage")
     SLACK_REPORT_MESSAGE=$( jq --argjson insert "${section}" '.blocks[.blocks|length] |= .+ $insert' <<< "$SLACK_REPORT_MESSAGE" )

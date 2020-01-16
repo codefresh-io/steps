@@ -1,0 +1,111 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: smtp
+  version: 0.0.1
+  isPublic: false
+  description: Sends Email using SMTP Server
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/incubating/smtp
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustinb@codefresh.io
+  categories:
+    - utility
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/guysalton-codefresh/cfstep-sendmail/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Send Mail
+      workflow:
+        SendEmail:
+          type: smtp
+          arguments:
+            TO: project_team@domain.com
+            FROM: service_user@domain.com
+            SUBJECT: Build for ${{CF_REPO_NAME}}
+            BODY: '<html><a href="${{CF_BUILD_URL}}">Codefresh Build</a></html>'
+            MIME_TYPE: html
+            SMTP_SERVER: smtp.domain.com
+            SMTP_USERNAME: service_user@domain.com
+            SMTP_PASSWORD: password
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "BODY",
+            "TO",
+            "FROM",
+            "SUBJECT",
+            "SMTP_PASSWORD",
+            "SMTP_SERVER",
+            "SMTP_USERNAME"
+        ],
+        "properties": {
+            "BODY": {
+                "type": "string",
+                "default": "",
+                "description": "Email Body"
+            },
+            "TO": {
+                "type": "string",
+                "default": "",
+                "description": "Email Receipent Address"
+            },
+            "FROM": {
+              "type": "string",
+              "default": "",
+              "description": "Email Sender Address"
+            },
+            "MIME_TYPE": {
+              "type": "string",
+              "default": "plain",
+              "description": "MIME Type"
+            },
+            "SMTP_PASSWORD": {
+                "type": "string",
+                "default": "",
+                "description": "SMTP Server Password"
+            },
+            "SMTP_PORT": {
+                "type": "string",
+                "description": "SMTP Server Port"
+            },
+            "SMTP_SERVER": {
+                "type": "string",
+                "default": "",
+                "description": "SMTP Server Address"
+            },
+            "SMTP_USERNAME": {
+                "type": "string",
+                "default": "",
+                "description": "SMTP Server Username"
+            },
+            "SUBJECT": {
+                "type": "string",
+                "default": "",
+                "description": "Email Subject"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: smtp
+      image: codefreshplugins/cfstep-smtp
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

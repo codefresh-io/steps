@@ -31,7 +31,7 @@ set_trivy_ignore() {
   echoSection "Set up trivy ignore file"
   # merge from file
   if [[ ! -z $TRIVY_IGNORE_FILE ]]; then
-    stat "$TRIVY_IGNORE_FILE" > /dev/null 2>&1
+    stat -c "%n" "$TRIVY_IGNORE_FILE"
     cp $TRIVY_IGNORE_FILE $TRIVY_IGNOREFILE
   fi 
   local IFS=$',' 
@@ -41,10 +41,11 @@ set_trivy_ignore() {
 }
 
 generate_images_list() {
+  echoSection "Generate list of images to scan"
   local IMAGES
   # merge from file
   if [[ ! -z $IMAGES_FILE ]]; then
-    stat "$IMAGES_FILE" > /dev/null 2>&1
+    stat -c "%n" "$IMAGES_FILE" > /dev/null 2>&1
     IMAGES=$(cat $IMAGES_FILE | tr '\n' ' ')
   fi
   # merge from list

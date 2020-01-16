@@ -37,6 +37,8 @@ set_trivy_ignore() {
   local IFS=$',' 
   for cve in $TRIVY_IGNORE_LIST; do
     echo $cve >> $TRIVY_IGNOREFILE
+  echo ".trivyignore:"
+  cat $TRIVY_IGNOREFILE
   done
 }
 

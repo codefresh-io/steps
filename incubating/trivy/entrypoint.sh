@@ -3,41 +3,18 @@
 set -e
 set -o pipefail
 
-# TODO
-# clear cache because of 'latest' images
-
-DATE=$(date +%F)
+# DATE=$(date +%F)
 TRIVY_DIR="/codefresh/volume/trivy"
 CACHE_DIR="${TRIVY_DIR}/cache"
-REPORT_DIR="${TRIVY_DIR}/reports"
-TRIVY_OUTPUT_FILE=${TRIVY_OUTPUT_FILE:-`echo ${REPORT_DIR}/report-${DATE}.json`}
-TRIVY_IGNOREFILE=${TRIVY_IGNOREFILE:-${TRIVY_DIR}/.trivyignore}
+# REPORT_DIR="${TRIVY_DIR}/reports"
+# TRIVY_OUTPUT_FILE=${TRIVY_OUTPUT_FILE:-`echo ${REPORT_DIR}/report-${DATE}.json`}
+TRIVY_IGNOREFILE="/tmp/.trivyignore" # default
+# TRIVY_IGNORE_FILE # set as a step parameter
 
-echoSection() {
+
+function echoSection {
   printf -- "--------------------------------------------\n\n"
   printf  "\n\n[INFO] $1\n\n"
-}
-
-scan_image() {
-# TODO
-# to catch  GitHub 'API rate limit exceeded' error
-  local image=$1
-  local format=${2:-table}
-  trivy \
-    -f ${format} \
-    -q \
-    --ignore-unfixed \
-    --cache-dir ${CACHE_DIR} \
-    --skip-update \
-    $image
-}
-
-set_trivy_ignore() {
-  echoSection "Set up trivy ignore file"
-  local IFS=$',' 
-  for cve in $TRIVY_IGNORE_LIST; do
-    echo $cve >> $TRIVY_IGNOREFILE
-  done
 }
 
 unset_empty_vars() {
@@ -50,45 +27,84 @@ unset_empty_vars() {
   done
 }
 
-main() {
-# Check images list
-  if [[ -z $IMAGES_LIST ]]; then
-    echo "[ERROR] The \$IMAGES_LIST variable is empty."
+set_trivy_ignore() {
+  echoSection "Set up trivy ignore file"
+  # merge from file
+  if [[ ! -z $TRIVY_IGNORE_FILE ]]; then
+    stat "$TRIVY_IGNORE_FILE" > /dev/null 2>&1
+    cp $TRIVY_IGNORE_FILE $TRIVY_IGNOREFILE
+  fi 
+  local IFS=$',' 
+  for cve in $TRIVY_IGNORE_LIST; do
+    echo $cve >> $TRIVY_IGNOREFILE
+  done
+}
+
+generate_images_list() {
+  local IMAGES
+  # merge from file
+  if [[ ! -z $IMAGES_FILE ]]; then
+    stat "$IMAGES_FILE" > /dev/null 2>&1
+    IMAGES=$(cat $IMAGES_FILE | tr '\n' ' ')
+  fi
+  # merge from list
+  if [[ ! -z $IMAGES_LIST ]]; then
+    IMAGES="$IMAGES $(echo $IMAGES_LIST | tr ',' ' ')"
+  fi
+  if [[ -z $IMAGES ]]; then
+    echo "[ERROR] The list of images is empty."
     exit 1
   fi
+  echo $IMAGES
+}
+
+scan_template() {
+  local image=$1
+  local object=$(trivy -q -f json --cache-dir ${CACHE_DIR} ${image} | sed 's|null|\[\]|')
+  count=$( echo $object | jq length)
+  for ((i = 0 ; i < $count ; i++)); do
+    echo
+    echo Target: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
+    echo "..."
+    echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
+  done
+}
+
+slack_image_section() {
+  local image=$1
+  local header="*${image}*"
+  local body=$(scan_template $image | awk '{print}' ORS='\\n')
+  echo -E "{
+  \"type\": \"section\",
+  \"text\": {
+    \"type\": \"mrkdwn\",
+    \"text\": \"${header}\n\n\`\`\`${body}\`\`\` \"
+  }
+}
+"
+}
+
+# MAIN
+main() {
 
   unset_empty_vars
 
   set_trivy_ignore
 
-  echoSection "Create report dir"
-  if [[ ! -d "$REPORT_DIR" ]]; then
-    mkdir -p ${REPORT_DIR}
-  fi
-
-  echoSection "Create the main report file"
-  echo '{"IMAGES": {}}' | jq . > ${TRIVY_OUTPUT_FILE}
-
   echoSection "Update trivy DB"
   trivy --download-db-only --cache-dir ${CACHE_DIR}
 
-  local IFS=$',' 
+  SLACK_REPORT_MESSAGE='{"blocks":[]}'
 
-  for IMAGE in $IMAGES_LIST; do
-    echoSection "Scanning $IMAGE image."
-    scan_image $IMAGE
-    echo "Get the json"
-    local SCAN_OBJECT=$(scan_image $IMAGE json)
-    echo "Merge merge json with the main report file"
-    jq \
-      --arg image_name "${IMAGE}" \
-      --argjson scanObject "${SCAN_OBJECT}" \
-      '.IMAGES |= .+ {($image_name): $scanObject}' \
-      $TRIVY_OUTPUT_FILE > /tmp/tmp.json && mv /tmp/tmp.json $TRIVY_OUTPUT_FILE
+  for image in $(generate_images_list); do
+    echoSection "Scanning $cfimage image"
+    local section=$(slack_image_section "$cfimage")
+    SLACK_REPORT_MESSAGE=$( jq --argjson insert "${section}" '.blocks[.blocks|length] |= .+ $insert' <<< "$SLACK_REPORT_MESSAGE" )
+    SLACK_REPORT_MESSAGE=$( jq '.blocks[.blocks|length] |= .+ {"type": "divider"}' <<< "$SLACK_REPORT_MESSAGE" )
   done
 
-  echoSection "Trivy output json file - ${TRIVY_OUTPUT_FILE}"
-
+  curl -X POST -H "Content-type: application/json" ${SLACK_INCOMING_URL} --data "$SLACK_REPORT_MESSAGE"
 }
 
 main $@
+

@@ -45,7 +45,7 @@ generate_images_list() {
   local IMAGES
   # merge from file
   if [[ ! -z $IMAGES_FILE ]]; then
-    stat -c "%n" "$IMAGES_FILE" > /dev/null 2>&1
+    stat -c "%n" "$IMAGES_FILE"
     IMAGES=$(cat $IMAGES_FILE | tr '\n' ' ')
   fi
   # merge from list

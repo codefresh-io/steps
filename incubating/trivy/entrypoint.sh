@@ -37,9 +37,9 @@ set_trivy_ignore() {
   local IFS=$',' 
   for cve in $TRIVY_IGNORE_LIST; do
     echo $cve >> $TRIVY_IGNOREFILE
+  done
   echo ".trivyignore:"
   cat $TRIVY_IGNOREFILE
-  done
 }
 
 generate_images_list() {
@@ -61,7 +61,7 @@ generate_images_list() {
 
 scan_template() {
   local image=$1
-  local object=$(trivy -q -f json --cache-dir ${CACHE_DIR} ${image} | sed 's|null|\[\]|')
+  local object=$(trivy -q -f json --cache-dir ${CACHE_DIR} --ignorefile ${TRIVY_IGNOREFILE} ${image} | sed 's|null|\[\]|')
   count=$( echo $object | jq length)
   for ((i = 0 ; i < $count ; i++)); do
     echo

@@ -41,7 +41,6 @@ set_trivy_ignore() {
 }
 
 generate_images_list() {
-  echoSection "Generate list of images to scan"
   local IMAGES
   # merge from file
   if [[ ! -z $IMAGES_FILE ]]; then

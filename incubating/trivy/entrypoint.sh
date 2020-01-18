@@ -69,7 +69,7 @@ scan_template() {
     if [[ "$vuln_length" -eq "0" ]] && [[ "$SKIP_EMPTY" == "true" ]]; then
       continue
     fi
-    echo -E \nTarget: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
+    echo -E "\n"Target: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
     echo "..."
     echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
   done

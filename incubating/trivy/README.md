@@ -11,6 +11,7 @@ The Codefresh step scans the list of docker images and sends the report to a Sla
 - **TRIVY_IGNORE_LIST**. List of vulnerabilities to ingore. Can be used in conjunction with **TRIVY_IGNORE_FILE**.
 - **TRIVY_USERNAME**. DockerHub username. Required in case of private registry. 
 - **TRIVY_PASSWORD**. DockerHub password. Required in case of private registry. 
+- **SKIP_EMPTY**. Do not attach to the report message images with empty vulnerabilities list.
 
 ## Example
 ```yaml

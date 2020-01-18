@@ -29,6 +29,7 @@ unset_empty_vars() {
 
 set_trivy_ignore() {
   echoSection "Set up trivy ignore file"
+  echo > $TRIVY_IGNOREFILE
   # merge from file
   if [[ ! -z $TRIVY_IGNORE_FILE ]]; then
     stat -c "%n" "$TRIVY_IGNORE_FILE"
@@ -64,7 +65,10 @@ scan_template() {
   local object=$(trivy -q -f json --cache-dir ${CACHE_DIR} --ignorefile ${TRIVY_IGNOREFILE} ${image} | sed 's|null|\[\]|')
   count=$( echo $object | jq length)
   for ((i = 0 ; i < $count ; i++)); do
-    echo
+    local vuln_length=$(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities | length')
+    if [[ "$vuln_length" -eq "0" ]] && [[ "$SKIP_EMPTY" == "true" ]]; then
+      continue
+    fi
     echo Target: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
     echo "..."
     echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
@@ -75,6 +79,7 @@ slack_image_section() {
   local image=$1
   local header="*${image}*"
   local body=$(scan_template $image | awk '{print}' ORS='\\n')
+  if [[ -z $body ]]; then return; fi
   echo -E "{
   \"type\": \"section\",
   \"text\": {
@@ -103,14 +108,21 @@ main() {
 
   local images=$(generate_images_list)
   echoSection "List of images: ${images}"
+
   for cfimage in $images; do
     echoSection "Scanning $cfimage image"
     local section=$(slack_image_section "$cfimage")
-    SLACK_REPORT_MESSAGE=$( jq --argjson insert "${section}" '.blocks[.blocks|length] |= .+ $insert' <<< "$SLACK_REPORT_MESSAGE" )
-    SLACK_REPORT_MESSAGE=$( jq '.blocks[.blocks|length] |= .+ {"type": "divider"}' <<< "$SLACK_REPORT_MESSAGE" )
+    if [[ ! -z $section ]]; then
+      SLACK_REPORT_MESSAGE=$( jq --argjson insert "${section}" '.blocks[.blocks|length] |= .+ $insert' <<< "$SLACK_REPORT_MESSAGE" )
+      SLACK_REPORT_MESSAGE=$( jq '.blocks[.blocks|length] |= .+ {"type": "divider"}' <<< "$SLACK_REPORT_MESSAGE" )
+    fi
   done
 
-  curl -X POST -H "Content-type: application/json" ${SLACK_INCOMING_URL} --data "$SLACK_REPORT_MESSAGE"
+ if [[ "$(echo $SLACK_REPORT_MESSAGE | jq '[.blocks[] | select(.type == "section")] | length' )" -eq "0" ]]; then
+   echoSection "The list of vulnerabilities is empty. Nothing to send."
+ else
+   curl -X POST -H "Content-type: application/json" ${SLACK_INCOMING_URL} --data "$SLACK_REPORT_MESSAGE"
+ fi
 }
 
 main $@

@@ -69,7 +69,7 @@ scan_template() {
     if [[ "$vuln_length" -eq "0" ]] && [[ "$SKIP_EMPTY" == "true" ]]; then
       continue
     fi
-    echo Target: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
+    echo -E \nTarget: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
     echo "..."
     echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
   done
@@ -84,7 +84,7 @@ slack_image_section() {
   \"type\": \"section\",
   \"text\": {
     \"type\": \"mrkdwn\",
-    \"text\": \"${header}\n\n\`\`\`${body}\`\`\` \"
+    \"text\": \"${header}\n\`\`\`${body}\`\`\` \"
   }
 }
 "

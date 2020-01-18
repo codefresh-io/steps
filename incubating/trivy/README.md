@@ -3,7 +3,7 @@
 The Codefresh step scans the list of docker images and sends the report to a Slack webhook URL.
 
 ## Arguments
-- **GITHUB_TOKEN**. To avoid the error because the "GitHub API limit is exceeded".
+- **GITHUB_TOKEN**. To avoid the error "GitHub API limit is exceeded".
 - **SLACK_INCOMING_URL**. Slack webhook URL to send the report to it.
 - **IMAGES_FILE**. Path to the file with list of images to scan.
 - **IMAGES_LIST**. List of images to scan. Can be used in conjunction with **IMAGES_FILE**, the resulting list of images is the sum of both.

@@ -1,0 +1,100 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: trivy-scan
+  version: 0.0.1
+  isPublic: false
+  description: A Codefresh freestyle step to manage releases in JFrog Bintray
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps.git
+  stage: incubating
+  maintainers:
+    - name: Pavel Nosovets
+      email: pavel.nosovets@codefresh.io
+  categories:
+    - featured
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/aquasecurity/trivy/master/imgs/logo.png
+  examples:
+    - description: example-1
+      workflow:
+        scan:
+          title: Scan images
+          type: codefresh-plugins/trivy-scan
+          arguments:
+            GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+            SLACK_INCOMING_URL: https://my.slack.url
+            IMAGES_LIST:
+              - image1:tag
+              - image2:tag
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+          "SLACK_INCOMING_URL"
+        ],
+        "properties": {
+            "SLACK_INCOMING_URL": {
+                "type": "string",
+                "description": "Slack webhook notification URL"
+            },
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "GitHub API token"
+            },
+            "IMAGES_LIST": {
+                "type": ["string", "array"],
+                "description": "Images to scan"
+            },
+            "IMAGES_FILE": {
+                "type": ["string"],
+                "description": "Path to the file with list of images to scan"
+            },
+            "TRIVY_USERNAME": {
+                "type": "string",
+                "description": "DockerHub username"
+            },
+            "TRIVY_PASSWORD": {
+                "type": "string",
+                "description": "DockerHub password"
+            },
+            "TRIVY_IGNORE_LIST": {
+                "type": ["string", "array"],
+                "description": "List of CVEs to ingnore"
+            },
+            "TRIVY_IGNORE_FILE": {
+                "type": "string",
+                "description": "specify .trivyignore file"
+            },
+            "SKIP_EMPTY": {
+                "type": "string",
+                "description": "Do not attach to the report message images with empty vulnerabilities list"
+            }
+        }
+    }
+  steps:
+    main:
+      name: scan
+      image: codefresh/trivy-scan:latest
+      environment:
+        - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
+        - 'IMAGES_LIST=${{IMAGES_LIST}}'
+        - 'IMAGES_FILE=${{IMAGES_FILE}}'
+        - 'TRIVY_USERNAME=${{TRIVY_USERNAME}}'
+        - 'TRIVY_PASSWORD=${{TRIVY_PASSWORD}}'
+        - 'TRIVY_IGNORE_LIST=${{TRIVY_IGNORE_LIST}}'
+        - 'TRIVY_IGNORE_FILE=${{TRIVY_IGNORE_FILE}}'
+        - 'SLACK_INCOMING_URL=${{SLACK_INCOMING_URL}}'
+        - 'SKIP_EMPTY=${{SKIP_EMPTY}}'

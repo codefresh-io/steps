@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: trivy-scan
-  version: 0.0.1
-  isPublic: false
-  description: A Codefresh freestyle step to manage releases in JFrog Bintray
+  version: 0.0.2
+  isPublic: true
+  description: The step scans the list of docker images and sends the report to a Slack webhook URL.
   sources:
     - >-
       https://github.com/codefresh-io/steps.git
@@ -27,7 +27,7 @@ metadata:
       workflow:
         scan:
           title: Scan images
-          type: codefresh-plugins/trivy-scan
+          type: trivy-scan
           arguments:
             GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             SLACK_INCOMING_URL: https://my.slack.url

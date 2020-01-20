@@ -1,13 +1,13 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefresh-plugins/trivy-scan
+  name: trivy-scan
   version: 0.0.1
   isPublic: false
   description: A Codefresh freestyle step to manage releases in JFrog Bintray
   sources:
     - >-
-      https://github.com/palson-cf/trivy-scan-images.git
+      https://github.com/codefresh-io/steps.git
   stage: incubating
   maintainers:
     - name: Pavel Nosovets

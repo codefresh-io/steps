@@ -139,20 +139,14 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: kubernetes-healthcheck
-      image: dustinvanbuskirk/cfstep-healthcheck:alpha
+      image: codefreshplugins/cfstep-healthcheck
       environment:
-        - 'TYPES=kubernetes_deployment,linkerd'
-        - 'CLUSTER=sales-demo@FirstKubernetes'
-        - 'DEPLOY_TIMEOUT=120'
-        - 'DEPLOYMENT=example-voting-app-vote'
-        - 'KUBE_CONFIG=/codefresh/volume/sensitive/.kube/config'
-        - 'METRIC_TIMEOUT=120'
-        - 'NAMESPACE=dustinvb-staging'
-        - 'PROMETHEUS_URL=http://10.59.254.185:9090'
-        - 'THRESHOLD=1'
-        - 'TOTAL=90'
-        - 'WAIT=15'
-
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

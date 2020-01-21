@@ -142,7 +142,7 @@ spec:
   steps:
     main:
       name: kubernetes-healthcheck
-      image: ./images/stethoscope.png
+      image: dustinvanbuskirk/cfstep-healthcheck:alpha
       environment:
         - 'TYPES=kubernetes_deployment,linkerd'
         - 'CLUSTER=sales-demo@FirstKubernetes'

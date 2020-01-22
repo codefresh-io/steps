@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: kubernetes-healthcheck
+  name: paigebernier/kubernetes-healthcheck
   version: 0.1.0
-  isPublic: true
+  isPublic: false
   description: Check Health of Kubernetes deployment
   sources:
     - >-
@@ -17,62 +17,54 @@ metadata:
   official: false
   tags: []
   icon:
-    type: svg
+    type: image
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kubernetes-healtcheck/images/stethoscope.png
     background: "#f4f4f4"
   examples:
     - description: example-deployment-healthcheck
       workflow:
-        version: '1.0'
-        steps:
-          KubernetesDeploymentHealthCheck:
-            type: kubernetes-healthcheck
-            arguments:
-              TYPES: kubernetes_deployment
-              CLUSTER: sales-demo@FirstKubernetes
-              NAMESPACE: dustinvb-staging
-              DEPLOYMENT: example-voting-app-vote
-              KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+        KubernetesDeploymentHealthCheck:
+          type: kubernetes-healthcheck
+          arguments:
+            TYPES: kubernetes_deployment
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
     - description: example-statefulset-healthcheck
       workflow:
-        version: '1.0'
-        steps:
-          KubernetesStatefulsetHealthCheck:
-            type: kubernetes-healthcheck
-            arguments:
-              TYPES: kubernetes_statefulset
-              CLUSTER: sales-demo@FirstKubernetes
-              NAMESPACE: dustinvb-staging
-              DEPLOYMENT: example-voting-app-vote-statefulset
-              KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+        KubernetesStatefulsetHealthCheck:
+          type: kubernetes-healthcheck
+          arguments:
+            TYPES: kubernetes_statefulset
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote-statefulset
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
     - description: example-linkerd-healthcheck
       workflow:
-        version: '1.0'
-        steps:
-          KubernetesLinkerdHealthCheck:
-            type: kubernetes-healthcheck
-            arguments:
-              TYPES: kubernetes_deployment,linkerd
-              CLUSTER: sales-demo@FirstKubernetes
-              NAMESPACE: dustinvb-staging
-              DEPLOYMENT: example-voting-app-vote
-              KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
-              PROMETHEUS_URL: http://10.59.254.185:9090
-              THRESHOLD: .99
+        KubernetesLinkerdHealthCheck:
+          type: kubernetes-healthcheck
+          arguments:
+            TYPES: kubernetes_deployment,linkerd
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+            PROMETHEUS_URL: http://10.59.254.185:9090
+            THRESHOLD: .99
     - description: example-deployment-linkerd-healthcheck
       workflow:
-        version: '1.0'
-        steps:
-          KubernetesDeploymentLinkerdHealthCheck:
-            type: kubernetes-healthcheck
-            arguments:
-              TYPES: kubernetes_deployment,linkerd
-              CLUSTER: sales-demo@FirstKubernetes
-              NAMESPACE: dustinvb-staging
-              DEPLOYMENT: example-voting-app-vote
-              KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
-              PROMETHEUS_URL: http://10.59.254.185:9090
-              THRESHOLD: .99
+        KubernetesDeploymentLinkerdHealthCheck:
+          type: kubernetes-healthcheck
+          arguments:
+            TYPES: kubernetes_deployment,linkerd
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+            PROMETHEUS_URL: http://10.59.254.185:9090
+            THRESHOLD: .99
 spec:
   arguments: |-
     {
@@ -91,7 +83,7 @@ spec:
         "properties": {
             "CLUSTER": {
                 "type": "string",
-                "description": "	Kubernetes Context Name"
+                "description": "Kubernetes Context Name"
             },
             "DEPLOY_TIMEOUT": {
                 "type": "integer",
@@ -127,7 +119,7 @@ spec:
             },
             "TOTAL": {
                 "type": "integer",
-                "description": "	(seconds) Required for Linkerd Type / Total Time to Continue Testing, Default 300"
+                "description": "(seconds) Required for Linkerd Type / Total Time to Continue Testing, Default 300"
             },
             "TYPES": {
                 "type": "string",
@@ -141,8 +133,8 @@ spec:
     }
   stepsTemplate: |-
     main:
-      name: kubernetes-healthcheck
-      image: codefreshplugins/cfstep-healthcheck
+      name: paigebernier/kubernetes-healthcheck
+      image: dustinvanbuskirk/cfstep-healthcheck:alpha
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

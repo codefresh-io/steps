@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: paigebernier/kubernetes-healthcheck
+  name: kubernetes-healthcheck
   version: 0.1.0
   isPublic: false
   description: Check Health of Kubernetes deployment
@@ -133,8 +133,8 @@ spec:
     }
   stepsTemplate: |-
     main:
-      name: paigebernier/kubernetes-healthcheck
-      image: dustinvanbuskirk/cfstep-healthcheck:alpha
+      name: kubernetes-healthcheck
+      image: codefreshplugins/cfstep-healthcheck
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -1,0 +1,21 @@
+version: '1.0'
+
+steps:
+  main_clone:
+    type: git-clone
+    repo: codefresh-io/steps
+    revision: ${{CF_REVISION}}
+    git: cf_github
+  
+  build_google:
+    type: build
+    image_name: codefresh/audit-exporter-google
+    dockerfile: ./incubating/audit-log-exporter/Dockerfile.google
+    tag: ${{CF_REVISION}}
+  
+  push_google:
+    type: push
+    candidate: ${{build_google}}
+    registry: dockerhub
+    tags:
+    - latest

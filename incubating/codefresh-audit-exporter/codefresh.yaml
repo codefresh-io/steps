@@ -14,7 +14,8 @@ steps:
     stage: google
     type: build
     image_name: codefresh/audit-exporter-google
-    dockerfile: incubating/codefresh-audit-exporter/Dockerfile.google
+    working_directory: ${{main_clone}}/incubating/codefresh-audit-exporter
+    dockerfile: Dockerfile.google
     tag: ${{CF_REVISION}}
   
   push_google:

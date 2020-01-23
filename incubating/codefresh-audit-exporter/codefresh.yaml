@@ -11,14 +11,14 @@ steps:
     git: cf_github
   
   build_google:
-    stage: goolge
+    stage: google
     type: build
     image_name: codefresh/audit-exporter-google
     dockerfile: ./incubating/audit-log-exporter/Dockerfile.google
     tag: ${{CF_REVISION}}
   
   push_google:
-    stage: goolge
+    stage: google
     type: push
     candidate: ${{build_google}}
     registry: dockerhub

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: kubernetes-healthcheck
-  version: 0.1.0
+  version: 0.2.0
   isPublic: true
   description: Check Health of Kubernetes deployment
   sources:

@@ -54,7 +54,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     first:
-      image: codefresh/cli
+      image: codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
       commands:
       - ./google.sh
       environment:

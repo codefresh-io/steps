@@ -1,0 +1,13 @@
+FROM alpine:3.11
+
+WORKDIR /plugin
+
+RUN apk update && apk add curl ca-certificates python bash jq
+
+RUN curl -sSL https://sdk.cloud.google.com | bash
+
+ENV PATH $PATH:/root/google-cloud-sdk/bin
+
+RUN apk del bash
+
+COPY . .

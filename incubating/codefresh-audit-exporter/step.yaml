@@ -1,0 +1,66 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: codefresh-audit-exporter
+  version: 0.3.0
+  isPublic: true
+  description: Export Codefresh audit log to external storage
+  stage: incubating
+  tags:
+  - codefresh
+  - google
+  maintainers:
+    - name: Oleg Sucharevich
+      email: olegs@codefresh.io
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "EXPORTER_TARGET",
+            "CF_API_KEY",
+            "GOOGLE_STORAGE",
+            "GOOGLE_BUCKET_NAME"
+        ],
+        "properties": {
+            "EXPORTER_TARGET": {
+                "type": "string",
+                "description": "Type of the exporter target",
+                "enum": [ "google" ],
+                "default": "google"
+            },
+            "CF_API_KEY": {
+                "type": "string",
+                "description": "Codefresh API key"
+            },
+            "GOOGLE_STORAGE": {
+                "type": "string",
+                "description": "Name of the integration of your Google storage in Codefresh"
+            },
+            "GOOGLE_BUCKET_NAME": {
+                "type": "string",
+                "description": "Name of the bucket in Google cloud, where to upload the audit-log"
+            },
+            "GOOGLE_PROJECT_ID": {
+                "type": "string",
+                "description": "Name of the project-id in google cloud"
+            }
+        }
+    }
+  delimiters:
+    left: '[['
+    right: ']]'
+  stepsTemplate: |-
+    export:
+      image: codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
+      working_directory: IMAGE_WORK_DIR
+      commands:
+      - sh /plugin/[[ .Arguments.EXPORTER_TARGET ]].sh
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]

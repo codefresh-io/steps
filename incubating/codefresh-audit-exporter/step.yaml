@@ -2,14 +2,16 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-audit-exporter
-  version: 0.1.0
+  version: 0.3.0
   isPublic: true
   description: Export Codefresh audit log to external storage
   stage: incubating
+  tags:
+  - codefresh
+  - google
   maintainers:
     - name: Oleg Sucharevich
       email: olegs@codefresh.io
-  official: true
 spec:
   arguments: |-
     {
@@ -46,17 +48,18 @@ spec:
             "GOOGLE_PROJECT_ID": {
                 "type": "string",
                 "description": "Name of the project-id in google cloud"
-            },
+            }
         }
     }
   delimiters:
     left: '[['
     right: ']]'
   stepsTemplate: |-
-    first:
+    export:
       image: codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
+      working_directory: IMAGE_WORK_DIR
       commands:
-      - ./google.sh
+      - sh /plugin/[[ .Arguments.EXPORTER_TARGET ]].sh
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

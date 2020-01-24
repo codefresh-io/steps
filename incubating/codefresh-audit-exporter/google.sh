@@ -38,8 +38,6 @@ curl -o /tmp/ctx.json -H "Authorization: $CF_API_KEY" $ENDPOINT_GET_CONTEXT/$GOO
 GOOGLE_SA_TMP_FILE="/tmp/google-sa.json"
 jq -r ".spec.data.auth.jsonConfig" /tmp/ctx.json > $GOOGLE_SA_TMP_FILE
 
-cat $GOOGLE_SA_TMP_FILE
-
 echo "Testing authentication with Google:"
 gcloud auth activate-service-account --key-file=$GOOGLE_SA_TMP_FILE
 if [ -z $GOOGLE_PROJECT_ID ]

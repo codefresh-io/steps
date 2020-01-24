@@ -9,7 +9,7 @@ PROTOCOL=${CF_PROTOCOL:-"https"}
 # endpoint where to get the audit
 ENDPOINT_DOWNLOAD=$PROTOCOL://$HOST/api/audit/download
 ENDPOINT_GET_CONTEXT=$PROTOCOL://$HOST/api/contexts
-DEFAULT_DESTINATION=$PWD"audit.csv"
+DEFAULT_DESTINATION="/tmp/audit.csv"
 AUDIT_DEST=${AUDIT_DESTINATION:-$DEFAULT_DESTINATION}
 
 echo "Using Codefresh API: $PROTOCOL://$HOST"

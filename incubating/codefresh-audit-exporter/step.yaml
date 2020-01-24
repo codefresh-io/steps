@@ -2,13 +2,14 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-audit-exporter
-  version: 0.3.0
+  version: 0.4.0
   isPublic: true
   description: Export Codefresh audit log to external storage
   stage: incubating
   tags:
   - codefresh
   - google
+  official: true
   maintainers:
     - name: Oleg Sucharevich
       email: olegs@codefresh.io

@@ -102,7 +102,7 @@ QUERY="?"
 if [ -z $FILTER_TIME_FROM ]
 then
     # in case the FILTER_TIME_RANGE was not set and FILTER_TIME_FROM is not set, calculate last 24 hours
-    if [ eq $secondsToReduceFromNow "" ]
+    if [ -z $secondsToReduceFromNow ]
     then
         secondsToReduceFromNow="86400"
     fi

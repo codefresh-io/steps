@@ -2,9 +2,9 @@ kind: step-type
 version: "1.0"
 metadata:
   name: freestyle
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
-  description: Run freestyle commands on top of a docker image
+  description: Run shell (bash or sh) commands on top of a docker image
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
   stage: graduated
@@ -19,10 +19,23 @@ metadata:
   maintainers:
     - name: Codefresh INC
   examples:
-    - workflow:
+    - description: Running in cloned repo working directory
+      workflow:
         Freestyle:
           title: Running docker image
           type: freestyle
+          working_directory: '${{CLONE_STEP_NAME}}',
+          arguments:
+            image: alpine:3.8
+            commands:
+              - echo "Hello world"
+              - echo "asdasd"
+    - description: Running on root
+      workflow:
+        Freestyle:
+          title: Running docker image
+          type: freestyle
+          working_directory: '/',
           arguments:
             image: alpine:3.8
             commands:

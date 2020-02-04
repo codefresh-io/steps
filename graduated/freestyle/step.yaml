@@ -35,7 +35,7 @@ metadata:
         Freestyle:
           title: Running docker image
           type: freestyle
-          working_directory: '/',
+          working_directory: '/'
           arguments:
             image: alpine:3.8
             commands:

@@ -25,7 +25,7 @@ metadata:
         Docker-Build:
           title: Building docker image
           type: build
-          working_directory: '${{CLONE_STEP_NAME}}',
+          working_directory: '${{CLONE_STEP_NAME}}'
           arguments:
             image_name: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
             tag: master

@@ -10,9 +10,21 @@ metadata:
   - codefresh
   - google
   official: true
+  categories:
+    - featured
   maintainers:
     - name: Oleg Sucharevich
       email: olegs@codefresh.io
+  examples:
+    - description: Exporting audit log to google
+      workflow:
+        Freestyle:
+          type: codefresh-audit-exporter
+          arguments:
+            CF_API_KEY: ${{CF_API_KEY}}
+            GOOGLE_STORAGE: ${{GOOGLE_STORAGE}}
+            GOOGLE_BUCKET_NAME: ${{GOOGLE_BUCKET_NAME}}
+
 spec:
   arguments: |-
     {

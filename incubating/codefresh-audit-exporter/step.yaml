@@ -15,6 +15,14 @@ metadata:
   maintainers:
     - name: Oleg Sucharevich
       email: olegs@codefresh.io
+  icon:
+    type: feather
+    name: command
+    color: '#000000'
+    background: '#ffffff'
+  sourceURL: 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-audit-exporter'
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-audit-exporter'
   examples:
     - description: Exporting audit log to google
       workflow:

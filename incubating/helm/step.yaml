@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 0.1.3
+  version: 0.1.2
   isPublic: true
   description: Release a Helm chart (update or install)
   sources:
@@ -22,7 +22,7 @@ metadata:
         url: >-
           https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/helm/icon.jpg
   examples:
-    - description: example-install
+    - description: example-1
       workflow:
           deploy:
             type: helm
@@ -40,7 +40,7 @@ metadata:
                 - /path/to/values.yaml
                 - /path/to/values2.yaml
               cmd_ps: --wait --timeout 5
-    - description: example-install-helm3
+    - description: example-2
       workflow:
           deploy:
             type: helm
@@ -52,18 +52,6 @@ metadata:
               custom_values:
                 - pat.arr="{one,two,three}"
                 - STR_WITH_COMAS="one\,two\,three"
-    - description: example-auth
-      workflow:
-        deploy:
-          type: helm
-          arguments:
-            action: auth
-            chart_name: test_chart
-            release_name: first
-            kube_context: my-kubernetes-context
-            custom_values:
-              - pat.arr="{one,two,three}"
-              - STR_WITH_COMAS="one\,two\,three"
 spec:
   arguments: |-
     {

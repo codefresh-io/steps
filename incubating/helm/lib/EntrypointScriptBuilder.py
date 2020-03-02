@@ -160,6 +160,21 @@ class EntrypointScriptBuilder(object):
             lines.append(kubectl_cmd)
         return lines
 
+    def _build_version_commands(self):
+        lines = []
+
+        kubectl_version_cmd = 'kubectl version'
+        if self.dry_run:
+            kubectl_version_cmd = 'echo ' + kubectl_version_cmd
+        lines.append(kubectl_version_cmd)
+
+        helm_version_cmd = 'helm version'
+        if self.dry_run:
+            helm_version_cmd = 'echo ' + helm_version_cmd
+        lines.append(helm_version_cmd)
+
+        return lines
+
     def _build_helm_commands(self):
         lines = []
 
@@ -300,5 +315,6 @@ class EntrypointScriptBuilder(object):
         lines = ['#!/bin/bash -e']
         lines += self._build_export_commands()
         lines += self._build_kubectl_commands()
+        lines += self._build_version_commands()
         lines += self._build_helm_commands()
         return '\n'.join(lines)

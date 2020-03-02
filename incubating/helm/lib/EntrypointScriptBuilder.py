@@ -315,6 +315,6 @@ class EntrypointScriptBuilder(object):
         lines = ['#!/bin/bash -e']
         lines += self._build_export_commands()
         lines += self._build_kubectl_commands()
-        lines += self._build_version_commands()
+#         lines += self._build_version_commands()
         lines += self._build_helm_commands()
         return '\n'.join(lines)

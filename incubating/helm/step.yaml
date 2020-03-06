@@ -87,7 +87,7 @@ spec:
             },
             "chart_name": {
                 "type": "string",
-                "description": "Helm chart name to release (path to chart folder, or name of packaged chart) (required)"
+                "description": "Helm chart name to release (path to chart folder, or name of packaged chart)"
             },
             "release_name": {
                 "type": "string",

@@ -21,8 +21,8 @@ Example `codefresh.yml` build is below with required Arguments in place.
 | namespace | null | string | No | Target Kubernetes namespace |
 | tiller_namespace | null | string | No | Kubernetes namespace where tiller is at |
 | chart_version | null | string | No | Application chart version to install |
-| helm_version | 2.9.1 | string | No | Version of cfstep-helm image(also helm-cli version). You can choose specific image at https://hub.docker.com/r/codefresh/cfstep-helm/tags |
-| chart_repo_url | null | string | No | Helm chart repository URL (overriden by injected Helm repository context) |
+| helm_version | 2.9.1 | string | No | Version of helm. You can choose specific image at https://hub.docker.com/r/codefresh/cfstep-helm/tags |
+| chart_repo_url | null | string | No | Helm chart repository URL (overridden by injected Helm repository context) |
 | custom_value_files | null | array of strings | No | Values file to provide to Helm (as --values or -f). see usage information below |
 | custom_values | null | array of strings | No | Variables to provide to Helm (as --set). see usage information below |
 | cmd_ps | null | string | No | Variable to provide other Helm cli flags. For example: '--wait --timeout', etc |

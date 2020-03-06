@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: andriicodefresh/helm
+  name: helm
   version: 1.0.0
   isPublic: true
   description: Release a Helm chart (update or install), push chart to repository, use custom helm commands

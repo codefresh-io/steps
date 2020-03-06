@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import os
+from EntrypointScriptBuilder import EntrypointScriptBuilder
+
+
+def main():
+    builder = EntrypointScriptBuilder(os.environ)
+    script_source = builder.build()
+    print(script_source)
+
+
+if __name__ == '__main__':
+    main()

@@ -25,9 +25,9 @@ RUN curl -L "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" -o he
 
 # Run acceptance tests
 COPY Makefile Makefile
-COPY bin/ bin/
-COPY lib/ lib/
-COPY acceptance_tests/ acceptance_tests/
+COPY bin bin/
+COPY lib lib/
+COPY acceptance_tests acceptance_tests/
 RUN apt-get update \
     && apt-get install -y python3-venv \
     && make acceptance

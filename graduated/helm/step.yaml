@@ -7,7 +7,7 @@ metadata:
   description: Release a Helm chart (update or install), push chart to repository, use custom helm commands
   sources:
     - 'https://github.com/codefresh-io/steps'
-  stage: incubating
+  stage: graduated
   maintainers:
     - name: Roman Kuchuk
       email: r.kuchuk@codefresh.io

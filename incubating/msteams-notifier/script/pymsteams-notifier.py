@@ -22,7 +22,7 @@ def main():
     msteams_link_text_2 = os.getenv('MSTEAMS_LINK_TEXT_2', 'Commit Information')
     msteams_link_url = os.getenv('MSTEAMS_LINK_URL', cf_build_url)
     msteams_link_url_2 = os.getenv('MSTEAMS_LINK_URL_2', cf_commit_url)
-    msteams_new_webhook_url = os.getenv('MSTEAMS_NEW_WEBHOOK_URL')
+    msteams_new_webhook_url = os.getenv('MSTEAMS_NEW_WEBHOOK_URL', None)
     msteams_text = os.getenv('MSTEAMS_TEXT', 'Codefresh Account: {}'.format(cf_account))
     msteams_title = os.getenv('MSTEAMS_TITLE', 'Codefresh Build Notification')
     msteams_webhook_url = os.getenv('MSTEAMS_WEBHOOK_URL')
@@ -72,7 +72,8 @@ def main():
     myTeamsMessage.addSection(myMessageSection)
 
     # Send to additional room
-    myTeamsMessage.newhookurl(msteams_new_webhook_url)
+    if msteams_new_webhook_url not None:
+        myTeamsMessage.newhookurl(msteams_new_webhook_url)
 
     myTeamsMessage.printme()
 

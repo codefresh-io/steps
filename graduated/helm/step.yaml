@@ -31,6 +31,7 @@ metadata:
               release_name: first
               kube_context: my-kubernetes-context
               tiller_namespace: kube-system
+              helm_version: 3.0.2
               namespace: project
               custom_values:
                 - KEY1=VAL1
@@ -48,6 +49,7 @@ metadata:
               action: install
               chart_name: test_chart
               release_name: first
+              helm_version: 3.0.2
               kube_context: my-kubernetes-context
               custom_values:
                 - pat.arr="{one,two,three}"
@@ -58,6 +60,7 @@ metadata:
             type: helm
             arguments:
               action: push
+              helm_version: 3.0.2
               chart_name: /codefresh/volume/repo/chart
               chart_repo_url: cm://h.cfcr.io/useraccount/default
     - description: example-auth

@@ -56,9 +56,11 @@ Crashes if missing KUBE_CONTEXT (ACTION=install)
     Run with env   ${env}
     Should have failed
 
-No env vars required if ACTION=auth
+KUBE_CONTEXT var is required if ACTION=auth
     &{env}=   Create dictionary
     Set to dictionary   ${env}  ACTION   auth
+    Set to dictionary   ${env}  KUBE_CONTEXT   helm
+    Set to dictionary   ${env}  DRY_RUN   true
     Run with env   ${env}
     Should have succeeded
 

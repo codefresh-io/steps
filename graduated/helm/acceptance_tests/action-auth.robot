@@ -10,6 +10,7 @@ Sourcing will provide exported environment variables
     Set to dictionary   ${env}  DRY_RUN   true
     Set to dictionary   ${env}  ACTION   auth
     Set to dictionary   ${env}  GOOGLE_APPLICATION_CREDENTIALS_JSON   {"x": "y"}
+    Set to dictionary   ${env}  KUBE_CONTEXT   helm
 
     Source with env and check for var  ${env}   GOOGLE_APPLICATION_CREDENTIALS
     Return code should be   255
@@ -24,6 +25,7 @@ If not sourced it will exit 0
     &{env}=   Create dictionary
     Set to dictionary   ${env}  DRY_RUN   true
     Set to dictionary   ${env}  ACTION   auth
+    Set to dictionary   ${env}  KUBE_CONTEXT   helm
 
     Run with env   ${env}
     Return code should be   0

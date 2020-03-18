@@ -20,7 +20,7 @@ metadata:
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/helm/icon.jpg
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/helm/icon.jpg
   examples:
     - description: example-install
       workflow:

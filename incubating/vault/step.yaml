@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: >-
     The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV

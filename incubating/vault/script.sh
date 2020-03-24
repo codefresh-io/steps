@@ -46,7 +46,7 @@ export VAULT_FORMAT="json"
 msg "Reading provided path"
 
 for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" ); do
-    echo $s >> $CF_VOLUME_PATH/env_vars_to_export
+    echo $s >> /meta/env_vars_to_export
 done
 
 

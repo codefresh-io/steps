@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Release a Helm chart (update or install), push chart to repository, use custom helm commands
   sources:
@@ -13,6 +13,7 @@ metadata:
       email: r.kuchuk@codefresh.io
   categories:
     - featured
+    - deployment
   official: true
   tags: []
   icon:
@@ -48,6 +49,7 @@ metadata:
               action: install
               chart_name: test_chart
               release_name: first
+              helm_version: 3.0.1
               kube_context: my-kubernetes-context
               custom_values:
                 - pat.arr="{one,two,three}"

@@ -1,0 +1,110 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: dustinvanbuskirk/prisma-cloud
+  version: 0.0.1
+  isPublic: true
+  description: Execute Prisma Clud image scan as build step
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/prisma-cloud'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - security
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/prisma-cloud/icon.png
+  examples:
+    - description: example-1
+      workflow:
+        PrismaCloudImageScan:
+          type: dustinvanbuskirk/prisma-cloud
+          arguments:
+            IMAGE_NAME: name
+            IMAGE_TAG: "tag"
+            PC_HOSTNAME: hostname
+            PC_PORT: "port"
+            PC_USERNAME: username
+            PC_PASSWORD: "password"
+            REGISTRY: registry
+            COMPLIANCE_THRESHOLD: level
+            VULNERABILITY_THRESHOLD: level
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "IMAGE_NAME",
+            "IMAGE_TAG",
+            "PC_HOSTNAME",
+            "PC_PASSWORD",
+            "PC_PORT",
+            "PC_USERNAME",
+            "REGISTRY"
+        ],
+        "properties": {
+            "IMAGE_NAME": {
+              "type": "string",
+              "description": "Docker Image Name"
+            },
+            "IMAGE_TAG": {
+              "type": "string",
+              "description": "Docker Image Tag"
+            },
+            "PC_HOSTNAME": {
+              "type": "string",
+              "description": "Prisma Cloud Hostname/IP"
+            },
+            "PC_PORT": {
+              "type": "string",
+              "description": "Prisma Cloud Port"
+            },
+            "PC_USERNAME": {
+              "type": "string",
+              "description": "username"
+            },
+            "PC_PASSWORD": {
+              "type": "string",
+              "description": "Prisma Cloud Password"
+            },
+            "PC_PROTOCOL": {
+              "type": "string",
+              "description": "Prisma Cloud Host/IP Protocol",
+              "default": "https"
+            },
+            "REGISTRY": {
+                "type": "string",
+                "description": "Docker Registry name from Prisma Cloud"
+            },
+            "COMPLIANCE_THRESHOLD": {
+                "type": "string",
+                "description": "[ low, medium, high, critical ] sets the the minimal severity compliance issue that returns a fail exit code"
+            },
+            "VULNERABILITY_THRESHOLD": {
+                "type": "string",
+                "description": "[ low, medium, high, critical ] sets the minimal severity vulnerability that returns a fail exit code"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: dustinvanbuskirk/prisma-cloud
+      image: codefreshplugins/cfstep-prisma-cloud:alpha
+      environment:
+      [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

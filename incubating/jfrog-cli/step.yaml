@@ -167,7 +167,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: codefreshplugins/cfstep-jfrog-cli:alpha
+      image: codefreshplugins/cfstep-jfrog-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

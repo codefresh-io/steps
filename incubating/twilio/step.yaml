@@ -4,7 +4,7 @@ metadata:
   name: twilio
   version: 0.0.3
   isPublic: true
-  description: Send SMS notifications via Twillio
+  description: Send any SMS message using Twilio
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/twilio'
   stage: incubating
@@ -37,6 +37,7 @@ metadata:
             TWILIO_TOKEN: ${{TWILIO_TOKEN}}
             TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
             TWILIO_MESSAGE: 'my message'
+title: Send an SMS via Twilio
 spec:
   arguments: |-
     {

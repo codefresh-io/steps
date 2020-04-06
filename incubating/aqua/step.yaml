@@ -4,7 +4,7 @@ metadata:
   name: aqua
   version: 0.0.4
   isPublic: true
-  description: Execute Aqua Security image scan as build step
+  description: Execute an Aqua container security scan
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/aqua'
   stage: incubating
@@ -32,6 +32,7 @@ metadata:
             AQUA_USERNAME: ${{AQUA_USERNAME}}
             IMAGE: ${{IMAGE}}
             TAG: ${{TAG}}
+title: Run an Aqua Security Scan
 spec:
   arguments: |-
     {

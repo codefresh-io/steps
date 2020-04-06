@@ -2,7 +2,7 @@ name: backblaze-b2
 image: codefreshplugins/backblaze-b2
 tag: 0.1.0
 version: 0.1.0
-description: Upload files to Backblaze B2 bucket
+description: Upload files to a Backblaze B2 bucket
 categories:
 - utility
 keywords:

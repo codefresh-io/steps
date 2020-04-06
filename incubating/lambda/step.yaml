@@ -4,7 +4,7 @@ metadata:
   name: lambda
   version: 0.0.2
   isPublic: true
-  description: Deploy a Serverless service (functions and resources) to AWS lambda
+  description: Deploy a serverless service (functions and resources) to AWS Lambda
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/lambda
@@ -53,6 +53,7 @@ metadata:
               AWS_REGION: ${{AWS_REGION}}
               AWS_PROFILE: ${{AWS_PROFILE}}
               AWS_STAGE: ${{AWS_STAGE}}
+title: Deploy to AWS Lambda
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: jira-ticket
   version: 0.0.2
   isPublic: false
-  description: Update a Jira ticket
+  description: Comment on a Jira ticket
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/jira-ticket
@@ -31,6 +31,7 @@ metadata:
             JIRA_URL: http://jira.com
             JIRA_USR: user
             JIRA_PWD: ${{JIRA_PASSWORD}}
+title: Comment on a Jira ticket
 spec:
   arguments: |-
     {

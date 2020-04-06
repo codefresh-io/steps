@@ -4,7 +4,7 @@ metadata:
   name: bintray
   version: 0.0.3
   isPublic: false
-  description: A Codefresh freestyle step to manage releases in JFrog Bintray
+  description: Manage a JFrog Bintray release
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/bintray
@@ -33,7 +33,7 @@ metadata:
             BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
             BINTRAY_USER: 'test'
             BINTRAY_KEY: '******'
-
+title: Manage a Bintray release
 spec:
   arguments: |-
     {

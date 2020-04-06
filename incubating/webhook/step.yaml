@@ -5,7 +5,7 @@ metadata:
   latest: true
   version: 0.0.5
   isPublic: true
-  description: Plugin which simply send notification
+  description: Notify any webook URL with any custom request body
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/webhook'
   stage: incubating
@@ -31,6 +31,7 @@ metadata:
   created_at: '2019-07-03T15:27:04.093Z'
   updated_at: '2019-09-18T08:15:28.752Z'
   id: 5d1cc948a7e22ee62c7ea76e
+title: Call a custom webhook
 spec:
   arguments: |-
     {

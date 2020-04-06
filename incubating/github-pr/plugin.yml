@@ -2,7 +2,7 @@ name: github-pr-plugin
 image: codefreshplugins/github-pr-plugin
 tag: master
 version: 0.2.0
-description: Operates on GitHub pull requests
+description: Create, edit, or annotate a GitHub pull request
 categories:
 - git
 - code-review

@@ -4,7 +4,7 @@ metadata:
   name: launch-composition
   version: 1.0.0
   isPublic: true
-  description: Run and externaly expose a docker-compose
+  description: Run and externally expose a docker-compose build
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/launch-composition'
   stage: graduated
@@ -32,6 +32,7 @@ metadata:
                 db:
                   image: mongo
             environment_name: 'environment name'
+title: Launch a composition
 spec:
   arguments: |
     {

@@ -4,7 +4,7 @@ metadata:
   name: twistlock
   version: 0.0.2
   isPublic: true
-  description: Execute Twistlock CLI image scan as build step
+  description: Scan a docker image with the Twistlock security service
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/twistlock'
   stage: incubating
@@ -37,6 +37,7 @@ metadata:
             CONSOLE_PASSWORD: ${{CONSOLE_PASSWORD}}
             COMPLIANCE_THRESHOLD: ${{COMPLIANCE_THRESHOLD}}
             VULNERABILITY_THRESHOLD: ${{VULNERABILITY_THRESHOLD}}
+title: Run a Twistlock security scan
 spec:
   arguments: |-
     {

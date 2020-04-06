@@ -4,7 +4,7 @@ metadata:
   name: git-submodules
   version: 0.0.2
   isPublic: false
-  description: Update git submodules
+  description: Update Git submodules
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/git-submodules
@@ -30,6 +30,7 @@ metadata:
             GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_SUBMODULE_SYNC: ${{CF_SUBMODULE_SYNC}}
             CF_SUBMODULE_UPDATE_RECURSIVE: ${{CF_SUBMODULE_UPDATE_RECURSIVE}}
+title: Update a Git submodule
 spec:
   arguments: |-
     {

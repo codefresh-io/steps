@@ -5,8 +5,7 @@ metadata:
   version: 0.0.2
   isPublic: true
   description: >-
-    Facilitates work with Google Key Management Service for such operations as
-    encrypting and decrypting
+    Run a command with Google Key Management Service, usually to encrypt or decrypt a value
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/google-kms'
   stage: incubating
@@ -34,7 +33,7 @@ metadata:
             KMS_KEY: ${{KMS_KEY}}
             GCP_SA_KEY: ${{GCP_SA_KEY}}
             VALUE: ${{VALUE}}
-
+title: Run a KMS command
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: github-pr
   version: 0.0.3
   isPublic: true
-  description: Operates on GitHub pull requests
+  description: Create, edit, or annotate a GitHub pull request
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/github-pr
@@ -35,6 +35,7 @@ metadata:
             HEAD: ${{CF_BRANCH}}
             TITLE: Codefresh PR for ${{CF_BRANCH}}
             BASE: master
+title: Open or update a GitHub PR
 spec:
   arguments: |-
     {

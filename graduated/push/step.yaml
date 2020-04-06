@@ -27,6 +27,7 @@ metadata:
             tag: latest
             image_name: codefresh/app
             registry: my-registry
+title: Push an image
 spec:
   arguments: |
     {

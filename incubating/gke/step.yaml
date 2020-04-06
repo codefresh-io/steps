@@ -4,7 +4,7 @@ metadata:
   name: gke
   version: 0.0.2
   isPublic: false
-  description: Codefresh gke plugin
+  description: Run a command on Google Kubernetes Engine, usually used to create GKE clusters for integration tests
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/gke'
   stage: incubating
@@ -32,7 +32,7 @@ metadata:
             CLOUDSDK_COMPUTE_ZONE: ${{CLOUDSDK_COMPUTE_ZONE}}
             CLOUDSDK_COMPUTE_REGION: ${{CLOUDSDK_COMPUTE_REGION}}
             COMMAND: ${{COMMAND}}
-
+title: Run a GKE command
 spec:
   arguments: |-
     {

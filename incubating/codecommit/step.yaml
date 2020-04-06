@@ -4,7 +4,7 @@ metadata:
   name: codecommit
   version: 0.0.2
   isPublic: false
-  description: Clone an AWS CodeCommit Git repository
+  description: Clone an AWS CodeCommit repository
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/codecommit
@@ -28,6 +28,7 @@ metadata:
           arguments:
             GIT_USER: ${{GIT_USER}}
             GIT_PASSWORD: ${{GIT_PASSWORD}}
+title: Clone a CodeCommit repository
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: freestyle
   version: 1.0.0
   isPublic: true
-  description: Run shell (bash or sh) commands on top of a docker image
+  description: Run any shell command on top of a Docker image
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/freestyle'
   stage: graduated
@@ -41,6 +41,7 @@ metadata:
             commands:
               - echo "Hello world"
               - echo "asdasd"
+title: Run a shell script
 spec:
   arguments: |
     {

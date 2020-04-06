@@ -4,7 +4,7 @@ metadata:
   name: k8s-canary-deployment
   version: 0.0.2
   isPublic: false
-  description: Perform canary deployments on a Kubernetes cluster
+  description: Perform a gradual canary deployment using only Kuberentes manifests
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-canary-deployment
@@ -38,6 +38,7 @@ metadata:
             SLEEP_SECONDS: ${{SLEEP_SECONDS}}
             NAMESPACE: ${{NAMESPACE}}
             KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+title: Canary deployment for plain K8s
 spec:
   arguments: |-
     {

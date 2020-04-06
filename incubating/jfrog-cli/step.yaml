@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: jfrog-cli
   version: 0.0.1
-  isPublic: false
+  isPublic: true
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli

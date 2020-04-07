@@ -4,7 +4,7 @@ metadata:
   name: msteams-notifier
   version: 0.0.4
   isPublic: true
-  description: Send Message to Microsoft Teams
+  description: Send a notification to a Microsoft Teams channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/msteams-notifier
@@ -38,6 +38,7 @@ metadata:
             MSTEAMS_TEXT: ${{MSTEAMS_TEXT}}
             MSTEAMS_TITLE: ${{MSTEAMS_TITLE}}
             MSTEAMS_WEBHOOK_URL: ${{MSTEAMS_WEBHOOK_URL}}
+title: Send message to Microsoft teams
 spec:
   arguments: |-
     {

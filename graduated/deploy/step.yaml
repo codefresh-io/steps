@@ -4,7 +4,7 @@ metadata:
   name: deploy
   version: 1.0.0
   isPublic: true
-  description: Deploy
+  description: Deploy a Docker image to an existing Kubernetes cluster.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'
   stage: graduated
@@ -28,6 +28,7 @@ metadata:
             cluster:  myDemoAKSCluster
             namespace: demo
             service: my-python-app
+title: Deploy to Kubernetes
 spec:
   arguments: |
     {

@@ -4,7 +4,7 @@ metadata:
   name: ecs-deploy
   version: 0.0.4
   isPublic: true
-  description: Deploy an image to ECS service
+  description: Deploy your app to AWS Elastic Container Service.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-deploy'
   stage: incubating
@@ -32,6 +32,7 @@ metadata:
             aws-region: us-east-2
             cluster_name: MY_ECS_CLUSTER
             service_name: MY_ECS_SERVICE
+title: Deploy to ECS
 spec:
   arguments: |-
     {

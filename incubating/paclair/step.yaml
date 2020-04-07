@@ -4,7 +4,7 @@ metadata:
   name: paclair
   version: 0.0.3
   isPublic: true
-  description: 'Scan docker images with Clair - https://github.com/coreos/clair'
+  description: Scan a Docker image with Clair Security scanner.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/paclair
@@ -52,6 +52,7 @@ metadata:
             CLAIR_URL: 'http://my-clair.com:6060'
             IMAGE: 'paclair-test'
             TAG: 'master'
+title: Run a Clair security scan
 spec:
   arguments: |-
     {

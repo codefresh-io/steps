@@ -5,7 +5,7 @@ metadata:
   name: cf-firebase-messaging
   version: 0.0.2
   isPublic: true
-  description: Send firebase notifications
+  description: Send notification messages to Firebase.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run
@@ -43,6 +43,7 @@ metadata:
                   "title": "test",
                   "body": "test"
               }
+title: Send Firebase notifications
 spec:
   arguments: |-
     {

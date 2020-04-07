@@ -4,7 +4,7 @@ metadata:
   name: azure-build
   version: 0.0.2
   isPublic: false
-  description: Docker build in Azure ACR
+  description: Build a Dockerfile and push it to the Azure Container Registry
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-build
@@ -35,6 +35,7 @@ metadata:
             TENANT: ${{TENANT}}
             DOCKERFILE_PATH: ${{DOCKERFILE}}
             USER: ${{USER}}
+title: Build an image in Azure ACR
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: sendgrid
   version: 0.0.3
   isPublic: true
-  description: Send e-mail via Sendgrid
+  description: Send an email using Sendgrid.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/sendgrid
@@ -32,6 +32,7 @@ metadata:
             SENDGRID_TYPE: ${{SENDGRID_TYPE}}
             SENDGRID_MESSAGE: ${{SENDGRID_MESSAGE}}
             SENDGRID_TEMPLATE: ${{SENDGRID_TEMPLATE}}
+title: Send an email via Sendgrid
 spec:
   arguments: |-
     {

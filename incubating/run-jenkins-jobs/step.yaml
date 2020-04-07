@@ -4,7 +4,7 @@ metadata:
   name: run-jenkins-jobs
   version: 0.1.4
   isPublic: true
-  description: Run jenkins job from codefresh pipeline
+  description: Run a Jenkins job from your Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/run-jenkins-jobs
@@ -51,6 +51,7 @@ metadata:
               - KEY1=VAL1
               - KEY2=VAL2
               - KEY3=VAL3
+title: Run a Jenkins job
 spec:
   arguments: |-
     {

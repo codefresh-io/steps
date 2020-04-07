@@ -4,7 +4,7 @@ metadata:
   name: helm
   version: 1.0.3
   isPublic: true
-  description: Release a Helm chart (update or install), push chart to repository, use custom helm commands
+  description: Update or install a Helm chart.
   sources:
     - 'https://github.com/codefresh-io/steps'
   stage: graduated
@@ -69,6 +69,7 @@ metadata:
               kube_context: my-kubernetes-context
               commands:
                 - helm list
+title: Release a Helm chart
 spec:
   arguments: |-
     {

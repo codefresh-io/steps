@@ -4,7 +4,7 @@ metadata:
   name: npm-publish
   version: 0.0.3
   isPublic: true
-  description: Publishes a nodejs package to NPM registry
+  description: Publish an NPM package to the NPM registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/npm-publish'
   stage: incubating
@@ -26,6 +26,7 @@ metadata:
           arguments:
             NPM_TOKEN: ${{NPM_TOKEN}}
             DIR: ${{MY_GITHUB_REPO_NAME}}
+title: Publish an NPM package
 spec:
   arguments: |-
     {

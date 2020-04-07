@@ -4,7 +4,7 @@ metadata:
   name: codefresh-inc/azure-files
   version: 0.0.2
   isPublic: true
-  description: Plugin for pushing files to Azure Files
+  description: Push files to Microsoft Azure Files.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-files
@@ -32,6 +32,7 @@ metadata:
             DIRECTORY: ${{DIRECTORY}}
             PATH_TO_FILE: ${{PATH_TO_FILE}}
             ADD_TIMESTAMP: "True"
+title: Upload to Azure Files
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: kompose
   version: 0.0.3
   isPublic: true
-  description: Release a Docker Compose to Kubernetes
+  description: Run Kompose to translate your docker-compose.yml files into Kubernetes resources.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/kompose
@@ -27,6 +27,7 @@ metadata:
           arguments:
             KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
             NAMESPACE: "${{NAMESPACE}}"
+title: Convert Docker Compose file to K8s
 spec:
   arguments: |-
     {

@@ -4,7 +4,7 @@ metadata:
   name: push
   version: 1.0.0
   isPublic: true
-  description: Push a docker image to a registry
+  description: Push a docker image to a registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/push'
   stage: graduated
@@ -27,6 +27,7 @@ metadata:
             tag: latest
             image_name: codefresh/app
             registry: my-registry
+title: Push an image
 spec:
   arguments: |
     {

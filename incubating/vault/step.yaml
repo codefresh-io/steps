@@ -5,8 +5,7 @@ metadata:
   version: 0.0.4
   isPublic: true
   description: >-
-    The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
-    variables
+    Read secrets from Hashicorp Vault inside a Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/vault
@@ -33,6 +32,7 @@ metadata:
             VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+title: Fetch secrets from Hashicorp Vault
 spec:
   arguments: |-
     {

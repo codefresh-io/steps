@@ -4,7 +4,7 @@ metadata:
   name: docker-service
   version: 0.0.2
   isPublic: false
-  description: Codefresh docker-service plugin
+  description: Run any command using the Docker daemon.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/docker-service
@@ -51,6 +51,7 @@ metadata:
             image: codefreshplugins/docker-service
             commands:
               - docker-service-clean
+title: Run a Docker command
 spec:
   arguments: |-
     {

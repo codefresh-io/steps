@@ -4,7 +4,7 @@ metadata:
   name: anchore
   version: 0.0.4
   isPublic: true
-  description: Analyze Docker images and generate a detailed manifest using Anchore
+  description: Analyze Docker images and generate a detailed manifest using Anchore.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/anchore
@@ -33,6 +33,7 @@ metadata:
             ANCHORE_CLI_PASS: foobar
             ANCHORE_CLI_IMAGE: alpine
             ANCHORE_CLI_FAIL_ON_POLICY: "true"
+title: Run an Anchore Security Scan
 spec:
   arguments: |-
     {

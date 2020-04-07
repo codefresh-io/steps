@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitlab-mr-annotate
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Add a comma-separated list of labels to a GitLab merge request.
   sources:

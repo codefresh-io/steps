@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-message-sender
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Send a message to a Slack user or channel.
   sources:

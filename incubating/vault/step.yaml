@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: >-
     Read secrets from Hashicorp Vault inside a Codefresh pipeline.

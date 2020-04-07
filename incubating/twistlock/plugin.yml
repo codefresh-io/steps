@@ -2,7 +2,7 @@ name: cf-twistlock
 image: codefreshplugins/cf-twistlock
 tag: "19.03"
 version: "19.03"
-description: Scan a docker image with the Twistlock security service
+description: Scan a docker image with the Twistlock security service.
 categories:
 - security
 keywords:

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: pgp
   isPublic: false
-  description: Create a digital signature with PGP encryption
+  description: Create a digital signature with PGP encryption.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run'
   stage: incubating

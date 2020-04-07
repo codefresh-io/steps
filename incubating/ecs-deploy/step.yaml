@@ -4,7 +4,7 @@ metadata:
   name: ecs-deploy
   version: 0.0.4
   isPublic: true
-  description: Deploy your app to AWS Elastic Container Service
+  description: Deploy your app to AWS Elastic Container Service.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-deploy'
   stage: incubating

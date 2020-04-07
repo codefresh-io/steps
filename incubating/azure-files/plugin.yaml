@@ -2,7 +2,7 @@ name: azure-files
 image: codefresh/azure-files-plugin
 tag: master
 version: 1.0.0
-description: Push files to Microsoft Azure Files
+description: Push files to Microsoft Azure Files.
 categories:
 - utility
 keywords:

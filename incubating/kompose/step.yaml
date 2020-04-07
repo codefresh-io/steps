@@ -4,7 +4,7 @@ metadata:
   name: kompose
   version: 0.0.3
   isPublic: true
-  description: Run Kompose to translate your docker-compose.yml files into Kubernetes resources
+  description: Run Kompose to translate your docker-compose.yml files into Kubernetes resources.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/kompose

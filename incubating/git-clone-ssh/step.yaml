@@ -4,7 +4,7 @@ metadata:
   name: git-clone-ssh
   version: 0.0.2
   isPublic: false
-  description: Clone a Git repository using SSH keys
+  description: Clone a Git repository using SSH keys.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/git-clone-ssh

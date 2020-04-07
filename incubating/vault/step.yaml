@@ -5,7 +5,7 @@ metadata:
   version: 0.0.4
   isPublic: true
   description: >-
-    Read secrets from Hashicorp Vault inside a Codefresh pipeline
+    Read secrets from Hashicorp Vault inside a Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/vault

@@ -4,7 +4,7 @@ metadata:
   name: backblaze-b2
   version: 0.0.4
   isPublic: true
-  description: Upload files to a Backblaze B2 bucket
+  description: Upload files to a Backblaze B2 bucket.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/backblaze-b2'
   stage: incubating

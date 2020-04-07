@@ -4,7 +4,7 @@ metadata:
   name: gitter-notifier
   version: 1.0.5
   isPublic: true
-  description: Send a notification to a gitter disucssion channel
+  description: Send a notification to a gitter disucssion channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/gitter-notifier

@@ -4,7 +4,7 @@ metadata:
   name: git-clone
   version: 1.0.0
   isPublic: true
-  description: Clone a Git repository with Codefresh's built in Git provider integration
+  description: Clone a Git repository with Codefresh's built in Git provider integration.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
   stage: graduated

@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: build
   isPublic: true
-  description: Build a Dockerfile and push it to the internal Codefresh registry
+  description: Build a Dockerfile and push it to the internal Codefresh registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated

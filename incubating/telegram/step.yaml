@@ -5,7 +5,7 @@ metadata:
   version: 1.0.1
   isPublic: true
   description: >-
-    Send any message to a Telegram channel or user
+    Send any message to a Telegram channel or user.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/telegram

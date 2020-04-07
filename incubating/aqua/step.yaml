@@ -4,7 +4,7 @@ metadata:
   name: aqua
   version: 0.0.4
   isPublic: true
-  description: Execute an Aqua container security scan
+  description: Execute an Aqua container security scan.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/aqua'
   stage: incubating

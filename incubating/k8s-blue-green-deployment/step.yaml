@@ -4,7 +4,7 @@ metadata:
   name: k8s-blue-green-deployment
   version: 0.0.2
   isPublic: false
-  description: Perform a blue/green deployment using only Kuberentes manifests
+  description: Perform a blue/green deployment using only Kuberentes manifests.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-blue-green-deployment

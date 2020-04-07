@@ -4,7 +4,7 @@ metadata:
   name: helm
   version: 1.0.3
   isPublic: true
-  description: Update or install a Helm chart
+  description: Update or install a Helm chart.
   sources:
     - 'https://github.com/codefresh-io/steps'
   stage: graduated

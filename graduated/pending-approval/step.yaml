@@ -4,7 +4,7 @@ metadata:
   name: pending-approval
   version: 1.0.0
   isPublic: true
-  description: Pause a running build until it is approved or denied
+  description: Pause a running build until it is approved or denied.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/pending-approval'
   stage: graduated

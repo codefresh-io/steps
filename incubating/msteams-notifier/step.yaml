@@ -4,7 +4,7 @@ metadata:
   name: msteams-notifier
   version: 0.0.4
   isPublic: true
-  description: Send a notification to a Microsoft Teams channel
+  description: Send a notification to a Microsoft Teams channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/msteams-notifier

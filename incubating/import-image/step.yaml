@@ -4,7 +4,7 @@ metadata:
   name: import-image
   version: 0.0.2
   isPublic: false
-  description: Import a Docker image from an external registry with existing metadata
+  description: Import a Docker image from an external registry with existing metadata.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/import-image

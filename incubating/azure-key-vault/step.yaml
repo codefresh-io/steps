@@ -4,7 +4,7 @@ metadata:
   name: azure-key-vault
   version: 0.0.4
   isPublic: true
-  description: Fetch secrets from Microsoft Azure Key Vault
+  description: Fetch secrets from Microsoft Azure Key Vault.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-key-vault

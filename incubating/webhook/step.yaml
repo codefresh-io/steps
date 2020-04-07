@@ -5,7 +5,7 @@ metadata:
   latest: true
   version: 0.0.5
   isPublic: true
-  description: Notify any webook URL with any custom request body
+  description: Notify any webook URL with any custom request body.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/webhook'
   stage: incubating

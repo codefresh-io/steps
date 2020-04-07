@@ -4,7 +4,7 @@ metadata:
   name: slack-message-sender
   version: 0.0.3
   isPublic: true
-  description: Send a message to a Slack user or channel
+  description: Send a message to a Slack user or channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/slack-message-sender

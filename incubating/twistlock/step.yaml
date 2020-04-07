@@ -4,7 +4,7 @@ metadata:
   name: twistlock
   version: 0.0.2
   isPublic: true
-  description: Scan a docker image with the Twistlock security service
+  description: Scan a docker image with the Twistlock security service.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/twistlock'
   stage: incubating

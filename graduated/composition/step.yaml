@@ -4,7 +4,7 @@ metadata:
   name: composition
   version: 1.0.0
   isPublic: true
-  description: Run a docker-compose.yml composition as a pipeline step
+  description: Run a docker-compose.yml composition as a pipeline step.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/composition'
   stage: graduated

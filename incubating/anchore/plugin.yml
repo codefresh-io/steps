@@ -1,5 +1,5 @@
 image: codefreshplugins/anchore-plugin
-description: Analyze Docker images and generate a detailed manifest using Anchore
+description: Analyze Docker images and generate a detailed manifest using Anchore.
 version: 0.1.0
 keywords:
   - anchore

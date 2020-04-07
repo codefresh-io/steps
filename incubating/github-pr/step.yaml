@@ -4,7 +4,7 @@ metadata:
   name: github-pr
   version: 0.0.3
   isPublic: true
-  description: Create, edit, or annotate a GitHub pull request
+  description: Create, edit, or annotate a GitHub pull request.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/github-pr

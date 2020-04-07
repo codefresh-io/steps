@@ -3,7 +3,7 @@ title: Publish on NPM
 image: codefresh/npm-publish:latest
 tag: "0.1"
 version: "0.1"
-description: Publish an NPM package to the NPM registry
+description: Publish an NPM package to the NPM registry.
 categories:
 - deployment
 sources:

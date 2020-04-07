@@ -7,7 +7,7 @@ metadata:
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
-  version: 1.0.1
+  version: 1.1.0
   categories:
     - featured
     - docker
@@ -96,6 +96,21 @@ spec:
             "target": {
                 "type": "string",
                 "description": "target stage in a multistage build (build will run until this stage)"
+            },
+            "tags": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                },
+                "description": "Multiple tags under which to push the image."
+            },
+            "registry": {
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view."
+            },
+            "disable_push": {
+                "type": "boolean",
+                "description": "Do not push to any registry automatically."
             }
         }
     }

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Update or install a Helm chart.
   sources:

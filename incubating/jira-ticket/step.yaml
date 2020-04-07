@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-ticket
-  version: 0.0.2
+  version: 0.0.3
   isPublic: false
   description: Comment on a Jira ticket.
   sources:

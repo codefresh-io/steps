@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-canary-deployment
-  version: 0.0.2
+  version: 0.0.3
   isPublic: false
   description: Perform a gradual canary deployment using only Kuberentes manifests.
   sources:

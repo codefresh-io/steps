@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: Fetch secrets from Microsoft Azure Key Vault.
   sources:

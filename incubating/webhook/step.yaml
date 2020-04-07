@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: webhook
   latest: true
-  version: 0.0.5
+  version: 0.0.6
   isPublic: true
   description: Notify any webook URL with any custom request body.
   sources:

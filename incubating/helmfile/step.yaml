@@ -57,7 +57,7 @@ spec:
             "HELM_VERSION": {
                 "type": "string",
                 "description": "Version of helm binary",
-                "default": "3.0.0",
+                "default": "3.0.3",
                 "enum": [ "2.14.3", "3.0.0", "3.0.3" ]
             },    
             "HELMFILE_VERSION": {
@@ -206,7 +206,7 @@ spec:
   stepsTemplate: |-
     main:
       name: helmfile
-      image: 'codefreshplugins/cfstep-helmfile:${{HELM_VERSION}}-${{HELMFILE_VERSION}}'
+      image: 'codefreshplugins/cfstep-helmfile:[[.Arguments.HELM_VERSION]]-[[.Arguments.HELMFILE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

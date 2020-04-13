@@ -75,7 +75,7 @@ spec:
       }
     }
   stepsTemplate: |
-    export_variables:
+    github_action_export_variables:
       title: Exporting required variables
       image: codefresh/github-action-converter
       environment:
@@ -88,23 +88,24 @@ spec:
       commands:
          - /app/interface/cli/index.js export-variables
     [[ if .Arguments.debug ]]
-    envs:
+    github_action_print:
       image: alpine
       title: envs
       commands:
         - printenv
     [[ end ]]
-    prepare:
-      type: github-action
-      title: Github Action
-      description: Github Action
-      git_repo: ${{GA_GIT_REPO}}
-      git_repo_name: ${{GA_GIT_REPO_NAME}}
-      docker_repo: ${{GA_DOCKER_REPO}}
-      registry: ${{GA_DOCKER_REGISTRY}}
-      disable_cache: ${{GA_DISABLE_CACHE}}
-    step_name:
-      image: ${{GA_DOCKER_REPO}}
+    github_action_clone:
+      type: git-clone
+      repo: ${{GA_GIT_REPO}}
+    github_action_build:
+      type: build
+      workingDirectory: ${{github_action_clone}}
+      repository: ${{GA_GIT_REPO_NAME}}
+      dockerfile:
+        path: Dockerfile
+      tag: latest
+    github_action_step:
+      image: ${{github_action_build}}
       volumes:
         - ./${{CF_REPO_NAME}}:/github/workspace/${{CF_REPO_NAME}}
         - ./:/github/workflow

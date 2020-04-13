@@ -2,7 +2,8 @@ kind: step-type
 version: "1.0"
 metadata:
   name: pending-approval
-  version: 1.0.1
+  version: 1.0.2
+  title: Wait for approval
   isPublic: true
   description: Pause a running build until it is approved or denied.
   sources:
@@ -32,7 +33,6 @@ metadata:
           timeout:
             duration: 1
             finalState: denied
-title: Wait for approval
 spec:
   arguments: |
     {

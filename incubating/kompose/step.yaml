@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: kompose
-  version: 0.0.4
+  version: 0.0.5
+  title: Convert Docker Compose file to K8s
   isPublic: true
   description: Run Kompose to translate your docker-compose.yml files into Kubernetes resources.
   sources:
@@ -27,7 +28,6 @@ metadata:
           arguments:
             KUBE_CONTEXT: "${{KUBE_CONTEXT}}"
             NAMESPACE: "${{NAMESPACE}}"
-title: Convert Docker Compose file to K8s
 spec:
   arguments: |-
     {

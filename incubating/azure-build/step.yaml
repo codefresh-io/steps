@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-build
-  version: 0.0.3
+  title: Build an image in Azure ACR
+  version: 0.0.4
   isPublic: false
   description: Build a Dockerfile and push it to the Azure Container Registry
   sources:
@@ -35,7 +36,6 @@ metadata:
             TENANT: ${{TENANT}}
             DOCKERFILE_PATH: ${{DOCKERFILE}}
             USER: ${{USER}}
-title: Build an image in Azure ACR
 spec:
   arguments: |-
     {

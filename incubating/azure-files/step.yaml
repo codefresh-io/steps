@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-inc/azure-files
-  version: 0.0.3
+  title: Upload to Azure Files
+  version: 0.0.4
   isPublic: true
   description: Push files to Microsoft Azure Files.
   sources:
@@ -32,7 +33,6 @@ metadata:
             DIRECTORY: ${{DIRECTORY}}
             PATH_TO_FILE: ${{PATH_TO_FILE}}
             ADD_TIMESTAMP: "True"
-title: Upload to Azure Files
 spec:
   arguments: |-
     {

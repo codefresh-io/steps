@@ -2,7 +2,8 @@ kind: step-type
 version: "1.0"
 metadata:
   name: git-clone
-  version: 1.0.1
+  title: Clone a Git repository
+  version: 1.0.2
   isPublic: true
   description: Clone a Git repository with Codefresh's built in Git provider integration.
   sources:
@@ -27,7 +28,6 @@ metadata:
             repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
             git: github
             revision: ${{CF_REVISION}}
-title: Clone a Git repository
 spec:
   arguments: |
     {

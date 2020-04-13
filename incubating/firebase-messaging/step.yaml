@@ -3,7 +3,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-firebase-messaging
-  version: 0.0.3
+  title: Send Firebase notifications
+  version: 0.0.4
   isPublic: true
   description: Send notification messages to Firebase.
   sources:
@@ -43,7 +44,6 @@ metadata:
                   "title": "test",
                   "body": "test"
               }
-title: Send Firebase notifications
 spec:
   arguments: |-
     {

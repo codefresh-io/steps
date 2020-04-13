@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitlab-mr-annotate
-  version: 0.0.4
+  title: Add a label to a GitLab merge request
+  version: 0.0.5
   isPublic: true
   description: Add a comma-separated list of labels to a GitLab merge request.
   sources:
@@ -29,7 +30,6 @@ metadata:
             LABELS: ${{LABELS}}
             PROJECT_ID: ${{PROJECT_ID}}
             MERGE_REQUEST_ID: ${{MERGE_REQUEST_ID}}
-title: Add a label to a GitLab merge request
 spec:
   arguments: |-
     {

@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aqua
-  version: 0.0.5
+  title: Run an Aqua Security Scan
+  version: 0.0.6
   isPublic: true
   description: Execute an Aqua container security scan.
   sources:
@@ -32,7 +33,6 @@ metadata:
             AQUA_USERNAME: ${{AQUA_USERNAME}}
             IMAGE: ${{IMAGE}}
             TAG: ${{TAG}}
-title: Run an Aqua Security Scan
 spec:
   arguments: |-
     {

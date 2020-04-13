@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: lambda
-  version: 0.0.3
+  version: 0.0.4
+  title: Deploy to AWS Lambda
   isPublic: true
   description: Deploy a serverless service (functions and resources) to AWS Lambda.
   sources:
@@ -53,7 +54,6 @@ metadata:
               AWS_REGION: ${{AWS_REGION}}
               AWS_PROFILE: ${{AWS_PROFILE}}
               AWS_STAGE: ${{AWS_STAGE}}
-title: Deploy to AWS Lambda
 spec:
   arguments: |-
     {

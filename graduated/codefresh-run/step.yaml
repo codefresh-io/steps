@@ -2,7 +2,8 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-run
-  version: 1.0.1
+  title: Run a Codefresh pipeline
+  version: 1.0.2
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -39,7 +40,6 @@ metadata:
   updated_at: '2019-12-24T15:42:47.178Z'
   latest: true
   id: 5e0231f76e1ebe58d5d37a37
-title: Run a Codefresh pipeline
 spec:
   arguments: |-
     {

@@ -2,7 +2,8 @@ kind: step-type
 version: "1.0"
 metadata:
   name: launch-composition
-  version: 1.0.1
+  version: 1.0.2
+  title: Launch a composition
   isPublic: true
   description: Run and externally expose a docker-compose build.
   sources:
@@ -32,7 +33,6 @@ metadata:
                 db:
                   image: mongo
             environment_name: 'environment name'
-title: Launch a composition
 spec:
   arguments: |
     {

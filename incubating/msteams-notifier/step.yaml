@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 0.0.5
+  version: 0.0.6
+  title: Send message to Microsoft teams
   isPublic: true
   description: Send a notification to a Microsoft Teams channel.
   sources:
@@ -38,7 +39,6 @@ metadata:
             MSTEAMS_TEXT: ${{MSTEAMS_TEXT}}
             MSTEAMS_TITLE: ${{MSTEAMS_TITLE}}
             MSTEAMS_WEBHOOK_URL: ${{MSTEAMS_WEBHOOK_URL}}
-title: Send message to Microsoft teams
 spec:
   arguments: |-
     {

@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gke
-  version: 0.0.3
+  version: 0.0.4
+  title: Run a GKE command
   isPublic: false
   description: Run a command on Google Kubernetes Engine, usually used to create GKE clusters for integration tests.
   sources:
@@ -32,7 +33,6 @@ metadata:
             CLOUDSDK_COMPUTE_ZONE: ${{CLOUDSDK_COMPUTE_ZONE}}
             CLOUDSDK_COMPUTE_REGION: ${{CLOUDSDK_COMPUTE_REGION}}
             COMMAND: ${{COMMAND}}
-title: Run a GKE command
 spec:
   arguments: |-
     {

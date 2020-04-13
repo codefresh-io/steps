@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-deploy
-  version: 0.0.5
+  title: Deploy to ECS
+  version: 0.0.6
   isPublic: true
   description: Deploy your app to AWS Elastic Container Service.
   sources:
@@ -32,7 +33,6 @@ metadata:
             aws-region: us-east-2
             cluster_name: MY_ECS_CLUSTER
             service_name: MY_ECS_SERVICE
-title: Deploy to ECS
 spec:
   arguments: |-
     {

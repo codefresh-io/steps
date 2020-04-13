@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.5
+  title: Pull secrets from Azure Key Vault
+  version: 0.0.6
   isPublic: true
   description: Fetch secrets from Microsoft Azure Key Vault.
   sources:
@@ -47,7 +48,6 @@ metadata:
             AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
             AZURE_CLIENT_SECRET: ${{AZURE_CLIENT_SECRET}}
             AZURE_TENANT_ID: ${{AZURE_TENANT_ID}}
-title: Pull secrets from Azure Key Vault
 spec:
   arguments: |-
     {

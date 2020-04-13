@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.4
+  version: 1.0.5
+  title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
   sources:
@@ -69,7 +70,6 @@ metadata:
               kube_context: my-kubernetes-context
               commands:
                 - helm list
-title: Release a Helm chart
 spec:
   arguments: |-
     {

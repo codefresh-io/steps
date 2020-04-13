@@ -2,15 +2,16 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helmfile
-  version: 0.0.2
+  version: 0.0.4
   isPublic: true
   description: Use helmfile from Codefresh pipeline
   sources:
     - 'https://github.com/codefresh-contrib/cfstep-helmfile'
+    - 'https://github.com/roboll/helmfile'
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk
-      email: dustinvb@codefresh.io
+      email: dustin@codefresh.io
   categories:
     - deployment
   official: true
@@ -55,15 +56,15 @@ spec:
             },
             "HELM_VERSION": {
                 "type": "string",
-                "description": "Version of helmfile binary",
-                "default": "3.0.0",
-                "enum": [ "2.14.3", "3.0.0" ]
+                "description": "Version of helm binary",
+                "default": "3.0.3",
+                "enum": [ "2.14.3", "3.0.0", "3.0.3" ]
             },    
             "HELMFILE_VERSION": {
                 "type": "string",
                 "description": "Version of helmfile binary",
-                "default": "0.90.7",
-                "enum": [ "0.90.2", "0.90.7", "0.93.2" ]
+                "default": "0.108.0",
+                "enum": [ "0.90.2", "0.90.7", "0.93.2", "0.108.0" ]
             },
             "HELM_BINARY": {
                 "type": "string",
@@ -202,38 +203,14 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: helmfile
-      image: 'codefreshplugins/cfstep-helmfile:${{HELM_VERSION}}-${{HELMFILE_VERSION}}'
+      image: 'codefreshplugins/cfstep-helmfile:[[.Arguments.HELM_VERSION]]-[[.Arguments.HELMFILE_VERSION]]'
       environment:
-        - 'COMMANDS=${{COMMANDS}}'
-        - 'WORKING_DIRECTORY=${{WORKING_DIRECTORY}}'
-        - 'HELMFILE_VERSION=${{HELMFILE_VERSION}}'
-        - 'HELM_BINARY=${{HELM_BINARY}}'
-        - 'FILE=${{FILE}}'
-        - 'ENVIRONMENT=${{ENVIRONMENT}}'
-        - 'STATE_VALUES_SET=${{STATE_VALUES_SET}}'
-        - 'STATE_VALUES_FILE=${{STATE_VALUES_FILE}}'
-        - 'QUIET=${{QUIET}}'
-        - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
-        - 'NO_COLOR=${{NO_COLOR}}'
-        - 'LOG_LEVEL=${{LOG_LEVEL}}'
-        - 'NAMESPACE=${{NAMESPACE}}'
-        - 'SELECTOR=${{SELECTOR}}'
-        - 'ALLOW_NO_MATCHING_RELEASE=${{ALLOW_NO_MATCHING_RELEASE}}'
-        - 'INTERACTIVE=${{INTERACTIVE}}'
-        - 'HELP=${{HELP}}'
-        - 'VERSION=${{VERSION}}'
-        - 'DEPS_PS=${{DEPS_PS}}'
-        - 'REPOS_PS=${{REPOS_PS}}'
-        - 'CHARTS_PS=${{CHARTS_PS}}'
-        - 'DIFF_PS=${{DIFF_PS}}'
-        - 'TEMPLATE_PS=${{TEMPLATE_PS}}'
-        - 'LINT_PS=${{LINT_PS}}'
-        - 'SYNC_PS=${{SYNC_PS}}'
-        - 'APPLY_PS=${{APPLY_PS}}'
-        - 'STATUS_PS=${{STATUS_PS}}'
-        - 'DELETE_PS=${{DELETE_PS}}'
-        - 'DESTROY_PS=${{DESTROY_PS}}'
-        - 'TEST_PS=${{TEST_PS}}'
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

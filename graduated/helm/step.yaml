@@ -111,6 +111,18 @@ spec:
                 "type": "string",
                 "description": "Application chart version to install"
             },
+            "repos": {
+              "type": "array",
+              "description": "array of custom repos",
+              "items": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
             "helm_version": {
                 "type": "string",
                 "examples": ["2.9.1", "3.0.3"],
@@ -164,6 +176,9 @@ spec:
       [[ range $key, $val := .Arguments.custom_value_files ]]
         - 'CUSTOMFILE_[[ toUpper $key ]]=[[ $val ]]'
       [[- end ]]
+      [[ range $arg := .Arguments.repos ]]
+        - 'CF_CTX_[[ $arg.name ]]_URL=[[ $arg.url ]]'
+      [[- end -]]
       [[ if .Arguments.commands ]]
       commands:
         - source /opt/bin/release_chart

@@ -31,7 +31,6 @@ metadata:
               SLACK_MESSAGE: Hello from codefresh!
               SLACK_TITLE: Custom Title
               SLACK_USERNAME: rtCamp
-            registry: dockerhub
   official: false
   stage: incubating
   latest: true
@@ -54,10 +53,6 @@ spec:
           "type": "object",
           "description": "action environment variables"
         },
-        "cache": {
-          "type": "boolean",
-          "description": "enable/disable cache"
-        },
         "debug": {
           "type": "boolean",
           "description": "show debug logs"
@@ -71,9 +66,6 @@ spec:
       environment:
          [[ if .Arguments.envs ]]- ENVS="[[ .Arguments.envs ]]"[[ end ]]
          [[ if .Arguments.url ]]- REPO_URL=[[ .Arguments.url ]][[ end ]]
-         [[ if .Arguments.registry ]]- REGISTRY=[[ .Arguments.registry ]][[ end ]]
-         [[ if .Arguments.registry_repo ]]- DOCKERHUB_REPO=[[ .Arguments.registry_repo ]][[ end ]]
-         [[ if .Arguments.cache ]]- CACHE=[[ .Arguments.cache ]][[ end ]]
          [[ if .Arguments.debug ]]- LOG_LEVEL=debug[[ end ]]
       commands:
          - /app/interface/cli/index.js export-variables

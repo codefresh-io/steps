@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helmfile
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: Use helmfile from Codefresh pipeline
   sources:
@@ -58,7 +58,7 @@ spec:
                 "type": "string",
                 "description": "Version of helm binary",
                 "default": "3.0.3",
-                "enum": [ "2.14.3", "3.0.0", "3.0.3" ]
+                "enum": [ "2.14.3", "3.0.0", "3.0.3", "3.1.1" ]
             },    
             "HELMFILE_VERSION": {
                 "type": "string",

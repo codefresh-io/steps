@@ -2,7 +2,8 @@ kind: step-type
 version: "1.0"
 metadata:
   name: composition
-  version: 1.0.1
+  title: Run a Docker Compose file
+  version: 1.0.2
   isPublic: true
   description: Run a docker-compose.yml composition as a pipeline step.
   sources:
@@ -36,7 +37,6 @@ metadata:
                 working_dir: /app
                 environment:
                   - key=value
-title: Run a Docker Compose file
 spec:
   arguments: |
     {

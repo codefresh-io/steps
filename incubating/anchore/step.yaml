@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: anchore
-  version: 0.0.5
+  title: Run an Anchore Security Scan
+  version: 0.0.6
   isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore.
   sources:
@@ -33,7 +34,6 @@ metadata:
             ANCHORE_CLI_PASS: foobar
             ANCHORE_CLI_IMAGE: alpine
             ANCHORE_CLI_FAIL_ON_POLICY: "true"
-title: Run an Anchore Security Scan
 spec:
   arguments: |-
     {

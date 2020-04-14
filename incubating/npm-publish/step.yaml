@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: npm-publish
-  version: 0.0.4
+  version: 0.0.5
+  title: Publish an NPM package
   isPublic: true
   description: Publish an NPM package to the NPM registry.
   sources:
@@ -26,7 +27,6 @@ metadata:
           arguments:
             NPM_TOKEN: ${{NPM_TOKEN}}
             DIR: ${{MY_GITHUB_REPO_NAME}}
-title: Publish an NPM package
 spec:
   arguments: |-
     {

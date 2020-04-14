@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-blue-green-deployment
-  version: 0.0.3
+  version: 0.0.4
+  title: Blue/green deploymens for plain K8s
   isPublic: false
   description: Perform a blue/green deployment using only Kuberentes manifests.
   sources:
@@ -35,7 +36,6 @@ metadata:
             HEALTH_SECONDS: ${{HEALTH_SECONDS}}
             NAMESPACE: ${{NAMESPACE}}
             KUBE_CONTEXT: ${{KUBE_CONTEXT}}
-title: Blue/green deploymens for plain K8s
 spec:
   arguments: |-
     {

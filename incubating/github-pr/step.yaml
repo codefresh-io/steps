@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: github-pr
-  version: 0.0.4
+  title: Open or update a GitHub PR
+  version: 0.0.5
   isPublic: true
   description: Create, edit, or annotate a GitHub pull request.
   sources:
@@ -35,7 +36,6 @@ metadata:
             HEAD: ${{CF_BRANCH}}
             TITLE: Codefresh PR for ${{CF_BRANCH}}
             BASE: master
-title: Open or update a GitHub PR
 spec:
   arguments: |-
     {

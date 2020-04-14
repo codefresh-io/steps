@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.6
+  version: 1.0.7
+  title: Gitter notify
   isPublic: true
   description: Send a notification to a gitter disucssion channel.
   sources:
@@ -44,7 +45,6 @@ metadata:
                 Hello, how are you? There was a build triggered by ${{CF_BUILD_INITIATOR}}
                 You could see the build [here](${{CF_BUILD_URL}}) and the commit [here](${{CF_COMMIT_URL}})
             gitter_status: "info"
-title: Gitter notify
 spec:
   arguments: |-
     {

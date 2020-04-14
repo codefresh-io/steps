@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bintray
-  version: 0.0.4
+  title: Manage a Bintray release
+  version: 0.0.5
   isPublic: false
   description: Manage a JFrog Bintray release.
   sources:
@@ -33,7 +34,6 @@ metadata:
             BINTRAY_ARGS: ${{BINTRAY_ARGSs}}
             BINTRAY_USER: 'test'
             BINTRAY_KEY: '******'
-title: Manage a Bintray release
 spec:
   arguments: |-
     {

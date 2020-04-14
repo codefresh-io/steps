@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.5
+  version: 0.0.6
+  title: Fetch secrets from Hashicorp Vault
   isPublic: true
   description: >-
     Read secrets from Hashicorp Vault inside a Codefresh pipeline.
@@ -32,7 +33,6 @@ metadata:
             VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
-title: Fetch secrets from Hashicorp Vault
 spec:
   arguments: |-
     {

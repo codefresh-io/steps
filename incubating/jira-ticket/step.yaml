@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-ticket
-  version: 0.0.3
+  version: 0.0.4
+  title: Comment on a Jira ticket
   isPublic: false
   description: Comment on a Jira ticket.
   sources:
@@ -31,7 +32,6 @@ metadata:
             JIRA_URL: http://jira.com
             JIRA_USR: user
             JIRA_PWD: ${{JIRA_PASSWORD}}
-title: Comment on a Jira ticket
 spec:
   arguments: |-
     {

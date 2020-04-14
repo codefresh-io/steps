@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twilio
-  version: 0.0.4
+  version: 0.0.5
+  title: Send an SMS via Twilio
   isPublic: true
   description: Send any SMS message using Twilio.
   sources:
@@ -37,7 +38,6 @@ metadata:
             TWILIO_TOKEN: ${{TWILIO_TOKEN}}
             TWILIO_PHONE_FROM: ${{TWILIO_PHONE_FROM}}
             TWILIO_MESSAGE: 'my message'
-title: Send an SMS via Twilio
 spec:
   arguments: |-
     {

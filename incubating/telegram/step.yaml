@@ -2,7 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: telegram
-  version: 1.0.2
+  version: 1.0.3
+  title: Send a Telegram message
   isPublic: true
   description: >-
     Send any message to a Telegram channel or user.
@@ -51,7 +52,6 @@ metadata:
                 You could see the build [here](${{CF_BUILD_URL}}) and the commit [here](${{CF_COMMIT_URL}})
               telegram_images:
                 - https://codefresh.io/docs/assets/brand/codefresh-social.png
-title: Send a Telegram message
 spec:
   arguments: |-
     {

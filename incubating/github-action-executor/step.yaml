@@ -43,9 +43,7 @@ spec:
       "type": "object",
       "additionalProperties": true,
       "required": [
-        "url",
-        "registry",
-        "registry_repo"
+        "url"
       ],
       "properties": {
         "url": {
@@ -55,14 +53,6 @@ spec:
         "env": {
           "type": "object",
           "description": "action environment variables"
-        },
-        "registry": {
-          "type": "string",
-          "description": "registry to push a builded image"
-        },
-        "registry_repo": {
-          "type": "string",
-          "description": "registry org name"
         },
         "cache": {
           "type": "boolean",
@@ -101,6 +91,7 @@ spec:
       type: build
       workingDirectory: ${{github_action_clone}}
       repository: ${{GA_GIT_REPO_NAME}}
+      disablePush: true
       dockerfile:
         path: Dockerfile
       tag: latest
@@ -112,6 +103,7 @@ spec:
       [[ if .Arguments.cmd ]]
       cmd: [[ .Arguments.cmd ]]
       [[ end ]]
+
   delimiters:
     left: '[['
     right: ']]'

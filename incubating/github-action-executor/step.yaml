@@ -56,7 +56,19 @@ spec:
         "debug": {
           "type": "boolean",
           "description": "show debug logs"
-        }
+        },
+        "registry": {
+          "type": "string",
+          "description": "registry to push a builded image"
+        },
+        "registry_repo": {
+          "type": "string",
+          "description": "registry org name"
+        },
+        "cache": {
+          "type": "boolean",
+          "description": "enable/disable cache"
+        },
       }
     }
   stepsTemplate: |

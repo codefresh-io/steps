@@ -30,6 +30,27 @@ metadata:
           arguments:
             image_name: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
             tag: master
+    - description: 'Delegate building image to Google Cloud Build'
+      name: GCB
+      workflow:
+        GCBuild:
+          title: Building docker image
+          type: build
+          working_directory: '${{CLONE_STEP_NAME}}'
+          arguments:
+            image_name: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+            tag: master
+            provider:
+              type: gcb
+              arguments:
+                google_app_creds: '${{G_CREDS_B64}}'
+                cache:
+                  repo: "${{CF_REPO_OWNER}}/kaniko-cache"
+                  ttl: "10h"
+                timeout: "600s"
+                machineType: 'N1_HIGHCPU_8'
+                logsBucket: "gs://your-project_id_cloudbuild/logs"
+                diskSizeGb: 10
 spec:
   arguments: |
     {
@@ -111,6 +132,10 @@ spec:
             "disable_push": {
                 "type": "boolean",
                 "description": "Do not push to any registry automatically."
+            },
+            "provider": {
+                "type": "object",
+                "additionalProperties": true
             }
         }
     }

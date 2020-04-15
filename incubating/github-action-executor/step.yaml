@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.2.0
+  version: 0.2.1
   name: github-action-executor
   description: Execute github action
   maintainers:
@@ -48,6 +48,10 @@ spec:
         "url": {
           "type": "string",
           "description": "github action marketplace url"
+        },
+        "args": {
+          "type": "string",
+          "description": "github action args"
         },
         "env": {
           "type": "object",
@@ -104,8 +108,8 @@ spec:
       volumes:
         - ./${{CF_REPO_NAME}}:/github/workspace/${{CF_REPO_NAME}}
         - ./:/github/workflow
-      [[ if .Arguments.cmd ]]
-      cmd: [[ .Arguments.cmd ]]
+      [[ if .Arguments.args ]]
+      cmd: [[ .Arguments.args ]]
       [[ end ]]
 
   delimiters:

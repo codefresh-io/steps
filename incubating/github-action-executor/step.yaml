@@ -68,7 +68,7 @@ spec:
         "cache": {
           "type": "boolean",
           "description": "enable/disable cache"
-        },
+        }
       }
     }
   stepsTemplate: |

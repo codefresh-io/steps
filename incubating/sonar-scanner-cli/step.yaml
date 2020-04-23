@@ -43,9 +43,7 @@ spec:
         "patterns": [],
         "required": [
             "SONAR_HOST_URL",
-            "SONAR_LOGIN",
-            "SONAR_PROJECT_KEY",
-            "SONAR_PROJECT_NAME"
+            "SONAR_LOGIN"
         ],
         "properties": {
             "SONAR_HOST_URL": {

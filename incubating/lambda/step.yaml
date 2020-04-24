@@ -14,7 +14,7 @@ metadata:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
   categories:
-    - serveless
+    - serverless
     - aws
   official: false
   tags: []

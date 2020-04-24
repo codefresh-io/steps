@@ -1,0 +1,194 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: jfrog-cli
+  version: 0.0.1
+  isPublic: true
+  description: Hybrid/On Premise only, Use JFrog CLI from step
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli
+    - https://bintray.com/jfrog/jfrog-cli-go/jfrog-cli-linux-amd64
+    - https://www.jfrog.com/confluence/display/CLI/JFrog+CLI
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jfrog-cli/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: publish-build
+      workflow:
+        JFrogPublishBuild:
+          type: codefreshdemo/jfrog-cli
+          arguments:
+            JFROG_HOST: ${{JFROG_HOST}}
+            JFROG_USER: ${{JFROG_USER}}
+            JFROG_API_KEY: ${{JFROG_API_KEY}}
+            JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
+            JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
+            JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
+    - description: publish-build-docker
+      workflow:
+        JFrogPublishBuild:
+          type: codefreshdemo/jfrog-cli
+          arguments:
+            JFROG_HOST: ${{JFROG_HOST}}
+            JFROG_USER: ${{JFROG_USER}}
+            JFROG_API_KEY: ${{JFROG_API_KEY}}
+            JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
+            JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
+            JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
+            IMAGE: myimage
+            TAG: mytag
+            REGISTRY: registry-fqdn
+            REPOSITORY: repository
+    - description: publish-build-docker-scan-build
+      workflow:
+        JFrogPublishBuild:
+          type: codefreshdemo/jfrog-cli
+          arguments:
+            JFROG_HOST: ${{JFROG_HOST}}
+            JFROG_USER: ${{JFROG_USER}}
+            JFROG_API_KEY: ${{JFROG_API_KEY}}
+            JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
+            JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
+            JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
+            IMAGE: myimage
+            TAG: mytag
+            REGISTRY: registry-fqdn
+            REPOSITORY: repository
+            XRAY_SCAN: true
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "JFROG_HOST",
+        "JFROG_USER",
+        "JFROG_API_KEY",
+        "JFROG_CLI_BUILD_NAME",
+        "JFROG_CLI_BUILD_NUMBER",
+        "JFROG_CLI_BUILD_URL"
+      ],
+      "properties": {
+        "CI": {
+          "type": "boolean",
+          "description": "If true, disables interactive prompts and progress bar.",
+          "default": true
+        },
+        "JFROG_PROTOCOL": {
+          "type": "string",
+          "description": "JFrog Protocol.",
+          "default": "https",
+          "enum": [ 
+            "http",
+            "https"
+          ]
+        },
+        "JFROG_HOST": {
+          "type": "string",
+          "description": "JFrog Hostname or IP."
+        },
+        "JFROG_USER": {
+          "type": "string",
+          "description": "JFrog Username"
+        },
+        "JFROG_API_KEY": {
+          "type": "string",
+          "description": "JFrog API Key"
+        },
+        "JFROG_CLI_BUILD_NAME": {
+          "type": "string",
+          "description": "Build name to be used by commands which expect a build name, unless sent as a command argument or option."
+        },
+        "JFROG_CLI_BUILD_NUMBER": {
+          "type": "string",
+          "description": "Build number to be used by commands which expect a build number, unless sent as a command argument or option."
+        },
+        "JFROG_CLI_BUILD_URL": {
+          "type": "string",
+          "description": "Sets the CI server build URL in the build-info. The 'jfrog rt build-publish' command uses the value of this environment variable, unless the --build-url command option is sent."
+        },
+        "JFROG_CLI_LOG_LEVEL": {
+          "type": "string",
+          "description": "This variable determines the log level of the JFrog CLI.",
+          "default": "INFO",
+          "enum": [
+            "INFO",
+            "ERROR",
+            "DEBUG"
+          ]
+        },
+        "JFROG_CLI_ENV_EXCLUDE": {
+          "type": "string",
+          "description": "List of case insensitive patterns in the form of 'value1;value2;...'. Environment variables match those patterns will be excluded. This environment variable is used by the 'jfrog rt build-publish' command, in case the --env-exclude command option is not sent.",
+          "default": "*password*;*secret*;*key*;*token*"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "Docker image name"
+        },
+        "TAG": {
+          "type": "string",
+          "description": "Docker image tag"
+        },
+        "REGISTRY": {
+          "type": "string",
+          "description": "Docker registry FQDN"
+        },  
+        "REPOSITORY": {
+          "type": "string",
+          "description": "Docker repository"
+        },            
+        "XRAY_SCAN": {
+          "type": "boolean",
+          "description": "Set true if you want to scan build with Xray",
+          "default": false
+        },
+        "COMMANDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Commands to execute before build publish after authorization (for `config` step)"
+        }
+      }
+    }
+  stepsTemplate: |-
+    build-publish:
+      name: jfrog-cli
+      image: codefreshplugins/cfstep-jfrog-cli
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
+        - jfrog rt config artifactory --url=$JFROG_PROTOCOL://$JFROG_HOST/artifactory --user=$JFROG_USER --apikey=$JFROG_API_KEY
+        - jfrog rt build-collect-env
+        - jfrog rt build-add-git
+      [[- if .Arguments.IMAGE ]]
+        - jfrog rt docker-pull $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
+        - jfrog rt docker-push $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
+      [[- end ]]
+      [[ range $arg := .Arguments.COMMANDS ]]
+        - '[[ $arg ]]'
+      [[ end ]]
+        - jfrog rt build-publish
+        - codefresh create annotation build $CF_BUILD_ID jfrog_build_url="$JFROG_PROTOCOL://$JFROG_HOST/artifactory/webapp/builds/$JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER"
+      [[- if eq .Arguments.XRAY_SCAN true ]]
+        - jfrog rt build-scan
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

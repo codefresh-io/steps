@@ -1,0 +1,106 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: checkmarx-cli
+  version: 0.0.1
+  isPublic: false
+  description: Invokes scan using Checkmarx Console
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/incubating/checkmarx-cli
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - security
+  official: true
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/checkmarx-cli/icon.jpg
+  examples:
+    - description: Checkmarx Scan
+      workflow:
+        SendEmail:
+          type: checkmarx-cli
+          arguments:
+            CHECKMARX_SERVER: http://foo.acme
+            CHECKMARX_USERNAME: Checkmarx Username
+            CHECKMARX_PASSWORD: Checkmarx Password
+            CHECKMARX_PROJECT_NAME: Checkmarx Project Name
+            CHECKMARX_LOCATION_URL: GIT Repository URL
+            CHECKMARX_LOCATION_BRANCH: ${{CF_BRANCH}}
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "CHECKMARX_SERVER",
+            "CHECKMARX_USERNAME",
+            "CHECKMARX_PASSWORD",
+            "CHECKMARX_PROJECT_NAME",
+            "CHECKMARX_LOCATION_URL",
+            "CHECKMARX_LOCATION_BRANCH"
+        ],
+        "properties": {
+            "CHECKMARX_SERVER": {
+                "type": "string",
+                "default": "",
+                "description": "IP address or resolvable name of CxSAST web server, including protocol."
+            },
+            "CHECKMARX_USERNAME": {
+                "type": "string",
+                "default": "",
+                "description": "CxSAST login credentials (username)."
+            },
+            "CHECKMARX_PASSWORD": {
+              "type": "string",
+              "default": "",
+              "description": "CxSAST login credentials (password)."
+            },
+            "CHECKMARX_PROJECT_NAME": {
+              "type": "string",
+              "default": "",
+              "description": "An existing project name with full path. If the project doesn't yet exist, it will be created.  For example: -ProjectName CxServer\SP\Company\Users\my project"
+            },
+            "CHECKMARX_LOCATION_TYPE": {
+                "type": "string",
+                "default": "git",
+                "description": "Source location type. One of: folder; shared (network location); SVN; TFS; Perforce; GIT"
+            },
+            "CHECKMARX_LOCATION_URL": {
+                "type": "string",
+                "default": "",
+                "description": "Source control URL NOTE: For GIT repositories, the GIT username and password must be part of the LocationURL. For example: http://my_username:my_password@mygitrepourl"
+            },
+            "CHECKMARX_LOCATION_BRANCH": {
+                "type": "string",
+                "default": "",
+                "description": "Source GIT branch."
+            },
+            "CHECKMARX_CLI_VERSION": {
+                "type": "string",
+                "default": "latest",
+                "description": "Version of Checkmarx CLI (CxConsole) to use, Docker image tag."
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: checkmarx-cli
+      image: 'codefreshplugins/checkmarx-cli:[[.Arguments.CHECKMARX_CLI_VERSION]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

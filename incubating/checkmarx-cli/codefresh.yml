@@ -1,0 +1,23 @@
+version: "1.0"
+steps:
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: codefreshplugins/cfstep-checkmarx-cli
+    working_directory: ./
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+    dockerfile: Dockerfile
+    build_arguments:
+      - CXCONSOLE_VERSION=${{CXCONSOLE_VERSION}}
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    tags:
+    - latest
+    - ${{CXCONSOLE_VERSION}}
+    registry: dockerhub
+    when:
+      branch:
+        only:
+        - master

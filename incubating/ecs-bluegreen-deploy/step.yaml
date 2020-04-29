@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-plugins/ecs-bluegreen-deploy-test
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Deploys  a  new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
   sources:

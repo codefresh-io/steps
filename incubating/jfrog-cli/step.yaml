@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: dustinvanbuskirk/jfrog-cli
+  name: jfrog-cli
   version: 0.0.3
   isPublic: true
   description: Hybrid/On Premise only, Use JFrog CLI from step

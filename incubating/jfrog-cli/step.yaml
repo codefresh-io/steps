@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
@@ -19,7 +19,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jfrog-cli/icon.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jfrog-cli/icon.svg
     background: "#f4f4f4"
   examples:
     - description: publish-build

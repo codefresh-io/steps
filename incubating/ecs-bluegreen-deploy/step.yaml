@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefresh-plugins/ecs-bluegreen-deploy
+  name: codefresh-plugins/ecs-bluegreen-deploy-test
   version: 0.0.1
   isPublic: true
   description: Deploys  a  new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
@@ -35,6 +35,7 @@ metadata:
             IMAGE: IMAGE:TAG
             CODEDEPLOY_APPLICATION: AppECS-${CLUSTER_NAME}-${SERVICE_NAME}
             CODEDEPLOY_DEPLOYMENT_GROUP: DgpECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            MAX_WAIT_TIME: 60
 spec:
   arguments: |-
     {
@@ -81,13 +82,17 @@ spec:
             "CODEDEPLOY_DEPLOYMENT_GROUP": {
                 "type": "string",
                 "description": "Optinal. Default value - DgpECS-[CLUSTER_NAME]-[SERVICE_NAME]"
+            },
+            "MAX_WAIT_TIME": {
+                "type": "string",
+                "description": "Time in minutes to wait for deployment to succeed. Default value - 60 minutes"
             }
         }
     }
   steps:
     main:
       name: ecs-deploy
-      image: codefresh/ecs-bluegreen-deploy:0.0.1
+      image: codefresh/ecs-bluegreen-deploy:0.1.0
       shell: bash
       commands:
         - |-
@@ -96,7 +101,8 @@ spec:
             --service ${{SERVICE_NAME}} \
             --image ${{IMAGE}} \
             --codedeploy-application ${{CODEDEPLOY_APPLICATION}} \
-            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}}
+            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}} \
+            --max-wait-time ${{MAX_WAIT_TIME}}
       environment:
         - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
         - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
@@ -105,3 +111,4 @@ spec:
         - 'SERVICE_NAME=${{SERVICE_NAME}}'
         - 'CODEDEPLOY_APPLICATION=${{CODEDEPLOY_APPLICATION}}'
         - 'CODEDEPLOY_DEPLOYMENT_GROUP=${{CODEDEPLOY_DEPLOYMENT_GROUP}}'
+        - 'MAX_WAIT_TIME=${{MAX_WAIT_TIME}}'

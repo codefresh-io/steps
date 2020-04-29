@@ -3,6 +3,7 @@
 The step allows to deploy to Amazon ECS Service that uses CodeDeploy to manage Blue/Green deployments.  
 
 ## Requirements
+
 - ECS service with the **CODE\_DEPLOY** deployment controller;
 - AWS Application Load Balancer with two target groups;
 - CodeDeploy application and deployment group;
@@ -14,6 +15,7 @@ The step allows to deploy to Amazon ECS Service that uses CodeDeploy to manage B
 See the [prepare.sh](resources/prepare.sh) script to create test AWS resources.  
 
 The following variables in the `defaults()` function should be updated regarding to your case:
+
 - `PREFIX`;
 - `APPLICATION\_PORT`;
 - `APPLICATION_IMAGE`;
@@ -24,18 +26,22 @@ The following variables in the `defaults()` function should be updated regarding
 - `ECS_CLUSTER_NAME`;
 
 To run the script:
-```
+
+```sh
 ./prepare.sh
 ```
 
 ## The step usage
-What the step does
+
+What the step does:
+
 - gets the current task definition;
 - updates it with the new image;
 - generates app spec yaml file;
 - triggers a new deploy.
 
 The step arguments:
+
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_DEFAULT_REGION`
@@ -43,4 +49,4 @@ The step arguments:
 - `SERVICE_NAME`
 - `CODEDEPLOY_APPLICATION`
 - `CODEDEPLOY_DEPLOYMENT_GROUP`
-
+- `MAX_WAIT_TIME`

@@ -47,6 +47,7 @@ function print_usage {
   echo -e "  --codedeploy-deployment-group\t\t\tDefault value - DgpECS-[CLUSTER_NAME]-[SERVICE_NAME]"
   echo -e "  --iam-role\t\t\tAWS IAM role to assume before deployment"
   echo -e "  --from-current-task\t\t\tGet current task or latest as a base (default: latest)"
+  echo -e "  --max-wait-time\t\t\tTime in minutes to wait for deployment to succeed. Default value - 60 minutes"
   echo
   echo "Examples:"
   echo
@@ -162,6 +163,50 @@ function ecs_deploy_service() {
           --codedeploy-deployment-group "${codedeploy_deployment_group}"
 }
 
+function get_last_deployment_id() {
+  aws deploy list-deployments \
+    --application-name ${codedeploy_application} \
+    --deployment-group-name ${codedeploy_deployment_group} \
+    --query 'deployments[0]' \
+    --output text
+}
+
+function get_deployment_status() {
+  local last_deployment_id=$1
+
+  aws deploy get-deployment \
+    --query 'deploymentInfo.status' \
+    --output text \
+    --deployment-id ${last_deployment_id}
+}
+
+function wait_deployment_succeeded() {
+  local counter=0
+  local last_deployment_id=$(get_last_deployment_id)
+
+  echo "[DEBUG] last_deployment_id: $last_deployment_id"
+  echo "[DEBUG] status: $(get_deployment_status ${last_deployment_id})"
+
+  while [[ $counter -le $max_wait_time ]] && [[ "$(get_deployment_status ${last_deployment_id})" == "InProgress" ]]; do
+    printf "$(date)\t[INFO] The deployment is still in progress\n\n"
+    sleep 300;
+    ((counter=$counter+5))
+  done
+
+  local deployment_status=$(get_deployment_status ${last_deployment_id})
+
+  echo "[INFO] Deployment status: ${deployment_status}"
+
+  if [[ $deployment_status == "Failed" ]]; then
+    aws deploy get-deployment \
+      --deployment-id ${last_deployment_id} \
+      --query 'deploymentInfo.errorInformation' \
+      --output text
+
+    exit 1
+  fi
+}
+
 function ecs_deploy {
   assert_is_installed "jq"
 
@@ -201,6 +246,10 @@ function ecs_deploy {
         ;;
       --from-current-task)
         from_current_task="$2"
+        shift
+        ;;
+      --max-wait-time)
+        max_wait_time="${2:-60}"
         shift
         ;;
       --help)
@@ -271,7 +320,12 @@ function ecs_deploy {
   echo
 
   echo "Deploy ECS service"
-  ecs_deploy_service
+  ecs_deploy_service &
+
+  echo "Waiting for deployment to succeed"
+  sleep 60
+  wait_deployment_succeeded
+
   echo "Done!"
 
 

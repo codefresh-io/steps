@@ -92,7 +92,7 @@ spec:
   steps:
     main:
       name: ecs-deploy
-      image: codefresh/ecs-bluegreen-deploy:0.1.0
+      image: codefresh/ecs-bluegreen-deploy:0.0.1
       shell: bash
       commands:
         - |-

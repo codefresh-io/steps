@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: paclair
-  version: 0.0.3
+  version: 0.0.5
+  title: Run a Clair security scan
   isPublic: true
-  description: 'Scan docker images with Clair - https://github.com/coreos/clair'
+  description: Scan a Docker image with Clair Security scanner.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/paclair

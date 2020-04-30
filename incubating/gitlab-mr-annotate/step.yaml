@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitlab-mr-annotate
-  version: 0.0.3
+  title: Add a label to a GitLab merge request
+  version: 0.0.5
   isPublic: true
-  description: The plugin allows for easy applying labels to GitLab merge requests
+  description: Add a comma-separated list of labels to a GitLab merge request.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/gitlab-mr-annotate

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: npm-publish
-  version: 0.0.3
+  version: 0.0.5
+  title: Publish an NPM package
   isPublic: true
-  description: Publishes a nodejs package to NPM registry
+  description: Publish an NPM package to the NPM registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/npm-publish'
   stage: incubating

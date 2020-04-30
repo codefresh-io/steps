@@ -2,7 +2,7 @@ name: cf-twistlock
 image: codefreshplugins/cf-twistlock
 tag: "19.03"
 version: "19.03"
-description: Execute Twistlock CLI image scan as build step
+description: Scan a docker image with the Twistlock security service.
 categories:
 - security
 keywords:
@@ -36,7 +36,7 @@ envs:
   description: CA Cert if provided TLS will be used
 - name: HASH
   type:	optional
-  description: "hashing algorithm (one of: md5, sha1, sha256)" 
+  description: "hashing algorithm (one of: md5, sha1, sha256)"
 - name: DETAILS
   type:	optional
   description: true|false - prints an itemized list of each vulnerability found by the scanner

@@ -2,10 +2,11 @@ version: '1.0'
 kind: step-type
 metadata:
   name: webhook
+  title: Call a custom webhook
   latest: true
-  version: 0.0.5
+  version: 0.0.7
   isPublic: true
-  description: Plugin which simply send notification
+  description: Notify any webook URL with any custom request body.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/webhook'
   stage: incubating

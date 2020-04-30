@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: import-image
-  version: 0.0.2
+  version: 0.0.4
+  title: Import a Docker image
   isPublic: false
-  description: Import metadata for existing Docker images into Codefresh
+  description: Import a Docker image from an external registry with existing metadata.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/import-image
@@ -34,7 +35,6 @@ metadata:
             USERNAME: ${{USERNAME}}
             PASSWORD: ${{PASSWORD}}
             CF_API_TOKEN: ${{CF_API_TOKEN}}
-
 spec:
   arguments: |-
     {

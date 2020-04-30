@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sendgrid
-  version: 0.0.3
+  version: 0.0.5
+  title: Send an email via Sendgrid
   isPublic: true
-  description: Send e-mail via Sendgrid
+  description: Send an email using Sendgrid.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/sendgrid

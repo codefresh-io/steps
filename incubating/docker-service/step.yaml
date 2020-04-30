@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: docker-service
-  version: 0.0.2
+  title: Run a Docker command
+  version: 0.0.4
   isPublic: false
-  description: Codefresh docker-service plugin
+  description: Run any command using the Docker daemon.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/docker-service

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 0.0.3
+  version: 0.0.6
+  title: Send message to Microsoft teams
   isPublic: true
-  description: Send Message to Microsoft Teams
+  description: Send a notification to a Microsoft Teams channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/msteams-notifier
@@ -100,20 +101,14 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
-      name: msteams-notifier
-      image: codefreshplugins/cfstep-msteams-notifier
-      environment:
-        - 'CF_STATUS_MESSAGE=${{CF_STATUS_MESSAGE}}'
-        - 'MSTEAMS_ACTIVITY_IMAGE=${{MSTEAMS_ACTIVITY_IMAGE}}'
-        - 'MSTEAMS_ACTIVITY_SUBTITLE=${{MSTEAMS_ACTIVITY_SUBTITLE}}'
-        - 'MSTEAMS_ACTIVITY_TEXT=${{MSTEAMS_ACTIVITY_TEXT}}'
-        - 'MSTEAMS_LINK_TEXT=${{MSTEAMS_LINK_TEXT}}'
-        - 'MSTEAMS_LINK_TEXT_2=${{MSTEAMS_LINK_TEXT_2}}'
-        - 'MSTEAMS_LINK_URL=${{MSTEAMS_LINK_URL}}'
-        - 'MSTEAMS_LINK_URL_2=${{MSTEAMS_LINK_URL_2}}'
-        - 'MSTEAMS_NEW_WEBHOOK_URL=${{MSTEAMS_NEW_WEBHOOK_URL}}'
-        - 'MSTEAMS_TEXT=${{MSTEAMS_TEXT}}'
-        - 'MSTEAMS_TITLE=${{MSTEAMS_TITLE}}'
-        - 'MSTEAMS_WEBHOOK_URL=${{MSTEAMS_WEBHOOK_URL}}'
+        name: msteams-notifier
+        image: codefreshplugins/cfstep-msteams-notifier
+        environment:
+        [[ range $key, $val := .Arguments ]]
+            - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

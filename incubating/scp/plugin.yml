@@ -2,7 +2,7 @@ name: scp-plugin
 image: codefreshplugins/scp-plugin
 tag: master
 version: 1.0.0
-description: Plugin to upload file or directory to remote machine using scp protocol.
+description: Transfer, copy, or upload files with Secure Copy Protocol.
 categories:
 - utility
 keywords:

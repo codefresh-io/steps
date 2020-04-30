@@ -1,0 +1,30 @@
+version: '1.0'
+steps:
+  Clone:
+    type: git-clone
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: github
+      revision: '${{CF_REVISION}}'
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    working_directory: '${{Clone}}/incubating/trivy'
+    image_name: codefresh/trivy-scan
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+  GetImageVersion:
+    title: "Export image version"
+    image: codefresh/cli
+    commands:
+    - 'export IMAGE_VERSION=$(cat ${{CF_REPO_NAME}}/incubating/trivy/step.yaml | yq -r .metadata.version)'
+    - "echo Current step version: $IMAGE_VERSION"
+    - "cf_export IMAGE_VERSION"
+  PushingToRegistry_master:
+    type: push
+    registry: dockerhub
+    title: Pushing To Registry
+    candidate: ${{BuildImage}}
+    tags:
+      - latest
+      - ${{IMAGE_VERSION}}
+

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.5
+  version: 1.0.7
+  title: Gitter notify
   isPublic: true
-  description: Send message to gitter
+  description: Send a notification to a gitter disucssion channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/gitter-notifier

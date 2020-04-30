@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: lambda
-  version: 0.0.2
+  version: 0.0.4
+  title: Deploy to AWS Lambda
   isPublic: true
-  description: Deploy a Serverless service (functions and resources) to AWS lambda
+  description: Deploy a serverless service (functions and resources) to AWS Lambda.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/lambda
@@ -13,7 +14,7 @@ metadata:
     - name: Francisco Cocozza
       email: francisco@codefresh.io
   categories:
-    - serveless
+    - serverless
     - aws
   official: false
   tags: []

@@ -2,11 +2,11 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.3
+  version: 0.0.6
+  title: Fetch secrets from Hashicorp Vault
   isPublic: true
   description: >-
-    The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
-    variables
+    Read secrets from Hashicorp Vault inside a Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/vault

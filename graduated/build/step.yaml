@@ -2,12 +2,13 @@ kind: step-type
 version: "1.0"
 metadata:
   name: build
+  title: Build a Docker image
   isPublic: true
-  description: Build a Docker image
+  description: Build a Dockerfile and push it to the internal Codefresh registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
-  version: 0.0.2
+  version: 1.1.2
   categories:
     - featured
     - docker
@@ -25,9 +26,31 @@ metadata:
         Docker-Build:
           title: Building docker image
           type: build
+          working_directory: '${{CLONE_STEP_NAME}}'
           arguments:
             image_name: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
             tag: master
+    - description: 'Delegate building image to Google Cloud Build'
+      name: GCB
+      workflow:
+        GCBuild:
+          title: Building docker image
+          type: build
+          working_directory: '${{CLONE_STEP_NAME}}'
+          arguments:
+            image_name: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+            tag: master
+            provider:
+              type: gcb
+              arguments:
+                google_app_creds: '${{G_CREDS_B64}}'
+                cache:
+                  repo: "${{CF_REPO_OWNER}}/kaniko-cache"
+                  ttl: "10h"
+                timeout: "600s"
+                machineType: 'N1_HIGHCPU_8'
+                logsBucket: "gs://your-project_id_cloudbuild/logs"
+                diskSizeGb: 10
 spec:
   arguments: |
     {
@@ -94,6 +117,25 @@ spec:
             "target": {
                 "type": "string",
                 "description": "target stage in a multistage build (build will run until this stage)"
+            },
+            "tags": {
+                "type": "array",
+                "items": {
+                "type": "string"
+                },
+                "description": "Multiple tags under which to push the image."
+            },
+            "registry": {
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view."
+            },
+            "disable_push": {
+                "type": "boolean",
+                "description": "Do not push to any registry automatically."
+            },
+            "provider": {
+                "type": "object",
+                "additionalProperties": true
             }
         }
     }

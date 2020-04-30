@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: run-jenkins-jobs
-  version: 0.1.3
+  version: 0.1.6
+  title: Run a Jenkins job
   isPublic: true
-  description: Run jenkins job from codefresh pipeline
+  description: Run a Jenkins job from your Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/run-jenkins-jobs
@@ -99,7 +100,7 @@ spec:
   stepsTemplate: |-
     main:
       name: run-jenkins-jobs
-      image: codefresh/run-jenkins-jobs:0.1.3
+      image: codefresh/run-jenkins-jobs:0.1.4
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if hasPrefix $key "jenkins_" ]]

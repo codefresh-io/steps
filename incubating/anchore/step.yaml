@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: anchore
-  version: 0.0.4
+  title: Run an Anchore Security Scan
+  version: 0.0.6
   isPublic: true
-  description: Analyze Docker images and generate a detailed manifest using Anchore
+  description: Analyze Docker images and generate a detailed manifest using Anchore.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/anchore

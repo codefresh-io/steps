@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.1.5
+  version: 0.2.1
   name: github-action-executor
   description: Execute github action
   maintainers:
@@ -31,7 +31,6 @@ metadata:
               SLACK_MESSAGE: Hello from codefresh!
               SLACK_TITLE: Custom Title
               SLACK_USERNAME: rtCamp
-            registry: dockerhub
   official: false
   stage: incubating
   latest: true
@@ -43,18 +42,24 @@ spec:
       "type": "object",
       "additionalProperties": true,
       "required": [
-        "url",
-        "registry",
-        "registry_repo"
+        "url"
       ],
       "properties": {
         "url": {
           "type": "string",
           "description": "github action marketplace url"
         },
+        "args": {
+          "type": "string",
+          "description": "github action args"
+        },
         "env": {
           "type": "object",
           "description": "action environment variables"
+        },
+        "debug": {
+          "type": "boolean",
+          "description": "show debug logs"
         },
         "registry": {
           "type": "string",
@@ -67,60 +72,46 @@ spec:
         "cache": {
           "type": "boolean",
           "description": "enable/disable cache"
-        },
-        "debug": {
-          "type": "boolean",
-          "description": "show debug logs"
         }
       }
     }
   stepsTemplate: |
-    export_variables:
+    github_action_export_variables:
       title: Exporting required variables
       image: codefresh/github-action-converter
       environment:
          [[ if .Arguments.envs ]]- ENVS="[[ .Arguments.envs ]]"[[ end ]]
          [[ if .Arguments.url ]]- REPO_URL=[[ .Arguments.url ]][[ end ]]
-         [[ if .Arguments.registry ]]- REGISTRY=[[ .Arguments.registry ]][[ end ]]
-         [[ if .Arguments.registry_repo ]]- DOCKERHUB_REPO=[[ .Arguments.registry_repo ]][[ end ]]
-         [[ if .Arguments.cache ]]- CACHE=[[ .Arguments.cache ]][[ end ]]
          [[ if .Arguments.debug ]]- LOG_LEVEL=debug[[ end ]]
       commands:
          - /app/interface/cli/index.js export-variables
-
     [[ if .Arguments.debug ]]
-    envs:
+    github_action_print:
       image: alpine
       title: envs
       commands:
         - printenv
     [[ end ]]
-
-    prepare:
-      type: github-action
-      title: Github Action
-      description: Github Action
-      git_repo: ${{GA_GIT_REPO}}
-      git_repo_name: ${{GA_GIT_REPO_NAME}}
-      docker_repo: ${{GA_DOCKER_REPO}}
-      registry: ${{GA_DOCKER_REGISTRY}}
-      disable_cache: ${{GA_DISABLE_CACHE}}
-
-    step_name:
-      image: ${{GA_DOCKER_REPO}}
+    github_action_clone:
+      type: git-clone
+      repo: ${{GA_GIT_REPO}}
+    github_action_build:
+      type: build
+      workingDirectory: ${{github_action_clone}}
+      repository: ${{GA_GIT_REPO_NAME}}
+      disablePush: true
+      dockerfile:
+        path: Dockerfile
+      tag: latest
+    github_action_step:
+      image: ${{github_action_build}}
       volumes:
         - ./${{CF_REPO_NAME}}:/github/workspace/${{CF_REPO_NAME}}
         - ./:/github/workflow
-      [[ if .Arguments.cmd ]]
-      cmd: [[ .Arguments.cmd ]]
+      [[ if .Arguments.args ]]
+      cmd: [[ .Arguments.args ]]
       [[ end ]]
-      environment:
-        - GITHUB_WORKFLOW=${{CF_PIPELINE_NAME}}
-        - GITHUB_ACTOR=${{CF_COMMIT_AUTHOR}}
-        - GITHUB_REPOSITORY=${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
-        - HOME=${{CF_VOLUME_PATH}}
-        - GITHUB_WORKSPACE=/github/workspace/${{CF_REPO_NAME}}
-        - GITHUB_EVENT_PATH=/codefresh/volume/event.json
+
   delimiters:
     left: '[['
     right: ']]'

@@ -5,6 +5,10 @@ import sys
 import urllib.request
 import urllib.parse
 
+from Helm2CommandBuilder import Helm2CommandBuilder
+from Helm3CommandBuilder import Helm3CommandBuilder
+
+
 class EntrypointScriptBuilder(object):
 
     def __init__(self, env):
@@ -22,6 +26,7 @@ class EntrypointScriptBuilder(object):
         self.cmd_ps = env.get('CMD_PS')
         self.google_application_credentials_json = env.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
         self.chart = env.get('CHART_JSON')
+        self.helm_version = env.get('HELM_VERSION')
         self.azure_helm_token = None
 
         # Save chart data in files
@@ -29,14 +34,14 @@ class EntrypointScriptBuilder(object):
             self.chart = json.loads(self.chart)
 
             self.chart_ref = '/opt/chart'
-            os.mkdir('/opt/chart');
-            sys.stderr.write('Chart files will be placed in /opt/chart\n');
+            os.mkdir('/opt/chart')
+            sys.stderr.write('Chart files will be placed in /opt/chart\n')
             for item in self.chart:
                 if item['name'] == 'values':
                     item['name'] = 'values.yaml'
                 item['name'] = item['name'].replace('Charts/', 'charts/')
 
-                sys.stderr.write(item['name'] + '\n');
+                sys.stderr.write(item['name'] + '\n')
 
                 if not os.path.exists(os.path.dirname('/opt/chart/' + item['name'])):
                     try:
@@ -125,6 +130,8 @@ class EntrypointScriptBuilder(object):
         if self.chart_repo_url is not None and not self.chart_repo_url.endswith('/'):
             self.chart_repo_url += '/'
 
+        self.helm_command_builder = self._select_helm_command_builder()
+
     def _get_azure_helm_token(self, repo_url):
         service = repo_url.replace('az://', '').strip('/')
         sys.stderr.write('Obtaining one-time token for Azure Helm repo service %s ...\n' % service)
@@ -140,18 +147,9 @@ class EntrypointScriptBuilder(object):
         data = json.load(urllib.request.urlopen(request))
         return data['access_token']
 
-    def _build_export_commands(self):
-        lines = []
-        lines.append('export HELM_REPO_ACCESS_TOKEN=$CF_API_KEY')
-        lines.append('export HELM_REPO_AUTH_HEADER=Authorization')
-        if self.google_application_credentials_json is not None:
-            lines.append('echo -E $GOOGLE_APPLICATION_CREDENTIALS_JSON > /tmp/google-creds.json')
-            lines.append('export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google-creds.json')
-        return lines
-
     def _build_kubectl_commands(self):
         lines = []
-        if self.action in ['install', 'promotion']:
+        if self.action in ['install', 'promotion', 'auth']:
             if self.kube_context is None:
                 raise Exception('Must set KUBE_CONTEXT in environment (Name of Kubernetes cluster as named in Codefresh)')
             kubectl_cmd = 'kubectl config use-context "%s"' % self.kube_context
@@ -207,7 +205,7 @@ class EntrypointScriptBuilder(object):
         if self.cmd_ps is not None:
             helm_promote_cmd += self.cmd_ps
         if self.dry_run:
-            helm_promote_cmd = 'echo ' + helm_upgrade_cmd
+            helm_promote_cmd = 'echo ' + helm_promote_cmd
         lines.append(helm_promote_cmd)
 
         return lines
@@ -218,18 +216,21 @@ class EntrypointScriptBuilder(object):
         if self.release_name is None:
             raise Exception('Must set RELEASE_NAME in the environment (desired Helm release name)')
 
-        # Only build dependencies if CHART_REPO_URL is not specified
-        if self.chart_repo_url is None:
+        # Only build dependencies if CHART_REPO_URL is not specified. Skip for helm3
+        if self.chart_repo_url is None and not self._helm_3():
             helm_dep_build_cmd = 'helm dependency build %s' % self.chart_ref
             if self.dry_run:
                 helm_dep_build_cmd = 'echo ' + helm_dep_build_cmd
             lines.append(helm_dep_build_cmd)
 
-        helm_upgrade_cmd = 'helm upgrade %s %s --install --force --reset-values ' % (self.release_name, self.chart_ref)
+        helm_upgrade_cmd = self.helm_command_builder.build_helm_upgrade_command(self.release_name, self.chart_ref)
+
         if self.chart_repo_url is not None:
             helm_upgrade_cmd += '--repo %s ' % self.chart_repo_url
         if self.chart_version is not None:
             helm_upgrade_cmd += '--version %s ' % self.chart_version
+        if self.tiller_namespace is not None:
+            helm_upgrade_cmd += '--tiller-namespace %s ' % self.tiller_namespace
         if self.namespace is not None:
             helm_upgrade_cmd += '--namespace %s ' % self.namespace
         for custom_valuesfile in self.custom_valuesfiles:
@@ -259,10 +260,11 @@ class EntrypointScriptBuilder(object):
             helm_repo_add_cmd = 'echo ' + helm_repo_add_cmd
         lines.append(helm_repo_add_cmd)
 
-        helm_dep_build_cmd = 'helm dependency build %s' % self.chart_ref
-        if self.dry_run:
-            helm_dep_build_cmd = 'echo ' + helm_dep_build_cmd
-        lines.append(helm_dep_build_cmd)
+        if not self._helm_3():
+            helm_dep_build_cmd = 'helm dependency build %s' % self.chart_ref
+            if self.dry_run:
+                helm_dep_build_cmd = 'echo ' + helm_dep_build_cmd
+            lines.append(helm_dep_build_cmd)
 
         if self.dry_run:
             package_var = 'dryrun-0.0.1.tgz'
@@ -296,9 +298,19 @@ class EntrypointScriptBuilder(object):
 
         return lines
 
+    def _helm_3(self):
+        return self.helm_version.startswith('3.')
+
+    def _select_helm_command_builder(self):
+        if self._helm_3():
+            return Helm3CommandBuilder()
+        else:
+            return Helm2CommandBuilder()
+
     def build(self):
         lines = ['#!/bin/bash -e']
-        lines += self._build_export_commands()
+        lines += self.helm_command_builder.build_export_commands(self.google_application_credentials_json)
         lines += self._build_kubectl_commands()
+        lines += self.helm_command_builder.build_repo_commands()
         lines += self._build_helm_commands()
         return '\n'.join(lines)

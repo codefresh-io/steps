@@ -1,11 +1,12 @@
 ARG HELM_VERSION
 
-FROM arm64v8/golang:latest as setup
+FROM arm64v8/golang:1.12-buster as setup
 ARG HELM_VERSION
-RUN curl -L "https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-arm64.tar.gz" -o helm.tar.gz \
+RUN echo "HELM_VERSION is set to: ${HELM_VERSION}" && mkdir /temp
+RUN curl -L "https://get.helm.sh/helm-v${HELM_VERSION}-linux-arm64.tar.gz" -o helm.tar.gz \
     && tar -zxvf helm.tar.gz \
     && mv ./linux-arm64/helm /usr/local/bin/helm \
-    && helm init --client-only \
+    && bash -c 'if [[ "${HELM_VERSION}" == 2* ]]; then helm init --client-only; echo "using helm3, no need to initialize helm"; fi' \
     && helm plugin install https://github.com/hypnoglow/helm-s3.git \
     && helm plugin install https://github.com/nouney/helm-gcs.git \
     && helm plugin install https://github.com/chartmuseum/helm-push.git
@@ -22,9 +23,11 @@ RUN apt-get update \
 
 FROM arm64v8/alpine:3.6
 
-ARG KUBE_VERSION="v1.8.1"
+ARG KUBE_VERSION="v1.14.3"
 
 ARG HELM_VERSION
+
+RUN echo "HELM_VERSION is set to: ${HELM_VERSION}"
 
 ENV FILENAME="helm-v${HELM_VERSION}-linux-arm64.tar.gz"
 
@@ -40,17 +43,17 @@ RUN apk add --update ca-certificates && update-ca-certificates \
     && pip install yq  \
     && curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/arm64/kubectl -o /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
-    && curl -L http://storage.googleapis.com/kubernetes-helm/${FILENAME} -o /tmp/${FILENAME} \
+    && curl -L https://get.helm.sh/${FILENAME} -o /tmp/${FILENAME} \
     && tar -zxvf /tmp/${FILENAME} -C /tmp \
     && mv /tmp/linux-arm64/helm /bin/helm \
     # Cleanup uncessary files
     && rm /var/cache/apk/* \
     && rm -rf /tmp/*
 
-RUN helm init --client-only
+RUN if [[ "${HELM_VERSION}" == 2* ]]; then helm init --client-only; echo "using helm3, no need to initialize helm"; fi
 
 ARG HELM_VERSION
-COPY --from=setup /root/.helm/ /root/.helm/
+COPY --from=setup /temp /root/.helm/* /root/.helm/
 COPY bin/* /opt/bin/
 RUN chmod +x /opt/bin/*
 COPY lib/* /opt/lib/

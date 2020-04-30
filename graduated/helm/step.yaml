@@ -2,27 +2,27 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 0.1.2
+  version: 1.0.6
+  title: Release a Helm chart
   isPublic: true
-  description: Release a Helm chart (update or install)
+  description: Update or install a Helm chart.
   sources:
-    - 'https://github.com/codefresh-contrib/cfstep-helm'
-  stage: incubating
+    - 'https://github.com/codefresh-io/steps'
+  stage: graduated
   maintainers:
     - name: Roman Kuchuk
       email: r.kuchuk@codefresh.io
   categories:
     - featured
-  official: false
+    - deployment
+  official: true
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/helm/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-contrib/cfstep-helmfile/helm-logo.svg
+    background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: example-install
       workflow:
           deploy:
             type: helm
@@ -40,7 +40,7 @@ metadata:
                 - /path/to/values.yaml
                 - /path/to/values2.yaml
               cmd_ps: --wait --timeout 5
-    - description: example-2
+    - description: example-install-2
       workflow:
           deploy:
             type: helm
@@ -48,10 +48,28 @@ metadata:
               action: install
               chart_name: test_chart
               release_name: first
+              helm_version: 3.0.1
               kube_context: my-kubernetes-context
               custom_values:
                 - pat.arr="{one,two,three}"
                 - STR_WITH_COMAS="one\,two\,three"
+    - description: example-push
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              action: push
+              chart_name: /codefresh/volume/repo/chart
+              chart_repo_url: cm://h.cfcr.io/useraccount/default
+    - description: example-auth
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              action: auth
+              kube_context: my-kubernetes-context
+              commands:
+                - helm list
 spec:
   arguments: |-
     {
@@ -61,9 +79,7 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "kube_context",
-            "chart_name",
-            "release_name"
+            "kube_context"
         ],
         "properties": {
             "kube_context": {
@@ -72,7 +88,7 @@ spec:
             },
             "chart_name": {
                 "type": "string",
-                "description": "Helm chart name to release (path to chart folder, or name of packaged chart) (required)"
+                "description": "Helm chart name to release (path to chart folder, or name of packaged chart)"
             },
             "release_name": {
                 "type": "string",
@@ -84,6 +100,7 @@ spec:
             },
             "namespace": {
                 "type": "string",
+
                 "description": "Target Kubernetes namespace"
             },
             "tiller_namespace": {
@@ -94,11 +111,23 @@ spec:
                 "type": "string",
                 "description": "Application chart version to install"
             },
+            "repos": {
+              "type": "array",
+              "description": "array of custom repos",
+              "items": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
             "helm_version": {
                 "type": "string",
-                "examples": ["2.9.1", "2.9.0"],
+                "examples": ["2.9.1", "3.0.3"],
                 "default": "2.9.1",
-                "description": "Version of cfstep-helm image(also helm-cli version). You can choose specific image at https://hub.docker.com/r/codefresh/cfstep-helm/tags"
+                "description": "Version of cfstep-helm image"
             },
             "chart_repo_url": {
                 "type": "string",
@@ -121,6 +150,13 @@ spec:
             "cmd_ps": {
                 "type": "string",
                 "description": "Variable to provide other Helm cli flags. For example: '--wait --timeout', etc"
+            },
+            "commands": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Commands to execute in plugin container after authorization (for `auth` action)"
             }
         }
     }
@@ -140,6 +176,16 @@ spec:
       [[ range $key, $val := .Arguments.custom_value_files ]]
         - 'CUSTOMFILE_[[ toUpper $key ]]=[[ $val ]]'
       [[- end ]]
+      [[ range $arg := .Arguments.repos ]]
+        - 'CF_CTX_[[ $arg.name ]]_URL=[[ $arg.url ]]'
+      [[- end -]]
+      [[ if .Arguments.commands ]]
+      commands:
+        - source /opt/bin/release_chart
+      [[ range $arg := .Arguments.commands ]]
+        - '[[ $arg ]]'
+      [[ end ]]
+      [[ end ]]
   delimiters:
     left: '[['
     right: ']]'

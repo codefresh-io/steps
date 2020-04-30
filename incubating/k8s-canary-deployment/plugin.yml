@@ -2,7 +2,7 @@ name: k8s-canary-deployment
 image: codefreshplugins/k8s-canary
 tag: 0.1.0
 version: 0.1.0
-description: Perform canary deployments on a Kubernetes cluster
+description: Perform a gradual canary deployment using only Kuberentes manifests.
 categories:
 - featured
 - deployment

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: azure-key-vault
-  version: 0.0.4
+  title: Pull secrets from Azure Key Vault
+  version: 0.0.6
   isPublic: true
-  description: Fetch Secrets from Azure Key Vault
+  description: Fetch secrets from Microsoft Azure Key Vault.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-key-vault
@@ -47,7 +48,6 @@ metadata:
             AZURE_CLIENT_ID: ${{AZURE_CLIENT_ID}}
             AZURE_CLIENT_SECRET: ${{AZURE_CLIENT_SECRET}}
             AZURE_TENANT_ID: ${{AZURE_TENANT_ID}}
-
 spec:
   arguments: |-
     {

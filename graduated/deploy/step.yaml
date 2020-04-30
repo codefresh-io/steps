@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: deploy
-  version: 0.0.2
+  title: Deploy to Kubernetes
+  version: 1.0.2
   isPublic: true
-  description: Deploy
+  description: Deploy a Docker image to an existing Kubernetes cluster.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'
   stage: graduated

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: scp
-  version: 0.0.3
+  version: 0.0.5
+  title: Run SCP
   isPublic: false
-  description: Plugin to upload file or directory to remote machine using scp protocol.
+  description: Transfer, copy, or upload files with Secure Copy Protocol.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/scp'
   stage: incubating

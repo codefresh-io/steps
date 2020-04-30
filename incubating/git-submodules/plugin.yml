@@ -1,7 +1,7 @@
 image: codefreshplugins/cfstep-gitsubmodules
 tag: latest
 version: 0.1.0
-description: Update git submodules
+description: Update git submodules.
 categories:
   - git
   - utility

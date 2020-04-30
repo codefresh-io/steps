@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: push
-  version: 0.0.2
+  version: 1.0.2
+  title: Push an image
   isPublic: true
-  description: Push a docker image to a registry
+  description: Push a docker image to a registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/push'
   stage: graduated

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.6
+  version: 1.0.7
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -50,6 +50,7 @@ metadata:
               release_name: first
               helm_version: 3.0.1
               kube_context: my-kubernetes-context
+              skip_cf_stable_helm_repo: true
               custom_values:
                 - pat.arr="{one,two,three}"
                 - STR_WITH_COMAS="one\,two\,three"
@@ -157,6 +158,10 @@ spec:
                      "type": "string"
                   },
                   "description": "Commands to execute in plugin container after authorization (for `auth` action)"
+            },
+            "skip_cf_stable_helm_repo": {
+                "type": "boolean",
+                "description": "Don't add stable repository"
             }
         }
     }

@@ -45,7 +45,7 @@ metadata:
                 serverless package --stage ${AWS_STAGE} --region ${AWS_REGION}
                 --package ${PACKAGE}
           deploy:
-            type: serverless
+            type: lambda
             title: deploy to AWS with serverless framework
             arguments:
               PACKAGE: ${{PACKAGE}}

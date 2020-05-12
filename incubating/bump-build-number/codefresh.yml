@@ -1,14 +1,24 @@
 version: '1.0'
 steps:
+  Clone:
+    title: Cloning bump build number repository
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
   BuildImage:
     title: Building Docker Image
     type: build
+    working_directory: "./steps/incubating/bump-build-number"
+    dockerfile: "Dockerfile"
     image_name: codefreshplugins/bump-build-number
   PushingToRegistry:
     type: push
-    title: Pushing To Registry
+    title: Pushing To Dockerhub Registry
+    registry: dockerhub
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.0" ]
+    tags: [ "latest", "1.0.1" ]
     when:
       branch:
         only:

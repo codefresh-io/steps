@@ -4,13 +4,13 @@ steps:
     title: Cloning bump build number repository
     type: "git-clone"
     arguments:
-      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/steps'
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
       git: "cf_github"
       revision: '${{CF_REVISION}}'
   BuildImage:
     title: Building Docker Image
     type: build
-    working_directory: "${{clone}}/incubating/bump-build-number"
+    working_directory: "${{clone}}/steps/incubating/bump-build-number"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/bump-build-number
   PushingToRegistry:

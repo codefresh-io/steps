@@ -10,7 +10,7 @@ steps:
   BuildImage:
     title: Building Docker Image
     type: build
-    working_directory: "${{clone}}/steps/incubating/bump-build-number"
+    working_directory: "./steps/incubating/bump-build-number"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/bump-build-number
   PushingToRegistry:

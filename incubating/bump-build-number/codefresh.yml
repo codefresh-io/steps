@@ -15,7 +15,8 @@ steps:
     image_name: codefreshplugins/bump-build-number
   PushingToRegistry:
     type: push
-    title: Pushing To Registry
+    title: Pushing To Dockerhub Registry
+    registry: dockerhub
     candidate: ${{BuildImage}}
     tags: [ "latest", "1.0.0" ]
     when:

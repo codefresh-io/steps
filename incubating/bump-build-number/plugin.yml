@@ -1,0 +1,19 @@
+title: bump-build-number
+image: codefreshplugins/bump-build-number
+categories:
+  - build
+version: 1.0.0
+description: Bump the current pipeline's build number
+keywords:
+  - build
+  - tag
+sources:
+  - https://github.com/codefresh-io/steps/tree/master/incubating/bump-build-number
+maintainers:
+  - name: Brandon Phillips
+    email: brandon@codefresh.io
+icon: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/bump-build-number/icon.png
+envs:
+  - name: ANNOTATION_NAME
+    type: optional
+    description: Can overwrite the default annotation name of build_number

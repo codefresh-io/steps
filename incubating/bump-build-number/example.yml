@@ -1,0 +1,8 @@
+version: '1.0'
+steps:
+    BumpBuildNumber:
+        title: Bump Build Version Number
+        image: codefreshplugins/bump-build-number
+        environment:
+            - ANNOTATION_NAME=${{CF_BRANCH}}
+        

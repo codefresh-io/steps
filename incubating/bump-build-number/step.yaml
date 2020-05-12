@@ -1,0 +1,60 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: bump-build-number
+  version: 1.0.0
+  isPublic: true
+  description: Bump the build number
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/bump-build-number
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - build
+  official: false
+  tags: []
+  icon:
+    type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/bump-build-number/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/bump-build-number/icon.png
+  examples:
+    - description: Default Annotation Name
+      workflow:  
+        BumpBuildNumber:
+          title: Bump default build_number annotation
+          type: bump-build-number
+    - description: Custom Annotation Name
+      workflow:
+        BumpBuildNumber:
+          title: Bump custom annotation name
+          type: bump-build-number
+          arguments:
+            ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "ANNOTATION_NAME": {
+                "type": "string",
+                "description": "Override the build_number annotation name"
+            }
+        }
+    }
+  steps:
+    main:
+      name: bump-build-number
+      image: codefreshplugins/bump-build-number
+      environment:
+        - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'

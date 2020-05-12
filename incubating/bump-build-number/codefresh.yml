@@ -4,7 +4,7 @@ steps:
     title: Cloning bump build number repository
     type: "git-clone"
     arguments:
-      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/steps'
       git: "cf_github"
       revision: '${{CF_REVISION}}'
   BuildImage:

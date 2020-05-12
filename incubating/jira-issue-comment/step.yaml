@@ -1,0 +1,127 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/jira-issue-comment
+  version: 0.1.0
+  isPublic: false
+  description: Add or update a Jira issue comment
+  # Should be updated to https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-comment
+  sources:
+    - >-
+      https://github.com/brandonphillips/jira-issue-comment
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - build
+  official: false
+  tags: []
+  icon:
+    type: image
+    # Should be updated to https://raw.githubusercontent.com/codefresh-plugins/jira-issue-comment/master/icon.png
+    url: https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
+  examples:
+    - description: Custom Annotation Name
+      workflow:
+        JiraTicketUpdate:
+          title: Bump custom annotation name
+          type: jira-issue-comment
+          arguments:
+            ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "JIRA_BASE_URL",
+            "JIRA_USERNAME",
+            "JIRA_API_KEY",
+            "JIRA_ISSUE_SOURCE_FIELD"
+        ],
+        "properties": {
+            "JIRA_BASE_URL": {
+                "type": "string",
+                "description": "Jira base url"
+            },
+            "JIRA_USERNAME": {
+                "type": "string",
+                "description": "Jira username"
+            },
+            "JIRA_API_KEY": {
+                "type": "string",
+                "description": "Jira API key"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD": {
+                "type": "string",
+                "description": "Jira issue ID or key source field"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD_REGEX": {
+                "type": "string",
+                "description": "Regex expression to get the Jira issue info from the JIRA_ISSUE_SOURCE_FIELD"
+            },
+            "BUILD_MESSAGE": {
+                "type": "string",
+                "description": "Custom build message at the top of the Jira comment"
+            },
+            "BUILD_STATUS": {
+                "type": "string",
+                "description": "Current status of the build"
+            },
+            "JIRA_COMMENT_ID": {
+                "type": "string",
+                "description": "Jira comment ID to update a comment"
+            },
+            "ADD_BRANCH_INFO": {
+                "type": "boolean",
+                "description": "Add the branch information to the Jira comment",
+                "default": false
+            },
+            "ADD_COMMIT_INFO": {
+                "type": "boolean",
+                "description": "Add the commit information to the Jira comment",
+                "default": false
+            },
+            "ADD_PR_INFO": {
+                "type": "boolean",
+                "description": "Add the pull request information to the Jira comment",
+                "default": false
+            },
+            "VERBOSE": {
+                "type": "boolean",
+                "description": "Enable verbose logging by setting to true"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+        name: jira-issue-comment
+        image: fleatbnp/jira-issue-comment:v0.1.0
+        environment:
+          - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+          - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
+          - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
+          - 'CF_API_KEY=${{CF_API_KEY}}'
+          - 'CF_VOLUME_PATH=${{CF_VOLUME_PATH}}'
+          - 'CF_BRANCH=${{CF_BRANCH}}'
+          - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
+          - 'CF_COMMIT_MESSAGE=${{CF_COMMIT_MESSAGE}}'
+          - 'CF_COMMIT_URL=${{CF_COMMIT_URL}}'
+          - 'CF_PULL_REQUEST_ACTION=${{CF_PULL_REQUEST_ACTION}}'
+          - 'CF_PULL_REQUEST_TARGET=${{CF_PULL_REQUEST_TARGET}}'
+          - 'CF_PULL_REQUEST_NUMBER=${{CF_PULL_REQUEST_NUMBER}}'
+          - 'CF_PULL_REQUEST_ID=${{CF_PULL_REQUEST_ID}}'
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

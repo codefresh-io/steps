@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: lambda
-  version: 0.0.4
+  version: 0.0.5
   title: Deploy to AWS Lambda
   isPublic: true
   description: Deploy a serverless service (functions and resources) to AWS Lambda.

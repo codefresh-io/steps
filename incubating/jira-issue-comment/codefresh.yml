@@ -1,0 +1,25 @@
+version: '1.0'
+steps:
+  Clone:
+    title: Cloning jira issue comment repository
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    working_directory: "./steps/incubating/jira-issue-comment"
+    dockerfile: "Dockerfile"
+    image_name: codefreshplugins/jira-issue-comment
+  PushingToRegistry:
+    type: push
+    title: Pushing To Dockerhub Registry
+    registry: dockerhub
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "1.0.0" ]
+    when:
+      branch:
+        only:
+        - master

@@ -1,0 +1,12 @@
+version: '1.0'
+steps:
+  JiraTicketUpdate:
+    title: Add Jira Comment
+    type: jira-issue-comment
+    arguments:
+      JIRA_BASE_URL: "https://company-name.atlassian.net/"
+      JIRA_USERNAME: "jira-dev-ops-user"
+      JIRA_API_KEY: ${{JIRA_API_KEY}}
+      JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+      BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+      BUILD_STATUS: Build Started

@@ -1,14 +1,14 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/jira-issue-comment
-  version: 0.1.0
-  isPublic: false
+  name: jira-issue-comment
+  version: 1.0.0
+  title: Jira Issue Comment
+  isPublic: true
   description: Add or update a Jira issue comment
-  # Should be updated to https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-comment
   sources:
     - >-
-      https://github.com/brandonphillips/jira-issue-comment
+      https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-comment
   stage: incubating
   maintainers:
     - name: Brandon Phillips
@@ -18,21 +18,53 @@ metadata:
   tags: []
   icon:
     type: image
-    # Should be updated to https://raw.githubusercontent.com/codefresh-plugins/jira-issue-comment/master/icon.png
-    url: https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-comment/icon.png
     background: "#f4f4f4"
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-comment/icon.png
   examples:
-    - description: Custom Annotation Name
+    - description: Basic Jira Comment
       workflow:
         JiraTicketUpdate:
-          title: Bump custom annotation name
+          title: Add Jira Comment
           type: jira-issue-comment
           arguments:
-            ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
+            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Started
+    - description: Update Jira Comment
+      workflow:
+        JiraTicketUpdate:
+          title: Update Jira Comment
+          type: jira-issue-comment
+          arguments:
+            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            JIRA_COMMENT_ID: ${{JIRA_COMMENT_ID}}
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Completed
+    - description: Add Additional Information
+      workflow:
+        JiraTicketUpdate:
+          title: Add Jira Comment With Info
+          type: jira-issue-comment
+          arguments:
+            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Completed
+            ADD_BRANCH_INFO: true
+            ADD_COMMIT_INFO: true
+            ADD_PR_INFO: true
 spec:
   arguments: |-
     {
@@ -104,7 +136,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-comment
-        image: fleatbnp/jira-issue-comment:v0.1.0
+        image: codefreshplugins/jira-issue-comment
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_BUILD_ID=${{CF_BUILD_ID}}'

@@ -5,7 +5,7 @@ steps:
     type: "git-clone"
     arguments:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
-      git: github
+      git: "cf_github"
       revision: '${{CF_REVISION}}'
   BuildImage:
     title: Building Docker Image

@@ -9,3 +9,7 @@ steps:
     title: Pushing To Registry
     candidate: ${{BuildImage}}
     tags: [ "latest", "1.0.0" ]
+    when:
+      branch:
+        only:
+        - master

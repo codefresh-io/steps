@@ -1,0 +1,158 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: jira-issue-comment
+  version: 1.0.0
+  title: Jira Issue Comment
+  isPublic: true
+  description: Add or update a Jira issue comment
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-comment
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - build
+  official: false
+  tags: []
+  icon:
+    type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-comment/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-comment/icon.png
+  examples:
+    - description: Basic Jira Comment
+      workflow:
+        JiraTicketUpdate:
+          title: Add Jira Comment
+          type: jira-issue-comment
+          arguments:
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Started
+    - description: Update Jira Comment
+      workflow:
+        JiraTicketUpdate:
+          title: Update Jira Comment
+          type: jira-issue-comment
+          arguments:
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            JIRA_COMMENT_ID: ${{JIRA_COMMENT_ID}}
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Completed
+    - description: Add Additional Information
+      workflow:
+        JiraTicketUpdate:
+          title: Add Jira Comment With Info
+          type: jira-issue-comment
+          arguments:
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
+            JIRA_USERNAME: "jira-dev-ops-user"
+            JIRA_API_KEY: ${{JIRA_API_KEY}}
+            JIRA_ISSUE_SOURCE_FIELD: "SA-19"
+            BUILD_MESSAGE: ${{BUILD_MESSAGE}}
+            BUILD_STATUS: Build Completed
+            ADD_BRANCH_INFO: true
+            ADD_COMMIT_INFO: true
+            ADD_PR_INFO: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "JIRA_BASE_URL",
+            "JIRA_USERNAME",
+            "JIRA_API_KEY",
+            "JIRA_ISSUE_SOURCE_FIELD"
+        ],
+        "properties": {
+            "JIRA_BASE_URL": {
+                "type": "string",
+                "description": "Jira base url"
+            },
+            "JIRA_USERNAME": {
+                "type": "string",
+                "description": "Jira username"
+            },
+            "JIRA_API_KEY": {
+                "type": "string",
+                "description": "Jira API key"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD": {
+                "type": "string",
+                "description": "Jira issue ID or key source field"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD_REGEX": {
+                "type": "string",
+                "description": "Regex expression to get the Jira issue info from the JIRA_ISSUE_SOURCE_FIELD"
+            },
+            "BUILD_MESSAGE": {
+                "type": "string",
+                "description": "Custom build message at the top of the Jira comment"
+            },
+            "BUILD_STATUS": {
+                "type": "string",
+                "description": "Current status of the build"
+            },
+            "JIRA_COMMENT_ID": {
+                "type": "string",
+                "description": "Jira comment ID to update a comment"
+            },
+            "ADD_BRANCH_INFO": {
+                "type": "boolean",
+                "description": "Add the branch information to the Jira comment",
+                "default": false
+            },
+            "ADD_COMMIT_INFO": {
+                "type": "boolean",
+                "description": "Add the commit information to the Jira comment",
+                "default": false
+            },
+            "ADD_PR_INFO": {
+                "type": "boolean",
+                "description": "Add the pull request information to the Jira comment",
+                "default": false
+            },
+            "VERBOSE": {
+                "type": "boolean",
+                "description": "Enable verbose logging by setting to true"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+        name: jira-issue-comment
+        image: codefreshplugins/jira-issue-comment
+        environment:
+          - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+          - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
+          - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
+          - 'CF_API_KEY=${{CF_API_KEY}}'
+          - 'CF_BRANCH=${{CF_BRANCH}}'
+          - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
+          - 'CF_COMMIT_MESSAGE=${{CF_COMMIT_MESSAGE}}'
+          - 'CF_COMMIT_URL=${{CF_COMMIT_URL}}'
+          - 'CF_PULL_REQUEST_ACTION=${{CF_PULL_REQUEST_ACTION}}'
+          - 'CF_PULL_REQUEST_TARGET=${{CF_PULL_REQUEST_TARGET}}'
+          - 'CF_PULL_REQUEST_NUMBER=${{CF_PULL_REQUEST_NUMBER}}'
+          - 'CF_PULL_REQUEST_ID=${{CF_PULL_REQUEST_ID}}'
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

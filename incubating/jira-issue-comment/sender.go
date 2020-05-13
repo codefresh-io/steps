@@ -52,11 +52,11 @@ func setupRequest(environment Config) Request {
 	var request Request
 	if len(environment.JiraCommentId) > 0 {
 		request.MethodType = "PUT"
-		request.Url = environment.JiraBaseUrl + "rest/api/2/issue/" + environment.JiraIssueId + "/comment" +
+		request.Url = environment.JiraBaseUrl + "/rest/api/2/issue/" + environment.JiraIssueId + "/comment" +
 			"/" + environment.JiraCommentId
 	} else {
 		request.MethodType = "POST"
-		request.Url = environment.JiraBaseUrl + "rest/api/2/issue/" + environment.JiraIssueId + "/comment"
+		request.Url = environment.JiraBaseUrl + "/rest/api/2/issue/" + environment.JiraIssueId + "/comment"
 	}
 
 	request.AuthorizationHeader = "Basic " + b64.StdEncoding.EncodeToString([]byte(environment.JiraUsername+":"+environment.JiraApiKey))

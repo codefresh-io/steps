@@ -13,7 +13,7 @@ This step will create a comment with build information on your Jira instance wit
 
 Name|Required|Description
 ---|---|---
-JIRA_BASE_URL | Yes | The base URL path to your Jira instance (please make sure it ends with /)
+JIRA_BASE_URL | Yes | The base URL path to your Jira instance
 JIRA_USERNAME | Yes | The Jira username that you generated the API key with
 JIRA_API_KEY | Yes | The generated Jira API Key
 JIRA_ISSUE_SOURCE_FIELD | Yes | Jira Issue ID or Key

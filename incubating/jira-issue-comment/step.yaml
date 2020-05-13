@@ -31,7 +31,7 @@ metadata:
           title: Add Jira Comment
           type: jira-issue-comment
           arguments:
-            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
             JIRA_USERNAME: "jira-dev-ops-user"
             JIRA_API_KEY: ${{JIRA_API_KEY}}
             JIRA_ISSUE_SOURCE_FIELD: "SA-19"
@@ -43,7 +43,7 @@ metadata:
           title: Update Jira Comment
           type: jira-issue-comment
           arguments:
-            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
             JIRA_USERNAME: "jira-dev-ops-user"
             JIRA_API_KEY: ${{JIRA_API_KEY}}
             JIRA_ISSUE_SOURCE_FIELD: "SA-19"
@@ -56,7 +56,7 @@ metadata:
           title: Add Jira Comment With Info
           type: jira-issue-comment
           arguments:
-            JIRA_BASE_URL: "https://company-name.atlassian.net/"
+            JIRA_BASE_URL: "https://company-name.atlassian.net"
             JIRA_USERNAME: "jira-dev-ops-user"
             JIRA_API_KEY: ${{JIRA_API_KEY}}
             JIRA_ISSUE_SOURCE_FIELD: "SA-19"

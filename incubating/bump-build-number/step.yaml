@@ -56,11 +56,9 @@ spec:
   steps:
     main:
       name: bump-build-number
-      image: codefreshplugins/bump-build-number
+      image: fleatbnp/bump-build-number:v0.2.1
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
-    secondary:
-      image: alpine:latest
-      working_directory: "${{clone}}"
       commands:
-        - echo $CF_BUILD_NUMBER
+        - "/entrypoint.sh"
+        - "cf_export $CF_BUILD_NUMBER"

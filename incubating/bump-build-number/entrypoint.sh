@@ -36,5 +36,7 @@ codefresh create annotation pipeline $pipelineid $annotation_variable=$new_build
 printf '\nUpdated annotation build_number JSON\n'
 codefresh get annotation pipeline $pipelineid $annotation_variable -o json
 
-printf '\nExporting build number to CF_BUILD_NUMBER\n'
-echo CF_BUILD_NUMBER="$new_build_number" >> env_vars_to_export
+#printf '\nExporting build number to CF_BUILD_NUMBER\n'
+#echo CF_BUILD_NUMBER="$new_build_number" >> env_vars_to_export
+export CF_BUILD_NUMBER="$new_build_number"
+echo $CF_BUILD_NUMBER

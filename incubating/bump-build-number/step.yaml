@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: bump-build-number
+  name: codefreshdemo/bump-build-number
   version: 1.0.1
   title: Bump Build Number
   isPublic: true
@@ -59,3 +59,8 @@ spec:
       image: codefreshplugins/bump-build-number
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
+    secondary:
+      image: alpine:latest
+      working_directory: "${{clone}}"
+      commands:
+        - echo $CF_BUILD_NUMBER

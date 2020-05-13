@@ -51,9 +51,10 @@ func createBuildAnnotation(environment Config) {
 
 func exportCommentIdVariable(environment Config) {
 	fmt.Println("environment.JiraCommentId: " + environment.JiraCommentId)
+	const envFilePath = "/meta/env_vars_to_export"
 
-	if fileExists(environment.CodefreshVolumePath + "/env_vars_to_export") {
-		f, err := os.OpenFile(environment.CodefreshVolumePath+"/env_vars_to_export", os.O_APPEND|os.O_WRONLY, 0600)
+	if fileExists(envFilePath) {
+		f, err := os.OpenFile(envFilePath, os.O_APPEND|os.O_WRONLY, 0600)
 		if err != nil {
 			fmt.Println("Error opening env_vars_to_export file")
 			panic(err)
@@ -66,7 +67,7 @@ func exportCommentIdVariable(environment Config) {
 			}
 		}
 	} else {
-		fmt.Println("File:" + environment.CodefreshVolumePath + "/env_vars_to_export" +
+		fmt.Println("File:" + envFilePath +
 			"doesn't exist. Unable to write build variable JIRA_COMMENT_ID")
 	}
 

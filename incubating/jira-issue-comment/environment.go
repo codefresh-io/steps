@@ -8,16 +8,15 @@ import (
 )
 
 type Config struct {
-	JiraBaseUrl         string
-	JiraUsername        string
-	JiraApiKey          string
-	JiraIssueId         string
-	JiraCommentId       string
-	CodefreshApiKey     string
-	CodefreshVolumePath string
-	CodefreshBuildId    string
-	Verbose             bool
-	InfoValues          []CommentValue
+	JiraBaseUrl      string
+	JiraUsername     string
+	JiraApiKey       string
+	JiraIssueId      string
+	JiraCommentId    string
+	CodefreshApiKey  string
+	CodefreshBuildId string
+	Verbose          bool
+	InfoValues       []CommentValue
 }
 
 type CommentValue struct {
@@ -32,7 +31,6 @@ func setupEnvironment() Config {
 	environment.Verbose = convertStringToBool(getEnvironmentVariable("VERBOSE", false))
 
 	// Retrieve the codefresh volume path, API key, and build ID
-	environment.CodefreshVolumePath = getEnvironmentVariable("CF_VOLUME_PATH", false)
 	environment.CodefreshApiKey = getEnvironmentVariable("CF_API_KEY", false)
 	environment.CodefreshBuildId = getEnvironmentVariable("CF_BUILD_ID", false)
 

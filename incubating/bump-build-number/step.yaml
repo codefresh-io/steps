@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/bump-build-number
-  version: 1.0.1
+  name: bump-build-number
+  version: 1.0.2
   title: Bump Build Number
   isPublic: true
   description: Bump the build number
@@ -56,9 +56,6 @@ spec:
   steps:
     main:
       name: bump-build-number
-      image: fleatbnp/bump-build-number:v0.2.1
+      image: codefreshplugins/bump-build-number
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
-      commands:
-        - "/entrypoint.sh"
-        - "cf_export $CF_BUILD_NUMBER"

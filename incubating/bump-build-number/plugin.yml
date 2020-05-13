@@ -2,7 +2,7 @@ title: bump-build-number
 image: codefreshplugins/bump-build-number
 categories:
   - build
-version: 1.0.1
+version: 1.0.2
 description: Bump the current pipeline's build number
 keywords:
   - build

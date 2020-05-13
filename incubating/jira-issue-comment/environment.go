@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 type Config struct {
@@ -35,7 +36,8 @@ func setupEnvironment() Config {
 	environment.CodefreshBuildId = getEnvironmentVariable("CF_BUILD_ID", false)
 
 	// Verify that the required variables are passed in with the step
-	environment.JiraBaseUrl = getEnvironmentVariable("JIRA_BASE_URL", true)
+	rawJiraBaseURL := getEnvironmentVariable("JIRA_BASE_URL", true)
+	environment.JiraBaseUrl = strings.TrimSuffix(rawJiraBaseURL, "/")
 	environment.JiraUsername = getEnvironmentVariable("JIRA_USERNAME", true)
 	environment.JiraApiKey = getEnvironmentVariable("JIRA_API_KEY", true)
 

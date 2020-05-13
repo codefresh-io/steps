@@ -28,8 +28,8 @@ VERBOSE | No | Enable verbose logging
 
 ### Jira Issue Regex Sample
 
-JIRA_ISSUE_SOURCE_FIELD="branch/feature-SA-19/testing"
-JIRA_ISSUE_SOURCE_FIELD_REGEX="[a-zA-Z]{2}-\d+"
+JIRA_ISSUE_SOURCE_FIELD='branch/feature-SA-19/testing'
+JIRA_ISSUE_SOURCE_FIELD_REGEX='[a-zA-Z]{2}-\d+'
 
 This would set the Jira Issue Key to "SA-19". The example text in JIRA_ISSUE_SOURCE_FIELD can come from any variable you would like. In this example, the likely source of the branch information would be CF_BRANCH.
 

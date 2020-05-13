@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
@@ -25,7 +25,7 @@ metadata:
     - description: publish-build
       workflow:
         JFrogPublishBuild:
-          type: codefreshdemo/jfrog-cli
+          type: jfrog-cli
           arguments:
             JFROG_HOST: ${{JFROG_HOST}}
             JFROG_USER: ${{JFROG_USER}}
@@ -36,7 +36,7 @@ metadata:
     - description: publish-build-docker
       workflow:
         JFrogPublishBuild:
-          type: codefreshdemo/jfrog-cli
+          type: jfrog-cli
           arguments:
             JFROG_HOST: ${{JFROG_HOST}}
             JFROG_USER: ${{JFROG_USER}}
@@ -51,7 +51,7 @@ metadata:
     - description: publish-build-docker-scan-build
       workflow:
         JFrogPublishBuild:
-          type: codefreshdemo/jfrog-cli
+          type: jfrog-cli
           arguments:
             JFROG_HOST: ${{JFROG_HOST}}
             JFROG_USER: ${{JFROG_USER}}

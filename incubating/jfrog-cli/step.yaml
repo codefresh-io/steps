@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
@@ -29,7 +29,7 @@ metadata:
           arguments:
             JFROG_HOST: ${{JFROG_HOST}}
             JFROG_USER: ${{JFROG_USER}}
-            JFROG_API_KEY: ${{JFROG_API_KEY}}
+            JFROG_ACCESS_TOKEN: ${{JFROG_ACCESS_TOKEN}}
             JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
             JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
             JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
@@ -75,7 +75,6 @@ spec:
       "required": [
         "JFROG_HOST",
         "JFROG_USER",
-        "JFROG_API_KEY",
         "JFROG_CLI_BUILD_NAME",
         "JFROG_CLI_BUILD_NUMBER",
         "JFROG_CLI_BUILD_URL"
@@ -102,6 +101,10 @@ spec:
         "JFROG_USER": {
           "type": "string",
           "description": "JFrog Username"
+        },
+        "JFROG_ACCESS_TOKEN": {
+          "type": "string",
+          "description": "JFrog Access Token, does not support jfrog rt docker commands / Xray"
         },
         "JFROG_API_KEY": {
           "type": "string",
@@ -174,7 +177,14 @@ spec:
       [[- end ]]
       commands:
         - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
-        - jfrog rt config artifactory --url=$JFROG_PROTOCOL://$JFROG_HOST/artifactory --user=$JFROG_USER --apikey=$JFROG_API_KEY
+      [[- $cmd := (printf "jfrog rt config artifactory --url=%s://%s/artifactory --user=%s" .Arguments.JFROG_PROTOCOL .Arguments.JFROG_HOST .Arguments.JFROG_USER ) -]]
+      [[- if .Arguments.JFROG_ACCESS_TOKEN ]]
+          [[- $cmd = (printf "%s --access-token=%s" $cmd .Arguments.JFROG_ACCESS_TOKEN) -]]
+      [[- end -]]
+      [[- if .Arguments.JFROG_API_KEY ]]
+          [[- $cmd = (printf "%s --apikey=%s" $cmd .Arguments.JFROG_API_KEY) -]]
+      [[- end ]]
+        - [[ $cmd ]]
         - jfrog rt build-collect-env
         - jfrog rt build-add-git
       [[- if .Arguments.IMAGE ]]
@@ -183,7 +193,7 @@ spec:
       [[- end ]]
       [[ range $arg := .Arguments.COMMANDS ]]
         - '[[ $arg ]]'
-      [[ end ]]
+      [[- end ]]
         - jfrog rt build-publish
         - codefresh create annotation build $CF_BUILD_ID jfrog_build_url="$JFROG_PROTOCOL://$JFROG_HOST/artifactory/webapp/builds/$JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER"
       [[- if eq .Arguments.XRAY_SCAN true ]]

@@ -28,8 +28,8 @@ printf '\nGet annotation JSON value using jq\n'
 build_number=$(codefresh get annotation pipeline $pipelineid $annotation_variable -o json | jq '.value' -j) || true
 printf '\nCurrent value: %s' "$build_number"
 
-# Check if the variable retrieveCurrentValueOnly is set to true to skip bumping the build number
-if [ "$RETRIEVE_VALUE_ONLY" = true ]
+# Check if the variable RETRIEVE_CURRENT_VALUE_ONLY is set to true to skip bumping the build number
+if [ "$RETRIEVE_CURRENT_VALUE_ONLY" = true ]
 then
     printf '\nRetrieve value only variable set. Exporting existing build number to CF_BUILD_NUMBER\n'
     echo CF_BUILD_NUMBER="$new_build_number" >> /meta/env_vars_to_export

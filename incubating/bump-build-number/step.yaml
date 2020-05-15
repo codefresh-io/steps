@@ -51,7 +51,7 @@ spec:
                 "type": "string",
                 "description": "Override the build_number annotation name"
             },
-            "RETRIEVE_VALUE_ONLY": {
+            "RETRIEVE_CURRENT_VALUE_ONLY": {
                 "type": "boolean",
                 "description": "Retrieve the current annotation value without bumping"
             }
@@ -63,4 +63,4 @@ spec:
       image: codefreshplugins/bump-build-number
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
-        - 'RETRIEVE_VALUE_ONLY=${{RETRIEVE_VALUE_ONLY}}'
+        - 'RETRIEVE_CURRENT_VALUE_ONLY=${{RETRIEVE_CURRENT_VALUE_ONLY}}'

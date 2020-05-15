@@ -1,4 +1,4 @@
-FROM codefresh/kube-helm:master
+FROM codefresh/kube-helm:latest
 
 RUN mkdir /app
 

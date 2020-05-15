@@ -3,6 +3,14 @@ steps:
   BuildingDockerImage:
     title: Building Docker Image
     type: build
-    image_name: codefreshplugins/k8s-canary
+    image_name: codefreshplugins/k8s-canary-deployment
     tag: ${{CF_BRANCH}}
     dockerfile: Dockerfile
+  PushingDockerImage:
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    tag: "latest"
+    when:
+      branch:
+        only:
+          - master

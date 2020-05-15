@@ -2,10 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-canary-deployment
-  version: 0.0.4
+  version: 0.0.5
   title: Canary deployment for plain K8s
-  isPublic: false
-  description: Perform a gradual canary deployment using only Kuberentes manifests.
+  isPublic: true
+  description: Perform a gradual canary deployment using only Kubernetes manifests.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-canary-deployment
@@ -34,9 +34,9 @@ metadata:
             WORKING_VOLUME: ${{WORKING_VOLUME}}
             SERVICE_NAME: ${{SERVICE_NAME}}
             DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
-            TRAFFIC_INCREMENT: ${{TRAFFIC_INCREMENT}}
-            NEW_VERSION: ${{NEW_VERSION}}
-            SLEEP_SECONDS: ${{SLEEP_SECONDS}}
+            TRAFFIC_INCREMENT: '${{TRAFFIC_INCREMENT}}'
+            NEW_VERSION: '${{NEW_VERSION}}'
+            SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
             NAMESPACE: ${{NAMESPACE}}
             KUBE_CONTEXT: ${{KUBE_CONTEXT}}
 spec:
@@ -55,7 +55,7 @@ spec:
             },
             "NAMESPACE": {
                 "type": "string",
-                "description": "The name of the kubenretes namespace"
+                "description": "The name of the kubernetes namespace"
             },
             "TRAFFIC_INCREMENT": {
                 "type": "string"
@@ -85,7 +85,7 @@ spec:
   steps:
     main:
       name: k8s-canary-deployment
-      image: codefreshplugins/k8s-canary
+      image: codefreshplugins/k8s-canary-deployment:latest
       environment:
         - WORKING_VOLUME=${{WORKING_VOLUME}}
         - SERVICE_NAME=${{SERVICE_NAME}}

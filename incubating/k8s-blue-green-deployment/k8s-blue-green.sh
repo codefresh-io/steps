@@ -38,8 +38,8 @@ cancel(){
 
 
 mainloop(){
-   
-    echo "[DEPLOY INFO] Selecting Kubernetes cluster"
+
+    echo "[DEPLOY INFO] Selecting Kubernetes cluster ${KUBE_CONTEXT}"
     kubectl config use-context "${KUBE_CONTEXT}"
 
     echo "[DEPLOY INFO] Locating current version"
@@ -70,7 +70,11 @@ mainloop(){
    
 }
 
-if [ "$1" != "" ] && [ "$2" != "" ] && [ "$3" != "" ] && [ "$4" != "" ] && [ "$5" != "" ] && [ "$6" != "" ]; then
+if [[ ! -v KUBE_CONTEXT ]]; then
+    echo "Environment variable \$KUBE_CONTEXT is not set"
+    exit 1
+
+elif [ "$1" != "" ] && [ "$2" != "" ] && [ "$3" != "" ] && [ "$4" != "" ] && [ "$5" != "" ] && [ "$6" != "" ]; then
     SERVICE_NAME=$1
     DEPLOYMENT_NAME=$2
     NEW_VERSION=$3

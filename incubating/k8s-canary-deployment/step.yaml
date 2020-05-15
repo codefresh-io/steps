@@ -1,10 +1,10 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/k8s-canary-deployment
+  name: k8s-canary-deployment
   version: 0.0.5
   title: Canary deployment for plain K8s
-  isPublic: false
+  isPublic: true
   description: Perform a gradual canary deployment using only Kubernetes manifests.
   sources:
     - >-
@@ -13,8 +13,6 @@ metadata:
   maintainers:
     - name: Kostis Kapelonis
       email: support@codefresh.io
-    - name: Dustin Van Buskirk
-      email: dustin@codefresh.io
   categories:
     - featured
     - deployment
@@ -87,7 +85,7 @@ spec:
   steps:
     main:
       name: k8s-canary-deployment
-      image: codefreshplugins/k8s-canary
+      image: codefreshplugins/k8s-canary-deployment:latest
       environment:
         - WORKING_VOLUME=${{WORKING_VOLUME}}
         - SERVICE_NAME=${{SERVICE_NAME}}

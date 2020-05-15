@@ -1,5 +1,5 @@
 name: k8s-canary-deployment
-image: codefreshplugins/k8s-canary
+image: codefreshplugins/k8s-canary-deployment:latest
 tag: 0.1.0
 version: 0.1.0
 description: Perform a gradual canary deployment using only Kuberentes manifests.

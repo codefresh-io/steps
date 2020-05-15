@@ -32,7 +32,7 @@ printf '\nCurrent value: %s' "$build_number"
 if [ "$RETRIEVE_CURRENT_VALUE_ONLY" = true ]
 then
     printf '\nRetrieve value only variable set. Exporting existing build number to CF_BUILD_NUMBER\n'
-    echo CF_BUILD_NUMBER="$new_build_number" >> /meta/env_vars_to_export
+    echo CF_BUILD_NUMBER="$build_number" >> /meta/env_vars_to_export
     exit 0
 fi
 

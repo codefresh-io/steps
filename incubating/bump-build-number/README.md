@@ -17,6 +17,7 @@ The build number is exported for future step use to the following variable: CF_B
 Name|Required|Description
 ---|---|---
 ANNOTATION_NAME | No | Can customize the name of the build number annotation
+RETRIEVE_CURRENT_VALUE_ONLY | No  | Retrieve the current value of the default or custom annotation name without bumping it
 
 ### Codefresh.yml
 

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bump-build-number
-  version: 1.0.2
+  version: 1.0.3
   title: Bump Build Number
   isPublic: true
   description: Bump the build number
@@ -25,18 +25,25 @@ metadata:
         url: >-
           https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/bump-build-number/icon.png
   examples:
-    - description: Default Annotation Name
+    - description: Default annotation name
       workflow:  
         BumpBuildNumber:
           title: Bump default build_number annotation
           type: bump-build-number
-    - description: Custom Annotation Name
+    - description: Custom annotation name
       workflow:
         BumpBuildNumber:
           title: Bump custom annotation name
           type: bump-build-number
           arguments:
             ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
+    - description: Retrieve current value without bumping
+      workflow:  
+        BumpBuildNumber:
+          title: Bump default build_number annotation
+          type: bump-build-number
+          arguments:
+            RETRIEVE_CURRENT_VALUE_ONLY: true
 spec:
   arguments: |-
     {

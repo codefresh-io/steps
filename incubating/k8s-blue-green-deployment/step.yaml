@@ -2,10 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-blue-green-deployment
-  version: 0.0.4
-  title: Blue/green deploymens for plain K8s
-  isPublic: false
-  description: Perform a blue/green deployment using only Kuberentes manifests.
+  version: 0.0.5
+  title: Blue/green deployments for plain K8s
+  isPublic: true
+  description: Perform a blue/green deployment using only Kubernetes manifests.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-blue-green-deployment
@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: k8s-blue-green-deployment
-      image: codefreshplugins/k8s-blue-green
+      image: codefreshplugins/k8s-blue-green:latest
       environment:
         - KUBE_CONTEXT=${{KUBE_CONTEXT}}
         - SERVICE_NAME=${{SERVICE_NAME}}

@@ -4,7 +4,7 @@ metadata:
   name: git-submodules
   title: Update a Git submodule
   version: 0.0.4
-  isPublic: false
+  isPublic: true
   description: Update Git submodules
   sources:
     - >-

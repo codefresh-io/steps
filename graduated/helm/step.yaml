@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.7
+  version: 1.0.8
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -80,7 +80,6 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "kube_context"
         ],
         "properties": {
             "kube_context": {

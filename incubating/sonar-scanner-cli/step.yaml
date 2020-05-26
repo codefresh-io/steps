@@ -1,0 +1,84 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: sonar-scanner-cli
+  version: 0.0.1
+  isPublic: false
+  description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/incubating/sonar-scanner-cli
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - security
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/SA-59/incubating/sonar-scanner-cli/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Sonarqube Scan
+      workflow:
+        SendEmail:
+          type: sonar-scanner-cli
+          arguments:
+            SONAR_HOST_URL: http://foo.acme:9000
+            SONAR_LOGIN: username or key
+            SONAR_PASSWORD: password if username is used
+            SONAR_PROJECT_BASE_DIR: set working directory for analysis
+            SONAR_SCANNER_CLI_VERSION: "latest"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "SONAR_HOST_URL",
+        "SONAR_LOGIN"
+      ],
+      "properties": {
+        "SONAR_HOST_URL": {
+          "type": "string",
+          "default": "",
+          "description": "the server URL"
+        },
+        "SONAR_LOGIN": {
+          "type": "string",
+          "default": "",
+          "description": "The login or authentication token of a SonarQube user with Execute Analysis permission on the project."
+        },
+        "SONAR_PASSWORD": {
+          "type": "string",
+          "default": "",
+          "description": "The password that goes with the sonar.login username. This should be left blank if an authentication token is being used."
+        },
+        "SONAR_PROJECT_BASE_DIR": {
+          "type": "string",
+          "default": "",
+          "description": "Use this property when you need analysis to take place in a directory other than the one from which it was launched. E.G. analysis begins from jenkins/jobs/myjob/workspace but the files to be analyzed are in ftpdrop/cobol/project1. The path may be relative or absolute. Specify not the the source directory, but some parent of the source directory. The value specified here becomes the new 'analysis directory', and other paths are then specified as though the analysis were starting from the specified value of sonar.projectBaseDir. Note that the analysis process will need write permissions in this directory; it is where the sonar.working.directory will be created."
+        },
+        "SONAR_SCANNER_CLI_VERSION": {
+          "type": "string",
+          "default": "latest",
+          "description": "Version of Sonar Scanner CLI to use, Docker image tag."
+        }
+      }
+    }
+  stepsTemplate: |-
+    main:
+      name: sonar-scanner-cli
+      image: 'sonarsource/sonar-scanner-cli:[[.Arguments.SONAR_SCANNER_CLI_VERSION]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

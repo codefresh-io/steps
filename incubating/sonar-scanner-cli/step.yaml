@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-scanner-cli
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
@@ -66,7 +66,7 @@ spec:
         },
         "SONAR_SCANNER_CLI_VERSION": {
           "type": "string",
-          "default": "latest",
+          "default": "4.2",
           "description": "Version of Sonar Scanner CLI to use, Docker image tag."
         }
       }

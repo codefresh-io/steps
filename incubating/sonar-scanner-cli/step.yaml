@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-scanner-cli
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
@@ -18,7 +18,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/SA-59/incubating/sonar-scanner-cli/icon.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/sonar-scanner-cli/icon.svg
     background: "#f4f4f4"
   examples:
     - description: Sonarqube Scan

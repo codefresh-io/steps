@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-bluegreen-deploy
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
-  description: Deploys  a  new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
+  description: Deploys a new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-bluegreen-deploy'
   stage: incubating
@@ -51,6 +51,10 @@ spec:
             "CODEDEPLOY_DEPLOYMENT_GROUP"
         ],
         "properties": {
+            "AWS_ASSUME_ROLE": {
+                "type": "string",
+                "description": "ARN for Amazon role to assume during deploy."
+            },
             "AWS_ACCESS_KEY_ID": {
                 "type": "string",
                 "description": "Amazon access key ID"
@@ -89,26 +93,27 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: ecs-deploy
-      image: codefresh/ecs-bluegreen-deploy:0.1.0
+      image: codefresh/ecs-bluegreen-deploy:0.0.2
       shell: bash
       commands:
         - |-
           entrypoint.sh \
-            --cluster ${{CLUSTER_NAME}} \
-            --service ${{SERVICE_NAME}} \
-            --image ${{IMAGE}} \
-            --codedeploy-application ${{CODEDEPLOY_APPLICATION}} \
-            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}} \
-            --max-wait-time ${{MAX_WAIT_TIME}}
+            [[- if .Arguments.AWS_ASSUME_ROLE ]]
+            --iam-role [[.Arguments.AWS_ASSUME_ROLE]] \
+            [[- end ]]
+            --cluster [[.Arguments.CLUSTER_NAME]] \
+            --service [[.Arguments.SERVICE_NAME]] \
+            --image [[.Arguments.IMAGE]] \
+            --codedeploy-application [[.Arguments.CODEDEPLOY_APPLICATION]] \
+            --codedeploy-deployment-group [[.Arguments.CODEDEPLOY_DEPLOYMENT_GROUP]] \
+            --max-wait-time [[.Arguments.MAX_WAIT_TIME]]
       environment:
-        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
-        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
-        - 'AWS_DEFAULT_REGION=${{AWS_DEFAULT_REGION}}'
-        - 'CLUSTER_NAME=${{CLUSTER_NAME}}'
-        - 'SERVICE_NAME=${{SERVICE_NAME}}'
-        - 'CODEDEPLOY_APPLICATION=${{CODEDEPLOY_APPLICATION}}'
-        - 'CODEDEPLOY_DEPLOYMENT_GROUP=${{CODEDEPLOY_DEPLOYMENT_GROUP}}'
-        - 'MAX_WAIT_TIME=${{MAX_WAIT_TIME}}'
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

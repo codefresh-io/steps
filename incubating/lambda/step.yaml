@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/lambda
+  name: lambda
   version: 0.0.6
   title: Deploy to AWS Lambda using Serverless
   isPublic: true

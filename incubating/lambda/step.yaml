@@ -2,8 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: lambda
-  version: 0.0.5
-  title: Deploy to AWS Lambda
+  version: 0.0.6
+  title: Deploy to AWS Lambda using Serverless
   isPublic: true
   description: Deploy a serverless service (functions and resources) to AWS Lambda.
   sources:
@@ -12,7 +12,7 @@ metadata:
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
-      email: francisco@codefresh.io
+      email: support@codefresh.io
   categories:
     - serverless
     - aws
@@ -23,37 +23,26 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/lambda/icon.svg
     background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: aws-credentials-file
       workflow:
-        version: '1.0'
-        steps:
-          setup:
-            image: 'alpine:3.7'
-            title: generate AWS shared credentials file
-            commands:
-              - mkdir -p .aws
-              - >-
-                echo -n $AWS_CREDENTIALS_FILE | base64 -d >
-                ${PWD}/.aws/credentials
-              - 'cf_export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials'
-          package:
-            image: codefreshplugins/cf-plugin-serverless
-            title: package serverless service
-            working_directory: '${{main_clone}}/examples/aws-node-simple-http-endpoint'
-            commands:
-              - >-
-                serverless package --stage ${AWS_STAGE} --region ${AWS_REGION}
-                --package ${PACKAGE}
-          deploy:
-            type: lambda
-            title: deploy to AWS with serverless framework
-            arguments:
-              PACKAGE: ${{PACKAGE}}
-              AWS_CREDENTIALS_FILE: ${{AWS_CREDENTIALS_FILE}}
-              AWS_SHARED_CREDENTIALS_FILE: ${{AWS_SHARED_CREDENTIALS_FILE}}
-              AWS_REGION: ${{AWS_REGION}}
-              AWS_PROFILE: ${{AWS_PROFILE}}
-              AWS_STAGE: ${{AWS_STAGE}}
+        deploy:
+          type: lambda
+          title: Deploy to AWS using Credentials File
+          arguments:
+            PACKAGE: ./deploy
+            AWS_CREDENTIALS_FILE: ${{AWS_CREDENTIALS_FILE}}
+            AWS_PROFILE: default
+            AWS_REGION: us-west-2
+            AWS_STAGE: development
+    - description: aws-hybrid
+      workflow:
+        deploy:
+          type: lambda
+          title: Deploy to AWS using IAM Role
+          arguments:
+            PACKAGE: deploy
+            AWS_REGION: us-west-2
+            AWS_STAGE: development
 spec:
   arguments: |-
     {
@@ -64,10 +53,7 @@ spec:
         "patterns": [],
         "required": [
             "PACKAGE",
-            "AWS_CREDENTIALS_FILE",
-            "AWS_SHARED_CREDENTIALS_FILE",
             "AWS_REGION",
-            "AWS_PROFILE",
             "AWS_STAGE"
         ],
         "properties": {
@@ -79,17 +65,13 @@ spec:
                 "type": "string",
                 "description": "Base64 encoded AWS credentials file"
             },
-            "AWS_SHARED_CREDENTIALS_FILE": {
+            "AWS_PROFILE": {
                 "type": "string",
-                "description": "Path to shared AWS credentials file"
+                "description": "AWS Profile Name"
             },
             "AWS_REGION": {
                 "type": "string",
                 "description": "AWS region"
-            },
-            "AWS_PROFILE": {
-                "type": "string",
-                "description": "AWS credentials profile"
             },
             "AWS_STAGE": {
                 "type": "string",
@@ -97,18 +79,22 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: serverless
       image: codefreshplugins/cf-plugin-serverless
       environment:
-        - 'PACKAGE=${{PACKAGE}}'
-        - 'AWS_CREDENTIALS_FILE=${{AWS_CREDENTIALS_FILE}}'
-        - 'AWS_SHARED_CREDENTIALS_FILE=${{AWS_SHARED_CREDENTIALS_FILE}}'
-        - 'AWS_REGION=${{AWS_REGION}}'
-        - 'AWS_PROFILE=${{AWS_PROFILE}}'
-        - 'AWS_STAGE=${{AWS_STAGE}}'
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
       commands:
-        - serverless deploy --conceal --verbose --stage ${{AWS_STAGE}}
-          --region ${{AWS_REGION}} --aws-profile ${{AWS_PROFILE}} --package
-          ${{PACKAGE}}
+        - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/${{PACKAGE}}
+      [[- if .Arguments.AWS_CREDENTIALS_FILE ]]
+        - mkdir -p .aws
+        - >-
+          echo -n $AWS_CREDENTIALS_FILE | base64 -d >
+          ${PWD}/.aws/credentials
+        - export AWS_SHARED_CREDENTIALS_FILE=${PWD}/.aws/credentials
+      [[- end ]]
+        - serverless package --stage ${{AWS_STAGE}} --region ${{AWS_REGION}}
+        - serverless deploy --conceal --verbose

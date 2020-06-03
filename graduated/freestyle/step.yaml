@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: freestyle
   title: Run a shell script
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Run any shell command on top of a Docker image
   sources:
@@ -63,6 +63,10 @@ spec:
                   "alpine:latest"
                 ],
                 "description": "The image from which the executable container is created. It can be an explicit ID of a Docker image, or a variable that references a Build or Push step."
+            },
+            "registry_context": {
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your primary registry by image domainy."
             },
             "commands": {
                 "type": "array",

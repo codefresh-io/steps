@@ -134,7 +134,7 @@ spec:
                 "items": {
                 "type": "string"
                 },
-                "description": "The registry logical name of one of the inserted registries from the integration view."
+                "description": "The registry logical name of one of the inserted registries from the integration view. The default values is primary registries by domain. Note that this is needed to do docker login to specified registries."
             },
             "disable_push": {
                 "type": "boolean",

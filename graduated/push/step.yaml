@@ -2,7 +2,7 @@ kind: step-type
 version: "1.0"
 metadata:
   name: push
-  version: 1.0.2
+  version: 1.0.3
   title: Push an image
   isPublic: true
   description: Push a docker image to a registry.
@@ -45,6 +45,10 @@ spec:
             "registry": {
                 "type": "string",
                 "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your default registry."
+            },
+            "registry_context": {
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your primary registry by image domain."
             },
             "credentials": {
                 "type": "object",

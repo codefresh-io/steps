@@ -11,7 +11,9 @@ REQUIRED_VARS=(
     VAULT_AUTH_TOKEN
     APPROLE_ROLE_ID
     APPROLE_SECRET_ID
-    VAULT_PATH    
+    VAULT_PATH
+    VAULT_FIELD_NAME
+    VAULT_FIELD_EXPORT_NAME    
     VAULT_CLIENT_CERT_BASE64
     VAULT_CLIENT_KEY_BASE64
 )
@@ -63,9 +65,17 @@ fi
 
 msg "Reading provided path"
 
-for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" ); do
-    #echo $s >> /meta/env_vars_to_export
-    echo $s
-done
+if [ ! -z "$VAULT_FIELD_NAME" ]; then
+    field_return_value=$(vault kv get -format table -field $VAULT_FIELD_NAME $VAULT_PATH)
+    if [ ! -z "$VAULT_FIELD_EXPORT_NAME" ]; then
+        echo $VAULT_FIELD_EXPORT_NAME=$field_return_value >> /meta/env_vars_to_export
+    else
+        echo $VAULT_FIELD_NAME=$field_return_value >> /meta/env_vars_to_export
+    fi
+else
+    for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" ); do
+        echo $s >> /meta/env_vars_to_export
+    done
+fi
 
 

@@ -68,23 +68,25 @@ msg "Reading provided path"
 
 if [ ! -z "$VAULT_FIELD_NAME" ]; then
     field_return_value=$(vault kv get -format table -field $VAULT_FIELD_NAME $VAULT_PATH)
-    #echo $VAULT_VARIABLE_EXPORT_PREFIX$VAULT_FIELD_NAME=$field_return_value >> /meta/env_vars_to_export
-    echo $VAULT_VARIABLE_EXPORT_PREFIX$VAULT_FIELD_NAME=$field_return_value
+    echo $VAULT_VARIABLE_EXPORT_PREFIX$VAULT_FIELD_NAME=$field_return_value >> /meta/env_vars_to_export
 else
+    # If a path delimiter is specified, we need to break up the multiple paths and iterate over them
     if [ ! -z "$VAULT_PATH_DELIMITER" ]; then
+        # Set the delimiter to the passed in delimiter value and break the string apart
         IFS=$VAULT_PATH_DELIMITER read -ra SPLIT_VAULT_PATHS <<< "$VAULT_PATH"
         for i in "${SPLIT_VAULT_PATHS[@]}"; do
             msg "Exporting variables from path $i"
+            # Grab the json values from this path and add any prefix specified
             for s in $(vault kv get $i | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do                
-                #echo $s >> /meta/env_vars_to_export
-                echo $s
+                echo $s >> /meta/env_vars_to_export
             done
-        done 
+        done
+    # Export values from a single path
     else
         msg "Exporting variables from path $VAULT_PATH"
+        # Grab the json values from this path and add any prefix specified
         for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do            
-            #echo $s >> /meta/env_vars_to_export
-            echo $s
+            echo $s >> /meta/env_vars_to_export
         done
     fi
     

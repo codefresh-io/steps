@@ -53,9 +53,9 @@ msg "Authenticating Vault"
 export VAULT_FORMAT="json"
 
 if [ "$VAULT_AUTH_METHOD" = "APPROLE" ]; then
-    client_token=$(vault write auth/approle/login role_id=$APPROLE_ROLE_ID secret_id=$APPROLE_SECRET_ID | jq '.auth.client_token' -j)
+    CLIENT_TOKEN=$(vault write auth/approle/login role_id=$APPROLE_ROLE_ID secret_id=$APPROLE_SECRET_ID | jq '.auth.client_token' -j)
     # Set the vault token for any future requests to the client token retrieved by the approle authentication
-    export VAULT_TOKEN=$client_token
+    vault login $CLIENT_TOKEN >/dev/null
 else
     vault login $VAULT_AUTH_TOKEN  >/dev/null
 fi

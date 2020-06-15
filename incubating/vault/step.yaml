@@ -54,6 +54,10 @@ spec:
                 "type": "string",
                 "description": "Path to secrets in vault. Example: secret/codefreshsecret (required)"
             },
+            "VAULT_PATH_DELIMITER": {
+                "type": "string",
+                "description": "Path delimiter to break up multiple paths in the VAULT_PATH value"
+            },
             "VAULT_AUTH_METHOD": {
               "type": "string",
               "description": "Vault authentication method. Valid options: APPROLE or TOKEN"
@@ -95,6 +99,7 @@ spec:
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - 'VAULT_PATH=${{VAULT_PATH}}'
+        - 'VAULT_PATH_DELIMITER=${{VAULT_PATH_DELIMITER}}'
         - 'VAULT_AUTH_TOKEN=${{VAULT_AUTH_TOKEN}}'
         - 'VAULT_CLIENT_CERT_BASE64=${{VAULT_CLIENT_CERT_BASE64}}'
         - 'VAULT_CLIENT_KEY_BASE64=${{VAULT_CLIENT_KEY_BASE64}}'
@@ -102,4 +107,4 @@ spec:
         - 'APPROLE_ROLE_ID=${{APPROLE_ROLE_ID}}'
         - 'APPROLE_SECRET_ID=${{APPROLE_SECRET_ID}}'
         - 'VAULT_FIELD_NAME=${{VAULT_FIELD_NAME}}'
-        - 'VAULT_FIELD_EXPORT_NAME=${{VAULT_FIELD_EXPORT_NAME}}'
+        - 'VAULT_VARIABLE_EXPORT_PREFIX=${{VAULT_VARIABLE_EXPORT_PREFIX}}'

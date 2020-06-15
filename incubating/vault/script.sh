@@ -71,10 +71,23 @@ if [ ! -z "$VAULT_FIELD_NAME" ]; then
     #echo $VAULT_VARIABLE_EXPORT_PREFIX$VAULT_FIELD_NAME=$field_return_value >> /meta/env_vars_to_export
     echo $VAULT_VARIABLE_EXPORT_PREFIX$VAULT_FIELD_NAME=$field_return_value
 else
-    for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do
-        #echo $s >> /meta/env_vars_to_export
-        echo $s
-    done
+    if [ ! -z "$VAULT_PATH_DELIMITER" ]; then
+        IFS=$VAULT_PATH_DELIMITER read -ra SPLIT_VAULT_PATHS <<< "$VAULT_PATH"
+        for i in "${SPLIT_VAULT_PATHS[@]}"; do
+            msg "Exporting variables from path $i"
+            for s in $(vault kv get $i | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do                
+                #echo $s >> /meta/env_vars_to_export
+                echo $s
+            done
+        done 
+    else
+        msg "Exporting variables from path $VAULT_PATH"
+        for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do            
+            #echo $s >> /meta/env_vars_to_export
+            echo $s
+        done
+    fi
+    
 fi
 
 

@@ -82,9 +82,9 @@ spec:
                 "type": "string",
                 "description": "Set this field to export a single value with the specified key"
             },
-            "VAULT_FIELD_EXPORT_NAME": {
+            "VAULT_VARIABLE_EXPORT_PREFIX": {
                 "type": "string",
-                "description": "Override the codefresh variable export name when retrieving a single field"
+                "description": "Add a string prefix to the exported variable names of groups or single values"
             }
         }
     }

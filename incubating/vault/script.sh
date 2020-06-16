@@ -55,7 +55,8 @@ export VAULT_FORMAT="json"
 if [ "$VAULT_AUTH_METHOD" = "APPROLE" ]; then
     CLIENT_TOKEN=$(vault write auth/approle/login role_id=$APPROLE_ROLE_ID secret_id=$APPROLE_SECRET_ID | jq '.auth.client_token' -j)
     # Set the vault token for any future requests to the client token retrieved by the approle authentication
-    vault login $CLIENT_TOKEN >/dev/null
+    [ -z "$CLIENT_TOKEN" ] && err "Approle authentication failure"
+    export VAULT_TOKEN=$CLIENT_TOKEN
 else
     vault login $VAULT_AUTH_TOKEN  >/dev/null
 fi
@@ -88,8 +89,7 @@ else
         for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do            
             echo $s >> /meta/env_vars_to_export
         done
-    fi
-    
+    fi    
 fi
 
 

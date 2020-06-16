@@ -22,7 +22,16 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/vault/icon.svg
     background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: Token Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+    - description: Client Certificate
       workflow:
         Vault_to_Env:
           title: Importing vault values
@@ -33,6 +42,48 @@ metadata:
             VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+    - description: Approle Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_METHOD: 'APPROLE'
+            APPROLE_ROLE_ID: ${{APPROLE_ROLE_ID}}
+            APPROLE_SECRET_ID: ${{APPROLE_SECRET_ID}}
+    - description: Retrieve Single Key
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_FIELD_NAME: 'some-key-name'
+    - description: Retrieve Multiple Paths
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: 'kv/firstpath;kv/secondpath'
+            VAULT_PATH_DELIMITER: ';'
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+    - description: Add Prefix to Variables
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: 'kv/firstpath;kv/secondpath'
+            VAULT_PATH_DELIMITER: ';'
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_VARIABLE_EXPORT_PREFIX: 'pre_'
 spec:
   arguments: |-
     {

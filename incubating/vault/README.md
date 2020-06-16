@@ -2,7 +2,7 @@
 
 Use Codefresh [Vault](https://www.vaultproject.io) plugin to make key-value pairs stored in a vault available as environment variables for further steps.
 
-NOTE: this plugin currently supports token and approle authentication and Key/Value secrets engine only. This plugin will not renew a secret id TTL - it must be valid at the time of execution
+NOTE: this plugin currently supports token and approle authentication and Key/Value secrets engine only. This plugin will not renew an Approle secret id TTL - it must be valid at the time of execution
 
 
 ## Usage
@@ -30,6 +30,9 @@ VAULT_AUTH_TOKEN=s.4wtaMJuZ7dv0c4XuRaasLUOG
       VAULT_PATH: ${{VAULT_PATH}}
       VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
 ```
+## Authentication
+
+Although the AUTH and APPROLE variables are not listed as required by the step, you must pass valid authentication credentials to retrieve any keys. At a minimum, this requires the VAULT_AUTH_TOKEN as the default authorization method is Token based. If you would like to utilize Approle based authentication, please set the VAULT_AUTH_METHOD to APPROLE and pass in a valid Role ID (APPROLE_ROLE_ID) and Secret ID (APPROLE_SECRET_ID).
 
 ## Environment Variables
 

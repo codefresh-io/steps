@@ -1,10 +1,10 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: brandonphillips/vault
-  version: 0.0.6
+  name: vault
+  version: 0.0.7
   title: Fetch secrets from Hashicorp Vault
-  isPublic: false
+  isPublic: true
   description: >-
     Read secrets from Hashicorp Vault inside a Codefresh pipeline.
   sources:
@@ -146,7 +146,7 @@ spec:
   steps:
     main:
       name: vault
-      image: fleatbnp/vault-step:latest
+      image: codefresh/vault
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - 'VAULT_PATH=${{VAULT_PATH}}'

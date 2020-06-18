@@ -10,6 +10,7 @@ metadata:
   stage: incubating
   categories:
     - deployment
+  official: false
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/argo/argo.svg

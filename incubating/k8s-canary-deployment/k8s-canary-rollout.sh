@@ -180,6 +180,7 @@ mainloop(){
 
     echo "[CANARY INFO] Canary target replicas: $STARTING_REPLICAS"
 
+    # ----- BRANDON ----- Insert conditional logic to either call a pipeline or execute the health check
     healthcheck
 
     while [ $TRAFFIC_INCREMENT -lt 100 ]
@@ -201,6 +202,7 @@ mainloop(){
         sleep $SLEEP_SECONDS
      	healthcheck
     done
+     # ----- BRANDON ----- Insert conditional logic to either call a pipeline or execute the health check
 }
 
 if [ "$1" != "" ] && [ "$2" != "" ] && [ "$3" != "" ] && [ "$4" != "" ] && [ "$5" != "" ] && [ "$6" != "" ] && [ "$7" != "" ]; then

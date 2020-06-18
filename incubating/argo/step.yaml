@@ -1,0 +1,85 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: argo
+  version: 0.0.14
+  isPublic: true
+  description: This pipeline plugin trigger a sync for ArgoCD app
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo'
+  stage: incubating
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/argo/argo.svg
+    background: "#f4f4f4"
+  maintainers:
+    - name: Raziel Tabib
+  examples:
+    - workflow:
+        sync_and_wait:
+          title: Sync ArgoCD app and wait
+          type: argo
+          arguments:
+            context: 'argo-demo'
+            app_name: 'demo_app'
+  latest: true
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+          "app_name",
+          "context"
+      ],
+      "properties": {
+          "context": {
+            "type": "string",
+            "description": "Name of context with argo cd from integration"
+          },
+          "app_name": {
+              "type": "string",
+              "description": "The argocd application that will be synced"
+          },
+          "sync": {
+              "type": "boolean",
+              "description": "Specify whether to trigger an ArgoCD sync",
+              "default": true
+          },
+          "wait_healthy": {
+              "type": "boolean",
+              "description": "Specify whether to wait for sync to be completed (in canary consider wait for suspended status)",
+              "default": false
+          },
+          "wait_for_suspend": {
+              "type": "boolean",
+              "description": "Specify whether to wait for application suspended status",
+              "default": false
+          }
+      }
+    }
+  steps:
+    runArgoCd:
+      title: "Run ArgoCD"
+      image: "nazarcodefresh/argo:latest"
+      environment:
+        - ARGOCD_SYNC=${{sync}}
+        - ARGOCD_WAIT_HEALTHY=${{wait_healthy}}
+        - ARGOCD_WAIT_FOR_SUSPEND=${{wait_for_suspend}}
+      commands:
+        - printenv
+        - 'export CONTEXT=$(curl $CF_URL/api/argo/${{context}} -H "Authorization: Bearer $CF_API_KEY")'
+        - export ARGO_SERVER_RAW=$(echo $CONTEXT | jq .data.url -r)
+        - export ARGO_SERVER=$(echo $ARGO_SERVER_RAW | sed -E 's|https?://||')
+        - export ARGO_USERNAME=$(echo $CONTEXT | jq .data.username -r)
+        - export ARGO_PWD=$(echo $CONTEXT | jq .data.password -r)
+        - argocd login $ARGO_SERVER --insecure --username $ARGO_USERNAME --password $ARGO_PWD
+        - cf_export runArgoCd_CF_OUTPUT_URL="$ARGO_SERVER_RAW/${{app_name}}"
+        - if $ARGOCD_SYNC; then argocd app sync ${{app_name}}; fi
+        - if $ARGOCD_WAIT_HEALTHY; then argocd app wait ${{app_name}}; fi
+        - if $ARGOCD_WAIT_FOR_SUSPEND; then argocd app wait ${{app_name}} --suspended; fi

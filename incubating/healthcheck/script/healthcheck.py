@@ -3,6 +3,7 @@ import json
 from kubernetes import client, config
 from kubernetes.client import configuration
 from prometheus_http_client import Prometheus
+from datadog import initialize, api
 import os
 import time
 import sys
@@ -18,6 +19,9 @@ class PrometheusMetricsNotAvailable(Error):
    pass
 class ThresholdCheckFailed(Error):
    """Raised when metrics tests have failed"""
+   pass
+class DatadogSLOFailing(Error):
+   """Raised when SLO in Datadog returns failing status"""
    pass
 
 def kube_http_client(healthcheck_type, cluster, namespace, deployment):
@@ -61,6 +65,21 @@ def get_metrics(metric):
     else:
         return False
 
+def get_slo_id(name):
+    query = name
+    get_slo = api.ServiceLevelObjective.get_all(query=query)
+    json_formatted_str_slo = json.dumps(get_slo, indent=2)
+    query_slo_dict = json.loads(json_formatted_str_slo)
+    slo_id = query_slo_dict['data'][0]['id']
+    return slo_id
+
+def get_slo_history(slo_id, from_ts, to_ts):
+    slo_history = api.ServiceLevelObjective.history(slo_id, from_ts, to_ts)
+    json_formatted_str_slo_history = json.dumps(slo_history, indent=2)
+    query_history_dict = json.loads(json_formatted_str_slo_history)
+    history = query_history_dict['data']['overall']['history'][-1]
+    return history
+
 def main():
 
     cluster = os.getenv('CLUSTER')
@@ -73,6 +92,9 @@ def main():
     testing_time_wait = os.getenv('WAIT', 15)
     threshold = os.getenv('THRESHOLD', 1)
     types = os.getenv('TYPES')
+    datadog_api_key = os.getenv('DATADOG_API_KEY')
+    datadog_app_key = os.getenv('DATADOG_APP_KEY')
+    datadog_slo_list = os.getenv('DATADOG_SLO_LIST')
 
     d_timeout = time.time() + int(deploy_timeout)
 
@@ -163,6 +185,37 @@ def main():
                     print('Rollback Initiated')
                     sys.exit(1)
     
+            print('Testing Completed Successfully')
+
+        # Datadog Tests
+
+        if healthcheck_type == 'datadog-slo':
+            from_ts = int(time.time())
+            options = {
+                'api_key': datadog_api_key,
+                'app_key': datadog_app_key
+            }
+            initialize(**options)
+            t_end = time.time() + int(testing_time_total)
+            while time.time() < t_end:
+                try:
+                    datadog_slos = datadog_slo_list.split(';')
+                    for name in datadog_slos:
+                        slo_id = get_slo_id(name)
+                        time.sleep(1)
+                        to_ts = int(time.time())
+                        history = get_slo_history(slo_id, from_ts, to_ts)
+                        date, status = history
+                        formatted_date = datetime.datetime.fromtimestamp(float(date)).strftime('%c')
+                        if status == 1:
+                            print(f'!!!!!Service Level Objective {name} started FAILING at {formatted_date}!!!!!')
+                            raise DatadogSLOFailing
+                        else:
+                            print(f'Service Level Objective {name} is passing at {formatted_date}')
+                    print(f'Waiting {testing_time_wait} Seconds before retesting')
+                    time.sleep(int(testing_time_wait))
+                except:
+                    sys.exit(1)
             print('Testing Completed Successfully')
 
 

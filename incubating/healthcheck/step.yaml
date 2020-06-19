@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: healthcheck
+  name: codefreshdemo/healthcheck
   version: 1.0.0
-  isPublic: true
+  isPublic: false
   description: Simple Step for running different health checks
   sources:
     - >-
@@ -74,16 +74,24 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "TYPES",
-            "CLUSTER",
-            "NAMESPACE",
-            "DEPLOYMENT",
-            "KUBE_CONFIG"
+            "TYPES"
         ],
         "properties": {
             "CLUSTER": {
                 "type": "string",
                 "description": "Kubernetes Context Name"
+            },
+            "DATADOG_API_KEY": {
+                "type": "string",
+                "description": "Datadog API Key."
+            },
+            "DATADOG_APP_KEY": {
+                "type": "string",
+                "description": "Datadog App Key."
+            },
+            "DATADOG_SLO_LIST": {
+                "type": "string",
+                "description": "String of SLO Names delimited with semi-colon character.  Ex. slo-1;slo-2"
             },
             "DEPLOY_TIMEOUT": {
                 "type": "integer",
@@ -123,7 +131,7 @@ spec:
             },
             "TYPES": {
                 "type": "string",
-                "description": "Type of Tests to Run comma delimited"
+                "description": "Type of Tests to Run semi-colon delimited."
             },
             "WAIT": {
                 "type": "integer",
@@ -134,7 +142,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: codefreshplugins/healthcheck:1.0.0
+      image: dustinvanbuskirk/healthcheck:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

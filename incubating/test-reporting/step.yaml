@@ -108,7 +108,6 @@ spec:
         [[ if .Arguments.storage_integration ]]
           - CF_STORAGE_INTEGRATION=.Arguments.storage_integration
         [[ end ]]
-
-delimiters:
+  delimiters:
     left: '[['
     right: ']]'

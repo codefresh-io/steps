@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: test-reporting
-  version: 1.0.2
+  version: 1.0.3
   title: Test reporting
   isPublic: true
   description: Upload test report to some your storage integration.
@@ -88,25 +88,25 @@ spec:
       image: codefresh/cf-docker-test-reporting
       environment:
         [[ if .Arguments.allure_dir ]]
-          - ALLURE_DIR=.Arguments.allure_dir
+          - ALLURE_DIR="[[ .Arguments.allure_dir ]]"
         [[ end ]]
         [[ if .Arguments.bucket_name ]]
-          - BUCKET_NAME=.Arguments.bucket_name
+          - BUCKET_NAME="[[  .Arguments.bucket_name ]]"
         [[ end ]]
         [[ if .Arguments.clear_test_report ]]
-          - CLEAR_TEST_REPORT=.Arguments.clear_test_report
+          - CLEAR_TEST_REPORT=""[[ .Arguments.clear_test_report ]]"
         [[ end ]]
         [[ if .Arguments.report_dir ]]
-          - REPORT_DIR=.Arguments.report_dir
+          - REPORT_DIR="[[ .Arguments.report_dir ]]"
         [[ end ]]
         [[ if .Arguments.report_index_file ]]
-          - REPORT_INDEX_FILE=.Arguments.report_index_file
+          - REPORT_INDEX_FILE="[[ .Arguments.report_index_file ]]"
         [[ end ]]
         [[ if .Arguments.branch ]]
-          - CF_BRANCH_TAG_NORMALIZED=.Arguments.branch
+          - CF_BRANCH_TAG_NORMALIZED="[[ .Arguments.branch ]]"
         [[ end ]]
         [[ if .Arguments.storage_integration ]]
-          - CF_STORAGE_INTEGRATION=.Arguments.storage_integration
+          - CF_STORAGE_INTEGRATION="[[ .Arguments.storage_integration ]]"
         [[ end ]]
   delimiters:
     left: '[['

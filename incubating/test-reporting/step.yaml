@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: test-reporting
-  version: 1.0.3
+  version: 1.0.4
   title: Test reporting
   isPublic: true
   description: Upload test report to some your storage integration.
@@ -23,22 +23,15 @@ metadata:
   examples:
     - description: example-install
       workflow:
-          deploy:
-            type: helm
+          upload_report:
+            title: Upload Allure Report
+            type: test-reporting
+            fail_fast: false
             arguments:
-              chart_name: test_chart
-              release_name: first
-              kube_context: my-kubernetes-context
-              tiller_namespace: kube-system
-              namespace: project
-              custom_values:
-                - KEY1=VAL1
-                - KEY2=VAL2
-                - KEY3=VAL3
-              custom_value_files:
-                - /path/to/values.yaml
-                - /path/to/values2.yaml
-              cmd_ps: --wait --timeout 5
+              allure_dir: /codefresh/volume/e2e_api_test/allure-report
+              bucket_name: codefresh-test-reporting
+              storage_integration: minios
+              branch: master
 
 spec:
   arguments: |-
@@ -88,25 +81,25 @@ spec:
       image: codefresh/cf-docker-test-reporting
       environment:
         [[ if .Arguments.allure_dir ]]
-          - ALLURE_DIR="[[ .Arguments.allure_dir ]]"
+          - ALLURE_DIR=[[ .Arguments.allure_dir ]]
         [[ end ]]
         [[ if .Arguments.bucket_name ]]
-          - BUCKET_NAME="[[  .Arguments.bucket_name ]]"
+          - BUCKET_NAME=[[ .Arguments.bucket_name ]]
         [[ end ]]
         [[ if .Arguments.clear_test_report ]]
-          - CLEAR_TEST_REPORT=""[[ .Arguments.clear_test_report ]]"
+          - CLEAR_TEST_REPORT=[[ .Arguments.clear_test_report ]]
         [[ end ]]
         [[ if .Arguments.report_dir ]]
-          - REPORT_DIR="[[ .Arguments.report_dir ]]"
+          - REPORT_DIR=[[ .Arguments.report_dir ]]
         [[ end ]]
         [[ if .Arguments.report_index_file ]]
-          - REPORT_INDEX_FILE="[[ .Arguments.report_index_file ]]"
+          - REPORT_INDEX_FILE=[[ .Arguments.report_index_file ]]
         [[ end ]]
         [[ if .Arguments.branch ]]
-          - CF_BRANCH_TAG_NORMALIZED="[[ .Arguments.branch ]]"
+          - CF_BRANCH_TAG_NORMALIZED=[[ .Arguments.branch ]]
         [[ end ]]
         [[ if .Arguments.storage_integration ]]
-          - CF_STORAGE_INTEGRATION="[[ .Arguments.storage_integration ]]"
+          - CF_STORAGE_INTEGRATION=[[ .Arguments.storage_integration ]]
         [[ end ]]
   delimiters:
     left: '[['

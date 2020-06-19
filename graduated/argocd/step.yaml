@@ -1,19 +1,19 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: argo
-  version: 0.0.14
+  name: argocd
+  version: 0.0.16
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo'
-  stage: incubating
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/argocd'
+  stage: graduated
   categories:
     - deployment
-  official: false
+  official: true
   icon:
     type: svg
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/argo/argo.svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd/argo.svg
     background: "#f4f4f4"
   maintainers:
     - name: Raziel Tabib

@@ -1,9 +1,9 @@
-FROM alpine:3.12.0
+FROM codefresh/node:10.15.3-alpine3.11
 
 
 RUN apk add --update ca-certificates \
     && apk add bash curl jq \
-    && apk add --no-cache git nodejs npm \
+    && apk add --no-cache git npm \
     && rm /var/cache/apk/* \
     && rm -rf /tmp/*
 

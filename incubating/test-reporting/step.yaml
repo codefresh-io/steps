@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: test-reporting
-  version: 1.0.1
+  version: 1.0.2
   title: Test reporting
   isPublic: true
   description: Upload test report to some your storage integration.
@@ -93,9 +93,6 @@ spec:
         [[ if .Arguments.bucket_name ]]
           - BUCKET_NAME=.Arguments.bucket_name
         [[ end ]]
-        [[ if .Arguments.storage_integration ]]
-          - CF_STORAGE_INTEGRATION=.Arguments.storage_integration
-        [[ end ]]
         [[ if .Arguments.clear_test_report ]]
           - CLEAR_TEST_REPORT=.Arguments.clear_test_report
         [[ end ]]
@@ -108,6 +105,10 @@ spec:
         [[ if .Arguments.branch ]]
           - CF_BRANCH_TAG_NORMALIZED=.Arguments.branch
         [[ end ]]
-  delimiters:
+        [[ if .Arguments.storage_integration ]]
+          - CF_STORAGE_INTEGRATION=.Arguments.storage_integration
+        [[ end ]]
+
+delimiters:
     left: '[['
     right: ']]'

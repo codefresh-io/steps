@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: test-reporting
-  version: 1.0.5
+  version: 1.0.6
   title: Test reporting
   isPublic: true
   description: Upload test report to some your storage integration.
@@ -105,7 +105,8 @@ spec:
       image: alpine
       title: printenv
       commands:
-        - cf_export unit_test_reporting_step_CF_OUTPUT_URL=${{TEST_REPORT_LINK}}
+        - printenv
+        - cf_export unit_test_reporting_step_CF_OUTPUT_URL="${{TEST_REPORT_LINK}}"
   delimiters:
     left: '[['
     right: ']]'

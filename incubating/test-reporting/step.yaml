@@ -64,7 +64,7 @@ spec:
                 "description": "The name of the cloud integration as was entered in the Codefresh UI in the cloud storage integration page"
             },
             "clear_test_report": {
-                "type": "bool",
+                "type": "boolean",
                 "description": "Delete the previous test results once they are uploaded so they will not be available in the subsequent build"
             },
             "report_dir": {

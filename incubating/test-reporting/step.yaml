@@ -74,7 +74,12 @@ spec:
             "report_index_file": {
                 "type": "string",
                 "description": "Root file that will be open in report"
+            },
+            "branch" : {
+                "type": "string",
+                "description": "Normalized branch name"
             }
+
         }
     }
   stepsTemplate: |-
@@ -99,6 +104,9 @@ spec:
         [[ end ]]
         [[ if .Arguments.report_index_file ]]
           - REPORT_INDEX_FILE=.Arguments.report_index_file
+        [[ end ]]
+        [[ if .Arguments.branch ]]
+          - CF_BRANCH_TAG_NORMALIZED=.Arguments.branch
         [[ end ]]
   delimiters:
     left: '[['

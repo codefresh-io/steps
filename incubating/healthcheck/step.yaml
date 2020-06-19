@@ -1,0 +1,144 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: healthcheck
+  version: 1.0.0
+  isPublic: true
+  description: Simple Step for running different health checks
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/healthcheck
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utility
+  official: false
+  tags: []
+  icon:
+    type: image
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/healthcheck/images/stethoscope.png
+    background: "#f4f4f4"
+  examples:
+    - description: example-deployment-healthcheck
+      workflow:
+        KubernetesDeploymentHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: kubernetes_deployment
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+    - description: example-statefulset-healthcheck
+      workflow:
+        KubernetesStatefulsetHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: kubernetes_statefulset
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote-statefulset
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+    - description: example-linkerd-healthcheck
+      workflow:
+        KubernetesLinkerdHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: kubernetes_deployment,linkerd
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+            PROMETHEUS_URL: http://10.59.254.185:9090
+            THRESHOLD: .99
+    - description: example-deployment-linkerd-healthcheck
+      workflow:
+        KubernetesDeploymentLinkerdHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: kubernetes_deployment,linkerd
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            DEPLOYMENT: example-voting-app-vote
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+            PROMETHEUS_URL: http://10.59.254.185:9090
+            THRESHOLD: .99
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "TYPES",
+            "CLUSTER",
+            "NAMESPACE",
+            "DEPLOYMENT",
+            "KUBE_CONFIG"
+        ],
+        "properties": {
+            "CLUSTER": {
+                "type": "string",
+                "description": "Kubernetes Context Name"
+            },
+            "DEPLOY_TIMEOUT": {
+                "type": "integer",
+                "description": "(seconds) Required for Kubernetes Type / Timeout for Deployment Completion, Default 120"
+            },
+            "DEPLOY_WAIT": {
+                "type": "integer",
+                "description": "(seconds) Between Deployment Checks, Default 5"
+            },
+            "DEPLOYMENT": {
+                "type": "string",
+                "description": "Kubernetes Deployment/Statefulset Name"
+            },
+            "KUBE_CONFIG": {
+                "type": "string",
+                "description": "Location of Kube Config file"
+            },
+            "METRIC_TIMEOUT": {
+                "type": "integer",
+                "description": "(seconds) Required for Linkerd Type / Time to wait for Prometheus to return metrics, Default 120"
+            },
+            "NAMESPACE": {
+                "type": "string",
+                "description": "Kubernetes Namespace of Deployment"
+            },
+            "PROMETHEUS_URL": {
+                "type": "string",
+                "description": "Prometheus URL including protocol and port"
+            },
+            "THRESHOLD": {
+                "type": "integer",
+                "description": "Required for Linkerd Type / Percentage represented in 1 - .01 (100% - 1%), Default 1"
+            },
+            "TOTAL": {
+                "type": "integer",
+                "description": "(seconds) Required for Linkerd Type / Total Time to Continue Testing, Default 300"
+            },
+            "TYPES": {
+                "type": "string",
+                "description": "Type of Tests to Run comma delimited"
+            },
+            "WAIT": {
+                "type": "integer",
+                "description": "(seconds) Wait between tests, Default 15"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: healthcheck
+      image: codefreshplugins/healthcheck:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

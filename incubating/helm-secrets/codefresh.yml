@@ -1,0 +1,35 @@
+version: "1.0"
+steps:
+  main_clone:
+    title: Cloning main repository...
+    type: git-clone
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    revision: ${{CF_REVISION}}
+  Build:
+    type: parallel
+    steps:
+      BuildingDockerImageHelm311:
+        title: Building Docker Image
+        type: build
+        image_name: codefreshplugins/cfstep-helm-secrets
+        working_directory: ./
+        dockerfile: Dockerfile
+        tag: build-3.1.1-${{HELMFILE_VERSION}}
+        build_arguments:
+          - HELM_VERSION=3.1.1
+          - HELM_DIFF_VERSION=3.1.1
+          - HELM_SECRETS_VERSION=2.0.2
+  Push:
+    type: parallel
+    steps:
+      PushingHelm311ToDockerRegistry:
+        title: Pushing to Docker Registry
+        type: push
+        candidate: ${{BuildingDockerImageHelm311}}
+        tags:
+          - 3.1.1
+        registry: dockerhub
+        when:
+          branch:
+            only:
+              - master

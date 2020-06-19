@@ -1,0 +1,194 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/helm-secrets
+  version: 1.0.0
+  title: Helm with Helm Secrets Plugin Support
+  isPublic: false
+  description: Update or install a Helm chart using Helm Secrets plugin
+  sources:
+    - 'https://github.com/codefresh-io/steps/incubating/helm-secrets'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - deployment
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-contrib/cfstep-helmfile/helm-logo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: example-install
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              chart_name: test_chart
+              release_name: first
+              kube_context: my-kubernetes-context
+              tiller_namespace: kube-system
+              namespace: project
+              custom_values:
+                - KEY1=VAL1
+                - KEY2=VAL2
+                - KEY3=VAL3
+              custom_value_files:
+                - /path/to/values.yaml
+                - /path/to/values2.yaml
+              cmd_ps: --wait --timeout 5
+    - description: example-install-2
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              action: install
+              chart_name: test_chart
+              release_name: first
+              helm_version: 3.0.1
+              kube_context: my-kubernetes-context
+              skip_cf_stable_helm_repo: true
+              custom_values:
+                - pat.arr="{one,two,three}"
+                - STR_WITH_COMAS="one\,two\,three"
+    - description: example-push
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              action: push
+              chart_name: /codefresh/volume/repo/chart
+              chart_repo_url: cm://h.cfcr.io/useraccount/default
+    - description: example-auth
+      workflow:
+          deploy:
+            type: helm
+            arguments:
+              action: auth
+              kube_context: my-kubernetes-context
+              commands:
+                - helm list
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+        ],
+        "properties": {
+            "kube_context": {
+                "type": "string",
+                "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
+            },
+            "chart_name": {
+                "type": "string",
+                "description": "Helm chart name to release (path to chart folder, or name of packaged chart)"
+            },
+            "release_name": {
+                "type": "string",
+                "description": "Helm release name"
+            },
+            "action": {
+                "type": "string",
+                "description": "The helm operation mode is set by the ACTION variable, where the value is install/auth/push"
+            },
+            "namespace": {
+                "type": "string",
+
+                "description": "Target Kubernetes namespace"
+            },
+            "tiller_namespace": {
+                "type": "string",
+                "description": "Kubernetes namespace where tiller is at"
+            },
+            "chart_version": {
+                "type": "string",
+                "description": "Application chart version to install"
+            },
+            "repos": {
+              "type": "array",
+              "description": "array of custom repos",
+              "items": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
+            "helm_version": {
+                "type": "string",
+                "default": "3.1.1",
+                "description": "Version of cfstep-helm-secrets image",
+                "enum": [ "3.1.1" ]
+            },
+            "chart_repo_url": {
+                "type": "string",
+                "description": "Helm chart repository URL (overriden by injected Helm repository context)"
+            },
+            "custom_value_files": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Values file to provide to Helm (as --values or -f). see usage information below"
+            },
+            "custom_values": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Variables to provide to Helm (as --set). see usage information below"
+            },
+            "cmd_ps": {
+                "type": "string",
+                "description": "Variable to provide other Helm cli flags. For example: '--wait --timeout', etc"
+            },
+            "commands": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Commands to execute in plugin container after authorization (for `auth` action)"
+            },
+            "skip_cf_stable_helm_repo": {
+                "type": "boolean",
+                "description": "Don't add stable repository"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: helm-secrets
+      image: dustinvanbuskirk/cfstep-helm-secrets:[[ .Arguments.helm_version ]]
+      environment:
+      [[- range $key, $val := .Arguments -]]
+      [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]
+        - '[[ toUpper $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- end -]]
+      [[ range $arg := .Arguments.custom_values ]]
+        - 'CUSTOM_[[ $arg ]]'
+      [[- end -]]
+      [[ range $key, $val := .Arguments.custom_value_files ]]
+        - 'CUSTOMFILE_[[ toUpper $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[ range $arg := .Arguments.repos ]]
+        - 'CF_CTX_[[ $arg.name ]]_URL=[[ $arg.url ]]'
+      [[- end -]]
+      [[ if .Arguments.commands ]]
+      commands:
+        - source /opt/bin/release_chart
+      [[ range $arg := .Arguments.commands ]]
+        - '[[ $arg ]]'
+      [[ end ]]
+      [[ end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

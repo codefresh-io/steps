@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/k8s-canary-deployment
-  version: 0.0.5
+  name: k8s-canary-deployment
+  version: 0.0.6
   title: Canary deployment for plain K8s
   isPublic: false
   description: Perform a gradual canary deployment using only Kubernetes manifests.
@@ -25,7 +25,7 @@ metadata:
         url: >-
           https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/k8s-canary-deployment/icon.jpg
   examples:
-    - description: example-1
+    - description: example-canary
       workflow:
         run:
           title: 'Deploying new version ${{CF_SHORT_REVISION}}'
@@ -39,6 +39,24 @@ metadata:
             SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
             NAMESPACE: ${{NAMESPACE}}
             KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+    - description: example-canary-health-check-pipeline
+      workflow:
+        run:
+          title: 'Deploying new version ${{CF_SHORT_REVISION}}'
+          type: k8s-canary-deployment
+          arguments:
+            WORKING_VOLUME: ${{WORKING_VOLUME}}
+            SERVICE_NAME: ${{SERVICE_NAME}}
+            DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
+            TRAFFIC_INCREMENT: '${{TRAFFIC_INCREMENT}}'
+            NEW_VERSION: '${{NEW_VERSION}}'
+            SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
+            NAMESPACE: ${{NAMESPACE}}
+            KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+            PIPELINE_ID: 'project/health-check-pipeline'
+            NO_CACHE: true
+            NO_CF_CACHE: true
+            RESET_VOLUME: true
 spec:
   arguments: |-
     {
@@ -123,24 +141,14 @@ spec:
             }  
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: k8s-canary-deployment
-      image: fleatbnp/k8s-canary-deployment:latest
+      image: codefreshplugins/k8s-canary-deployment:alpha
       environment:
-        - WORKING_VOLUME=${{WORKING_VOLUME}}
-        - SERVICE_NAME=${{SERVICE_NAME}}
-        - DEPLOYMENT_NAME=${{DEPLOYMENT_NAME}}
-        - TRAFFIC_INCREMENT=${{TRAFFIC_INCREMENT}}
-        - NEW_VERSION=${{NEW_VERSION}}
-        - SLEEP_SECONDS=${{SLEEP_SECONDS}}
-        - NAMESPACE=${{NAMESPACE}}
-        - KUBE_CONTEXT=${{KUBE_CONTEXT}}
-        - ANALYSIS_TYPE=${{ANALYSIS_TYPE}}
-        - PIPELINE_ID=${{PIPELINE_ID}}
-        - TRIGGER_ID=${{TRIGGER_ID}}
-        - BRANCH=${{BRANCH}}
-        - SHA=${{SHA}}
-        - NO_CACHE=${{NO_CACHE}}
-        - NO_CF_CACHE=${{NO_CF_CACHE}}
-        - RESET_VOLUME=${{RESET_VOLUME}}
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -76,12 +76,12 @@ cancel(){
     echo "[CANARY] Cancelling rollout - healthcheck failed"
 
     echo "[CANARY SCALE] Restoring original deployment to $PROD_DEPLOYMENT"
-    kubectl apply -f $WORKING_VOLUME/original_deployment.yaml -n $NAMESPACE
-    kubectl rollout status deployment/$PROD_DEPLOYMENT
+    kubectl apply --force -f $WORKING_VOLUME/original_deployment.yaml -n $NAMESPACE
+    kubectl rollout status deployment/$PROD_DEPLOYMENT -n $NAMESPACE
 
     #we could also just scale to 0.
     echo "[CANARY DELETE] Removing canary deployment completely"
-    kubectl delete deployment $CANARY_DEPLOYMENT
+    kubectl delete deployment $CANARY_DEPLOYMENT -n $NAMESPACE
 
     echo "[CANARY DELETE] Removing canary horizontal pod autoscaler completely"
     kubectl delete hpa $CANARY_DEPLOYMENT -n $NAMESPACE

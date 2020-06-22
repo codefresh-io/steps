@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/healthcheck
+  name: healthcheck
   version: 1.0.0
   isPublic: false
   description: Simple Step for running different health checks
@@ -18,7 +18,7 @@ metadata:
   tags: []
   icon:
     type: image
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/healthcheck/images/stethoscope.png
+    url: https://raw.githubusercontent.com/codefresh-io/steps/SA-86-add-datadog-slo-healthcheck/incubating/healthcheck/images/icon-stethoscope.png
     background: "#f4f4f4"
   examples:
     - description: example-deployment-healthcheck
@@ -65,6 +65,16 @@ metadata:
             KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
             PROMETHEUS_URL: http://10.59.254.185:9090
             THRESHOLD: .99
+    - description: example-deployment-datadog-slo
+      workflow:
+        KubernetesDeploymentLinkerdHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: datadog-slo
+            DATADOG_API_KEY: ${{DATADOG_API_KEY}}
+            DATADOG_APP_KEY: ${{DATADOG_APP_KEY}}
+            DATADOG_SLO_LIST: slo1,slo2,slo3
+
 spec:
   arguments: |-
     {
@@ -142,7 +152,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: dustinvanbuskirk/healthcheck:1.0.0
+      image: healthcheck:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

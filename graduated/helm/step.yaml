@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.0.8
+  version: 1.0.9
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -150,6 +150,10 @@ spec:
             "cmd_ps": {
                 "type": "string",
                 "description": "Variable to provide other Helm cli flags. For example: '--wait --timeout', etc"
+            },
+            "set_file": {
+                "type": "string",
+                "description": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)"
             },
             "commands": {
                  "type": "array",

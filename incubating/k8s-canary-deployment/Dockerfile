@@ -7,7 +7,7 @@ RUN apk add --update ca-certificates \
     && rm /var/cache/apk/* \
     && rm -rf /tmp/*
 
-RUN npm install codefresh -g
+RUN npm install codefresh -g --unsafe-perm
 
 # RUN curl -L "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
 #     && chmod +x /usr/local/bin/kubectl

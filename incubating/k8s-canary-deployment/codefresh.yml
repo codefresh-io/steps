@@ -12,7 +12,7 @@ steps:
     type: build
     image_name: codefreshplugins/k8s-canary-deployment
     working_directory: "./steps/incubating/k8s-canary-deployment"
-    tag: ${{CF_BRANCH}}
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
     dockerfile: Dockerfile
   PushingDockerImage:
     title: Pushing Docker Image...

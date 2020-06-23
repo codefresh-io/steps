@@ -26,16 +26,62 @@ healthcheck(){
     fi
 }
 
+runpipeline(){
+    PARMS=""
+    if [ ! -z "${TRIGGER_ID}" ]; then 
+        PARMS+=" -t ${TRIGGER_ID} "
+    fi
+
+    if [ ! -z "${BRANCH}" ]; then
+        PARMS+=" -b ${BRANCH} "
+    fi
+
+    if [ ! -z "${SHA}" ]; then 
+        PARMS+=" -s ${SHA} "
+    fi
+
+    if [ ! -z "${NO_CACHE}" ]; then
+        PARMS+=" --no-cache ${NO_CACHE} "
+    fi
+    
+    if [ ! -z "${NO_CF_CACHE}" ]; then
+        PARMS+=" --no-cf-cache ${NO_CF_CACHE} "
+    fi
+
+    if [ ! -z "${RESET_VOLUME}" ]; then
+        PARMS+=" --reset-volume ${RESET_VOLUME} "
+    fi
+
+    PARMS+=" --variable SERVICE_NAME=$SERVICE_NAME "
+    PARMS+=" --variable DEPLOYMENT_NAME=$DEPLOYMENT_NAME "
+    PARMS+=" --variable CURRENT_VERSION=$CURRENT_VERSION "
+    PARMS+=" --variable NEW_VERSION=$NEW_VERSION "
+    PARMS+=" --variable PROD_DEPLOYMENT=$PROD_DEPLOYMENT "
+    PARMS+=" --variable CANARY_DEPLOYMENT=$CANARY_DEPLOYMENT "
+    PARMS+=" --variable NAMESPACE=$NAMESPACE "
+    PARMS+=" --variable KUBE_CONTEXT=$KUBE_CONTEXT "
+
+    echo "Running codefresh pipeline for canary analysis"
+    echo "codefresh run $PIPELINE_ID $PARMS"
+    codefresh run $PIPELINE_ID $PARMS
+    if [ $? -eq 0 ]; then
+        echo "Pipeline ran validation successfully"
+    else
+        echo "Pipeline failed with non-zero exit code - rolling back Canary Deployment"
+        cancel
+    fi
+}
+
 cancel(){
     echo "[CANARY] Cancelling rollout - healthcheck failed"
 
     echo "[CANARY SCALE] Restoring original deployment to $PROD_DEPLOYMENT"
-    kubectl apply -f $WORKING_VOLUME/original_deployment.yaml -n $NAMESPACE
-    kubectl rollout status deployment/$PROD_DEPLOYMENT
+    kubectl apply --force -f $WORKING_VOLUME/original_deployment.yaml -n $NAMESPACE
+    kubectl rollout status deployment/$PROD_DEPLOYMENT -n $NAMESPACE
 
     #we could also just scale to 0.
     echo "[CANARY DELETE] Removing canary deployment completely"
-    kubectl delete deployment $CANARY_DEPLOYMENT
+    kubectl delete deployment $CANARY_DEPLOYMENT -n $NAMESPACE
 
     echo "[CANARY DELETE] Removing canary horizontal pod autoscaler completely"
     kubectl delete hpa $CANARY_DEPLOYMENT -n $NAMESPACE
@@ -129,6 +175,25 @@ input_deployment(){
 }
 
 mainloop(){
+    ANALYSIS_TYPE="${ANALYSIS_TYPE}"    
+    if [ $ANALYSIS_TYPE = "PIPELINE" ]; then
+        # List of variables for codefresh run usage
+        PIPELINE_VARS=(
+            PIPELINE_ID
+            TRIGGER_ID
+            BRANCH
+            SHA
+            NO_CACHE
+            NO_CF_CACHE
+            RESET_VOLUME
+        )
+        # Verify that the passed in variables actually have values and clean them
+        for var in ${PIPELINE_VARS[*]}; do
+            if ( echo "${!var}" | grep '${{' &>/dev/null ); then eval $var=""; fi
+        done
+        [ -z "${PIPELINE_ID}" ] &&  err "ANALYSIS_TYPE set to PIPELINE, must pass PIPELINE_ID"        
+    fi      
+
     echo "[CANARY INFO] Selecting Kubernetes cluster"
     kubectl config use-context "${KUBE_CONTEXT}"
 
@@ -180,27 +245,53 @@ mainloop(){
 
     echo "[CANARY INFO] Canary target replicas: $STARTING_REPLICAS"
 
-    healthcheck
 
-    while [ $TRAFFIC_INCREMENT -lt 100 ]
-    do
-        p=$((p + $TRAFFIC_INCREMENT))
-        if [ "$p" -gt "100" ]; then
-            p=100
-        fi
-        echo "[CANARY INFO] Rollout is at $p percent"
+    # Conditional logic to either call a pipeline or execute the health check
+    if [ $ANALYSIS_TYPE = "PIPELINE" ]; then        
+        while [ $TRAFFIC_INCREMENT -lt 100 ]
+        do
+            p=$((p + $TRAFFIC_INCREMENT))
+            if [ "$p" -gt "100" ]; then
+                p=100
+            fi
+            echo "[CANARY INFO] Rollout is at $p percent"
 
-        incrementservice $TRAFFIC_INCREMENT $STARTING_REPLICAS
+            incrementservice $TRAFFIC_INCREMENT $STARTING_REPLICAS
 
-        if [ "$p" == "100" ]; then
-            cleanup
-            echo "[CANARY INFO] Done"
-            exit 0
-        fi
-        echo "[CANARY INFO] Will now sleep for $SLEEP_SECONDS seconds"
-        sleep $SLEEP_SECONDS
-     	healthcheck
-    done
+            if [ "$p" == "100" ]; then
+                cleanup
+                echo "[CANARY INFO] Done"
+                exit 0
+            fi
+            echo "[CANARY INFO] Will now sleep for $SLEEP_SECONDS seconds"
+            sleep $SLEEP_SECONDS
+
+            # Execute a pipeline run for every increment to verify health in some way
+            runpipeline            
+        done        
+    else
+        healthcheck
+
+        while [ $TRAFFIC_INCREMENT -lt 100 ]
+        do
+            p=$((p + $TRAFFIC_INCREMENT))
+            if [ "$p" -gt "100" ]; then
+                p=100
+            fi
+            echo "[CANARY INFO] Rollout is at $p percent"
+
+            incrementservice $TRAFFIC_INCREMENT $STARTING_REPLICAS
+
+            if [ "$p" == "100" ]; then
+                cleanup
+                echo "[CANARY INFO] Done"
+                exit 0
+            fi
+            echo "[CANARY INFO] Will now sleep for $SLEEP_SECONDS seconds"
+            sleep $SLEEP_SECONDS
+            healthcheck
+        done
+    fi    
 }
 
 if [ "$1" != "" ] && [ "$2" != "" ] && [ "$3" != "" ] && [ "$4" != "" ] && [ "$5" != "" ] && [ "$6" != "" ] && [ "$7" != "" ]; then

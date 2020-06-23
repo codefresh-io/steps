@@ -3,17 +3,16 @@ steps:
   BuildingDockerImage:
     title: Building Docker Image
     type: build
-    image_name: codefreshplugins/cfstep-kubernetes-healthcheck
+    image_name: codefreshplugins/cfstep-healthcheck
     working_directory: ./
-    tag: 0.1.0
+    tag: 1.0.0
     dockerfile: Dockerfile
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push
     candidate: ${{BuildingDockerImage}}
     tags:
-    - latest
-    - 0.1.0
+    - 1.0.0
     registry: dockerhub
     when:
       branch:

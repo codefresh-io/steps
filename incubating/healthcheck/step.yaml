@@ -1,30 +1,30 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: kubernetes-healthcheck
-  version: 0.2.0
-  isPublic: true
-  description: Check Health of Kubernetes deployment
+  name: healthcheck
+  version: 1.0.0
+  isPublic: false
+  description: Simple Step for running different health checks
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/kubernetes-healthcheck
+      https://github.com/codefresh-io/steps/tree/master/incubating/healthcheck
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk
-      email: dustinb@codefresh.io
+      email: dustin@codefresh.io
   categories:
     - utility
   official: false
   tags: []
   icon:
     type: image
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kubernetes-healtcheck/images/stethoscope.png
+    url: https://raw.githubusercontent.com/codefresh-io/steps/SA-86-add-datadog-slo-healthcheck/incubating/healthcheck/images/icon-stethoscope.png
     background: "#f4f4f4"
   examples:
     - description: example-deployment-healthcheck
       workflow:
         KubernetesDeploymentHealthCheck:
-          type: kubernetes-healthcheck
+          type: healthcheck
           arguments:
             TYPES: kubernetes_deployment
             CLUSTER: sales-demo@FirstKubernetes
@@ -34,7 +34,7 @@ metadata:
     - description: example-statefulset-healthcheck
       workflow:
         KubernetesStatefulsetHealthCheck:
-          type: kubernetes-healthcheck
+          type: healthcheck
           arguments:
             TYPES: kubernetes_statefulset
             CLUSTER: sales-demo@FirstKubernetes
@@ -44,7 +44,7 @@ metadata:
     - description: example-linkerd-healthcheck
       workflow:
         KubernetesLinkerdHealthCheck:
-          type: kubernetes-healthcheck
+          type: healthcheck
           arguments:
             TYPES: kubernetes_deployment,linkerd
             CLUSTER: sales-demo@FirstKubernetes
@@ -56,7 +56,7 @@ metadata:
     - description: example-deployment-linkerd-healthcheck
       workflow:
         KubernetesDeploymentLinkerdHealthCheck:
-          type: kubernetes-healthcheck
+          type: healthcheck
           arguments:
             TYPES: kubernetes_deployment,linkerd
             CLUSTER: sales-demo@FirstKubernetes
@@ -65,6 +65,16 @@ metadata:
             KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
             PROMETHEUS_URL: http://10.59.254.185:9090
             THRESHOLD: .99
+    - description: example-deployment-datadog-slo
+      workflow:
+        KubernetesDeploymentLinkerdHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: datadog-slo
+            DATADOG_API_KEY: ${{DATADOG_API_KEY}}
+            DATADOG_APP_KEY: ${{DATADOG_APP_KEY}}
+            DATADOG_SLO_LIST: slo1,slo2,slo3
+
 spec:
   arguments: |-
     {
@@ -74,16 +84,24 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "TYPES",
-            "CLUSTER",
-            "NAMESPACE",
-            "DEPLOYMENT",
-            "KUBE_CONFIG"
+            "TYPES"
         ],
         "properties": {
             "CLUSTER": {
                 "type": "string",
                 "description": "Kubernetes Context Name"
+            },
+            "DATADOG_API_KEY": {
+                "type": "string",
+                "description": "Datadog API Key."
+            },
+            "DATADOG_APP_KEY": {
+                "type": "string",
+                "description": "Datadog App Key."
+            },
+            "DATADOG_SLO_LIST": {
+                "type": "string",
+                "description": "String of SLO Names delimited with semi-colon character.  Ex. slo-1;slo-2"
             },
             "DEPLOY_TIMEOUT": {
                 "type": "integer",
@@ -123,7 +141,7 @@ spec:
             },
             "TYPES": {
                 "type": "string",
-                "description": "Type of Tests to Run comma delimited"
+                "description": "Type of Tests to Run semi-colon delimited."
             },
             "WAIT": {
                 "type": "integer",
@@ -133,8 +151,8 @@ spec:
     }
   stepsTemplate: |-
     main:
-      name: kubernetes-healthcheck
-      image: codefreshplugins/cfstep-healthcheck
+      name: healthcheck
+      image: healthcheck:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -10,12 +10,13 @@ RUN apk update && \
     npm install codefresh -g && \
     pip install kubernetes \
         prometheus-http-client \
-        requests
+        requests \
+        datadog
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.6/bin/linux/amd64/kubectl && \
     chmod u+x kubectl && mv kubectl /bin/kubectl
 
-COPY lib/healthcheck.py /healthcheck.py
+COPY script/healthcheck.py /healthcheck.py
 
 ENTRYPOINT ["python", "/healthcheck.py"]
 CMD [""]

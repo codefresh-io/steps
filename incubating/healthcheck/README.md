@@ -1,11 +1,14 @@
-# cfstep-kubernetes-healthcheck
-
-Prometheus Health Check Query based on Linkerd Success Percentage
+# cfstep-healthcheck
 
 Types:
+
 `kubernetes_deployment` Check that Kubernetes deployment has all replicas available (Deployment Successful)
+
 `kubernetes_statefulset` Check that Kubernetes statefulset has all replicas available (Deployment Successful)
+
 `linkerd` Watch Prometheus metrics from Linkerd for given time confirming Success Rate remains higher than threshold configured.
+
+`datadog-slo` Check that Datadog SLO is still matching expected SLA
 
 If either of the above fail the step will fail accordingly
 
@@ -23,6 +26,9 @@ If either of the above fail the step will fail accordingly
 | TOTAL | 300 | integer | No | (seconds) Required for Linkerd Type / Total Time to Continue Testing |
 | TYPES | null | string | Yes | Type of Tests to Run `;` delimited |
 | WAIT | 15 | integer | No | (seconds) Wait between tests |
+|DATADOG_API_KEY| null | string | No | Datadog API Key |
+|DATADOG_APP_KEY| null | string | No | Datadog APP Key |
+|DATADOG_SLO_LIST| null | string | No | Semicolon delimited string of SLO names |
 
 Example Step Usage:
 

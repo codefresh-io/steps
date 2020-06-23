@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: healthcheck
   version: 1.0.0
-  isPublic: false
+  isPublic: true
   description: Simple Step for running different health checks
   sources:
     - >-

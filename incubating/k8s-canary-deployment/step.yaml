@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-canary-deployment
-  version: 0.0.6
+  version: 0.0.7
   title: Canary deployment for plain K8s
-  isPublic: false
+  isPublic: true
   description: Perform a gradual canary deployment using only Kubernetes manifests.
   sources:
     - >-
@@ -16,7 +16,7 @@ metadata:
   categories:
     - featured
     - deployment
-  official: false
+  official: true
   tags: []
   icon:
     type: image

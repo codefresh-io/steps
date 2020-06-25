@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: healthcheck
-  version: 1.0.1
+  version: 1.1.1
   isPublic: true
   description: Simple Step for running different health checks
   sources:
@@ -18,8 +18,12 @@ metadata:
   tags: []
   icon:
     type: image
-    url: https://raw.githubusercontent.com/codefresh-io/steps/SA-86-add-datadog-slo-healthcheck/incubating/healthcheck/images/icon-stethoscope.png
+    url: https://github.com/codefresh-io/steps/raw/master/incubating/healthcheck/images/icon-stethoscope.png
     background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://github.com/codefresh-io/steps/raw/master/incubating/healthcheck/images/stethoscope.png
   examples:
     - description: example-deployment-healthcheck
       workflow:
@@ -40,6 +44,16 @@ metadata:
             CLUSTER: sales-demo@FirstKubernetes
             NAMESPACE: dustinvb-staging
             DEPLOYMENT: example-voting-app-vote-statefulset
+            KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
+    - description: example-job-healthcheck
+      workflow:
+        KubernetesJobHealthCheck:
+          type: healthcheck
+          arguments:
+            TYPES: kubernetes_job
+            CLUSTER: sales-demo@FirstKubernetes
+            NAMESPACE: dustinvb-staging
+            JOB: example-voting-app-vote
             KUBE_CONFIG: /codefresh/volume/sensitive/.kube/config
     - description: example-linkerd-healthcheck
       workflow:
@@ -103,9 +117,9 @@ spec:
                 "type": "string",
                 "description": "String of SLO Names delimited with semi-colon character.  Ex. slo-1;slo-2"
             },
-            "DEPLOY_TIMEOUT": {
+            "TESTING_TIMEOUT": {
                 "type": "integer",
-                "description": "(seconds) Required for Kubernetes Type / Timeout for Deployment Completion, Default 120"
+                "description": "(seconds) Required for Kubernetes Type / Timeout for Testing Completion, Default 120"
             },
             "DEPLOY_WAIT": {
                 "type": "integer",
@@ -114,6 +128,10 @@ spec:
             "DEPLOYMENT": {
                 "type": "string",
                 "description": "Kubernetes Deployment/Statefulset Name"
+            },
+            "JOB": {
+                "type": "string",
+                "description": "Kubernetes Job Name"
             },
             "KUBE_CONFIG": {
                 "type": "string",
@@ -152,7 +170,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: healthcheck:1.0.0
+      image: codefreshplugins/cfstep-healthcheck:1.1.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -1,18 +1,23 @@
 version: "1.0"
 steps:
+  main_clone:
+    title: Cloning main repository...
+    type: git-clone
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    revision: ${{CF_REVISION}}
   BuildingDockerImage:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/cfstep-healthcheck
-    working_directory: ./
-    tag: 1.0.0
-    dockerfile: Dockerfile
+    tag: 1.1.1
+    dockerfile: ./Dockerfile
+    working_directory: ./incubating/healthcheck
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push
     candidate: ${{BuildingDockerImage}}
     tags:
-    - 1.0.0
+    - 1.1.1
     registry: dockerhub
     when:
       branch:

@@ -11,7 +11,7 @@ steps:
     image_name: codefreshplugins/cfstep-healthcheck
     working_directory: ./
     tag: 1.1.1
-    dockerfile: Dockerfile
+    dockerfile: ./incubating/healthcheck/Dockerfile
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push

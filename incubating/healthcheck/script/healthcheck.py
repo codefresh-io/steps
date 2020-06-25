@@ -7,6 +7,7 @@ from datadog import initialize, api
 import os
 import time
 import sys
+import operator
 
 class Error(Exception):
    """Base class for other exceptions"""
@@ -24,16 +25,58 @@ class DatadogSLOFailing(Error):
    """Raised when SLO in Datadog returns failing status"""
    pass
 
-def kube_http_client(healthcheck_type, cluster, namespace, deployment):
-    print('Making Kubernetes API call')
+def kube_http_client(healthcheck_type, cluster, namespace, resource):
     config.load_kube_config(context=cluster)
     api = client.AppsV1Api()
+    batch_api = client.BatchV1Api()
+    core_api = client.CoreV1Api()
     if healthcheck_type.strip() == 'kubernetes_deployment':
         print('Checking on Kubernetes Deployment')
-        api_response = api.read_namespaced_deployment_status(deployment, namespace, _preload_content=False)
+        api_response = api.read_namespaced_deployment_status(resource, namespace, _preload_content=False)
     elif healthcheck_type.strip() == 'kubernetes_statefulset':
         print('Checking on Kubernetes Statefulset')
-        api_response = api.read_namespaced_stateful_set_status(deployment, namespace, _preload_content=False)
+        api_response = api.read_namespaced_stateful_set_status(resource, namespace, _preload_content=False)
+    elif healthcheck_type.strip() == 'kubernetes_job':
+        print('Checking on Kubernetes Job')
+        api_response = batch_api.read_namespaced_job_status(resource, namespace, _preload_content=False)
+        json_data = api_response.read()
+        response_dict = json.loads(json_data.decode('utf-8'))
+        name = response_dict['metadata']['name']
+        status = response_dict['status']['conditions'][0]['type']
+        print('Job: {} Status: {}'.format(name, status))
+        if status == 'Complete':
+            print('Job Succeeded')
+            return True
+        elif status == 'Failed':
+            print('Job Failed')
+            label = response_dict['spec']['selector']['matchLabels']['controller-uid']
+            print(f'Getting Pod for Controller UI: {label}')
+            api_response = core_api.list_namespaced_pod(namespace=namespace, label_selector='controller-uid={}'.format(label), _preload_content=False)
+            json_data = api_response.read()
+            pods = json.loads(json_data.decode('utf-8'))
+            pods_list = pods['items']
+            sorted_pods = sorted(pods_list, key=lambda k: k['metadata']['creationTimestamp'],  reverse=True)
+            last_pod = sorted_pods[0]
+            pod_name = last_pod['metadata']['name']
+            print(f'Last pod running for job: {pod_name}')
+            print('Last run: {}'.format(last_pod['metadata']['creationTimestamp']))
+            for container in last_pod['spec']['containers']:
+                print('Container: {}'.format(container['name']))
+                print('Fetching Logs')
+                api_response = core_api.read_namespaced_pod_log(name=pod_name, namespace=namespace, container=container['name'], _preload_content=False)
+                logs = api_response.read()
+                print(logs.decode())
+                log_directory = '/codefresh/volume/healthcheck/{}'.format(name)
+                if not os.path.exists(log_directory):
+                    os.makedirs(log_directory)
+                log_file = '{}/{}-{}.log'.format(log_directory, container['name'], datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S"))
+                f = open(log_file, 'wb')
+                f.write(logs)
+                f.close()
+                print(f'Logs written to: {log_file}')
+            return False
+        else:
+            return False
     else:
         print('Incorrect Kubernetes Health Check Type {}'.format(healthcheck_type))
         sys.exit(1)
@@ -45,7 +88,7 @@ def kube_http_client(healthcheck_type, cluster, namespace, deployment):
         try:
             current_replicas = response_dict['status']['unavailableReplicas']
         except:
-            print('No Unavailable Replicas Found')
+            print('All Replicas are reporting Healthy.')
             unavailable_replicas = 0
     elif healthcheck_type.strip() == 'kubernetes_statefulset':
         ready_replicas = response_dict['status']['readyReplicas']
@@ -53,7 +96,10 @@ def kube_http_client(healthcheck_type, cluster, namespace, deployment):
     d = dict();  
     d['name'] = name
     d['unavailable_replicas'] = unavailable_replicas
-    return d
+    if unavailable_replicas == 0:
+        return True
+    else:
+        return False
 
 def get_metrics(metric):
     prometheus = Prometheus()
@@ -84,8 +130,9 @@ def main():
 
     cluster = os.getenv('CLUSTER')
     deployment = os.getenv('DEPLOYMENT')
+    job = os.getenv('JOB')
     deploy_time_wait = os.getenv('DEPLOY_WAIT', 5)
-    deploy_timeout = os.getenv('DEPLOY_TIMEOUT', 120)
+    deploy_timeout = os.getenv('TESTING_TIMEOUT', 120)
     metric_timeout = os.getenv('METRIC_TIMEOUT', 120)
     namespace = os.getenv('NAMESPACE')
     testing_time_total = os.getenv('TOTAL', 300)
@@ -102,26 +149,24 @@ def main():
 
     healthcheck_list = healthcheck_types.split(';')
 
+    resource = deployment or job
+
     for healthcheck_type in healthcheck_list:
         if 'kubernetes' in healthcheck_type:
-            deployment_completed = False
-            while not deployment_completed:
-                print(f'Checking Deployment Status for: {deployment}')
-                response_dict = kube_http_client(healthcheck_type, cluster, namespace, deployment)
-                name = response_dict['name']
-                unavailable_replicas = response_dict['unavailable_replicas']
-                if unavailable_replicas == 0:
-                    deployment_completed = True
-                    print('Deployment Completed Successfully')
+            testing_completed = False
+            while not testing_completed:
+                print(f'Checking Status of: {resource}')
+                results = kube_http_client(healthcheck_type, cluster, namespace, resource)
+                if results:
+                    testing_completed = True
+                    print('Testing Completed Successfully')
                     break
                 else:
-                    print(f'Deployment for {name} has not completed...')
-                    print(f'Deployment has {unavailable_replicas} unavailable replicas.')
+                    print(f'Testing for {resource} has not completed...')
                     print(f'Issuing another check in {deploy_time_wait} seconds...')
                     time.sleep(int(deploy_time_wait))
                 if time.time() > d_timeout:
                     print(f'Deployment Timeout ({deploy_timeout}) Exceeded!!!' )
-                    print('Rollback Initiated')
                     sys.exit(1)
 
         # Prometheus Tests
@@ -201,6 +246,7 @@ def main():
                 try:
                     datadog_slos = datadog_slo_list.split(';')
                     for name in datadog_slos:
+                        print(f'Testing SLO: {name}')
                         slo_id = get_slo_id(name)
                         time.sleep(1)
                         to_ts = int(time.time())
@@ -215,6 +261,7 @@ def main():
                     print(f'Waiting {testing_time_wait} Seconds before retesting')
                     time.sleep(int(testing_time_wait))
                 except:
+                    print(f'No Results Found for: {name}')
                     sys.exit(1)
             print('Testing Completed Successfully')
 

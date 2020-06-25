@@ -12,6 +12,7 @@ steps:
     working_directory: ./
     tag: 1.1.1
     dockerfile: ./incubating/healthcheck/Dockerfile
+    working_directory: ./incubating/healthcheck
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push

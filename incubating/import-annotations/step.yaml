@@ -1,0 +1,87 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: import-annotations
+  version: 0.0.1
+  isPublic: true
+  description: Import Annotations to Pipeline Variables
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/import-annotations
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: get-latest-build-annotations-by-pipeline
+      workflow:
+        ImportAnnotationsFromLastSuccessfulBuildOfPipeline:
+          type: import-annotations
+          arguments:
+            PIPELINENAME: pipeline-name
+            PREFIX: SOURCE_
+    - description: get-build-annotations
+      workflow:
+        ImportBuildAnnotations:
+          type: import-annotations
+          arguments:
+            ENTITY: 5ef51598c4d99754ceed364b
+            ENTITY_TYPE: build
+            PREFIX: BUILD_
+    - description: get-docker-image-annotations
+      workflow:
+        ImportDockerImageAnnotations:
+          type: import-annotations
+          arguments:
+            ENTITY: fac802bcb4ef
+            ENTITY_TYPE: image
+            PREFIX: IMAGE_
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [],
+      "properties": {
+        "ENTITY": {
+          "type": "string",
+          "description": "Entity ID."
+        },
+        "ENTITY_TYPE": {
+          "type": "string",
+          "description": "Type of Entity to Query"
+        },
+        "PIPELINENAME": {
+          "type": "string",
+          "description": "Name of Pipeline to Query for Last Successful Build."
+        },
+        "PREFIX": {
+          "type": "string",
+          "description": "PREFIX for the Environment Variables.",
+          "default": "SOURCE_"
+        }
+      }
+    }
+  stepsTemplate: |-
+    import-annotations:
+      name: import-annotations
+      image: codefresh/cli
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+      [[- if .Arguments.PIPELINENAME ]]
+        - export ENTITY=$(codefresh get builds --pipeline-name $PIPELINENAME --limit 1 --output id --status success)
+        - export ENTITY_TYPE=build
+      [[- end ]]
+        - codefresh get annotation $ENTITY_TYPE $ENTITY -o json | jq ".[] | \"${PREFIX}\(.key)=\(.value)\"" >> /meta/env_vars_to_export
+  delimiters:
+    left: '[['
+    right: ']]'

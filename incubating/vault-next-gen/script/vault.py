@@ -3,21 +3,26 @@ import os
 import sys
 import json
 
-class secret:
+from step_utility import StepUtility
+
+class Secret:
     def __init__(self, export_name, path, secret_name, secret_value):
         self.export_name = export_name
         self.path = path
         self.secret_name = secret_name
         self.secret_value = secret_value
 
-class environment:
+class Environment:
     def __init__(self, vault_addr, vault_auth_method, vault_token,
-        mount_point, vault_version, verbose):
+        approle_role_id, approle_secret_id,
+        mount_point, vault_kv_version, verbose):
         self.vault_addr = vault_addr
         self.vault_auth_method = vault_auth_method
         self.vault_token = vault_token
+        self.approle_role_id = approle_role_id
+        self.approle_secret_id = approle_secret_id
         self.mount_point = mount_point
-        self.vault_version = vault_version
+        self.vault_kv_version = vault_kv_version
         self.verbose = verbose
 
 
@@ -27,28 +32,28 @@ def main():
     secrets, path_set = secrets_setup(env)
     client = vault_authentication(current_environment)
     retrieved_secrets = get_secrets(client, current_environment, secrets, path_set)
-    # Export secrets here
-    print("\n---- DEBUG REMOVE ---- Secrets")
-    for current_secret in retrieved_secrets:
-        print(json.dumps(current_secret.__dict__))
-    print()
+    export_secrets(retrieved_secrets)
 
 
 def environment_setup():
     # Grab all of the environment variables
     env = os.environ
-    vault_addr = env.get('VAULT_ADDR')
-    vault_auth_method = env.get('VAULT_AUTH_METHOD', "")
-    vault_token = env.get('VAULT_TOKEN')
-    mount_point = env.get('MOUNT_POINT')
-    vault_version = env.get('VAULT_VERSION')
-    verbose = env.get('VERBOSE')
-    current_environment = environment(
+    vault_addr = StepUtility.getEnvironmentVariable('VAULT_ADDR', env)
+    vault_auth_method = StepUtility.getEnvironmentVariable('VAULT_AUTH_METHOD', env)
+    vault_token = StepUtility.getEnvironmentVariable('VAULT_TOKEN', env)
+    approle_role_id = StepUtility.getEnvironmentVariable('APPROLE_ROLE_ID', env)
+    approle_secret_id = StepUtility.getEnvironmentVariable('APPROLE_SECRET_ID', env) 
+    mount_point = StepUtility.getEnvironmentVariable('MOUNT_POINT', env)
+    vault_kv_version = StepUtility.getEnvironmentVariable('VAULT_KV_VERSION', env)
+    verbose = StepUtility.getEnvironmentVariable('VERBOSE', env)
+    current_environment = Environment(
         vault_addr, 
         vault_auth_method, 
         vault_token,
+        approle_role_id,
+        approle_secret_id,
         mount_point,
-        vault_version,
+        vault_kv_version,
         verbose)
     #print(env)
     return env, current_environment
@@ -66,33 +71,33 @@ def secrets_setup(env):
             path = val[0:delim_index]
             path_set.add(path)
             secret_name = val[delim_index+1:len(val)]
-            # print("Secret: export_name=" + export_name + " path=" + path + " secret_name=" +  secret_name)
-            secrets.append(secret(
+            secrets.append(Secret(
                 export_name,
                 path,
                 secret_name,
                 ""
             ))
-            # print(key, val)
-            # secrets.append(val)
     return secrets, path_set
 
 
 def vault_authentication(current_environment):
     # Authenticate the client - exit program if authentication fails
-    client = hvac.Client()
+    client = hvac.Client(url=current_environment.vault_addr)
     if current_environment.vault_auth_method.upper() == "TOKEN":
         print("Authentication Mode: TOKEN")
-        client = hvac.Client(
-            url=current_environment.vault_addr,
-            token=current_environment.vault_token)
+        client.token = current_environment.vault_token
     elif current_environment.vault_auth_method.upper() == "APPROLE":
         print("Authentication Mode: APPROLE")
+        try:
+            client.auth_approle(current_environment.approle_role_id, current_environment.approle_secret_id)
+        except Exception as exc:
+            print('{}: {}'.format(type(exc).__name__, exc))
+            print("Exiting Step: Failed to authenticate with Approle to Vault instance")
+            sys.exit(1)
     else:
         print("Authentication Mode not passed, defaulting to Token auth")
-        client = hvac.Client(
-            url=current_environment.vault_addr,
-            token=current_environment.vault_token)
+        client.token = current_environment.vault_token
+        
 
     # Verify that we connected successfully to Vault, otherwise exit the step
     if not client.is_authenticated():
@@ -134,6 +139,14 @@ def get_secrets(client, current_environment, secrets, path_set):
                     current_secret.secret_value = value    
 
     return secrets
+
+
+def export_secrets(retrieved_secrets):
+    # Export secrets here
+    print("\n---- DEBUG REMOVE ---- Secrets")
+    for current_secret in retrieved_secrets:
+        print(json.dumps(current_secret.__dict__))
+    print()
 
 
 # Entrypoint for the application

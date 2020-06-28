@@ -6,7 +6,7 @@ RUN apk update && \
     apk upgrade && \
     pip install --no-cache-dir hvac
 
-COPY script/vault.py /vault.py
+COPY script/. /
 
 ENTRYPOINT ["python", "/vault.py"]
 CMD [""]

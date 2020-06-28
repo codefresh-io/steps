@@ -91,7 +91,7 @@ def vault_authentication(current_environment):
         try:
             client.auth_approle(current_environment.approle_role_id, current_environment.approle_secret_id)
         except Exception as exc:
-            print('{}: {}'.format(type(exc).__name__, exc))
+            StepUtility.printCleanException(exc)
             print("Exiting Step: Failed to authenticate with Approle to Vault instance")
             sys.exit(1)
     else:
@@ -123,14 +123,27 @@ def get_secrets(client, current_environment, secrets, path_set):
     # Iterate over each unique path passed in through the environment variables
     for current_path in path_set:
         print("Retrieving secrets from path: " + current_path)
-        secret_version_response = client.secrets.kv.v2.read_secret_version(
-            mount_point=current_environment.mount_point, path=current_path
-        )
-
-        print("\n---- DEBUG REMOVE ---- Response")
-        print(secret_version_response)
-
-        vault_retrieved_values = secret_version_response['data']['data']
+        if current_environment.vault_kv_version == "1":
+            try:
+                secret_response = client.secrets.kv.v1.read_secret(
+                    mount_point=current_environment.mount_point, path=current_path
+                )
+                vault_retrieved_values = secret_response['data']
+            except Exception as exc:
+                StepUtility.printCleanException(exc)
+                print("Failed to retrieve secrets from path: " + current_path)
+                print("Please verify mount point, path, and kv version")
+        else:
+            try:
+                secret_version_response = client.secrets.kv.v2.read_secret_version(
+                    mount_point=current_environment.mount_point, path=current_path
+                )
+                vault_retrieved_values = secret_version_response['data']['data']
+            except Exception as exc:
+                StepUtility.printCleanException(exc)
+                print("Failed to retrieve secrets from path: " + current_path)
+                print("Please verify mount point, path, and kv version")
+        
         # Loop through the list of secret requests and find keys that match
         for current_secret in secrets:
             for key, value in vault_retrieved_values.items():

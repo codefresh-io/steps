@@ -7,3 +7,7 @@ class StepUtility:
         if value == "${{" + key + "}}":
             value = ""
         return value
+
+    @staticmethod
+    def printCleanException(exc):
+        print('{}: {}'.format(type(exc).__name__, exc))

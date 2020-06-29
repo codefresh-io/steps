@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-canary-deployment
-  version: 0.0.7
+  version: 0.0.8
   title: Canary deployment for plain K8s
   isPublic: true
   description: Perform a gradual canary deployment using only Kubernetes manifests.
@@ -144,7 +144,7 @@ spec:
   stepsTemplate: |-
     main:
       name: k8s-canary-deployment
-      image: codefreshplugins/k8s-canary-deployment:alpha
+      image: codefreshplugins/k8s-canary-deployment
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -3,8 +3,8 @@ version: '1.0'
 metadata:
   name: codefreshdemo/vault-next-gen
   version: 1.0.0
-  title: Fetch secrets from Hashicorp Vault
-  isPublic: false
+  title: Fetch specific secrets from Hashicorp Vault
+  isPublic: true
   description: >-
     Read specific secrets from multiple paths in Hashicorp Vault inside a Codefresh pipeline.
   sources:

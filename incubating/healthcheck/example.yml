@@ -2,7 +2,7 @@ version: '1.0'
 steps:
   KubernetesHealthCheck:
     title: Checking Deployment Health...
-    image: codefreshplugins/healthcheck:1.1.1
+    image: codefreshplugins/healthcheck:1.1.4
     environment:
       - TYPES=kubernetes_deployment,linkerd
       - CLUSTER=sales-demo@FirstKubernetes

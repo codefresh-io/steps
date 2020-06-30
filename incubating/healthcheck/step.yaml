@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: healthcheck
-  version: 1.1.1
+  version: 1.1.4
   isPublic: true
   description: Simple Step for running different health checks
   sources:
@@ -117,6 +117,12 @@ spec:
                 "type": "string",
                 "description": "String of SLO Names delimited with semi-colon character.  Ex. slo-1;slo-2"
             },
+            "DATADOG_SLO_TIMEWINDOW": {
+                "type": "string",
+                "description": "Time Window of Datadog Metrics SLO",
+                "default": "7d",
+                "enum": [ "7d", "30d", "90d" ]
+            },
             "TESTING_TIMEOUT": {
                 "type": "integer",
                 "description": "(seconds) Required for Kubernetes Type / Timeout for Testing Completion, Default 120"
@@ -170,7 +176,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: codefreshplugins/cfstep-healthcheck:1.1.1
+      image: codefreshplugins/healthcheck:1.1.4
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

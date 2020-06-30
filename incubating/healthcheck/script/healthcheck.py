@@ -21,8 +21,14 @@ class PrometheusMetricsNotAvailable(Error):
 class ThresholdCheckFailed(Error):
    """Raised when metrics tests have failed"""
    pass
+class DatadogNoSLOHistory(Error):
+   """Raised when SLO in Datadog returns no history"""
+   pass
 class DatadogSLOFailing(Error):
    """Raised when SLO in Datadog returns failing status"""
+   pass
+class NoJobStatus(Error):
+   """Raised when Job API does not return a status"""
    pass
 
 def kube_http_client(healthcheck_type, cluster, namespace, resource):
@@ -38,12 +44,23 @@ def kube_http_client(healthcheck_type, cluster, namespace, resource):
         api_response = api.read_namespaced_stateful_set_status(resource, namespace, _preload_content=False)
     elif healthcheck_type.strip() == 'kubernetes_job':
         print('Checking on Kubernetes Job')
-        api_response = batch_api.read_namespaced_job_status(resource, namespace, _preload_content=False)
-        json_data = api_response.read()
-        response_dict = json.loads(json_data.decode('utf-8'))
-        name = response_dict['metadata']['name']
-        status = response_dict['status']['conditions'][0]['type']
-        print('Job: {} Status: {}'.format(name, status))
+        while True:
+            try:
+                api_response = batch_api.read_namespaced_job_status(resource, namespace, _preload_content=False)
+                json_data = api_response.read()
+                response_dict = json.loads(json_data.decode('utf-8'))
+                name = response_dict['metadata']['name']
+                status = response_dict['status']['conditions'][0]['type'] or response_dict['status']['active']
+                print('Job: {} Status: {}'.format(name, status))
+                if status == '1':
+                    print('Still Active, Sleeping 5 seconds.')
+                    time.sleep(5)
+                    continue
+                else:
+                    break
+            except NoJobStatus:
+                continue
+            break
         if status == 'Complete':
             print('Job Succeeded')
             return True
@@ -119,11 +136,38 @@ def get_slo_id(name):
     slo_id = query_slo_dict['data'][0]['id']
     return slo_id
 
-def get_slo_history(slo_id, from_ts, to_ts):
-    slo_history = api.ServiceLevelObjective.history(slo_id, from_ts, to_ts)
-    json_formatted_str_slo_history = json.dumps(slo_history, indent=2)
-    query_history_dict = json.loads(json_formatted_str_slo_history)
-    history = query_history_dict['data']['overall']['history'][-1]
+def get_slo_history(slo_id, from_ts, **kwargs):
+    timeframe = kwargs.get('timeframe', None)
+    formatted_from_ts = datetime.datetime.fromtimestamp(float(from_ts)).strftime('%c')
+    while True:
+        try:
+            time.sleep(1)
+            to_ts = int(time.time())
+            formatted_to_ts = datetime.datetime.fromtimestamp(float(to_ts)).strftime('%c')
+            print(f'Checking SLO History between {formatted_from_ts} to {formatted_to_ts}')
+            slo_history = api.ServiceLevelObjective.history(slo_id, from_ts, to_ts)
+            json_formatted_str_slo_history = json.dumps(slo_history, indent=2)
+            print(json_formatted_str_slo_history)
+            query_history_dict = json.loads(json_formatted_str_slo_history)
+            if query_history_dict['data']['type'] == 'metric':
+                print('Evaluating SLO Metrics')
+                sli_value = query_history_dict['data']['overall']['sli_value']
+                print(sli_value)
+                target_value = query_history_dict['data']['thresholds'][timeframe]['target']
+                print(target_value)
+                if float(sli_value) >= float(target_value):
+                    status = 0
+                else:
+                    status = 1
+                history = [to_ts,status]
+            else:
+                history = query_history_dict['data']['overall']['history'][-1]
+        except DatadogNoSLOHistory:
+            print('Waiting 10 seconds for history')
+            time.sleep(10)
+            continue
+        break
+    print(history)
     return history
 
 def main():
@@ -142,6 +186,7 @@ def main():
     datadog_api_key = os.getenv('DATADOG_API_KEY')
     datadog_app_key = os.getenv('DATADOG_APP_KEY')
     datadog_slo_list = os.getenv('DATADOG_SLO_LIST')
+    datadog_slo_timewindow = os.getenv('DATADOG_SLO_TIMEWINDOW')
 
     d_timeout = time.time() + int(deploy_timeout)
 
@@ -248,9 +293,7 @@ def main():
                     for name in datadog_slos:
                         print(f'Testing SLO: {name}')
                         slo_id = get_slo_id(name)
-                        time.sleep(1)
-                        to_ts = int(time.time())
-                        history = get_slo_history(slo_id, from_ts, to_ts)
+                        history = get_slo_history(slo_id, from_ts, timeframe=datadog_slo_timewindow)
                         date, status = history
                         formatted_date = datetime.datetime.fromtimestamp(float(date)).strftime('%c')
                         if status == 1:

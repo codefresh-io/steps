@@ -1,0 +1,101 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: argocd-rollout
+  version: 1.1.5
+  isPublic: true
+  description: This pipeline plugin trigger a rollout for ArgoCD app
+  sources:
+    - 'https://github.com/codefresh-io/cf-argo-plugin'
+  stage: graduated
+  categories:
+    - deployment
+  official: true
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-rollout/argo.svg
+    background: "#f4f4f4"
+  maintainers:
+    - name: Nazar Rohozhuk
+  examples:
+    - workflow:
+        promote_rollout:
+          title: "Promote Argo rollout"
+          type: argocd-rollout
+          arguments:
+            k8s_context: '${{K8S_CONTEXT}}'
+            rollout_name: '${{ROLLOUT_NAME}}'
+            rollout_namespace: '${{ROLLOUT_NAMESPACE}}'
+            context: 'argo-demo'
+  latest: true
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+          "app_name",
+          "rollout_name",
+          "k8s_context"
+      ],
+      "properties": {
+          "host": {
+            "type": "string",
+            "description": "Host for argo integration, examlple https://argo, will use only when context not provided!",
+            "default": ""
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of argo integration, will use only when context not provided!",
+            "default": ""
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of argo integration, will use only when context not provided!",
+            "default": ""
+          },
+          "context": {
+            "type": "string",
+            "description": "Name of context with argo cd from integration, will use only, when argo credentials not provided",
+            "default": ""
+          },
+          "app_name": {
+              "type": "string",
+              "description": "The argocd application that will be synced"
+          },
+          "wait_healthy": {
+              "type": "boolean",
+              "description": "Specify whether to wait for sync to be completed (in canary consider wait for suspended status)",
+              "default": false
+          },
+          "k8s_context": {
+              "type": "string",
+              "description": "The name of the rollout to be promoted"
+          },
+          "rollout_name": {
+              "type": "string",
+              "description": "The name of the rollout to be promoted"
+          },
+          "rollout_namespace": {
+              "type": "string",
+              "description": "The namespace of the rollout to be promoted",
+              "default": ""
+          }
+      }
+    }
+  steps:
+    runArgoCd:
+      title: "Run ArgoCD"
+      image: "nazarcodefresh/argo-plugin:latest"
+      commands:
+        - >-
+          cf-argo-plugin rollout "${{app_name}}"
+          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
+          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
+          --k8s-context=${{k8s_context}} --rollout-name=${{rollout_name}} --rollout-namespace=${{rollout_namespace}} --wait-healthy=${{wait_healthy}}
+          > /tmp/executor
+        - chmod +x /tmp/executor
+        - /tmp/executor

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -24,13 +24,20 @@ metadata:
   examples:
     - description: example-1
       workflow:
+        build:
+          title: "Building Docker image"
+          type: "build"
+          image_name: "codefresh/${{CF_REPO_NAME}}"
+          tag: '${{PACKAGE_VERSION}}'
+          dockerfile: "Dockerfile"
+
         enrich-image:
           title: Enrich image with annotations
-          type: cimage-enricher
+          type: image-enricher
           arguments:
-            IMAGE: image-ref
-            BRANCH: master
-            REPO: codefresh-plugins/github-enricher
+            IMAGE: ${{build.imageId}}
+            BRANCH: ${{CF_BRANCH}}
+            REPO: codefresh/${{CF_REPO_NAME}}
   created_at: '2019-12-24T15:42:47.178Z'
   updated_at: '2019-12-24T15:42:47.178Z'
   latest: true
@@ -69,6 +76,7 @@ spec:
     main:
       name: enrich-image
       image: codefresh/github-enricher
+      working_directory: /app/
       environment:
           - IMAGE=${{IMAGE}}
           - BRANCH=${{BRANCH}}

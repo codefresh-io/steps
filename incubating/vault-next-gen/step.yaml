@@ -4,7 +4,7 @@ metadata:
   name: codefreshdemo/vault-next-gen
   version: 1.0.0
   title: Fetch specific secrets from Hashicorp Vault
-  isPublic: true
+  isPublic: false
   description: >-
     Read specific secrets from multiple paths in Hashicorp Vault inside a Codefresh pipeline.
   sources:
@@ -84,6 +84,20 @@ metadata:
             SECRETS:
                 - EXPORT_NAME=path:secret
                 - EXPORT_NAME2=path2:secret2
+    - description: Base64 Encode Secrets
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_KV_VERSION: 1
+            NEW_LINE_REPLACEMENT_STRING: 'BASE64'
+            SECRETS:
+                - EXPORT_NAME=path:secret
+                - EXPORT_NAME2=path2:secret2
 spec:
   arguments: |-
     {
@@ -134,6 +148,10 @@ spec:
                 "type": "integer",
                 "description": "Vault secrets version [1 or 2] (Run CLI command: vault secrets list -detailed) "
             },
+            "NEW_LINE_REPLACEMENT_STRING": {
+                "type": "string",
+                "description": "Specify the value to use to replace new lines: Default is \\n"
+            },
             "SECRETS": {
                  "type": "array",
                  "items": {
@@ -149,8 +167,8 @@ spec:
     }
   stepsTemplate: |-
     main:
-      name: codefreshdemo/vault-next-gen
-      image: fleatbnp/vault-next-gen:latest
+      name: codefreshdemo/vault-next-gen-2
+      image: fleatbnp/vault-next-gen:1.0.1
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if not (hasPrefix $key "SECRETS") ]]

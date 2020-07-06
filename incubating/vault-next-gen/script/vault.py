@@ -17,7 +17,8 @@ class Environment:
     def __init__(self, vault_addr, vault_auth_method, vault_token,
         approle_role_id, approle_secret_id,
         vault_client_cert_base64, vault_client_key_base64,
-        mount_point, vault_kv_version, verbose):
+        mount_point, vault_kv_version, new_line_replacement_string,
+        verbose):
         self.vault_addr = vault_addr
         self.vault_auth_method = vault_auth_method
         self.vault_token = vault_token
@@ -27,6 +28,7 @@ class Environment:
         self.vault_client_key_base64 = vault_client_key_base64
         self.mount_point = mount_point
         self.vault_kv_version = vault_kv_version
+        self.new_line_replacement_string = new_line_replacement_string
         self.verbose = verbose
 
 
@@ -35,7 +37,8 @@ def main():
     secrets, path_set = secrets_setup(env)
     client = vault_authentication(current_environment)
     retrieved_secrets = get_secrets(client, current_environment, secrets, path_set)
-    export_secrets(retrieved_secrets)
+    formatted_secrets = format_secrets(retrieved_secrets, current_environment.new_line_replacement_string)
+    export_secrets(formatted_secrets)
 
 
 def environment_setup():
@@ -50,6 +53,7 @@ def environment_setup():
     vault_client_key_base64 = StepUtility.getEnvironmentVariable('VAULT_CLIENT_KEY_BASE64', env)
     mount_point = StepUtility.getEnvironmentVariable('MOUNT_POINT', env)
     vault_kv_version = StepUtility.getEnvironmentVariable('VAULT_KV_VERSION', env)
+    new_line_replacement_string = StepUtility.getEnvironmentVariable('NEW_LINE_REPLACEMENT_STRING', env)
     verbose = StepUtility.getEnvironmentVariable('VERBOSE', env)
     current_environment = Environment(
         vault_addr, 
@@ -61,6 +65,7 @@ def environment_setup():
         vault_client_key_base64,
         mount_point,
         vault_kv_version,
+        new_line_replacement_string,
         verbose)    
     return env, current_environment
 
@@ -186,17 +191,33 @@ def get_secrets(client, current_environment, secrets, path_set):
 
     return secrets
 
+def format_secrets(retrieved_secrets, new_line_replacement_string):
+    for current_secret in retrieved_secrets:
+        if new_line_replacement_string == "":
+            current_secret.secret_value = current_secret.secret_value.replace("\n", "\\n")
+        elif new_line_replacement_string.upper() == "SPACE":
+            current_secret.secret_value = current_secret.secret_value.replace("\n", " ")
+        elif new_line_replacement_string.upper() == "EMPTY_STRING":
+            current_secret.secret_value = current_secret.secret_value.replace("\n", "")
+        elif new_line_replacement_string.upper() == "BASE64":
+            encoded = base64.b64encode(current_secret.secret_value.encode())
+            current_secret.secret_value = str(encoded, "utf-8")
+        else:
+            current_secret.secret_value = current_secret.secret_value.replace("\n", new_line_replacement_string)
+            
+    return retrieved_secrets
 
-def export_secrets(retrieved_secrets):
+
+def export_secrets(formatted_secrets):
     # Export secrets here
     print("\nExporting Secrets")    
     env_file_path = "/meta/env_vars_to_export"
     if not os.path.exists(env_file_path):        
-        for current_secret in retrieved_secrets:
+        for current_secret in formatted_secrets:            
             print(current_secret.export_name + "=" + current_secret.secret_value)
     else:
         env_file = open(env_file_path, "a")
-        for current_secret in retrieved_secrets:
+        for current_secret in formatted_secrets:            
             env_file.write(current_secret.export_name + "=" + current_secret.secret_value + "\n")
         env_file.close()
 

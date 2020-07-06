@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.0
+  version: 1.1.1
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -110,6 +110,10 @@ spec:
             "chart_version": {
                 "type": "string",
                 "description": "Application chart version to install"
+            },
+            "app_version": {
+                "type": "string",
+                "description": "Version of the application. This field is informational, and has no impact on chart version calculations."
             },
             "repos": {
               "type": "array",

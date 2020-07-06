@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.0.4
+  version: 1.0.5
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -53,7 +53,8 @@ spec:
         "required": [
             "IMAGE",
             "BRANCH",
-            "REPO"
+            "REPO",
+            "GITHUB_TOKEN"
         ],
         "properties": {
             "IMAGE": {
@@ -69,6 +70,10 @@ spec:
                 "type": "string",
                 "description": "repo-owner/repo-name",
                 "examples": ["codefresh-plugins/github-enricher"]
+            },
+            "GITHUB_TOKEN": {
+                "type": "string",
+                "description": "token from github"
             }
         }
     }

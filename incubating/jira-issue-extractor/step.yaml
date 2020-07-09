@@ -2,8 +2,8 @@ version: '1.0'
 kind: step-type
 metadata:
   name: jira-issue-extractor
-  title: Jira issue extractor
-  version: 1.0.2
+  title: Jira issue extractor from any source
+  version: 1.0.3
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:

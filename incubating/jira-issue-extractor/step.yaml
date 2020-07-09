@@ -19,11 +19,11 @@ metadata:
   icon:
     type: image
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.png
-      background: "#f4f4f4"
-      size:
-        large:
-          url: >-
-            https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.png
   examples:
     - description: example-1
       workflow:

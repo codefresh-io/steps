@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -58,9 +58,11 @@ spec:
         "patterns": [],
         "required": [
             "IMAGE",
-            "BRANCH",
-            "REPO",
-            "GITHUB_TOKEN"
+            "JIRA_PROJECT_PREFIX",
+            "MESSAGE",
+            "JIRA_HOST",
+            "JIRA_EMAIL",
+            "JIRA_API_TOKEN"
         ],
         "properties": {
             "JIRA_PROJECT_PREFIX": {

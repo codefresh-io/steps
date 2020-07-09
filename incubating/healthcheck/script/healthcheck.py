@@ -242,13 +242,14 @@ def main():
             }
             initialize(**options)
             t_end = time.time() + int(testing_time_total)
+            print(f'Waiting {testing_time_wait} Seconds before initial test...')
             while time.time() < t_end:
                 try:
                     datadog_slos = datadog_slo_list.split(';')
+                    time.sleep(int(testing_time_wait))
                     for name in datadog_slos:
                         print(f'Testing SLO: {name}')
                         slo_id = get_slo_id(name)
-                        time.sleep(1)
                         to_ts = int(time.time())
                         history = get_slo_history(slo_id, from_ts, to_ts)
                         date, status = history
@@ -259,7 +260,6 @@ def main():
                         else:
                             print(f'Service Level Objective {name} is passing at {formatted_date}')
                     print(f'Waiting {testing_time_wait} Seconds before retesting')
-                    time.sleep(int(testing_time_wait))
                 except:
                     print(f'No Results Found for: {name}')
                     sys.exit(1)

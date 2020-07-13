@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: Commit changes and pushed to repository
   icon:
@@ -95,12 +95,8 @@ spec:
 
       commands:
         - cd ${WORKING_DIRECTORY}
-        - echo ${WORKING_DIRECTORY}
         - git config --global user.name ${GIT_USER_NAME}
-        - echo ${GIT_USER_NAME}
         - git config --global user.email ${GIT_USER_EMAIL}
-        - echo ${GIT_USER_EMAIL}
         - git commit -a -m "${COMMIT_MESSAGE}"
         - git status
-        - echo https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$CF_REPO_OWNER/$CF_REPO_NAME.git
         - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$CF_REPO_OWNER/$CF_REPO_NAME.git

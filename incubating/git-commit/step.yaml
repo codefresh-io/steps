@@ -3,8 +3,12 @@ version: '1.0'
 metadata:
   name: git-commit
   version: 0.0.1
-  isPublic: false
+  isPublic: true
   description: Commit changes and pushed to repository
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-commit/icon.svg
+    background: "#0B3E49"
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/git-commit
   stage: incubating
@@ -64,7 +68,7 @@ spec:
           },
           "git_user_email": {
               "type": "string",
-              "description": "The git user email"
+              "description": "Git user email"
           }
       }
     }

@@ -4,7 +4,7 @@ metadata:
   name: git-commit
   version: 0.0.2
   isPublic: true
-  description: Commit changes and pushed to repository
+  description: Commit and pushed changes to repository
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-commit/icon.svg

@@ -14,6 +14,7 @@ metadata:
   stage: incubating
   maintainers:
     - name: Dima Golomozy
+    - name: Oleh Zahnitko
   categories:
     - featured
     - git

@@ -13,8 +13,7 @@ metadata:
     - https://github.com/codefresh-io/steps/tree/master/incubating/git-commit
   stage: incubating
   maintainers:
-    - name: Oleh Zhanitko
-      email: olegz@codefresh.io
+    - name: Dima Golomozy
   categories:
     - featured
     - git

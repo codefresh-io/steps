@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.3
+  version: 0.0.4
   isPublic: true
-  description: Commit and pushed changes to repository
+  description: Commit and push changes to repository
   icon:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-commit/icon.svg

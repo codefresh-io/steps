@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: deploy
   title: Deploy to Kubernetes
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Deploy a Docker image to an existing Kubernetes cluster.
   sources:
@@ -81,7 +81,7 @@ spec:
                 "additionalProperties": false,
                 "patterns": [],
                 "required": ["image", "registry"],
-                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href=\"https://codefresh.io/docs/docs/docker-registries/external-docker-registries/\">registry integration page</a>."
+                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href=\"https://codefresh.io/docs/docs/integrations/docker-registries/\">registry integration page</a>."
             }
         }
     }

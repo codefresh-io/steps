@@ -17,7 +17,7 @@
 
 "@types/events@*":
   version "1.2.0"
-  resolved "http://registry.npmjs.org/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+  resolved "https://registry.npmjs.org/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
 
 "@types/express-serve-static-core@*":
   version "4.16.0"
@@ -125,7 +125,7 @@ delayed-stream@~1.0.0:
 
 deprecate@1.0.0:
   version "1.0.0"
-  resolved "http://registry.npmjs.org/deprecate/-/deprecate-1.0.0.tgz#661490ed2428916a6c8883d8834e5646f4e4a4a8"
+  resolved "https://registry.npmjs.org/deprecate/-/deprecate-1.0.0.tgz#661490ed2428916a6c8883d8834e5646f4e4a4a8"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -288,8 +288,8 @@ lodash.once@^4.0.0:
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
 
 lodash@^4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
 
 mime-db@~1.37.0:
   version "1.37.0"

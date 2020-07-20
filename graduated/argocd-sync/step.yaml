@@ -98,3 +98,11 @@ spec:
       image: "nazarcodefresh/argo-plugin:latest"
       commands:
         - /codefresh/volume/argo-executor
+    startCodefreshTask:
+      title: "StartCodefreshTask"
+      image: "nazarcodefresh/argo-plugin:latest"
+      commands:
+        - >-
+          cf-argo-plugin run-task ${{context}}
+          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
+          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"

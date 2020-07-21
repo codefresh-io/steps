@@ -82,7 +82,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "nazarcodefresh/argo-plugin:latest"
+      image: "codefresh/cf-argo-plugin:0.0.1"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
@@ -95,12 +95,12 @@ spec:
         - /codefresh/volume/argo-export_url
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "nazarcodefresh/argo-plugin:latest"
+      image: "codefresh/cf-argo-plugin:0.0.1"
       commands:
         - /codefresh/volume/argo-executor
     startCodefreshTask:
       title: "StartCodefreshTask"
-      image: "nazarcodefresh/argo-plugin:latest"
+      image: "codefresh/cf-argo-plugin:0.0.1"
       commands:
         - >-
           cf-argo-plugin run-task ${{context}}

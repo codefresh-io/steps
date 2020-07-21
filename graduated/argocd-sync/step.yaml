@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.1.8
+  version: 1.1.9
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -82,7 +82,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "nazarcodefresh/argo-plugin:latest"
+      image: "codefresh/cf-argo-plugin:0.0.1"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
@@ -95,6 +95,14 @@ spec:
         - /codefresh/volume/argo-export_url
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "nazarcodefresh/argo-plugin:latest"
+      image: "codefresh/cf-argo-plugin:0.0.1"
       commands:
         - /codefresh/volume/argo-executor
+    startCodefreshTask:
+      title: "StartCodefreshTask"
+      image: "codefresh/cf-argo-plugin:0.0.1"
+      commands:
+        - >-
+          cf-argo-plugin run-task ${{context}}
+          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
+          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"

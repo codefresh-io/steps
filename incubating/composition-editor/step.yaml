@@ -1,0 +1,101 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/composition-editor
+  version: 0.0.1
+  isPublic: true
+  description: Edit Composition Files for Codefresh Pipeline Usage
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/composition-editor
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: conform-composition-yaml
+      workflow:
+        ConformCompositionYAML:
+          type: codefreshdemo/composition-editor
+          arguments:
+            DIRECTORY: /codefresh/volume/myrepo
+            YAMLFILE: docker-compose.yml
+            CONFORM_COMPOSITION: true
+    - description: edit-keys-and-values-in-composition-yaml
+      workflow:
+        EditYAMLFile:
+          type: codefreshdemo/composition-editor
+          arguments:
+            DIRECTORY: /codefresh/volume/myrepo
+            YAMLFILE: docker-compose.yml
+            KEY_SETS:
+              - oldkeyname1;newkeyname1
+              - oldkeyname1;newkeyname1
+            KEYVALUE_PAIRS:
+              - services.myservice.environment.VARNAME1=VARVALUE1
+              - services.myservice.environment.VARNAME2=VARVALUE2
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [],
+      "properties": {
+        "CONFORM_COMPOSITION": {
+          "type": "boolean",
+          "description": "If true, removes host ports and sets compose version to 3.0.",
+          "default": false
+        },
+        "DIRECTORY": {
+          "type": "string",
+          "description": "Directory of YAML file.",
+          "default": "/codefresh/volume"
+        },
+        "YAMLFILE": {
+          "type": "string",
+          "description": "Composition file name.",
+          "default": "docker-compose.yml"
+        },
+        "KEYVALUE_PAIRS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The YAML hierarchy is delimited with '.'' characters"
+        },
+        "KEY_SETS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "OldKey then NewKey delimited with ';' character"
+        }
+      }
+    }
+  stepsTemplate: |-
+    composition-editor:
+      name: composition-editor
+      image: dustinvanbuskirk/composition-editor:alpha
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+      [[- if eq .Arguments.CONFORM_COMPOSITION true ]]
+        - EDIT_OBJECT=composition python3 /composition-editor.py
+      [[- end ]]
+      [[ range $arg := .Arguments.KEYVALUE_PAIRS ]]
+        - EDIT_OBJECT=value PAYLOAD='[[ $arg ]]' python3 /composition-editor.py
+      [[- end ]]
+      [[ range $arg := .Arguments.KEY_SETS ]]
+        - EDIT_OBJECT=key PAYLOAD='[[ $arg ]]' python3 /composition-editor.py
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

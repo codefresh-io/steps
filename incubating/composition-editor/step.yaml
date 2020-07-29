@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/composition-editor
-  version: 0.0.1
+  name: composition-editor
+  version: 1.0.0
   isPublic: true
   description: Edit Composition Files for Codefresh Pipeline Usage
   sources:
@@ -81,7 +81,7 @@ spec:
   stepsTemplate: |-
     composition-editor:
       name: composition-editor
-      image: dustinvanbuskirk/composition-editor:alpha
+      image: codefreshplugins/composition-editor:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

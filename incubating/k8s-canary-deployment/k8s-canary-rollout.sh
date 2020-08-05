@@ -5,7 +5,7 @@ healthcheck(){
     h=true
 
     #Start custom healthcheck
-    output=$(kubectl get pods -l app="$DEPLOYMENT_NAME" -n $NAMESPACE --no-headers)
+    output=$(kubectl get pods -l app="$CANARY_DEPLOYMENT" -n $NAMESPACE --no-headers)
     echo "[CANARY HEALTH] $output"
     s=($(echo "$output" | awk '{s+=$4}END{print s}'))
     c=($(echo "$output" | wc -l))
@@ -244,7 +244,7 @@ mainloop(){
     kubectl apply -f $WORKING_VOLUME/canary_deployment.yaml -n $NAMESPACE
 
     echo "[CANARY INFO] Awaiting canary pod..."
-    while [ $(kubectl get pods -l app="$DEPLOYMENT_NAME" -n $NAMESPACE --no-headers | wc -l) -eq 0 ]
+    while [ $(kubectl get pods -l app="$CANARY_DEPLOYMENT" -n $NAMESPACE --no-headers | wc -l) -eq 0 ]
     do
       sleep 2
     done

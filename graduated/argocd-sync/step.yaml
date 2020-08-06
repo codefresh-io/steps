@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.2.11
+  version: 1.3.0
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -103,11 +103,11 @@ spec:
       image: "codefresh/cf-argo-plugin:0.0.4"
       commands:
         - /codefresh/volume/argo-executor
-    startCodefreshTask:
-      title: "StartCodefreshTask"
-      image: "codefresh/cf-argo-plugin:0.0.4"
+    sendArgoMetadata:
+      title: "SendArgoMetadata"
+      image: "codefresh/cf-argo-plugin:0.0.5"
       environment:
         - ENV_NAME=${{env_name}}
       commands:
         - echo $ENV_NAME
-        - if [ ! -z "$ENV_NAME" ]; then cf-argo-plugin run-task ${{env_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"; fi
+        - if [ ! -z "$ENV_NAME" ]; then cf-argo-plugin process-result ${{env_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME; fi

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -86,8 +86,7 @@ spec:
       title: "Commit and push"
       image: alpine/git:latest
       environment:
-        - CF_REPO_OWNER=${{CF_REPO_OWNER}}
-        - CF_REPO_NAME=${{CF_REPO_NAME}}
+        - REPO=${{repo}}
         - COMMIT_MESSAGE=${{commit_message}}
         - WORKING_DIRECTORY=${{working_directory}}
         - GIT_USER_NAME=${{git_user_name}}
@@ -99,4 +98,4 @@ spec:
         - git config --global user.email ${GIT_USER_EMAIL}
         - git commit -a -m "${COMMIT_MESSAGE}"
         - git status
-        - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$CF_REPO_OWNER/$CF_REPO_NAME.git
+        - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git

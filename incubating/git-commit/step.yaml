@@ -30,40 +30,7 @@ metadata:
           arguments:
             repo: 'repo-owner/repo-name'
             git: 'github'
-            commit_message: 'Some commit message'
-            git_user_name: 'git-user-name'
-            git_user_email: 'git-user@email.com'
-
-    - description: Usage of git-clone step with a few repository
-      workflow:
-        clone1:
-          title: "Cloning primary repository"
-          type: "git-clone"
-          repo: "repo-owner-1/repo-name-1"
-          revision: "master"
-          git: "github"
-        clone2:
-          title: "Cloning secondary repository"
-          type: "git-clone"
-          repo: "repo-owner-2/repo-name-2"
-          revision: "master"
-          git: "github"
-          stage: "clone"
-        make_some_changes:
-          title: "Make some changes with one of you repo"
-          type: freestyle
-          working_directory: 'repo-name-1'
-          arguments:
-            image: 'node:latest'
-            commands:
-              - npm run makeSomeChanges
-        commit_and_push:
-          title: Commit changes and push
-          type: git-commit
-          arguments:
-            working_directory: 'repo-name-1'
-            repo: "repo-owner-1/repo-name-1"
-            git: github
+            working_directory: ${{clone}}
             commit_message: 'Some commit message'
             git_user_name: 'git-user-name'
             git_user_email: 'git-user@email.com'

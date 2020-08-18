@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.0.4
+  version: 1.0.5
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -18,12 +18,12 @@ metadata:
   tags: []
   icon:
     type: image
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.png
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.svg
     background: "#f4f4f4"
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.png
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.svg
   examples:
     - description: example-1
       workflow:

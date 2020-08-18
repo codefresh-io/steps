@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.1.0
+  version: 1.1.1
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -38,6 +38,7 @@ metadata:
             IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}
             BRANCH: ${{CF_BRANCH}}
             REPO: codefresh/${{CF_REPO_NAME}}
+            GITHUB_TOKEN: ${{GITHUB_TOKEN}}
   created_at: '2019-12-24T15:42:47.178Z'
   updated_at: '2019-12-24T15:42:47.178Z'
   latest: true

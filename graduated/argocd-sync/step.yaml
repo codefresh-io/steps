@@ -106,7 +106,7 @@ spec:
     sendArgoMetadata:
       title: "SendArgoMetadata"
       fail_fast: false
-      image: "codefresh/cf-argo-plugin:0.0.5"
+      image: "codefresh/cf-argo-plugin:0.0.6"
       commands:
         - echo $CF_PIPELINE_NAME
-        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME
+        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID

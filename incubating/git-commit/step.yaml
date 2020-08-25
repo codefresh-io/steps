@@ -1,0 +1,101 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: git-commit
+  version: 0.0.5
+  isPublic: true
+  description: Commit and push changes to repository
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/git-commit/icon.svg
+    background: "#0B3E49"
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/git-commit
+  stage: incubating
+  maintainers:
+    - name: Dima Golomozy
+    - name: Oleh Zahnitko
+  categories:
+    - featured
+    - git
+  official: true
+  tags: []
+  examples:
+    - workflow:
+        commit_and_push:
+          title: Commit changes and push
+          type: git-commit
+          arguments:
+            repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+            git: 'github'
+            commit_message: 'Some commit message'
+            git_user_name: 'git-user-name'
+            git_user_email: 'git-user@email.com'
+
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+          "repo",
+          "git"
+      ],
+      "properties": {
+          "repo": {
+              "type": "string",
+              "description": "path of the repository without the domain name in the form of my_username/my_repo"
+          },
+          "git": {
+              "type": "string",
+              "description": "The name of the git integration you want to use. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
+          },
+          "commit_message": {
+              "type": "string",
+              "description": "Text body of the comment to be created"
+          },
+          "working_directory": {
+              "type": "string",
+              "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is ${{main_clone}}.",
+              "default": "/codefresh/volume/${{CF_REPO_NAME}}"
+          },
+          "git_user_name": {
+              "type": "string",
+              "description":"The username from which the commit comes from"
+          },
+          "git_user_email": {
+              "type": "string",
+              "description": "Git user email"
+          }
+      }
+    }
+  steps:
+    export_access_token:
+      title: "Export git access token"
+      image: codefresh/cli
+      environment:
+        - GIT_INTEGRATION_NAME=${{git}}
+      commands:
+        - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
+        - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
+
+    commit_and_push:
+      title: "Commit and push"
+      image: alpine/git:latest
+      environment:
+        - REPO=${{repo}}
+        - COMMIT_MESSAGE=${{commit_message}}
+        - WORKING_DIRECTORY=${{working_directory}}
+        - GIT_USER_NAME=${{git_user_name}}
+        - GIT_USER_EMAIL=${{git_user_email}}
+
+      commands:
+        - cd ${WORKING_DIRECTORY}
+        - git config --global user.name ${GIT_USER_NAME}
+        - git config --global user.email ${GIT_USER_EMAIL}
+        - git commit -a -m "${COMMIT_MESSAGE}"
+        - git status
+        - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git

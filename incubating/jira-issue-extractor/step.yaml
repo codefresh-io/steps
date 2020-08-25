@@ -1,0 +1,104 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: jira-issue-extractor
+  title: Jira issue extractor from any source
+  version: 1.0.6
+  isPublic: true
+  description: Extract jira issue from message and convert it to image annotation
+  sources:
+    - 'https://github.com/codefresh-plugins/jira-issue-extractor'
+  stage: incubating
+  maintainers:
+    - name: Pavel Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - build
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/jira-issue-extractor/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: example-1
+      workflow:
+        build:
+          title: "Building Docker image"
+          type: "build"
+          image_name: "codefresh/${{CF_REPO_NAME}}"
+          tag: '${{PACKAGE_VERSION}}'
+          dockerfile: "Dockerfile"
+
+        jira-issue-extractor:
+          title: Enrich image with annotations
+          type: jira-issue-extractor
+          arguments:
+            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}
+            JIRA_PROJECT_PREFIX: ${{CF_BRANCH}}
+            MESSAGE: SAAS-21011-ability-to-remove-user
+            JIRA_HOST: codefresh-io.atlassian.net
+            JIRA_EMAIL: pavel@codefresh.io
+            JIRA_API_TOKEN: "******"
+  created_at: '2019-12-24T15:42:47.178Z'
+  updated_at: '2019-12-24T15:42:47.178Z'
+  latest: true
+  id: 5e0231f76e1ebe58d5d37a55
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "IMAGE",
+            "JIRA_PROJECT_PREFIX",
+            "MESSAGE",
+            "JIRA_HOST",
+            "JIRA_EMAIL",
+            "JIRA_API_TOKEN"
+        ],
+        "properties": {
+            "JIRA_PROJECT_PREFIX": {
+                "type": "string",
+                "description": "Jira project prefix like: SAAS,CF, etc"
+            },
+            "MESSAGE": {
+                "type": "string",
+                "description": "Message from which you want retrieve issue name, can be branch, commit message, whatever",
+                "examples": ["SAAS-21011-fix", "CF-2111-revert"]
+            },
+            "JIRA_HOST": {
+                "type": "string",
+                "description": "jira host, should be without protocol and / in the end",
+                "examples": ["codefresh-io.atlassian.net"]
+            },
+            "JIRA_EMAIL": {
+                "type": "string",
+                "description": "Your jira email"
+            },
+            "JIRA_API_TOKEN": {
+                "type": "string",
+                "description": "Token that you generate in jira"
+            },
+            "IMAGE": {
+               "type": "string",
+               "description": "your image to which you want assign issues",
+               "examples": ["gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"]
+            }
+        }
+    }
+  steps:
+    main:
+      name: jira-issue-extractor
+      image: codefresh/jira-issue-extractor
+      working_directory: /app/
+      environment:
+          - JIRA_PROJECT_PREFIX=${{JIRA_PROJECT_PREFIX}}
+          - MESSAGE=${{MESSAGE}}
+          - JIRA_HOST=${{JIRA_HOST}}
+          - JIRA_EMAIL=${{JIRA_EMAIL}}
+          - JIRA_API_TOKEN=${{JIRA_API_TOKEN}}
+          - IMAGE=${{IMAGE}}

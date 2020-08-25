@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: launch-composition
-  version: 1.0.0
+  version: 1.0.2
+  title: Launch a composition
   isPublic: true
-  description: Run and externaly expose a docker-compose
+  description: Run and externally expose a docker-compose build.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/launch-composition'
   stage: graduated

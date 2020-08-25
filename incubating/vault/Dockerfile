@@ -1,6 +1,6 @@
-FROM vault:1.0.1 AS vault
+FROM vault:1.4.2 AS vault
 
-FROM alpine:3.8
+FROM alpine:3.12.0
 
 RUN apk add --no-cache curl curl-dev jq bash
 

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: k8s-canary-deployment
-  version: 0.0.2
-  isPublic: false
-  description: Perform canary deployments on a Kubernetes cluster
+  version: 0.0.8
+  title: Canary deployment for plain K8s
+  isPublic: true
+  description: Perform a gradual canary deployment using only Kubernetes manifests.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/k8s-canary-deployment
@@ -15,7 +16,7 @@ metadata:
   categories:
     - featured
     - deployment
-  official: false
+  official: true
   tags: []
   icon:
     type: image
@@ -24,7 +25,7 @@ metadata:
         url: >-
           https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/k8s-canary-deployment/icon.jpg
   examples:
-    - description: example-1
+    - description: example-canary
       workflow:
         run:
           title: 'Deploying new version ${{CF_SHORT_REVISION}}'
@@ -33,11 +34,29 @@ metadata:
             WORKING_VOLUME: ${{WORKING_VOLUME}}
             SERVICE_NAME: ${{SERVICE_NAME}}
             DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
-            TRAFFIC_INCREMENT: ${{TRAFFIC_INCREMENT}}
-            NEW_VERSION: ${{NEW_VERSION}}
-            SLEEP_SECONDS: ${{SLEEP_SECONDS}}
+            TRAFFIC_INCREMENT: '${{TRAFFIC_INCREMENT}}'
+            NEW_VERSION: '${{NEW_VERSION}}'
+            SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
             NAMESPACE: ${{NAMESPACE}}
             KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+    - description: example-canary-health-check-pipeline
+      workflow:
+        run:
+          title: 'Deploying new version ${{CF_SHORT_REVISION}}'
+          type: k8s-canary-deployment
+          arguments:
+            WORKING_VOLUME: ${{WORKING_VOLUME}}
+            SERVICE_NAME: ${{SERVICE_NAME}}
+            DEPLOYMENT_NAME: ${{DEPLOYMENT_NAME}}
+            TRAFFIC_INCREMENT: '${{TRAFFIC_INCREMENT}}'
+            NEW_VERSION: '${{NEW_VERSION}}'
+            SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
+            NAMESPACE: ${{NAMESPACE}}
+            KUBE_CONTEXT: ${{KUBE_CONTEXT}}
+            PIPELINE_ID: 'project/health-check-pipeline'
+            NO_CACHE: true
+            NO_CF_CACHE: true
+            RESET_VOLUME: true
 spec:
   arguments: |-
     {
@@ -54,7 +73,7 @@ spec:
             },
             "NAMESPACE": {
                 "type": "string",
-                "description": "The name of the kubenretes namespace"
+                "description": "The name of the kubernetes namespace"
             },
             "TRAFFIC_INCREMENT": {
                 "type": "string"
@@ -78,19 +97,58 @@ spec:
             },
             "NEW_VERSION": {
               "type": "string"
-            }
+            },
+            "ANALYSIS_TYPE": {
+              "type": "string",
+              "description": "Can analyze canary health by pipeline execution or health checks (PIPELINE or HEALTH)",
+              "default": "HEALTH"
+            },
+            "PIPELINE_ID": {
+              "type": "string",
+              "description": "Pipeline name or id"
+            },
+            "TRIGGER_ID": {
+                "type": "string",
+                "description": "Trigger id or name",
+                "default": ""
+            },
+            "BRANCH": {
+                "type": "string",
+                "description": "Branch",
+                "examples": ["master"],
+                "default": ""
+            },
+            "SHA": {
+                "type": "string",
+                "description": "Set commit sha",
+                "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"],
+                "default": ""
+            },
+            "NO_CACHE": {
+                "type": "boolean",
+                "description": "Ignore cached images",
+                "default": false
+            },
+            "NO_CF_CACHE": {
+                   "type": "boolean",
+                   "description": "Ignore Codefresh cache optimizations",
+                   "default": false
+            },
+            "RESET_VOLUME": {
+                  "type": "boolean",
+                  "description": "Reset pipeline cached volume",
+                  "default": false
+            }  
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: k8s-canary-deployment
-      image: codefreshplugins/k8s-canary
+      image: codefreshplugins/k8s-canary-deployment
       environment:
-        - WORKING_VOLUME=${{WORKING_VOLUME}}
-        - SERVICE_NAME=${{SERVICE_NAME}}
-        - DEPLOYMENT_NAME=${{DEPLOYMENT_NAME}}
-        - TRAFFIC_INCREMENT=${{TRAFFIC_INCREMENT}}
-        - NEW_VERSION=${{NEW_VERSION}}
-        - SLEEP_SECONDS=${{SLEEP_SECONDS}}
-        - NAMESPACE=${{NAMESPACE}}
-        - KUBE_CONTEXT=${{KUBE_CONTEXT}}
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

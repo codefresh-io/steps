@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: deploy
-  version: 1.0.0
+  title: Deploy to Kubernetes
+  version: 1.0.3
   isPublic: true
-  description: Deploy
+  description: Deploy a Docker image to an existing Kubernetes cluster.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/deploy'
   stage: graduated
@@ -80,7 +81,7 @@ spec:
                 "additionalProperties": false,
                 "patterns": [],
                 "required": ["image", "registry"],
-                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href=\"https://codefresh.io/docs/docs/docker-registries/external-docker-registries/\">registry integration page</a>."
+                "description": "Docker image that will be deployed. Only valid if service is defined. Should contain image and name of registry as it appears in the <a href=\"https://codefresh.io/docs/docs/integrations/docker-registries/\">registry integration page</a>."
             }
         }
     }

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: kompose
-  version: 0.0.3
+  version: 0.0.6
+  title: Convert Docker Compose file to K8s
   isPublic: true
-  description: Release a Docker Compose to Kubernetes
+  description: Run Kompose to translate your docker-compose.yml files into Kubernetes resources.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/kompose
@@ -76,7 +77,7 @@ spec:
   steps:
     main:
       name: kompose
-      image: codefreshplugins/plugin-kompose:0.0.3
+      image: codefresh/plugin-kompose:0.0.5
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
         - 'FILE=${{FILE}}'

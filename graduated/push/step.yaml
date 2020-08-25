@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: push
-  version: 1.0.0
+  version: 1.0.3
+  title: Push an image
   isPublic: true
-  description: Push a docker image to a registry
+  description: Push a docker image to a registry.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/push'
   stage: graduated
@@ -44,6 +45,10 @@ spec:
             "registry": {
                 "type": "string",
                 "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your default registry."
+            },
+            "registry_context": {
+                "type": "string",
+                "description": "The registry logical name of one of the inserted registries from the integration view. The default value will be your primary registry by image domain."
             },
             "credentials": {
                 "type": "object",

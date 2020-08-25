@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aqua
-  version: 0.0.4
+  title: Run an Aqua Security Scan
+  version: 0.0.6
   isPublic: true
-  description: Execute Aqua Security image scan as build step
+  description: Execute an Aqua container security scan.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/aqua'
   stage: incubating

@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twilio
-  version: 0.0.3
+  version: 0.0.5
+  title: Send an SMS via Twilio
   isPublic: true
-  description: Send SMS notifications via Twillio
+  description: Send any SMS message using Twilio.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/twilio'
   stage: incubating

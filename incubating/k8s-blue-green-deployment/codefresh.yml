@@ -1,11 +1,26 @@
-version: '1.0'
+version: "1.0"
 steps:
-  BuildImage:
-    title: Building Docker Image
+  Clone:
+    title: Cloning Repsitory...
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
+  BuildingDockerImage:
+    title: Building Docker Image...
     type: build
     image_name: codefreshplugins/k8s-blue-green
-  PushingToRegistry:
+    working_directory: "./steps/incubating/k8s-blue-green-deployment"
+    tag: ${{CF_BRANCH}}
+    dockerfile: Dockerfile
+  PushingDockerImage:
+    title: Pushing Docker Image...
     type: push
-    title: Pushing To Registry
-    candidate: ${{BuildImage}}
-    tag: "0.1"
+    candidate: ${{BuildingDockerImage}}
+    registry: dockerhub
+    tag: "latest"
+    when:
+      branch:
+        only:
+          - master

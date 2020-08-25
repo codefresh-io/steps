@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: composition
-  version: 1.0.0
+  title: Run a Docker Compose file
+  version: 1.0.3
   isPublic: true
-  description: Run a docker-compose
+  description: Run a docker-compose.yml composition as a pipeline step.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/composition'
   stage: graduated
@@ -45,6 +46,13 @@ spec:
         "additionalProperties": true,
         "patterns": [],
         "required": ["composition", "composition_candidates"],
+        "registry_contexts": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "The registry logical name of one of the inserted registries from the integration view. The default values is primary registries by domain. Note that this is needed to pull images from specified registries."
+        },
         "properties": {
             "working_directory": {
                 "type": "string",

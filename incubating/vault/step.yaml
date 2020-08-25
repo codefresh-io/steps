@@ -2,17 +2,17 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.4
+  version: 0.0.7
+  title: Fetch secrets from Hashicorp Vault
   isPublic: true
   description: >-
-    The plugin exports KV pairs from Hashicorp Vault to Codefresh pipeline ENV
-    variables
+    Read secrets from Hashicorp Vault inside a Codefresh pipeline.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/vault
   stage: incubating
   maintainers:
-    - name: Alexander Aladov
+    - name: Brandon Phillips
   categories:
     - featured
   official: false
@@ -22,7 +22,16 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/vault/icon.svg
     background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: Token Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+    - description: Client Certificate
       workflow:
         Vault_to_Env:
           title: Importing vault values
@@ -33,6 +42,48 @@ metadata:
             VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+    - description: Approle Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_METHOD: 'APPROLE'
+            APPROLE_ROLE_ID: ${{APPROLE_ROLE_ID}}
+            APPROLE_SECRET_ID: ${{APPROLE_SECRET_ID}}
+    - description: Retrieve Single Key
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: ${{VAULT_PATH}}
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_FIELD_NAME: 'some-key-name'
+    - description: Retrieve Multiple Paths
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: 'kv/firstpath;kv/secondpath'
+            VAULT_PATH_DELIMITER: ';'
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+    - description: Add Prefix to Variables
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            VAULT_PATH: 'kv/firstpath;kv/secondpath'
+            VAULT_PATH_DELIMITER: ';'
+            VAULT_AUTH_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_VARIABLE_EXPORT_PREFIX: 'pre_'
 spec:
   arguments: |-
     {
@@ -43,8 +94,7 @@ spec:
         "patterns": [],
         "required": [
           "VAULT_ADDR",
-          "VAULT_PATH",
-          "VAULT_AUTH_TOKEN"
+          "VAULT_PATH"
         ],
         "properties": {
             "VAULT_ADDR": {
@@ -55,9 +105,25 @@ spec:
                 "type": "string",
                 "description": "Path to secrets in vault. Example: secret/codefreshsecret (required)"
             },
+            "VAULT_PATH_DELIMITER": {
+                "type": "string",
+                "description": "Path delimiter to break up multiple paths in the VAULT_PATH value"
+            },
+            "VAULT_AUTH_METHOD": {
+              "type": "string",
+              "description": "Vault authentication method. Valid options: APPROLE or TOKEN"
+            },
             "VAULT_AUTH_TOKEN": {
                 "type": "string",
                 "description": "Vault authentication token (required)"
+            },
+            "APPROLE_ROLE_ID": {
+              "type": "string",
+              "description": "Vault AppRole Role ID. Required if auth method is APPROLE"
+            },
+            "APPROLE_SECRET_ID": {
+              "type": "string",
+              "description": "Vault AppRole Secret ID. Required if auth method is APPROLE"
             },
             "VAULT_CLIENT_CERT_BASE64": {
                 "type": "string",
@@ -66,6 +132,14 @@ spec:
             "VAULT_CLIENT_KEY_BASE64": {
                 "type": "string",
                 "description": "Base64 encoded client key"
+            },
+            "VAULT_FIELD_NAME": {
+                "type": "string",
+                "description": "Set this field to export a single value with the specified key"
+            },
+            "VAULT_VARIABLE_EXPORT_PREFIX": {
+                "type": "string",
+                "description": "Add a string prefix to the exported variable names of groups or single values"
             }
         }
     }
@@ -76,6 +150,12 @@ spec:
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - 'VAULT_PATH=${{VAULT_PATH}}'
+        - 'VAULT_PATH_DELIMITER=${{VAULT_PATH_DELIMITER}}'
         - 'VAULT_AUTH_TOKEN=${{VAULT_AUTH_TOKEN}}'
         - 'VAULT_CLIENT_CERT_BASE64=${{VAULT_CLIENT_CERT_BASE64}}'
         - 'VAULT_CLIENT_KEY_BASE64=${{VAULT_CLIENT_KEY_BASE64}}'
+        - 'VAULT_AUTH_METHOD=${{VAULT_AUTH_METHOD}}'
+        - 'APPROLE_ROLE_ID=${{APPROLE_ROLE_ID}}'
+        - 'APPROLE_SECRET_ID=${{APPROLE_SECRET_ID}}'
+        - 'VAULT_FIELD_NAME=${{VAULT_FIELD_NAME}}'
+        - 'VAULT_VARIABLE_EXPORT_PREFIX=${{VAULT_VARIABLE_EXPORT_PREFIX}}'

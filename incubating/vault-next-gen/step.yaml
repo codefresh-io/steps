@@ -1,0 +1,183 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: vault-next-gen
+  version: 1.0.0
+  title: Fetch specific secrets from Hashicorp Vault
+  isPublic: true
+  description: >-
+    Read specific secrets from multiple paths in Hashicorp Vault inside a Codefresh pipeline.
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/vault
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - featured
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/vault/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Token Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            SECRETS:
+                - EXPORT_NAME=path:secret
+    - description: Client Certificate
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
+            VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
+            SECRETS:
+                - EXPORT_NAME=path:secret
+    - description: Approle Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_AUTH_METHOD: 'APPROLE'
+            APPROLE_ROLE_ID: ${{APPROLE_ROLE_ID}}
+            APPROLE_SECRET_ID: ${{APPROLE_SECRET_ID}}
+            SECRETS:
+                - EXPORT_NAME=path:secret
+    - description: Retrieve Multiple Paths
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            SECRETS:
+                - EXPORT_NAME=path:secret
+                - EXPORT_NAME2=path2:secret2
+    - description: Retrieve Version 1 Secrets
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_KV_VERSION: 1
+            SECRETS:
+                - EXPORT_NAME=path:secret
+                - EXPORT_NAME2=path2:secret2
+    - description: Base64 Encode Secrets
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            VAULT_KV_VERSION: 1
+            NEW_LINE_REPLACEMENT_STRING: 'BASE64'
+            SECRETS:
+                - EXPORT_NAME=path:secret
+                - EXPORT_NAME2=path2:secret2
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+          "VAULT_ADDR",
+          "MOUNT_POINT",
+          "SECRETS"
+        ],
+        "properties": {
+            "VAULT_ADDR": {
+                "type": "string",
+                "description": "Vault server URI. Example: https://vault.testdomain.io:8200 (required)"
+            },
+            "MOUNT_POINT": {
+                "type": "string",
+                "description": "Vault Secrets Engines name (Run CLI command: vault secrets list -detailed)"
+            },
+            "VAULT_AUTH_METHOD": {
+              "type": "string",
+              "description": "Vault authentication method. Valid options: APPROLE or TOKEN"
+            },
+            "VAULT_TOKEN": {
+                "type": "string",
+                "description": "Vault authentication token (required)"
+            },
+            "APPROLE_ROLE_ID": {
+              "type": "string",
+              "description": "Vault AppRole Role ID. Required if auth method is APPROLE"
+            },
+            "APPROLE_SECRET_ID": {
+              "type": "string",
+              "description": "Vault AppRole Secret ID. Required if auth method is APPROLE"
+            },
+            "VAULT_CLIENT_CERT_BASE64": {
+                "type": "string",
+                "description": "Base64 encoded client cerificate"
+            },
+            "VAULT_CLIENT_KEY_BASE64": {
+                "type": "string",
+                "description": "Base64 encoded client key"
+            },
+            "VAULT_KV_VERSION": {
+                "type": "integer",
+                "description": "Vault secrets version [1 or 2] (Run CLI command: vault secrets list -detailed) "
+            },
+            "NEW_LINE_REPLACEMENT_STRING": {
+                "type": "string",
+                "description": "Specify the value to use to replace new lines: Default is \\n"
+            },
+            "SECRETS": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Array list of secrets in this pattern - exportvariablename=path:secretname"
+            },
+            "VERBOSE": {
+                "type": "boolean",
+                "description": "Add more detailed logging"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: vault-next-gen
+      image: codefreshplugins/vault-next-gen
+      environment:
+      [[- range $key, $val := .Arguments -]]
+      [[ if not (hasPrefix $key "SECRETS") ]]
+        - '[[ toUpper $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- end -]]
+      [[ range $arg := .Arguments.SECRETS ]]
+        - 'SECRETSVALUES_[[ $arg ]]'
+      [[- end -]]
+  delimiters:
+    left: '[['
+    right: ']]'

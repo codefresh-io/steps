@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-inc/azure-files
-  version: 0.0.2
+  title: Upload to Azure Files
+  version: 0.0.4
   isPublic: true
-  description: Plugin for pushing files to Azure Files
+  description: Push files to Microsoft Azure Files.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/azure-files

@@ -2,9 +2,10 @@ kind: step-type
 version: "1.0"
 metadata:
   name: git-clone
-  version: 1.0.0
+  title: Clone a Git repository
+  version: 1.0.2
   isPublic: true
-  description: Clone a git repository
+  description: Clone a Git repository with Codefresh's built in Git provider integration.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/git-clone'
   stage: graduated

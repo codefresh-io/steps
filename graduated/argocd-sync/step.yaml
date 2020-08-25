@@ -1,0 +1,112 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: argocd-sync
+  version: 1.3.3
+  isPublic: true
+  description: This pipeline plugin trigger a sync for ArgoCD app
+  sources:
+    - 'https://github.com/codefresh-io/cf-argo-plugin'
+  stage: graduated
+  categories:
+    - deployment
+  official: true
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
+    background: "#f4f4f4"
+  maintainers:
+    - name: Nazar Rohozhuk
+  examples:
+    - workflow:
+        sync_and_wait:
+          title: Sync ArgoCD app and wait
+          type: argocd-sync
+          arguments:
+            context: 'argo-demo'
+            app_name: 'demo_app'
+  latest: true
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+          "app_name"
+      ],
+      "properties": {
+          "host": {
+            "type": "string",
+            "description": "Host for argo integration, examlple https://argo, will use only when context not provided!",
+            "default": ""
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of argo integration, will use only when context not provided!",
+            "default": ""
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of argo integration, will use only when context not provided!",
+            "default": ""
+          },
+          "context": {
+            "type": "string",
+            "description": "Name of context with argo cd from integration, will use only, when argo credentials not provided",
+            "default": ""
+          },
+          "app_name": {
+              "type": "string",
+              "description": "The argocd application that will be synced"
+          },
+          "sync": {
+              "type": "boolean",
+              "description": "Specify whether to trigger an ArgoCD sync",
+              "default": true
+          },
+          "wait_healthy": {
+              "type": "boolean",
+              "description": "Specify whether to wait for sync to be completed (in canary consider wait for suspended status)",
+              "default": false
+          },
+          "wait_for_suspend": {
+              "type": "boolean",
+              "description": "Specify whether to wait for application suspended status",
+              "default": false
+          },
+          "env_name": {
+              "type": "string",
+              "description": "Environment from codefresh for auto sync",
+              "default": ""
+          }
+      }
+    }
+  steps:
+    runArgoCd:
+      title: "Run ArgoCD"
+      image: "codefresh/cf-argo-plugin:0.0.4"
+      commands:
+        - >-
+          cf-argo-plugin sync "${{app_name}}"
+          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
+          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
+          --sync=${{sync}} --wait-healthy=${{wait_healthy}} --wait-suspend=${{wait_for_suspend}}
+          --out-commands-file /codefresh/volume/argo-executor --out-export-file /codefresh/volume/argo-export_url
+        - chmod +x /codefresh/volume/argo-executor
+        - chmod +x /codefresh/volume/argo-export_url
+        - /codefresh/volume/argo-export_url
+    executeArgoCd:
+      title: "ExecuteArgoCd"
+      image: "codefresh/cf-argo-plugin:0.0.4"
+      commands:
+        - /codefresh/volume/argo-executor
+    sendArgoMetadata:
+      title: "SendArgoMetadata"
+      fail_fast: false
+      image: "codefresh/cf-argo-plugin:0.0.6"
+      commands:
+        - echo $CF_PIPELINE_NAME
+        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID

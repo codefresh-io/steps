@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: paclair
-  version: 0.0.3
+  version: 0.0.6
+  title: Run a Clair security scan
   isPublic: true
-  description: 'Scan docker images with Clair - https://github.com/coreos/clair'
+  description: Scan a Docker image with Clair Security scanner.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/paclair
@@ -19,11 +20,9 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    size:
-      large:
-        url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/paclair/icon.jpg
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/paclair/clair-icon.svg
+    background: "#f4f4f4"
   examples:
     - description: example-1
       workflow:

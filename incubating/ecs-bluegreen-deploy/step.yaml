@@ -1,0 +1,114 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: ecs-bluegreen-deploy
+  version: 0.0.2
+  isPublic: true
+  description: Deploys  a  new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-bluegreen-deploy'
+  stage: incubating
+  maintainers:
+    - name: Pavel Nosovets
+      email: pavel.nosovets@codefresh.io
+  categories:
+    - deployment
+  official: false
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/ecs-deploy/icon.jpg
+  examples:
+    - description: example-1
+      workflow:
+        deploy to ecs:
+          type: ecs-deploy
+          arguments:
+            AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            CLUSTER_NAME: MY_ECS_CLUSTER
+            SERVICE_NAME: MY_ECS_SERVICE
+            IMAGE: IMAGE:TAG
+            CODEDEPLOY_APPLICATION: AppECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            CODEDEPLOY_DEPLOYMENT_GROUP: DgpECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            MAX_WAIT_TIME: 60
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+            "CLUSTER_NAME",
+            "SERVICE_NAME",
+            "CODEDEPLOY_APPLICATION",
+            "CODEDEPLOY_DEPLOYMENT_GROUP"
+        ],
+        "properties": {
+            "AWS_ACCESS_KEY_ID": {
+                "type": "string",
+                "description": "Amazon access key ID"
+            },
+            "AWS_SECRET_ACCESS_KEY": {
+                "type": "string",
+                "description": "amazon secret key (make sure it's encrypted)"
+            },
+            "AWS_DEFAULT_REGION": {
+                "type": "string",
+                "description": "aws region"
+            },
+            "CLUSTER_NAME": {
+                "type": "string",
+                "description": "ECS cluster name"
+            },
+            "SERVICE_NAME": {
+                "type": "string",
+                "description": "ECS service name"
+            },
+            "IMAGE": {
+                "type": "string",
+                "description": "Image name and tag to deploy"
+            },
+            "CODEDEPLOY_APPLICATION": {
+                "type": "string",
+                "description": "Optinal. Default value - AppECS-[CLUSTER_NAME]-[SERVICE_NAME]"
+            },
+            "CODEDEPLOY_DEPLOYMENT_GROUP": {
+                "type": "string",
+                "description": "Optinal. Default value - DgpECS-[CLUSTER_NAME]-[SERVICE_NAME]"
+            },
+            "MAX_WAIT_TIME": {
+                "type": "string",
+                "description": "Time in minutes to wait for deployment to succeed. Default value - 60 minutes"
+            }
+        }
+    }
+  steps:
+    main:
+      name: ecs-deploy
+      image: codefresh/ecs-bluegreen-deploy:0.0.1
+      shell: bash
+      commands:
+        - |-
+          entrypoint.sh \
+            --cluster ${{CLUSTER_NAME}} \
+            --service ${{SERVICE_NAME}} \
+            --image ${{IMAGE}} \
+            --codedeploy-application ${{CODEDEPLOY_APPLICATION}} \
+            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}} \
+            --max-wait-time ${{MAX_WAIT_TIME}}
+      environment:
+        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
+        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
+        - 'AWS_DEFAULT_REGION=${{AWS_DEFAULT_REGION}}'
+        - 'CLUSTER_NAME=${{CLUSTER_NAME}}'
+        - 'SERVICE_NAME=${{SERVICE_NAME}}'
+        - 'CODEDEPLOY_APPLICATION=${{CODEDEPLOY_APPLICATION}}'
+        - 'CODEDEPLOY_DEPLOYMENT_GROUP=${{CODEDEPLOY_DEPLOYMENT_GROUP}}'
+        - 'MAX_WAIT_TIME=${{MAX_WAIT_TIME}}'

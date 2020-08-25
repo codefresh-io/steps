@@ -1,8 +1,26 @@
 version: "1.0"
 steps:
+  Clone:
+    title: Cloning Repsitory...
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
   BuildingDockerImage:
-    title: Building Docker Image
+    title: Building Docker Image...
     type: build
-    image_name: codefreshplugins/k8s-canary
-    tag: ${{CF_BRANCH}}
+    image_name: codefreshplugins/k8s-canary-deployment
+    working_directory: "./steps/incubating/k8s-canary-deployment"
+    tag: ${{CF_BRANCH_TAG_NORMALIZED}}
     dockerfile: Dockerfile
+  PushingDockerImage:
+    title: Pushing Docker Image...
+    type: push
+    candidate: ${{BuildingDockerImage}}
+    registry: dockerhub
+    tag: "latest"
+    when:
+      branch:
+        only:
+          - master

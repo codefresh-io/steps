@@ -2,9 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 0.0.4
+  version: 0.0.6
+  title: Send message to Microsoft teams
   isPublic: true
-  description: Send Message to Microsoft Teams
+  description: Send a notification to a Microsoft Teams channel.
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/msteams-notifier

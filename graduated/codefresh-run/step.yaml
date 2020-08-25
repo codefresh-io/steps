@@ -2,9 +2,10 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-run
-  version: 1.0.0
+  title: Run a Codefresh pipeline
+  version: 1.0.2
   isPublic: true
-  description: Run a pipeline by id or name and attach the created build logs
+  description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run'
   stage: graduated

@@ -1,0 +1,121 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: test-reporting
+  version: 1.1.3
+  title: Test reporting
+  isPublic: true
+  description: Upload test report to some your storage integration.
+  sources:
+    - 'https://github.com/codefresh-io/cf-docker-test-reporting'
+  stage: incubating
+  maintainers:
+    - name: Pavlo Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/test-reporting/report.svg
+    background: "#f4f4f4"
+  examples:
+    - description: example-install
+      workflow:
+          upload_report:
+            title: Upload Allure Report
+            type: test-reporting
+            fail_fast: false
+            arguments:
+              allure_dir: /codefresh/volume/e2e_api_test/allure-report
+              bucket_name: codefresh-test-reporting
+              storage_integration: minios
+              branch: master
+    - description: mocha-report
+      workflow:
+          upload_report:
+            title: Upload Mocha Report
+            type: test-reporting
+            fail_fast: false
+            working_directory: /codefresh/volume/${{CF_REPO_NAME}}
+            arguments:
+              bucket_name: cf-test-rep
+              storage_integration: amazon
+              branch: ${{CF_BRANCH}}
+              report_dir: mochawesome-report
+              report_index_file: mochawesome.html
+
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+        ],
+        "properties": {
+            "allure_dir": {
+                "type": "string",
+                "description": "Directory with generated allure results"
+            },
+            "bucket_name": {
+                "type": "string",
+                "description": "The name of the bucket that you created in your cloud provider"
+            },
+            "storage_integration": {
+                "type": "string",
+                "description": "The name of the cloud integration as was entered in the Codefresh UI in the cloud storage integration page"
+            },
+            "clear_test_report": {
+                "type": "boolean",
+                "description": "Delete the previous test results once they are uploaded so they will not be available in the subsequent build"
+            },
+            "report_dir": {
+                "type": "string",
+                "description": "Directory with test report files"
+            },
+            "report_index_file": {
+                "type": "string",
+                "description": "Root file that will be open in report"
+            },
+            "branch" : {
+                "type": "string",
+                "description": "Normalized branch name"
+            }
+
+        }
+    }
+  stepsTemplate: |-
+    first:
+      title: Generate test reporting
+      image: codefresh/cf-docker-test-reporting:test-report-link
+      environment:
+        [[ if .Arguments.allure_dir ]]
+          - ALLURE_DIR=[[ .Arguments.allure_dir ]]
+        [[ end ]]
+        [[ if .Arguments.bucket_name ]]
+          - BUCKET_NAME=[[ .Arguments.bucket_name ]]
+        [[ end ]]
+        [[ if .Arguments.clear_test_report ]]
+          - CLEAR_TEST_REPORT=[[ .Arguments.clear_test_report ]]
+        [[ end ]]
+        [[ if .Arguments.report_dir ]]
+          - REPORT_DIR=[[ .Arguments.report_dir ]]
+        [[ end ]]
+        [[ if .Arguments.report_index_file ]]
+          - REPORT_INDEX_FILE=[[ .Arguments.report_index_file ]]
+        [[ end ]]
+        [[ if .Arguments.branch ]]
+          - CF_BRANCH_TAG_NORMALIZED=[[ .Arguments.branch ]]
+        [[ end ]]
+        [[ if .Arguments.storage_integration ]]
+          - CF_STORAGE_INTEGRATION=[[ .Arguments.storage_integration ]]
+        [[ end ]]
+          - CF_STEP_NAME=first
+          - CF_VOLUME_PATH=/meta
+  delimiters:
+    left: '[['
+    right: ']]'

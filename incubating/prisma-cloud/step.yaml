@@ -1,0 +1,135 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: prisma-cloud
+  version: 1.0.0
+  isPublic: true
+  description: Execute Prisma Clud image scan as build step
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/prisma-cloud'
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - security
+  official: true
+  icon:
+    type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/prisma-cloud/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/prisma-cloud/icon.png
+  examples:
+    - description: scan-with-thresholds
+      workflow:
+        PrismaCloudImageScan:
+          type: prisma-cloud
+          arguments:
+            IMAGE_NAME: name
+            IMAGE_TAG: "tag"
+            PC_HOSTNAME: hostname
+            PC_PORT: "port"
+            PC_USERNAME: username
+            PC_PASSWORD: "password"
+            REGISTRY: registry
+            COMPLIANCE_THRESHOLD: level
+            VULNERABILITY_THRESHOLD: level
+    - description: scan-with-policies
+      workflow:
+        PrismaCloudImageScan:
+          type: prisma-cloud
+          arguments:
+            IMAGE_NAME: name
+            IMAGE_TAG: "tag"
+            PC_HOSTNAME: hostname
+            PC_PORT: "port"
+            PC_USERNAME: username
+            PC_PASSWORD: "password"
+            REGISTRY: registry
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "IMAGE_NAME",
+            "IMAGE_TAG",
+            "PC_HOSTNAME",
+            "PC_PASSWORD",
+            "PC_PORT",
+            "PC_USERNAME",
+            "REGISTRY"
+        ],
+        "properties": {
+            "IMAGE_NAME": {
+              "type": "string",
+              "description": "Docker Image Name"
+            },
+            "IMAGE_TAG": {
+              "type": "string",
+              "description": "Docker Image Tag"
+            },
+            "PC_HOSTNAME": {
+              "type": "string",
+              "description": "Prisma Cloud Hostname/IP"
+            },
+            "PC_PORT": {
+              "type": "string",
+              "description": "Prisma Cloud Port"
+            },
+            "PC_USERNAME": {
+              "type": "string",
+              "description": "username"
+            },
+            "PC_PASSWORD": {
+              "type": "string",
+              "description": "Prisma Cloud Password"
+            },
+            "PC_PROTOCOL": {
+              "type": "string",
+              "description": "Prisma Cloud Host/IP Protocol",
+              "default": "https"
+            },
+            "REGISTRY": {
+                "type": "string",
+                "description": "Docker Registry name from Prisma Cloud"
+            },
+            "COMPLIANCE_THRESHOLD": {
+                "type": "string",
+                "description": "Sets the the minimal severity compliance issue that returns a fail exit code",
+                "enum": [ 
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
+            },
+            "VULNERABILITY_THRESHOLD": {
+                "type": "string",
+                "description": "Sets the minimal severity vulnerability that returns a fail exit code",
+                "enum": [ 
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: prisma-cloud
+      image: codefreshplugins/cfstep-prisma-cloud:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

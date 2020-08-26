@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: dustinvanbuskirk/prisma-cloud
-  version: 0.0.1
+  name: prisma-cloud
+  version: 1.0.0
   isPublic: true
   description: Execute Prisma Clud image scan as build step
   sources:
@@ -13,19 +13,20 @@ metadata:
       email: dustin@codefresh.io
   categories:
     - security
-  official: false
-  tags: []
+  official: true
   icon:
     type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/prisma-cloud/icon.png
+    background: "#f4f4f4"
     size:
       large:
         url: >-
-          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/prisma-cloud/icon.png
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/prisma-cloud/icon.png
   examples:
-    - description: example-1
+    - description: scan-with-thresholds
       workflow:
         PrismaCloudImageScan:
-          type: dustinvanbuskirk/prisma-cloud
+          type: prisma-cloud
           arguments:
             IMAGE_NAME: name
             IMAGE_TAG: "tag"
@@ -36,6 +37,18 @@ metadata:
             REGISTRY: registry
             COMPLIANCE_THRESHOLD: level
             VULNERABILITY_THRESHOLD: level
+    - description: scan-with-policies
+      workflow:
+        PrismaCloudImageScan:
+          type: prisma-cloud
+          arguments:
+            IMAGE_NAME: name
+            IMAGE_TAG: "tag"
+            PC_HOSTNAME: hostname
+            PC_PORT: "port"
+            PC_USERNAME: username
+            PC_PASSWORD: "password"
+            REGISTRY: registry
 spec:
   arguments: |-
     {
@@ -89,18 +102,30 @@ spec:
             },
             "COMPLIANCE_THRESHOLD": {
                 "type": "string",
-                "description": "[ low, medium, high, critical ] sets the the minimal severity compliance issue that returns a fail exit code"
+                "description": "Sets the the minimal severity compliance issue that returns a fail exit code",
+                "enum": [ 
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
             },
             "VULNERABILITY_THRESHOLD": {
                 "type": "string",
-                "description": "[ low, medium, high, critical ] sets the minimal severity vulnerability that returns a fail exit code"
+                "description": "Sets the minimal severity vulnerability that returns a fail exit code",
+                "enum": [ 
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
             }
         }
     }
   stepsTemplate: |-
     main:
-      name: dustinvanbuskirk/prisma-cloud
-      image: codefreshplugins/cfstep-prisma-cloud:alpha
+      name: prisma-cloud
+      image: codefreshplugins/cfstep-prisma-cloud:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

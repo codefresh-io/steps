@@ -1,16 +1,25 @@
 version: '1.0'
-
 steps:
-  buildimage:
+  Clone:
+    title: Cloning jira issue comment repository
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
+  BuildImage:
+    title: Building Docker Image
     type: build
-    description: image build step
-    dockerfile: Dockerfile
+    working_directory: "./steps/incubating/prisma-cloud"
+    dockerfile: "Dockerfile"
     image_name: codefreshplugins/cfstep-prisma-cloud
-  push_image:
+  PushingToRegistry:
     type: push
-    candidate: ${{buildimage}}
-    tag: "latest"
+    title: Pushing To Dockerhub Registry
+    registry: dockerhub
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "1.0.0" ]
     when:
       branch:
         only:
-          - master
+        - master

@@ -41,6 +41,9 @@ fi
 
 REPORT_NAME=$(echo ''$IMAGE_NAME:$IMAGE_TAG | tr /: _)
 curl -X GET -ks -u $PC_USERNAME:$PC_PASSWORD -G $PC_PROTOCOL://$PC_HOSTNAME:$PC_PORT/api/v1/registry -d search=$IMAGE_NAME:$IMAGE_TAG -d limit=1 -o TL_report_$REPORT_NAME.json
+
+jq . /codefresh/volume/TL_report_$REPORT_NAME.json 
+
 msg "Report Downloaded to $(pwd)/TL_report_$REPORT_NAME.json"
 
 COMPLIANCE_RISK_SCORE=$(cat TL_report_$REPORT_NAME.json | jq ".[0].complianceRiskScore")
@@ -53,49 +56,85 @@ msg "Count of Compliance Violations: $COMPLIANCE_VULNERABILITIES_CNT"
 msg "CVE Vulnerability Risk Score: $VULNERABILITY_RISK_SCORE"
 msg "Count of CVE Vulnerabilties: $CVE_VULNERABILITIES_CNT"
 
-case $COMPLIANCE_THRESHOLD in
-     low)      
-          COMPLIANCE_THRESHOLD=1
-          ;;
-     medium)      
-          COMPLIANCE_THRESHOLD=10
-          ;;
-     high)
-          COMPLIANCE_THRESHOLD=100
-          ;; 
-     critical)
-          COMPLIANCE_THRESHOLD=1000
-          ;;
-     *)
-          echo COMPLIANCE_THRESHOLD must be low|medium|high|critical
-          ;;
-esac
-
-case $VULNERABILITY_THRESHOLD in
-     low)      
-          VULNERABILITY_THRESHOLD=1
-          ;;
-     medium)      
-          VULNERABILITY_THRESHOLD=10
-          ;;
-     high)
-          VULNERABILITY_THRESHOLD=100
-          ;; 
-     critical)
-          VULNERABILITY_THRESHOLD=1000
-          ;;
-     *)
-          echo VULNERABILITY_THRESHOLD must be low|medium|high|critical
-          ;;
-esac
-
-if [ $COMPLIANCE_RISK_SCORE -ge $COMPLIANCE_THRESHOLD ]; then 
-  err "COMPLIANCE_THRESHOLD ($COMPLIANCE_THRESHOLD) EXEECED => $COMPLIANCE_VULNERABILITIES_CNT issue(s) found. COMPLIANCE_RISK_SCORE = $COMPLIANCE_RISK_SCORE (lower is better)"
-else
-  msg "COMPLIANCE CHECK => PASSED"
+if [[ ! -z $COMPLIANCE_THRESHOLD ]]; then
+  case $COMPLIANCE_THRESHOLD in
+      low)      
+            COMPLIANCE_THRESHOLD=1
+            ;;
+      medium)      
+            COMPLIANCE_THRESHOLD=10
+            ;;
+      high)
+            COMPLIANCE_THRESHOLD=100
+            ;; 
+      critical)
+            COMPLIANCE_THRESHOLD=1000
+            ;;
+      *)
+            echo COMPLIANCE_THRESHOLD must be low|medium|high|critical
+            ;;
+  esac
 fi
-if [ $VULNERABILITY_RISK_SCORE -ge $VULNERABILITY_THRESHOLD ]; then 
-  err "VULNERABILITY_THRESHOLD ($VULNERABILITY_THRESHOLD) EXEECED => $CVE_VULNERABILITIES_CNT issue(s) found. VULNERABILITY_RISK_SCORE = $VULNERABILITY_RISK_SCORE (lower is better)"
-else 
-  msg "CVEVULNERABILITY CHECK => PASSED"
+
+if [[ ! -z $VULNERABILITY_THRESHOLD ]]; then
+  case $VULNERABILITY_THRESHOLD in
+      low)      
+            VULNERABILITY_THRESHOLD=1
+            ;;
+      medium)      
+            VULNERABILITY_THRESHOLD=10
+            ;;
+      high)
+            VULNERABILITY_THRESHOLD=100
+            ;; 
+      critical)
+            VULNERABILITY_THRESHOLD=1000
+            ;;
+      *)
+            echo VULNERABILITY_THRESHOLD must be low|medium|high|critical
+            ;;
+  esac
+fi
+
+IMAGE=$(echo $IMAGE_NAME | awk '{print $NF}' FS=/)
+
+PRISMA_CLOUD_REPORT_URL="$PC_PROTOCOL://$PC_HOSTNAME:$PC_PORT/#!/monitor/vulnerabilities/images/registries?search=$IMAGE:$IMAGE_TAG"
+
+echo "PRISMA_CLOUD_REPORT_URL: $PRISMA_CLOUD_REPORT_URL"
+
+curl --location --request POST 'https://g.codefresh.io/api/annotations' \
+--header "Authorization: Bearer $CF_API_KEY" \
+--header 'Content-Type: application/json' \
+--data-raw "{
+    \"entityId\": \"$CF_BUILD_ID\",
+    \"entityType\": \"build\",
+    \"key\": \"prisma_cloud_report\",
+    \"value\": \"$PRISMA_CLOUD_REPORT_URL\"
+}"
+
+IMAGE_ID=$(codefresh get images --image-name $IMAGE --tag $IMAGE_TAG --sc id | sed -n '2 p')
+
+curl --location --request POST 'https://g.codefresh.io/api/annotations' \
+--header "Authorization: Bearer $CF_API_KEY" \
+--header 'Content-Type: application/json' \
+--data-raw "{
+    \"entityId\": \"$IMAGE_ID\",
+    \"entityType\": \"image\",
+    \"key\": \"prisma_cloud_report\",
+    \"value\": \"$PRISMA_CLOUD_REPORT_URL\"
+}"
+
+if [[ ! -z $COMPLIANCE_THRESHOLD ]]; then
+  if [ $COMPLIANCE_RISK_SCORE -ge $COMPLIANCE_THRESHOLD ]; then 
+    err "COMPLIANCE_THRESHOLD ($COMPLIANCE_THRESHOLD) EXEECED => $COMPLIANCE_VULNERABILITIES_CNT issue(s) found. COMPLIANCE_RISK_SCORE = $COMPLIANCE_RISK_SCORE (lower is better)"
+  else
+    msg "COMPLIANCE CHECK => PASSED"
+  fi
+fi
+  if [[ ! -z $VULNERABILITY_THRESHOLD ]]; then
+  if [ $VULNERABILITY_RISK_SCORE -ge $VULNERABILITY_THRESHOLD ]; then 
+    err "VULNERABILITY_THRESHOLD ($VULNERABILITY_THRESHOLD) EXEECED => $CVE_VULNERABILITIES_CNT issue(s) found. VULNERABILITY_RISK_SCORE = $VULNERABILITY_RISK_SCORE (lower is better)"
+  else 
+    msg "CVEVULNERABILITY CHECK => PASSED"
+  fi
 fi

@@ -193,6 +193,8 @@ def get_secrets(client, current_environment, secrets, path_set):
 
 def format_secrets(retrieved_secrets, new_line_replacement_string):
     for current_secret in retrieved_secrets:
+        if isinstance(current_secret.secret_value, dict):
+            current_secret.secret_value = json.dumps(current_secret.secret_value)
         if new_line_replacement_string == "":
             current_secret.secret_value = current_secret.secret_value.replace("\n", "\\n")
         elif new_line_replacement_string.upper() == "SPACE":

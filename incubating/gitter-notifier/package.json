@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.5.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },

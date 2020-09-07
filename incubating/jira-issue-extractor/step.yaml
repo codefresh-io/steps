@@ -102,7 +102,4 @@ spec:
           - JIRA_EMAIL=${{JIRA_EMAIL}}
           - JIRA_API_TOKEN=${{JIRA_API_TOKEN}}
           - IMAGE=${{IMAGE}}
-    link:
-      image: alpine
-      commands:
-        - cf_export link_CF_OUTPUT_URL=$CF_CURRENT_JIRA_LINK
+          - LINK_VAR_NAME=main_CF_OUTPUT_URL

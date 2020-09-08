@@ -103,3 +103,4 @@ spec:
           - JIRA_API_TOKEN=${{JIRA_API_TOKEN}}
           - IMAGE=${{IMAGE}}
           - LINK_VAR_NAME=main_CF_OUTPUT_URL
+          - CF_VOLUME_PATH=/meta

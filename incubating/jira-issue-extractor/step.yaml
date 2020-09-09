@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.0.6
+  version: 1.0.7
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -102,3 +102,5 @@ spec:
           - JIRA_EMAIL=${{JIRA_EMAIL}}
           - JIRA_API_TOKEN=${{JIRA_API_TOKEN}}
           - IMAGE=${{IMAGE}}
+          - LINK_VAR_NAME=main_CF_OUTPUT_URL
+          - CF_VOLUME_PATH=/meta

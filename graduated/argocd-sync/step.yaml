@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.3.2
+  version: 1.3.3
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -106,7 +106,7 @@ spec:
     sendArgoMetadata:
       title: "SendArgoMetadata"
       fail_fast: false
-      image: "codefresh/cf-argo-plugin:0.0.5"
+      image: "codefresh/cf-argo-plugin:0.0.6"
       commands:
         - echo $CF_PIPELINE_NAME
-        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME
+        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID

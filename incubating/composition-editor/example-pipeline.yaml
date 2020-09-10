@@ -1,0 +1,77 @@
+version: 1.0
+
+stages:
+  - clone
+  - build
+  - conform
+  - test
+
+steps:
+  Clone:
+    title: Cloning Repository...
+    type: git-clone
+    repo: https://github.com/dockersamples/example-voting-app
+    revision: master
+    git: github
+    stage: clone  
+  BuildingMicroServices:
+    type: parallel
+    steps:
+      BuildResultImage:
+        title: Building Result Image
+        type: build
+        image_name: example-voting-app/result
+        working_directory: ./${{CF_REPO_NAME}}/result/
+        dockerfile: Dockerfile
+        tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      BuildVoteImage:
+        title: Building Vote Image
+        type: build
+        image_name: vote
+        working_directory: ./${{CF_REPO_NAME}}/vote/
+        dockerfile: Dockerfile
+        tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      BuildWorkerImage:
+        title: Building Worker Image
+        type: build
+        image_name: worker
+        working_directory: ./${{CF_REPO_NAME}}/worker/
+        dockerfile: Dockerfile
+        tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+    stage: build
+  EditComposition:
+    title: Modifying Composition...
+    type: codefreshdemo/composition-editor
+    arguments:
+      DIRECTORY: /codefresh/volume/${{CF_REPO_NAME}}
+      YAMLFILE: docker-compose.yml
+      CONFORM_COMPOSITION: true
+      KEY_SETS:
+        - build;image
+      KEYVALUE_PAIRS:
+        - services.result.image=${{BuildResultImage}}
+        - services.vote.image=${{BuildVoteImage}}
+        - services.worker.image=${{BuildWorkerImage}}
+    stage: conform
+    fail_fast: false
+  ConfirmCompositionEdit:
+    title: Displaying Updated Composition...
+    image: alpine
+    working_directory: ${{Clone}}
+    commands:
+      - cat docker-compose.yml
+      - echo $COMPOSITION_MODIFIED
+    stage: test
+  RunIntegrationTests:
+    title: Running Integration Test with Modified Composition...
+    image: alpine
+    working_directory: ${{Clone}}
+    commands:
+      - 'echo start testing my app'
+    services:
+      composition: ${{CF_REPO_NAME}}/docker-compose.yml
+    stage: test
+    when:
+      condition:
+        any:
+          compositionModified: "'${{COMPOSITION_MODIFIED}}' == 'true'"

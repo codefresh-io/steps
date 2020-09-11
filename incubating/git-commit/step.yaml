@@ -65,7 +65,7 @@ spec:
           },
           "git_user_name": {
               "type": "string",
-              "description":"The username from which the commit comes from"
+              "description":"The username the commit comes from"
           },
           "git_user_email": {
               "type": "string",

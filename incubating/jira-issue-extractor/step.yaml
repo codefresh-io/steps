@@ -72,7 +72,7 @@ spec:
             },
             "JIRA_HOST": {
                 "type": "string",
-                "description": "jira host, should be without protocol and / in the end",
+                "description": "Jira host, should be without protocol and / in the end",
                 "examples": ["codefresh-io.atlassian.net"]
             },
             "JIRA_EMAIL": {
@@ -85,7 +85,7 @@ spec:
             },
             "IMAGE": {
                "type": "string",
-               "description": "your image to which you want assign issues",
+               "description": "Your image to which you want assign issues",
                "examples": ["gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"]
             }
         }

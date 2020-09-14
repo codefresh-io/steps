@@ -40,27 +40,27 @@ spec:
       "properties": {
           "host": {
             "type": "string",
-            "description": "Host for argo integration, examlple https://argo, will use only when context not provided!",
+            "description": "Host for argo integration, examlple https://argo. Used only when context is not provided!",
             "default": ""
           },
           "username": {
             "type": "string",
-            "description": "Username of argo integration, will use only when context not provided!",
+            "description": "Username of argo integration. Used only when context is not provided!",
             "default": ""
           },
           "password": {
             "type": "string",
-            "description": "Password of argo integration, will use only when context not provided!",
+            "description": "Password of argo integration. Used only when context is not provided!",
             "default": ""
           },
           "context": {
             "type": "string",
-            "description": "Name of context with argo cd from integration, will use only, when argo credentials not provided",
+            "description": "Name of argocd context from integrations",
             "default": ""
           },
           "app_name": {
               "type": "string",
-              "description": "The argocd application that will be synced"
+              "description": "The argocd application to be synced"
           },
           "sync": {
               "type": "boolean",

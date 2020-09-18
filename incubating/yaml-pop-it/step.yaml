@@ -1,0 +1,58 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/yaml-pop-it
+  version: 1.0.0
+  isPublic: false
+  description: Pop Variables into ConfigMap and Secrets YAML files
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-pop-it
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: pop-variables-to-yaml
+      workflow:
+        ConformCompositionYAML:
+          type: codefreshdemo/yaml-pop-it
+          arguments:
+            DIRECTORY: /codefresh/volume/myrepo/manifests
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [],
+      "properties": {
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "description": "Working Directory where output files will be sent.",
+          "default": "/codefresh/volume"
+        },
+        "TEMPLATES_DIRECTORY": {
+          "type": "string",
+          "description": "Directory for ConfigMap and Secrets Templates."
+        }
+      }
+    }
+  stepsTemplate: |-
+    yaml-pop-it:
+      name: yaml-pop-it
+      image: codefreshplugins/yaml-pop-itr:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /yaml-pop-it.py
+  delimiters:
+    left: '[['
+    right: ']]'

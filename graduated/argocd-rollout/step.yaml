@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.1.9
+  version: 1.1.10
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:
@@ -43,27 +43,27 @@ spec:
       "properties": {
           "host": {
             "type": "string",
-            "description": "Host for argo integration, examlple https://argo, will use only when context not provided!",
+            "description": "Host for argo integration, examlple https://argo. Used only when context is not provided!",
             "default": ""
           },
           "username": {
             "type": "string",
-            "description": "Username of argo integration, will use only when context not provided!",
+            "description": "Username of argo integration. Used only when context is not provided!",
             "default": ""
           },
           "password": {
             "type": "string",
-            "description": "Password of argo integration, will use only when context not provided!",
+            "description": "Password of argo integration. Used only when context is not provided!",
             "default": ""
           },
           "context": {
             "type": "string",
-            "description": "Name of context with argo cd from integration, will use only, when argo credentials not provided",
+            "description": "Name of argocd context from integrations",
             "default": ""
           },
           "app_name": {
               "type": "string",
-              "description": "The argocd application that will be synced"
+              "description": "The argocd application to be synced"
           },
           "wait_healthy": {
               "type": "boolean",
@@ -72,7 +72,7 @@ spec:
           },
           "k8s_context": {
               "type": "string",
-              "description": "The name of the rollout to be promoted"
+              "description": "Kubernetes context"
           },
           "rollout_name": {
               "type": "string",
@@ -80,7 +80,7 @@ spec:
           },
           "rollout_namespace": {
               "type": "string",
-              "description": "The namespace of the rollout to be promoted",
+              "description": "The namespace of the rollout",
               "default": "default"
           }
       }

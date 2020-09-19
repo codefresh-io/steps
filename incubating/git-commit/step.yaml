@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -65,7 +65,7 @@ spec:
           },
           "git_user_name": {
               "type": "string",
-              "description":"The username from which the commit comes from"
+              "description":"The username the commit comes from"
           },
           "git_user_email": {
               "type": "string",

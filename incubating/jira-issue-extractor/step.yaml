@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.0.7
+  version: 1.0.8
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -72,7 +72,7 @@ spec:
             },
             "JIRA_HOST": {
                 "type": "string",
-                "description": "jira host, should be without protocol and / in the end",
+                "description": "Jira host, should be without protocol and / in the end",
                 "examples": ["codefresh-io.atlassian.net"]
             },
             "JIRA_EMAIL": {
@@ -85,7 +85,7 @@ spec:
             },
             "IMAGE": {
                "type": "string",
-               "description": "your image to which you want assign issues",
+               "description": "Your image to which you want assign issues",
                "examples": ["gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"]
             }
         }

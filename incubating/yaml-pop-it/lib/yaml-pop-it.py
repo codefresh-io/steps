@@ -5,7 +5,10 @@ import sys
 import requests
 import re
 import in_place
+from google.oauth2 import service_account
 from google.cloud import secretmanager
+from google.protobuf.json_format import MessageToDict
+
 
 # Add key value to dict
 def append_to_dictionary(target_dict, key, value):
@@ -49,6 +52,32 @@ def get_shared_config(cf_api_key, context_name, decrypt):
     return response_dict
 
 
+def add_google_kms_secrets_to_dicts(secrets, secrets_env_dict, secrets_name, credentials, project_id):
+
+    # Create the Secret Manager client.
+    client = secretmanager.SecretManagerServiceClient(credentials=credentials)
+
+    # Get Secrets from Project
+    parent = f"projects/{project_id}"
+
+    response = client.list_secrets(request={"parent": parent})
+
+    my_dict = MessageToDict(response._pb, preserving_proto_field_name=True)
+
+    # Search secrets for correct label
+
+    for secret in my_dict['secrets']:
+        if 'test-api-secret' in secret['labels']['secret-name']:
+            version = '{}/versions/latest'.format(secret['name'])
+            response = client.access_secret_version(name=version)
+            secret_value = response.payload.data.decode('UTF-8')
+            secret_name = secret['name'].split('/', 3)[3]
+            append_to_dictionary(secrets, secret_name, secret_value)
+            append_to_dictionary_array(secrets_env_dict, secret_name, secrets_name, 'secretKeyRef')
+    
+    return secrets, secrets_env_dict
+
+
 def main():
 
     cf_api_key = os.getenv('CF_API_KEY')
@@ -57,12 +86,15 @@ def main():
     cf_build_timestamp = os.getenv('CF_BUILD_TIMESTAMP')
     cf_build_url = os.getenv('CF_BUILD_URL')
     cf_pipeline_name = os.getenv('CF_PIPELINE_NAME')
+    google_project_name = os.getenv('GOOGLE_PROJECT_NAME')
+    google_sa_json_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
     working_directory = os.getenv('WORKING_DIRECTORY', '.')
     templates_directory = os.getenv('TEMPLATES_DIRECTORY', './templates')
     deployment_file = os.getenv('DEPLOYMENT_FILE', 'deployment.yaml')
     config_yaml_path = os.path.join(templates_directory, 'configmap.yaml')
     secrets_yaml_path = os.path.join(templates_directory, 'secrets.yaml')
     service_name =  os.getenv('SERVICE_NAME')
+
 
     # Import variables from environment
 
@@ -119,6 +151,14 @@ def main():
         for key in secret_items['spec']['data']:
             append_to_dictionary(secrets, key, secret_items['spec']['data'][key])
             append_to_dictionary_array(secrets_env_dict, key, secrets_name, 'secretKeyRef')
+
+    # Get Secrets from Google KMS
+
+    if google_project_name:
+        print('Fetching Secrets from Google Secret Manager...')
+        google_credentials = service_account.Credentials.from_service_account_file(google_sa_json_path)
+        add_google_kms_secrets_to_dicts(secrets, secrets_env_dict, secrets_name, google_credentials, google_project_name)
+
 
     # Open YAML file for editing
     with open(config_yaml_path) as f:

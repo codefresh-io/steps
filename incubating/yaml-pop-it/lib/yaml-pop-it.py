@@ -88,7 +88,7 @@ def main():
     google_project_name = os.getenv('GOOGLE_PROJECT_NAME')
     google_sa_json_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
     working_directory = os.getenv('WORKING_DIRECTORY', '.')
-    templates_directory = os.getenv('TEMPLATES_DIRECTORY', './templates')
+    templates_directory = os.getenv('TEMPLATES_DIRECTORY', '/templates')
     deployment_file = os.getenv('DEPLOYMENT_FILE', 'deployment.yaml')
     config_yaml_path = os.path.join(templates_directory, 'configmap.yaml')
     secrets_yaml_path = os.path.join(templates_directory, 'secrets.yaml')
@@ -183,10 +183,10 @@ def main():
     secrets_dict['metadata'] = dict_metadata
 
     # # Write ConfigMap file
-    write_file(os.path.join(working_directory, 'configmap-0.yaml'), configmap_dict)
+    write_file(os.path.join(working_directory, '{}-configmap-{}.yaml'.format(service_name, cf_build_number)), configmap_dict)
 
     # # Write Secrets file
-    write_file(os.path.join(working_directory, 'secrets-0.yaml'), secrets_dict)
+    write_file(os.path.join(working_directory, '{}-secrets-{}.yaml'.format(service_name, cf_build_number)), secrets_dict)
 
     # Edit Deployment YAML with new names for ConfigMap and Secret
     deployment_dict['spec']['template']['spec']['containers'][0]['envFrom'] = []
@@ -202,10 +202,10 @@ def main():
         elif 'secret' in volume:
             volume['secret']['secretName'] = secrets_name
 
-    write_file(os.path.join(working_directory, 'deployment-{}.yaml'.format(cf_build_number)), deployment_dict)
+    write_file(os.path.join(working_directory, '{}-deployment-{}.yaml'.format(service_name, cf_build_number)), deployment_dict)
 
     # Interpolate remaining variales in new deployment.yaml file
-    with in_place.InPlace(os.path.join(working_directory, 'deployment-{}.yaml'.format(cf_build_number))) as f:
+    with in_place.InPlace(os.path.join(working_directory, '{}-deployment-{}.yaml'.format(service_name, cf_build_number))) as f:
         for line in f:
             existing_value = re.findall(regex, line)
             if len(existing_value):

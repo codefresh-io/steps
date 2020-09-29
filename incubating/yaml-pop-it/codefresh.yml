@@ -19,7 +19,7 @@ steps:
     title: Pushing To Docker Hub Registry...
     registry: dockerhub
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.0" ]
+    tags: [ "latest", "1.0.1" ]
     when:
       branch:
         only:

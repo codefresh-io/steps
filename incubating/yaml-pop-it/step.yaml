@@ -1,10 +1,10 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/yaml-pop-it
-  version: 1.0.0
+  name: yaml-pop-it
+  version: 1.0.1
   isPublic: false
-  description: Pop Variables into ConfigMap and Secrets YAML files
+  description: Interpolation variables into manifests.  To interpolate variables inplace upper case the variable name and replace '-' with '_'.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-pop-it
   stage: incubating
@@ -18,35 +18,68 @@ metadata:
   examples:
     - description: pop-variables-to-yaml
       workflow:
-        ConformCompositionYAML:
-          type: codefreshdemo/yaml-pop-it
-          arguments:
-            DIRECTORY: /codefresh/volume/myrepo/manifests
+          prepare_credentials:
+            title: Writing sa.json...
+            image: alpine
+            commands:
+              - echo "${{BASE64_SA_JSON}}" | base64 -d > sa.json
+          rev_pipeline:
+            title: Revving build number...
+            type: bump-build-number
+            stage: "prepare deployment"
+          prepare_deployment:
+            title: Preparing deployment manifests...
+            type: codefreshdemo/yaml-pop-it
+            arguments:
+              APP_NAME: app-name
+              CF_BUILD_NUMBER: ${{CF_BUILD_NUMBER}}
+              DEPLOYMENT_FILE: ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/deployment.yaml
+              DOCKER_IMAGE_NAME: docker-image-name
+              GOOGLE_APPLICATION_CREDENTIALS: sa.json
+              GOOGLE_PROJECT_NAME: gcp-project-name
+              SERVICE_NAME: service-name
+              WORKING_DIRECTORY: ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
 spec:
   arguments: |-
     {
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "patterns": [],
       "required": [],
       "properties": {
-        "WORKING_DIRECTORY": {
+        "DEPLOYMENT_FILE": {
           "type": "string",
-          "description": "Working Directory where output files will be sent.",
-          "default": "/codefresh/volume"
+          "description": "Deployment file name."
+        },
+        "GOOGLE_APPLICATION_CREDENTIALS": {
+          "type": "string",
+          "description": "Path to Google SA credentials json, including file name."
+        },
+        "GOOGLE_PROJECT_NAME": {
+          "type": "string",
+          "description": "Google Project Name."
+        },
+        "SERVICE_NAME": {
+          "type": "string",
+          "description": "Name of Service to be deployed."
         },
         "TEMPLATES_DIRECTORY": {
           "type": "string",
           "description": "Directory for ConfigMap and Secrets Templates."
+        },
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "description": "Working Directory where output files will be sent.",
+          "default": "/codefresh/volume"
         }
       }
     }
   stepsTemplate: |-
     yaml-pop-it:
       name: yaml-pop-it
-      image: codefreshplugins/yaml-pop-itr:1.0.0
+      image: codefreshplugins/yaml-pop-it:1.0.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -8,10 +8,14 @@ import in_place
 from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.protobuf.json_format import MessageToDict
+import base64
 
 
-def append_to_dictionary(target_dict, key, value):
-    target_dict[key] = value
+def append_to_dictionary(target_dict, key, value, secret):
+    if secret:
+        target_dict[key] = base64.b64encode(bytes(value, 'utf-8')).decode("utf-8")
+    else:
+        target_dict[key] = value
     
     return target_dict
 
@@ -52,7 +56,7 @@ def get_shared_config(cf_api_key, context_name, decrypt):
     return response_dict
 
 
-def add_google_kms_secrets_to_dicts(secrets, secrets_env_dict, secrets_name, credentials, project_id):
+def add_google_kms_secrets_to_dicts(secrets, secrets_env_dict, secrets_name, credentials, project_id, key, value):
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient(credentials=credentials)
@@ -66,13 +70,14 @@ def add_google_kms_secrets_to_dicts(secrets, secrets_env_dict, secrets_name, cre
 
     # Search secrets for correct label
     for secret in my_dict['secrets']:
-        if 'test-api-secret' in secret['labels']['secret-name']:
-            version = '{}/versions/latest'.format(secret['name'])
-            response = client.access_secret_version(name=version)
-            secret_value = response.payload.data.decode('UTF-8')
-            secret_name = secret['name'].split('/', 3)[3]
-            append_to_dictionary(secrets, secret_name, secret_value)
-            append_to_dictionary_array(secrets_env_dict, secret_name, secrets_name, 'secretKeyRef')
+        if key in secret['labels']:
+            if value in secret['labels'][key]:
+                version = '{}/versions/latest'.format(secret['name'])
+                response = client.access_secret_version(name=version)
+                secret_value = response.payload.data.decode('UTF-8')
+                secret_name = secret['name'].split('/', 3)[3]
+                append_to_dictionary(secrets, secret_name, secret_value, True)
+                append_to_dictionary_array(secrets_env_dict, secret_name, secrets_name, 'secretKeyRef')
     
     return secrets, secrets_env_dict
 
@@ -93,7 +98,8 @@ def main():
     config_yaml_path = os.path.join(templates_directory, 'configmap.yaml')
     secrets_yaml_path = os.path.join(templates_directory, 'secrets.yaml')
     service_name =  os.getenv('SERVICE_NAME')
-
+    google_label_key = os.getenv('GOOGLE_LABEL_KEY', 'secret-name')
+    google_label_value = os.getenv('GOOGLE_LABEL_VALUE')
 
     # Import variables from environment
     variables = os.environ
@@ -127,10 +133,10 @@ def main():
     for variable in variables:
         if variable.startswith('POP_CONFIG'):
             print('Importing ConfigMap Pop: {}'.format(variable.split('_',2)[-1]))
-            append_to_dictionary(configmap, variable.split('_',2)[-1], os.environ[variable])
+            append_to_dictionary(configmap, variable.split('_',2)[-1], os.environ[variable], False)
         elif variable.startswith('POP_SECRET'):
             print('Importing Secret Pop: {}'.format(variable.split('_',2)[-1]))
-            append_to_dictionary(secrets, variable.split('_',2)[-1], os.environ[variable])
+            append_to_dictionary(secrets, variable.split('_',2)[-1], os.environ[variable], True)
             append_to_dictionary_array(deployment_dict, variable.split('_',2)[-1], secrets_name, 'secretKeyRef')
 
     # Get Shared Configs and append to dictionaries
@@ -139,17 +145,23 @@ def main():
 
     if config_items:
         for key in config_items['spec']['data']:
-            append_to_dictionary(configmap, key, config_items['spec']['data'][key])
+            append_to_dictionary(configmap, key, config_items['spec']['data'][key], False)
     if secret_items:
-        for key in secret_items['spec']['data']:
-            append_to_dictionary(secrets, key, secret_items['spec']['data'][key])
-            append_to_dictionary_array(deployment_dict, key, secrets_name, 'secretKeyRef')
+        try: 
+            for key in secret_items['spec']['data']:
+                append_to_dictionary(secrets, key, secret_items['spec']['data'][key], True)
+                append_to_dictionary_array(deployment_dict, key, secrets_name, 'secretKeyRef')
+        except:
+            print('No Codefresh Shared Secrets Found.')
+            pass
 
     # Get Secrets from Google KMS
     if google_project_name:
-        print('Fetching Secrets from Google Secret Manager...')
+        if google_label_value is None:
+            google_label_value = secret_context.lower().replace('_', '-')
+        print('Fetching Secrets from Google Secret Manager for Label: {} Key: {}'.format(google_label_key, google_label_value))
         google_credentials = service_account.Credentials.from_service_account_file(google_sa_json_path)
-        add_google_kms_secrets_to_dicts(secrets, deployment_dict, secrets_name, google_credentials, google_project_name)
+        add_google_kms_secrets_to_dicts(secrets, deployment_dict, secrets_name, google_credentials, google_project_name, google_label_key, google_label_value)
 
     # Open YAML file for editing
     with open(config_yaml_path) as f:
@@ -162,13 +174,13 @@ def main():
     secrets_dict['data'] = secrets
 
     # Rename ConfigMap
-    configmap_dict['name'] = configmap_name
+    configmap_dict['metadata']['name'] = configmap_name
 
     # Rename Secrets
-    secrets_dict['name'] = secrets_name
+    secrets_dict['metadata']['name'] = secrets_name
 
-    # Define metadata
-    dict_metadata = {
+    # Define annotations
+    dict_annotations = {
         'codefresh.io/build': cf_build_id, 
         'codefresh.io/pipeline': cf_pipeline_name,
         'codefresh.io/revision': cf_build_number,
@@ -177,10 +189,10 @@ def main():
         }
 
     # Update ConfigMap metadata
-    configmap_dict['metadata'] = dict_metadata
+    configmap_dict['metadata']['annotations'] = dict_annotations
 
     # Update Secrets metadata
-    secrets_dict['metadata'] = dict_metadata
+    secrets_dict['metadata']['annotations'] = dict_annotations
 
     # # Write ConfigMap file
     write_file(os.path.join(working_directory, '{}-configmap-{}.yaml'.format(service_name, cf_build_number)), configmap_dict)
@@ -192,8 +204,8 @@ def main():
     deployment_dict['spec']['template']['spec']['containers'][0]['envFrom'] = []
     deployment_dict['spec']['template']['spec']['containers'][0]['envFrom'].append({
         'configMapRef':{
-                'name':  configmap_name
-            }
+            'name':  configmap_name
+        }
     })
 
     for volume in deployment_dict['spec']['template']['spec']['volumes']:

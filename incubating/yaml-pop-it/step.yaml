@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: yaml-pop-it
   version: 1.0.1
-  isPublic: false
+  isPublic: true
   description: Interpolation variables into manifests.  To interpolate variables inplace upper case the variable name and replace '-' with '_'.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-pop-it
@@ -56,6 +56,14 @@ spec:
         "GOOGLE_APPLICATION_CREDENTIALS": {
           "type": "string",
           "description": "Path to Google SA credentials json, including file name."
+        },
+        "GOOGLE_LABEL_KEY": {
+          "type": "string",
+          "description": "Label key to query Google Secret Manager."
+        },
+        "GOOGLE_LABEL_VALUE": {
+          "type": "string",
+          "description": "Label value to key to query Google Secret Manager."
         },
         "GOOGLE_PROJECT_NAME": {
           "type": "string",

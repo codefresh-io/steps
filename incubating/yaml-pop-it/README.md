@@ -89,7 +89,7 @@ steps:
 
   prepare_deployment:
     title: Preparing deployment manifests...
-    type: codefreshdemo/yaml-pop-it
+    type: yaml-pop-it
     arguments:
       APP_NAME: ${{APP_NAME}}
       CF_BUILD_NUMBER: ${{CF_BUILD_NUMBER}}

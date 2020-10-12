@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.7
+  version: 0.0.8
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -32,6 +32,11 @@ metadata:
             commit_message: 'Some commit message'
             git_user_name: 'git-user-name'
             git_user_email: 'git-user@email.com'
+            allow_empty: false
+            add:
+              - file1.txt
+              - file2.txt
+              - ./dir3
 
 spec:
   arguments: |
@@ -70,6 +75,19 @@ spec:
           "git_user_email": {
               "type": "string",
               "description": "Git user email"
+          },
+          "allow_empty": {
+              "type": "boolean",
+              "description": "Allow empty commit",
+              "default": false
+          },
+          "add": {
+              "type": ["string","array"],
+              "items": {
+                  "type": "string"
+              },
+              "description": "Add file contents to the git index",
+              "default": "."
           }
       }
     }
@@ -79,9 +97,14 @@ spec:
       image: codefresh/cli
       environment:
         - GIT_INTEGRATION_NAME=${{git}}
+        - ALLOW_EMPTY_BOOL=${{allow_empty}}
       commands:
         - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
+        - export ALLOW_EMPTY=$(if [[ $ALLOW_EMPTY_BOOL == true ]]; then echo '--allow-empty';fi)
+        - echo ALLOW_EMPTY=$ALLOW_EMPTY >> /meta/env_vars_to_export
+        - export ADD_FILES=$(echo ${{add}} | tr "," " ")
+        - echo ADD_FILES=$ADD_FILES >> /meta/env_vars_to_export
 
     commit_and_push:
       title: "Commit and push"
@@ -97,6 +120,7 @@ spec:
         - cd ${WORKING_DIRECTORY}
         - git config --global user.name ${GIT_USER_NAME}
         - git config --global user.email ${GIT_USER_EMAIL}
-        - git commit -a -m "${COMMIT_MESSAGE}"
+        - git add ${ADD_FILES}
+        - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
         - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git

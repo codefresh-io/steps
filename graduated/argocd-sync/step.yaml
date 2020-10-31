@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.7.0
+  version: 1.7.1
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -145,4 +145,4 @@ spec:
       image: "codefresh/cf-argo-plugin:0.0.8"
       fail_fast: false
       commands:
-        - cf-argo-plugin rollback ${{app_name}} --message $ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}
+        - cf-argo-plugin rollback ${{app_name}} --message=$ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}

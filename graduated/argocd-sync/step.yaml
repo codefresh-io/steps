@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.8.0
+  version: 1.8.1
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -100,6 +100,11 @@ spec:
                   "type": "string"
               },
               "description": "Additional flags for argocd command ( like --grpc-web, so on )",
+              "default": ""
+          },
+          "additional_flags_for_wait_cmd": {
+              "type": "string",
+              "description": "Additional flags for argocd app wait command ( like --grpc-web, so on )",
               "default": ""
           },
           "debug": {

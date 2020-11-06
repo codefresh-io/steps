@@ -122,7 +122,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "codefresh/cf-argo-plugin:0.1.0"
+      image: "codefresh/cf-argo-plugin:0.1.1"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
@@ -138,18 +138,18 @@ spec:
         - echo ARGOCD_OPTS=$ARGOCD_OPTS >> /meta/env_vars_to_export
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "codefresh/cf-argo-plugin:0.1.0"
+      image: "codefresh/cf-argo-plugin:0.1.1"
       commands:
         - /codefresh/volume/argo-executor
     sendArgoMetadata:
       title: "SendArgoMetadata"
       fail_fast: false
-      image: "codefresh/cf-argo-plugin:0.1.0"
+      image: "codefresh/cf-argo-plugin:0.1.1"
       commands:
         - echo $CF_PIPELINE_NAME
         - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID
     rollback:
       title: "Rollback"
-      image: "codefresh/cf-argo-plugin:0.1.0"
+      image: "codefresh/cf-argo-plugin:0.1.1"
       commands:
         - cf-argo-plugin rollback ${{app_name}} --code=$ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}

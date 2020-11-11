@@ -4,7 +4,7 @@ ENV LANG C.UTF-8
 
 RUN apk update && \
     apk upgrade && \
-    pip install --no-cache-dir hvac
+    pip install --no-cache-dir hvac google-api-python-client google-auth
 
 COPY script/. /
 

@@ -3,6 +3,10 @@ import os
 import sys
 import json
 import base64
+import time
+
+import googleapiclient.discovery
+from google.oauth2 import service_account as google_service_account
 
 from step_utility import StepUtility
 
@@ -15,6 +19,7 @@ class Secret:
 
 class Environment:
     def __init__(self, vault_addr, vault_auth_method, vault_token,
+        vault_role, vault_auth_creds_path,
         approle_role_id, approle_secret_id,
         vault_client_cert_base64, vault_client_key_base64,
         mount_point, vault_kv_version, new_line_replacement_string,
@@ -22,6 +27,8 @@ class Environment:
         self.vault_addr = vault_addr
         self.vault_auth_method = vault_auth_method
         self.vault_token = vault_token
+        self.vault_role = vault_role
+        self.vault_auth_creds_path = vault_auth_creds_path
         self.approle_role_id = approle_role_id
         self.approle_secret_id = approle_secret_id
         self.vault_client_cert_base64 = vault_client_cert_base64
@@ -47,6 +54,8 @@ def environment_setup():
     vault_addr = StepUtility.getEnvironmentVariable('VAULT_ADDR', env)
     vault_auth_method = StepUtility.getEnvironmentVariable('VAULT_AUTH_METHOD', env)
     vault_token = StepUtility.getEnvironmentVariable('VAULT_TOKEN', env)
+    vault_role = StepUtility.getEnvironmentVariable('VAULT_ROLE', env)
+    vault_auth_creds_path = StepUtility.getEnvironmentVariable('VAULT_AUTH_CREDS_PATH', env)
     approle_role_id = StepUtility.getEnvironmentVariable('APPROLE_ROLE_ID', env)
     approle_secret_id = StepUtility.getEnvironmentVariable('APPROLE_SECRET_ID', env)
     vault_client_cert_base64 = StepUtility.getEnvironmentVariable('VAULT_CLIENT_CERT_BASE64', env)
@@ -59,6 +68,8 @@ def environment_setup():
         vault_addr, 
         vault_auth_method, 
         vault_token,
+        vault_role,
+        vault_auth_creds_path,
         approle_role_id,
         approle_secret_id,
         vault_client_cert_base64,
@@ -123,6 +134,30 @@ def vault_authentication(current_environment):
             StepUtility.printCleanException(exc)
             StepUtility.printFail("Exiting Step - Failed to authenticate with Approle to Vault instance")
             sys.exit(1)
+    elif current_environment.vault_auth_method.upper() == "GCP":
+        with open(current_environment.vault_auth_creds_path, 'r') as f:
+            creds = json.load(f)
+            project = creds['project_id']
+            service_account = creds['client_email']
+
+        now = int(time.time())
+        expires = now + 900  # 15 mins in seconds
+        payload = {
+            'iat': now,
+            'exp': expires,
+            'sub': service_account,
+            'aud': f"vault/{current_environment.vault_role}"
+        }
+
+        credentials = google_service_account.Credentials \
+            .from_service_account_file(current_environment.vault_auth_creds_path)
+        iam = googleapiclient.discovery.build('iam', 'v1', credentials=credentials,
+                                              cache_discovery=False)
+        name = f'projects/{project}/serviceAccounts/{service_account}'
+        body = {'payload': json.dumps(payload)}
+        resp = iam.projects().serviceAccounts().signJwt(name=name, body=body).execute()
+        login = client.auth.gcp.login(current_environment.vault_role, resp['signedJwt'])
+        client.token = login['auth']['client_token']
     else:
         print("Authentication Mode not passed, defaulting to Token auth")
         client.token = current_environment.vault_token

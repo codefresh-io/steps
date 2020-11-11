@@ -46,6 +46,19 @@ metadata:
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
             SECRETS:
                 - EXPORT_NAME=path:secret
+    - description: GCP Authentication
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_AUTH_METHOD: 'GCP'
+            VAULT_ROLE: ${{VAULT_ROLE}}
+            VAULT_AUTH_CREDS_PATH: ${{VAULT_AUTH_CREDS_PATH}}
+            SECRETS:
+                - EXPORT_NAME=path:secret
     - description: Approle Authentication
       workflow:
         Vault_to_Env:
@@ -127,6 +140,14 @@ spec:
             "VAULT_TOKEN": {
                 "type": "string",
                 "description": "Vault authentication token (required)"
+            },
+            "VAULT_ROLE": {
+              "type": "string",
+              "description": "Vault role for authentication"
+            },
+            "VAULT_AUTH_CREDS_PATH": {
+                "type": "string",
+                "description": "Vault authentication credentials"
             },
             "APPROLE_ROLE_ID": {
               "type": "string",

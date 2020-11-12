@@ -13,7 +13,7 @@ steps:
   ...
   TestPlugin:
     title: TestPlugin
-    image: codefreshplugins/cf-webhook:latest
+    image: codefresh/webhook-plugin:latest
     environment: 
         - "WEBHOOK_URL=http://example.com/api/endpoint"
 ```
@@ -27,7 +27,7 @@ steps:
   ...
   TestPlugin:
     title: TestPlugin
-    image: codefreshplugins/cf-webhook:latest
+    image: codefresh/webhook-plugin:latest
     environment: 
         - "WEBHOOK_URL=http://example.com/api/endpoint"
         - "HEADER_Content-Type=plain/text"

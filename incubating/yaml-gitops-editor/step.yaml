@@ -1,0 +1,93 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: yaml-gitops-editor
+  version: 1.0.0
+  isPublic: true
+  description: Edit YAML files and commit to Version Control System
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-gitops-editor
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: edit-values-in-yaml-and-commit
+      workflow:
+        EditYAMLFile:
+          type: codefreshdemo/yaml-gitops-editor
+          arguments:
+            DIRECTORY: /codefresh/volume/myrepo
+            GIT_CONTEXT: github
+            YAMLFILE: mymanifest.yml
+            KEYVALUE_PAIRS:
+              - services.myservice.environment.VARNAME1=VARVALUE1
+              - services.myservice.environment.VARNAME2=VARVALUE2
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [],
+      "properties": {
+        "BRANCH": {
+          "type": "string",
+          "description": "Branch for commit."
+        },
+        "CREATE_PULL_REQUEST": {
+          "type": "boolean",
+          "description": "If true, creates a pull request to TARGET_BRANCH.",
+          "default": false
+        },
+        "DIRECTORY": {
+          "type": "string",
+          "description": "Directory of YAML file.",
+          "default": "/codefresh/volume"
+        },
+        "GIT_CONTEXT": {
+          "type": "string",
+          "description": "Name of GIT Context in Codefresh"
+        },
+        "KEYVALUE_PAIRS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The YAML hierarchy is delimited with '.'' characters"
+        },
+        "TARGET_BRANCH": {
+          "type": "string",
+          "description": "GIT branch to target for pull request."
+        },
+        "YAMLFILE": {
+          "type": "string",
+          "description": "Composition file name.",
+          "default": "docker-compose.yml"
+        }
+      }
+    }
+  stepsTemplate: |-
+    composition-editor:
+      name: yaml-gitops-editor
+      image: codefreshplugins/yaml-gitops-editor:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+      [[ range $arg := .Arguments.KEYVALUE_PAIRS ]]
+        - EDIT_OBJECT=value PAYLOAD='[[ $arg ]]' python3 /yaml-editor.py
+      [[- end ]]
+      [[ if .Arguments.GIT_CONTEXT ]]
+        - python3 /git-committer.py
+      [[- send]]
+  delimiters:
+    left: '[['
+    right: ']]'

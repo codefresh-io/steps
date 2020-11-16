@@ -1,0 +1,34 @@
+
+version: '1.0'
+steps:
+  Clone:
+    title: Cloning Repository
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
+
+  GettingPluginVersion:
+    title: Getting Plugin Version
+    image: codefresh/cli
+    commands:
+      - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/yaml-gitops-editor/step.yaml)
+      
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    working_directory: "./steps/incubating/yaml-gitops-editor"
+    dockerfile: "Dockerfile"
+    image_name: codefreshplugins/yaml-gitops-editor
+    
+  PushingToRegistry:
+    type: push
+    title: Pushing To Dockerhub Registry
+    registry: dockerhub
+    candidate: ${{BuildImage}}
+    tags: [ "${{PLUGIN_VERSION}}" ]
+    when:
+      branch:
+        only:
+        - master

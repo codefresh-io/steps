@@ -2,18 +2,6 @@ import os
 import yaml
 import sys
 
-def walkDict(dataDict, key, answer=None, sofar=None):
-    if sofar is None:
-        sofar = []
-    if answer is None:
-        answer = []
-    for k,v in dataDict.items():
-        if k == key:
-            answer.append(sofar + [k])
-        if isinstance(v, dict):
-            walkDict(v, key, answer, sofar+[k])
-    return answer
-
 
 def getFromDict(dataDict, mapList):
     for k in mapList: 
@@ -28,12 +16,11 @@ def setValueInDict(dataDict, mapList, value):
 
 
 def main():
-
     directory = os.getenv('CF_VOLUME_PATH')
+    payload = os.getenv('PAYLOAD')
     repository = os.getenv('CF_REPO_NAME')
     yaml_file = os.getenv('YAMLFILE')
-    payload = os.getenv('PAYLOAD')
-    yaml_path = os.path.join(directory, respository, yaml_file)
+    yaml_path = os.path.join(directory, repository, yaml_file)
 
     # Open YAML file for editing
     try:

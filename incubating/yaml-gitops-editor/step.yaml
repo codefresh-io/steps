@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: yaml-gitops-editor
+  name: codefreshdemo/yaml-gitops-editor
   version: 1.0.0
-  isPublic: true
+  isPublic: false
   description: Edit YAML files and commit to Version Control System
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-gitops-editor
@@ -21,7 +21,18 @@ metadata:
         EditYAMLFile:
           type: codefreshdemo/yaml-gitops-editor
           arguments:
-            DIRECTORY: /codefresh/volume/myrepo
+            GIT_CONTEXT: github
+            YAMLFILE: mymanifest.yml
+            KEYVALUE_PAIRS:
+              - services.myservice.environment.VARNAME1=VARVALUE1
+              - services.myservice.environment.VARNAME2=VARVALUE2
+    - description: edit-values-in-yaml-and-commit-open-github-pr
+      workflow:
+        EditYAMLFile:
+          type: codefreshdemo/yaml-gitops-editor
+          arguments:
+            CREATE_PULL_REQUEST: true
+            TARGET_BRANCH: main
             GIT_CONTEXT: github
             YAMLFILE: mymanifest.yml
             KEYVALUE_PAIRS:
@@ -37,23 +48,42 @@ spec:
       "patterns": [],
       "required": [],
       "properties": {
-        "BRANCH": {
+        "CF_BRANCH": {
           "type": "string",
           "description": "Branch for commit."
         },
         "CREATE_PULL_REQUEST": {
           "type": "boolean",
-          "description": "If true, creates a pull request to TARGET_BRANCH.",
-          "default": false
+          "description": "If true, creates a pull request in GitHub to TARGET_BRANCH."
         },
-        "DIRECTORY": {
+        "CF_API_KEY": {
           "type": "string",
-          "description": "Directory of YAML file.",
-          "default": "/codefresh/volume"
+          "description": "Codefresh API Key."
+        },
+        "CF_BUILD_ID": {
+          "type": "string",
+          "description": "Codefresh Build ID."
+        },
+        "CF_REPO_NAME": {
+          "type": "string",
+          "description": "GitHub repository name."
+        },
+        "CF_REPO_OWNER": {
+          "type": "string",
+          "description": "GitHub organization."
+        },
+        "CF_VOLUME_PATH": {
+          "type": "string",
+          "description": "Base volume path."
+        },
+        "CODEFRESH_URL": {
+          "type": "string",
+          "description": "Base volume path.",
+          "default": "https://g.codefresh.io"
         },
         "GIT_CONTEXT": {
           "type": "string",
-          "description": "Name of GIT Context in Codefresh"
+          "description": "Name of GIT context in Codefresh"
         },
         "KEYVALUE_PAIRS": {
           "type": "array",
@@ -76,7 +106,7 @@ spec:
   stepsTemplate: |-
     composition-editor:
       name: yaml-gitops-editor
-      image: codefreshplugins/yaml-gitops-editor:1.0.0
+      image: dustinvanbuskirk/yaml-gitops-editor:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -87,7 +117,7 @@ spec:
       [[- end ]]
       [[ if .Arguments.GIT_CONTEXT ]]
         - python3 /git-committer.py
-      [[- send]]
+      [[- end]]
   delimiters:
     left: '[['
     right: ']]'

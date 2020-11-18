@@ -4,7 +4,7 @@ metadata:
   name: codefreshdemo/yaml-gitops-editor
   version: 1.0.0
   isPublic: false
-  description: Edit YAML files and commit to Version Control System
+  description: Edit YAML files and commit to Version Control System (Not compatible with YAML comments)
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/yaml-gitops-editor
   stage: incubating

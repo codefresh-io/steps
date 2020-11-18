@@ -61,21 +61,6 @@ def main():
 
         repo.update_file(original_contents.path, commit_message, new_contents, original_contents.sha, branch=branch)
 
-        # base_tree = repo.get_git_tree(revision)
-        # element_list = list()
-        # for entry in file_list:
-        #     with open(entry, 'rb') as input_file:
-        #         data = input_file.read()
-        #     element = InputGitTreeElement(entry, '100644', 'blob', data)
-        #     element_list.append(element)
-        # tree = repo.create_git_tree(element_list, base_tree)
-        # parent = repo.get_git_commit(revision)
-        
-        # repo.create_git_commit(commit_message, tree, [parent])
-
-        # # Push
-        # repo.push()
-
     # Basic Auth option for later
     # else:
     #     # Set repository

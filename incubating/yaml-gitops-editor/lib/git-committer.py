@@ -81,11 +81,21 @@ def main():
     #     origin.push()
 
     if create_pull_request:
-        # Create pull request
-        create_pull = repo.create_pull(title='Pull Request from Codefresh GitOps Committer Step, Build ID: {}'.format(codefresh_build_id), head=branch, base=target_branch, body='Automated Pull Request from Codefresh Build: {}'.format(codefresh_build_id), maintainer_can_modify=True)
+        # Check for existing/open pull request
+        print('Checking for Open Pull Request...')
+        check_for_prs = repo.get_pulls(state='open', head=branch, base=target_branch)
+        if check_for_prs.totalCount != 0:
+            for pr in check_for_prs:
+                print('Found Open Pull Request.')
+                print('Name: {}'.format(pr.title))
+                print('Number: {}'.format(pr.number))
+        else:
+            print('Opening Pull Request.')
+            # Create pull request
+            create_pull = repo.create_pull(title='Pull Request from Codefresh GitOps Committer Step, Build ID: {}'.format(codefresh_build_id), head=branch, base=target_branch, body='Automated Pull Request from Codefresh Build: {}'.format(codefresh_build_id), maintainer_can_modify=True)
 
-        # Get pull request information
-        print('Created Pull Request: {}'.format(repo.get_pull(create_pull.number)))
+            # Get pull request information
+            print('Created Pull Request: {}'.format(repo.get_pull(create_pull.number)))
 
 
 if __name__ == "__main__":

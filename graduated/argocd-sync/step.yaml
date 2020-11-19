@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.10.0
+  version: 1.10.1
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -119,7 +119,7 @@ spec:
           },
           "rollback": {
               "type": "boolean",
-              "description": "Do rollback to previos rollout if wait command get failed ",
+              "description": "Do rollback to previous rollout if wait command get failed ",
               "default": false
           }
       }

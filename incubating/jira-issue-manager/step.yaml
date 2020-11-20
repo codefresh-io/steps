@@ -1,0 +1,243 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: jira-issue-manager
+  version: 1.0.0
+  title: Jira Issue Manager
+  isPublic: true
+  description: Create, Update, & Validate Jira Issues
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-manager
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - build
+  official: true
+  tags: []
+  icon:
+    type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-manager/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+            https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/jira-issue-manager/icon.png
+  examples:
+    - description: Create Jira Comment
+      workflow:
+        JiraCommentCreate:
+            title: Add Jira Comment
+            type: jira-issue-manager
+            arguments:
+                JIRA_BASE_URL: "https://company-name.atlassian.net/"
+                JIRA_USERNAME: ${{JIRA_USERNAME}}
+                JIRA_API_KEY: ${{JIRA_API_KEY}}
+                JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+                ACTION: "comment_create"
+                COMMENT_BODY: "Test from codefresh pipeline"
+    - description: Update Jira Comment
+      workflow:
+        JiraCommentUpdate:
+            title: Update Jira Comment
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+              ACTION: "comment_update"
+              JIRA_COMMENT_ID: "33455"
+              COMMENT_BODY: "New Updating from codefresh pipeline"
+    - description: Create Jira Issue
+      workflow:
+        JiraIssueCreate:
+            title: Add Jira Issue
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              ACTION: "issue_create"
+              ISSUE_PROJECT: "SA"
+              ISSUE_SUMMARY: "Brandons test 4"
+              ISSUE_DESCRIPTION: "Description inserted from codefresh pipeline"
+              ISSUE_COMPONENTS: "step,pov"
+              ISSUE_TYPE: "Task"
+    - description: Update Jira Issue
+      workflow:
+        JiraIssueUpdate:
+            title: Update Jira Issue
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+              ACTION: "issue_update"
+              ISSUE_SUMMARY: "Brandons test 3.1"
+              ISSUE_DESCRIPTION: "Description updated from codefresh pipeline"
+              ISSUE_COMPONENTS: "step"
+              ISSUE_TYPE: "Task"
+    - description: Update Jira Issues From JQL Query
+      workflow:
+        JiraIssueUpdateAllFromJQL:
+            title: Update Jira Issues From JQL Query
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              ACTION: "update_all_from_jql_query"
+              ISSUE_DESCRIPTION: "Update from JQL Query"
+              ISSUE_COMPONENTS: "step,pov"
+              ISSUE_TYPE: "Task"
+              JQL_QUERY: 'project=SA and summary~"Brandons testing*" and assignee = currentUser()'
+              JQL_QUERY_MAX_RESULTS: "50"
+    - description: Verify Jira Issue Status
+      workflow:
+        JiraIssueVerifyStatus:
+            title: Verify Issue Status on Single Issue
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+              ACTION: "verify_status"
+              DESIRED_ISSUE_STATUS: "Blocked"
+    - description: Verify Jira Issues From JQL Query
+      workflow:
+        JiraIssueVerifyStatusAllFromJQL:
+            title: Verify Issue Status on Issues from JQL Query
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              ACTION: "verify_status"
+              DESIRED_ISSUE_STATUS: "Blocked"
+              JQL_QUERY: 'project=SA and summary~"Brandons testing*" and assignee = currentUser()'
+    - description: Transition Jira Issue To Status
+      workflow:
+        JiraIssueTransitionStatus:
+            title: Transition the Issue status on a single item
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+              ACTION: "issue_transition"
+              DESIRED_ISSUE_STATUS: "Blocked"
+              VERBOSE: true
+    - description: Transition And Update Jira Issue
+      workflow:
+        JiraIssueTransitionStatusAndUpdate:
+            title: Transition the Issue status and update a single item
+            type: jira-issue-manager
+            arguments:
+              JIRA_BASE_URL: "https://company-name.atlassian.net/"
+              JIRA_USERNAME: ${{JIRA_USERNAME}}
+              JIRA_API_KEY: ${{JIRA_API_KEY}}
+              JIRA_ISSUE_SOURCE_FIELD: ${{JIRA_ISSUE_SOURCE_FIELD}}
+              ACTION: "issue_transition_and_update"
+              DESIRED_ISSUE_STATUS: "Blocked"
+              ISSUE_DESCRIPTION: "Updated while transitioning status"
+              VERBOSE: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "JIRA_BASE_URL",
+            "JIRA_USERNAME",
+            "JIRA_API_KEY"
+        ],
+        "properties": {
+            "JIRA_BASE_URL": {
+                "type": "string",
+                "description": "Jira base url"
+            },
+            "JIRA_USERNAME": {
+                "type": "string",
+                "description": "Jira username"
+            },
+            "JIRA_API_KEY": {
+                "type": "string",
+                "description": "Jira API key"
+            },
+            "ACTION": {
+                "type": "string",
+                "description": "Specifies the type of action to perform against your Jira instance - please see the examples and readme"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD": {
+                "type": "string",
+                "description": "Jira issue ID or key source field"
+            },
+            "JIRA_ISSUE_SOURCE_FIELD_REGEX": {
+                "type": "string",
+                "description": "Regex expression to get the Jira issue info from the JIRA_ISSUE_SOURCE_FIELD"
+            },
+            "ISSUE_PROJECT": {
+                "type": "string",
+                "description": "Jira project key: necessary for issue creation"
+            },
+            "ISSUE_SUMMARY": {
+                "type": "string",
+                "description": "Jira issue summary (main title)"
+            },
+            "ISSUE_DESCRIPTION": {
+                "type": "string",
+                "description": "Jira issue description"
+            },
+            "ISSUE_TYPE": {
+                "type": "string",
+                "description": "Jira issue type: Task, Bug, etc"
+            },
+            "ISSUE_COMPONENTS": {
+                "type": "string",
+                "description": "List of components using comma separated values: backend,database"
+            },
+            "JIRA_COMMENT_ID": {
+                "type": "string",
+                "description": "Jira comment ID to update a comment"
+            },
+            "COMMENT_BODY": {
+                "type": "string",
+                "description": "Text to add to the comment"
+            },
+            "DESIRED_ISSUE_STATUS": {
+                "type": "string",
+                "description": "Desired state of jira issue: Approved, Backlog"
+            },
+            "JQL_QUERY": {
+                "type": "string",
+                "description": "Free form query - please see Jira advanced search details"
+            },
+            "JQL_QUERY_MAX_RESULTS": {
+                "type": "string",
+                "description": "Allows you to specify the number of results that can return from a jql query"
+            },
+            "VERBOSE": {
+                "type": "boolean",
+                "description": "Enable verbose logging by setting to true"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+        name: jira-issue-manager
+        image: codefreshplugins/jira-issue-manager:1.0.0
+        environment:
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

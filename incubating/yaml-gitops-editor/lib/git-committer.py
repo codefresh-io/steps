@@ -30,7 +30,7 @@ def main():
     git_context = os.getenv('GIT_CONTEXT')
     organization = os.getenv('CF_REPO_OWNER')
     repository = os.getenv('CF_REPO_NAME')
-    revision = os.getenv('CF_REVISION')
+    orig_ref = os.getenv('REF', branch)
     target_branch = os.getenv('TARGET_BRANCH')
     yaml_file = os.getenv('YAMLFILE')
     yaml_path = os.path.join(directory, repository, yaml_file)
@@ -55,7 +55,7 @@ def main():
 
         commit_message = 'Commit created by Codefresh Build: {}'.format(codefresh_build_id)
 
-        original_contents = repo.get_contents(target_file, ref=revision)
+        original_contents = repo.get_contents(target_file, ref=orig_ref)
 
         new_contents = open(yaml_path, 'r').read()
 

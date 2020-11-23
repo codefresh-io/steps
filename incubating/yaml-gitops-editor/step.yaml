@@ -46,15 +46,15 @@ spec:
       "type": "object",
       "additionalProperties": false,
       "patterns": [],
-      "required": [],
+      "required": [
+        "GIT_CONTEXT",
+        "YAMLFILE",
+        "KEYVALUE_PAIRS"
+      ],
       "properties": {
         "CF_BRANCH": {
           "type": "string",
           "description": "Branch for commit."
-        },
-        "CREATE_PULL_REQUEST": {
-          "type": "boolean",
-          "description": "If true, creates a pull request in GitHub to TARGET_BRANCH."
         },
         "CF_API_KEY": {
           "type": "string",
@@ -81,6 +81,10 @@ spec:
           "description": "Base volume path.",
           "default": "https://g.codefresh.io"
         },
+        "CREATE_PULL_REQUEST": {
+          "type": "boolean",
+          "description": "If true, creates a pull request in GitHub to TARGET_BRANCH."
+        },
         "GIT_CONTEXT": {
           "type": "string",
           "description": "Name of GIT context in Codefresh"
@@ -90,7 +94,11 @@ spec:
           "items": {
             "type": "string"
           },
-          "description": "The YAML hierarchy is delimited with '.'' characters"
+          "description": "The YAML hierarchy is delimited with '.'' characters."
+        },
+        "REF": {
+          "type": "string",
+          "description": "Branch or SHA used as HEAD for GIT commit process, defaults to branch but can be pinned."
         },
         "TARGET_BRANCH": {
           "type": "string",

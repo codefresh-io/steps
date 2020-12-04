@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.2.5
+  version: 1.3.0
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:
@@ -28,6 +28,14 @@ metadata:
             rollout_namespace: ${{ROLLOUT_NAMESPACE}}
             context: 'argocd'
             app_name: "${{ARGOCD_APP_NAME}}"
+            wait_healthy: true
+        promote_rollout_without_context:
+          title: Promote Argo rollout
+          type: argocd-rollout
+          arguments:
+            k8s_context: '${{K8S_CONTEXT}}'
+            rollout_name: '${{ROLLOUT_NAME}}'
+            rollout_namespace: ${{ROLLOUT_NAMESPACE}}
   latest: true
 spec:
   arguments: |

@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.2.3
+  version: 1.2.4
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:
@@ -38,7 +38,6 @@ spec:
       "additionalProperties": false,
       "patterns": [],
       "required": [
-          "app_name",
           "rollout_name",
           "k8s_context"
       ],
@@ -65,7 +64,7 @@ spec:
           },
           "app_name": {
               "type": "string",
-              "description": "The argocd application to be synced"
+              "description": "The argocd application to wait health status"
           },
           "wait_healthy": {
               "type": "boolean",

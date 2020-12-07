@@ -128,7 +128,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "codefresh/cf-argo-plugin:0.1.3"
+      image: "codefresh/cf-argo-plugin:0.1.4"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
@@ -144,18 +144,20 @@ spec:
         - echo ARGOCD_OPTS=$ARGOCD_OPTS >> /meta/env_vars_to_export
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "codefresh/cf-argo-plugin:0.1.3"
+      image: "codefresh/cf-argo-plugin:0.1.4"
       commands:
         - /codefresh/volume/argo-executor
     sendArgoMetadata:
       title: "SendArgoMetadata"
       fail_fast: false
-      image: "codefresh/cf-argo-plugin:0.1.3"
+      image: "codefresh/cf-argo-plugin:0.1.4"
       commands:
         - echo $CF_PIPELINE_NAME
-        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID
+        - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID --out-export-file /codefresh/volume/argo-export_gitops
+        - chmod +x /codefresh/volume/argo-export_gitops
+        - /codefresh/volume/argo-export_gitops
     rollback:
       title: "Rollback"
-      image: "codefresh/cf-argo-plugin:0.1.3"
+      image: "codefresh/cf-argo-plugin:0.1.4"
       commands:
         - cf-argo-plugin rollback ${{app_name}} --code=$ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}

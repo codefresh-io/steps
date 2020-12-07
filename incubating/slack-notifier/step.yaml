@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/slack-notifier
+  name: slack-notifier
   version: 0.0.7
   isPublic: true
   description: Send message to slack

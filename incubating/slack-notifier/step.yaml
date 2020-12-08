@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-notifier
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Send message to slack
   sources:
@@ -64,20 +64,25 @@ spec:
                 "type": "string",
                 "description": "Required in template mode, general body, should be not array. Support only one attachment in body. Documentation https://api.slack.com/docs/message-attachments"
             },
+            "SLACK_TEMPLATE_ACTIONS": {
+                "type": "string",
+                "default": "[]",
+                "description": "Required in template mode, Override actions in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments"
+            },
             "SLACK_TEMPLATE_FIELDS": {
                 "type": "string",
                 "description": "Required in template mode, Override fields in SLACK_TEMPLATE_BODY, should be array. Documentation https://api.slack.com/docs/message-attachments"
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: slack-notifier
-      image: codefresh/slacknotifier:0.0.6
+      image: codefresh/slacknotifier:0.0.7
       environment:
-        - 'SLACK_HOOK_URL=${{SLACK_HOOK_URL}}'
-        - 'SLACK_TEXT=${{SLACK_TEXT}}'
-        - 'SLACK_ATTACHMENTS=${{SLACK_ATTACHMENTS}}'
-        - 'MODE=${{MODE}}'
-        - 'SLACK_TEMPLATE_BODY=${{SLACK_TEMPLATE_BODY}}'
-        - 'SLACK_TEMPLATE_FIELDS=${{SLACK_TEMPLATE_FIELDS}}'
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -42,7 +42,7 @@ metadata:
             arguments:
               bucket_name: cf-test-rep
               storage_integration: amazon
-              branch: ${{CF_BRANCH}}
+              branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
 

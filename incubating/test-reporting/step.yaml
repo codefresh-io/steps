@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: test-reporting
-  version: 1.1.3
+  version: 1.1.4
   title: Test reporting
   isPublic: true
   description: Upload test report to some your storage integration.
@@ -42,7 +42,7 @@ metadata:
             arguments:
               bucket_name: cf-test-rep
               storage_integration: amazon
-              branch: ${{CF_BRANCH}}
+              branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
 

@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.10.3
+  version: 1.10.4
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -154,8 +154,6 @@ spec:
       commands:
         - echo $CF_PIPELINE_NAME
         - cf-argo-plugin process-result ${{app_name}} --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --pipeline-id=$CF_PIPELINE_NAME --build-id=$CF_BUILD_ID --out-export-file /codefresh/volume/argo-export_gitops
-        - chmod +x /codefresh/volume/argo-export_gitops
-        - /codefresh/volume/argo-export_gitops
     rollback:
       title: "Rollback"
       image: "codefresh/cf-argo-plugin:0.1.4"

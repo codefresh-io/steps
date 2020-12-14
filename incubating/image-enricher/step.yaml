@@ -80,7 +80,7 @@ spec:
                 "type": "string",
                 "description": "Support on-premises github host, by default github.com",
                 "examples": ["codefresh.github.com"]
-            },
+            }
         }
     }
   steps:
@@ -92,7 +92,6 @@ spec:
       commands:
         - export GITHUB_TOKEN=$(codefresh get context $GIT_PROVIDER_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
         - echo GITHUB_TOKEN=$GITHUB_TOKEN >> /meta/env_vars_to_export
-
     main:
       name: enrich-image
       image: codefresh/github-enricher

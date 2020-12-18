@@ -30,9 +30,8 @@ metadata:
           arguments:
             PIPELINE_ID: project-name/pip_name
             TRIGGER_ID: trigger_id
-            CONTEXT:
-              - context1
-              - context2
+            BRANCH: '${{CF_BRANCH}}'
+            SHA: '${{CF_REVISION}}'
             VARIABLE:
               - key1=val1
               - key2=val2

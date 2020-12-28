@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -30,9 +30,8 @@ metadata:
           arguments:
             PIPELINE_ID: project-name/pip_name
             TRIGGER_ID: trigger_id
-            CONTEXT:
-              - context1
-              - context2
+            BRANCH: '${{CF_BRANCH}}'
+            SHA: '${{CF_REVISION}}'
             VARIABLE:
               - key1=val1
               - key2=val2

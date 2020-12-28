@@ -123,4 +123,4 @@ spec:
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
-        - git push https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git
+        - git push "https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git"

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.9
+  version: 0.0.10
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -118,9 +118,10 @@ spec:
 
       commands:
         - cd ${WORKING_DIRECTORY}
+        - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
         - git config --global user.name ${GIT_USER_NAME}
         - git config --global user.email ${GIT_USER_EMAIL}
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
-        - git push "https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git"
+        - git push "https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"

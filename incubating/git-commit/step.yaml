@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.9
+  version: 0.0.10
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -57,7 +57,7 @@ spec:
           },
           "git": {
               "type": "string",
-              "description": "The name of the git integration you want to use. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
+              "description": "The name of the git integration (non-OAuth2) you want to use. Oauth2 compatibility is coming soon. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
           },
           "commit_message": {
               "type": "string",
@@ -98,9 +98,14 @@ spec:
       environment:
         - GIT_INTEGRATION_NAME=${{git}}
         - ALLOW_EMPTY_BOOL=${{allow_empty}}
+        - GIT_USER_NAME=${{git_user_name}}
       commands:
         - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
+        - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.username)
+        # If the git integration does not include the auth username, then default to the git_user_name argument
+        - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
+        - echo GIT_ACCESS_TOKEN_USER=$GIT_ACCESS_TOKEN_USER >> /meta/env_vars_to_export
         - export ALLOW_EMPTY=$(if [[ $ALLOW_EMPTY_BOOL == true ]]; then echo '--allow-empty';fi)
         - echo ALLOW_EMPTY=$ALLOW_EMPTY >> /meta/env_vars_to_export
         - export ADD_FILES=$(echo ${{add}} | tr "," " ")
@@ -118,9 +123,12 @@ spec:
 
       commands:
         - cd ${WORKING_DIRECTORY}
+        - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
+        - echo GIT_USER_NAME=$GIT_USER_NAME GIT_USER_EMAIL=$GIT_USER_EMAIL
         - git config --global user.name ${GIT_USER_NAME}
         - git config --global user.email ${GIT_USER_EMAIL}
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
-        - git push "https://$GIT_USER_NAME:$GIT_ACCESS_TOKEN@github.com/$REPO.git"
+        - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
+        - git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"

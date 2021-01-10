@@ -139,6 +139,10 @@ spec:
           "description": "List of case insensitive patterns in the form of 'value1;value2;...'. Environment variables match those patterns will be excluded. This environment variable is used by the 'jfrog rt build-publish' command, in case the --env-exclude command option is not sent.",
           "default": "*password*;*secret*;*key*;*token*"
         },
+        "GRADLE_DEPLOY_REPO": {
+          "type": "string",
+          "description": "Gradle repo in Artifactory to deploy jar artifacts"
+        },
         "IMAGE": {
           "type": "string",
           "description": "Docker image name"
@@ -190,6 +194,10 @@ spec:
         - [[ $cmd ]]
         - jfrog rt build-collect-env
         - jfrog rt build-add-git
+      [[- if .Arguments.GRADLE_DEPLOY_REPO ]]
+        - jfrog rt gradle-config --server-id-deploy artifactory --repo-deploy ${{GRADLE_DEPLOY_REPO}}
+        - jfrog rt gradle artifactoryPublish --build-name=${{CF_REPO_NAME}} --build-number=${{CF_BUILD_ID}}
+      [[- end ]]
       [[- if .Arguments.IMAGE ]]
         - jfrog rt docker-pull $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
         - jfrog rt docker-push $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER

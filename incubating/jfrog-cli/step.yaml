@@ -2,8 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.5
-  isPublic: true
+  version: 0.0.6
+  isPublic: false  # FIXME Toggle back to true after testing
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli
@@ -13,6 +13,8 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustin@codefresh.io
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
   categories:
     - utilities
   official: false
@@ -170,7 +172,8 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: codefreshplugins/cfstep-jfrog-cli
+      image: gtspinks/cfstep-jfrog-cli  # FIXME toggle back to offical image after testing/updating
+      # image: codefreshplugins/cfstep-jfrog-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

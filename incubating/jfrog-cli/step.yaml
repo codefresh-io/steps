@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefreshdemo/jfrog-cli
-  version: 0.0.6
+  version: 0.0.7
   isPublic: false
   description: Hybrid/On Premise only, Use JFrog CLI from step
   sources:
@@ -186,7 +186,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: gtspinks/cfstep-jfrog-cli
+      image: dustinvanbuskirk/cfstep-jfrog-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -219,6 +219,7 @@ spec:
       [[- if eq .Arguments.XRAY_SCAN true ]]
         - jfrog rt build-scan
       [[- end ]]
+        - cf_export build-publish_CF_OUTPUT_URL="$JFROG_PROTOCOL://$JFROG_HOST/artifactory/webapp/builds/$JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER"
   delimiters:
     left: '[['
     right: ']]'

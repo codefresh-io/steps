@@ -59,7 +59,7 @@ metadata:
             JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
             JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
             JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
-            GRADLE_DEPLOY_REPO: my-gradle-repo
+            GRADLE_DEPLOY_REPO: my-artifactory-gradle-repo
     - description: publish-build-docker-scan-build
       workflow:
         JFrogPublishBuild:

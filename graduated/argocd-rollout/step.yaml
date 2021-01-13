@@ -98,7 +98,7 @@ spec:
               "type": "string",
               "description": "Additional flags for argocd app wait command ( like --grpc-web, so on )",
               "default": ""
-          },
+          }
       }
     }
   steps:

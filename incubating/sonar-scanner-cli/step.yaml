@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: sonar-scanner-cli
-  version: 0.0.6
+  name: codefreshdemo/sonar-scanner-cli
+  version: 0.0.7
   isPublic: true
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
@@ -79,6 +79,16 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
+    report:
+      name: report
+      image: codefresh/cli
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - export PROJECT=$(cat $SONAR_PROJECT_BASE_DIR/sonar-project.properties | grep sonar.projectKey | awk -F'=' '{print $2}')
+        - echo -n report_CF_OUTPUT_URL=$SONAR_HOST_URL/dashboard?id=$PROJECT >> /meta/env_vars_to_export
   delimiters:
     left: '[['
     right: ']]'

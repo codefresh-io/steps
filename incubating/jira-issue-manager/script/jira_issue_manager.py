@@ -130,12 +130,12 @@ def step_action(action, authenticated_jira, current_environment):
         'verify_status': verify_issue_status,
         'update_all_from_jql_query': update_multiple_issues,     
     }
-  action_func = actions.get(action, action_required)
-  if action_func:
-      action_func(authenticated_jira, current_environment)
-  else:
-      StepUtility.printFail("Exiting Step - invalid ACTION environment variable")
-      sys.exit(1)
+    action_func = actions.get(action, action_required)
+    if action_func:
+        action_func(authenticated_jira, current_environment)
+    else:
+        StepUtility.printFail("Exiting Step - invalid ACTION environment variable")
+        sys.exit(1)
 
 
 def create_comment(jira, current_environment):

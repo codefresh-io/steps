@@ -100,6 +100,11 @@ class EntrypointScriptBuilder(object):
                 self.azure_helm_token = self._get_azure_helm_token(chart_repo_url)
             chart_repo_url = chart_repo_url.strip('/').replace('az://', 'https://00000000-0000-0000-0000-000000000000:%s@' % self.azure_helm_token, 1) + '/helm/v1/repo'
 
+        if chart_repo_url and chart_repo_url.startswith('azsp://'):
+            if not self.azure_helm_token:
+                self.azure_helm_token = self._get_azure_service_principal_helm_token(chart_repo_url)
+            chart_repo_url = chart_repo_url.strip('/').replace('azsp://', 'https://00000000-0000-0000-0000-000000000000:%s@' % self.azure_helm_token, 1) + '/helm/v1/repo'
+
         helm_repo_username = env.get('HELMREPO_USERNAME')
         helm_repo_password = env.get('HELMREPO_PASSWORD')
         for key, val in sorted(env.items()):
@@ -118,6 +123,10 @@ class EntrypointScriptBuilder(object):
                     if not self.azure_helm_token:
                         self.azure_helm_token = self._get_azure_helm_token(repo_url)
                     repo_url = repo_url.replace('az://', 'https://00000000-0000-0000-0000-000000000000:%s@' % self.azure_helm_token, 1) + 'helm/v1/repo'
+                elif repo_url.startswith('azsp://'):
+                    if not self.azure_helm_token:
+                        self.azure_helm_token = self._get_azure_service_principal_helm_token(repo_url)
+                    repo_url = repo_url.replace('azsp://', 'https://00000000-0000-0000-0000-000000000000:%s@' % self.azure_helm_token, 1) + 'helm/v1/repo'
 
                 helm_repos[repo_name] = repo_url
                 if self.chart_repo_url is None:
@@ -142,6 +151,21 @@ class EntrypointScriptBuilder(object):
             cf_build_url = 'http://' + os.getenv('CF_HOST_IP')
         cf_build_url_parsed = urllib.parse.urlparse(cf_build_url)
         token_url = '%s://%s/api/clusters/aks/helm/repos/%s/token' % (cf_build_url_parsed.scheme, cf_build_url_parsed.netloc, service)
+        request = urllib.request.Request(token_url)
+        request.add_header('Authorization', os.getenv('CF_API_KEY'))
+        data = json.load(urllib.request.urlopen(request))
+        return data['access_token']
+
+    def _get_azure_service_principal_helm_token(self, repo_url):
+        service = repo_url.replace('azsp://', '').strip('/')
+        sys.stderr.write('Obtaining one-time token for Azure Helm repo service %s ...\n' % service)
+        if self.dry_run:
+            return 'xXxXx'
+        cf_build_url = os.getenv('CF_BUILD_URL', 'https://g.codefresh.io')
+        if 'local' in cf_build_url:
+            cf_build_url = 'http://' + os.getenv('CF_HOST_IP')
+        cf_build_url_parsed = urllib.parse.urlparse(cf_build_url)
+        token_url = '%s://%s/api/clusters/aks-sp/helm/repos/%s/token' % (cf_build_url_parsed.scheme, cf_build_url_parsed.netloc, service)
         request = urllib.request.Request(token_url)
         request.add_header('Authorization', os.getenv('CF_API_KEY'))
         data = json.load(urllib.request.urlopen(request))

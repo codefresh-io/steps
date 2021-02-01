@@ -4,7 +4,7 @@ metadata:
   name: codefreshdemo/jfrog-cli
   version: 0.0.6
   isPublic: true
-  description: Publishes artifacts to a Build in Artifactory. Also allows you to run additional Jfrog CLI commands during the publishing. Note, Docker images are for Hybrid/On-Premise Runners only.
+  description: Publishes artifacts to a Build in Artifactory. Also allows you to run additional Jfrog CLI commands during the publishing.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli
     - https://bintray.com/jfrog/jfrog-cli-go/jfrog-cli-linux-amd64
@@ -157,19 +157,19 @@ spec:
         },
         "IMAGE": {
           "type": "string",
-          "description": "Docker image name"
+          "description": "Docker image name. This functionality is for hybrid/on-premise Runners only."
         },
         "TAG": {
           "type": "string",
-          "description": "Docker image tag"
+          "description": "Docker image tag. This functionality is for hybrid/on-premise Runners only."
         },
         "REGISTRY": {
           "type": "string",
-          "description": "Docker registry FQDN"
+          "description": "Docker registry FQDN. This functionality is for hybrid/on-premise Runners only."
         },  
         "REPOSITORY": {
           "type": "string",
-          "description": "Docker repository"
+          "description": "Docker repository. This functionality is for hybrid/on-premise Runners only."
         },            
         "XRAY_SCAN": {
           "type": "boolean",
@@ -188,7 +188,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: gtspinks/cfstep-jfrog-cli
+      image: codefreshplugins/cfstep-jfrog-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefreshdemo/jfrog-cli
-  version: 0.0.7
-  isPublic: false
-  description: Hybrid/On Premise only, Use JFrog CLI from step
+  version: 0.0.6
+  isPublic: true
+  description: Publishes artifacts to a Build in Artifactory. Also allows you to run additional Jfrog CLI commands during the publishing. Note, Docker images are for Hybrid/On-Premise Runners only.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli
     - https://bintray.com/jfrog/jfrog-cli-go/jfrog-cli-linux-amd64
@@ -13,6 +13,8 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustin@codefresh.io
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
   categories:
     - utilities
   official: false
@@ -99,7 +101,7 @@ spec:
         },
         "JFROG_PROTOCOL": {
           "type": "string",
-          "description": "JFrog Protocol.",
+          "description": "JFrog Protocol: https (default) or http.",
           "default": "https",
           "enum": [ 
             "http",
@@ -186,7 +188,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: dustinvanbuskirk/cfstep-jfrog-cli
+      image: gtspinks/cfstep-jfrog-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -16,6 +16,11 @@ steps:
     git: "github"
     stage: "clone"
 
+  ls:
+    image: codefresh/cli
+    working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
+    commands: "ls -ail"
+
   build:
     title: "Building Docker image for pipeline and trigger merge"
     type: "build"
@@ -24,6 +29,7 @@ steps:
     tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
     dockerfile: "Dockerfile"
     disable_push: true
+    stage: "build"
 
   push:
     type: push

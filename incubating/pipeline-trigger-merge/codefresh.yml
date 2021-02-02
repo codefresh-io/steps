@@ -11,7 +11,7 @@ steps:
   clone:
     title: "Cloning repository"
     type: "git-clone"
-    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    repo: "codefresh-io/steps"
     revision: "${{CF_BRANCH}}"
     git: "github"
     stage: "clone"

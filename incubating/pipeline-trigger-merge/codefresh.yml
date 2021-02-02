@@ -12,9 +12,8 @@ steps:
     title: "Cloning repository"
     type: "git-clone"
     repo: "codefresh-io/steps"
-    revision: "${{CF_BRANCH}}"
+    revision: "pipeline_trigger_merge"
     git: "github"
-    branch: "pipeline_trigger_merge"
     stage: "clone"
 
   ls:

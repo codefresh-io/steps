@@ -19,7 +19,9 @@ steps:
   ls:
     image: codefresh/cli
     working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
+    stage: "clone"
     commands:
+      - pwd
       - ls -ail
 
   build:

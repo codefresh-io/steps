@@ -19,7 +19,8 @@ steps:
   ls:
     image: codefresh/cli
     working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
-    commands: "ls -ail"
+    commands:
+      - ls -ail
 
   build:
     title: "Building Docker image for pipeline and trigger merge"

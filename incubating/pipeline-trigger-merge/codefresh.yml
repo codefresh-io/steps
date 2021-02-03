@@ -39,5 +39,6 @@ steps:
     title: "Pushing ptm image"
     candidate: ${{build}}
     image_name: "lrochette/ptm"
+    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
     registry: docker-lr
     stage: "push"

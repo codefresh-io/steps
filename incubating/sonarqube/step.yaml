@@ -1,0 +1,72 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/sonarqube
+  version: 1.0.0
+  isPublic: false
+  description: Scan with SonarQube
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/sonarqube
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: Scan with SonarQube
+      workflow:
+        ConformCompositionYAML:
+          type: codefreshdemo/sonarqube
+          arguments:
+            DIRECTORY: /codefresh/volume/myrepo/manifests
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "PROJECT",
+      "SONARQUBE_USERNAME"
+      ],
+      "properties": {
+        "PROJECT": {
+          "type": "string",
+          "description": "SonarQube Project."
+        },
+        "SONARCLOUD_TOKEN": {
+          "type": "string",
+          "description": "SonarQube Cloud Token."
+        },
+        "SONARQUBE_PASSWORD": {
+          "type": "string",
+          "description": "SonarQube Passsword."
+        },
+        "SONARQUBE_USERNAME": {
+          "type": "string",
+          "description": "SonarQube Username."
+        },
+        "SONARQUBE_URL": {
+          "type": "string",
+          "description": "SonarQube URL."
+        }
+      }
+    }
+  stepsTemplate: |-
+    sonarqube:
+      name: sonarqube
+      image: dustinvanbuskirk/sonarqube:1.0.0-alpha
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /sonarqube-api.py
+  delimiters:
+    left: '[['
+    right: ']]'

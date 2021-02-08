@@ -22,7 +22,7 @@ metadata:
     - description: pipeline-trigger-merge
       workflow:
         ConformCompositionYAML:
-          type: lrochette/ptm
+          type: laurent-cf/pipeline_trigger_merge
           arguments:
             SPEC: spec.yml
             TRIGGERS: trig1.yml TRIGS trig2.yml
@@ -50,7 +50,7 @@ spec:
   stepsTemplate: |-
     pipeline-trigger-merge:
       name: pipeline-trigger-merge
-      image: lrochette/ptm:1.0.0
+      image: lrochette/ptm:1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -36,7 +36,9 @@ spec:
       "type": "object",
       "additionalProperties": false,
       "patterns": [],
-      "required": [],
+      "required": [
+        "SPEC"
+      ],
       "properties": {
         "SPEC": {
           "type": "string",

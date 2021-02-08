@@ -31,13 +31,13 @@ steps:
     image: codefresh/cli
     working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
     commands:
-      - codefresh create step-type -f step.yaml || codefresh replace step-type -f step.yaml
+      - codefresh replace step-type -f step.yaml || codefresh create step-type -f step.yaml
     stage: "push"
     when:
       branch:
         only:
         - pipeline_trigger_merge
-            
+
   push:
     type: push
     title: "Pushing ptm image to Docker registry"

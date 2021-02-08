@@ -9,36 +9,32 @@ stages:
 
 steps:
   clone:
-    title: "Cloning repository"
+    title: "Cloning steps repository"
     type: "git-clone"
     repo: "codefresh-io/steps"
     revision: "pipeline_trigger_merge"
     git: "github"
     stage: "clone"
 
-  ls:
-    image: codefresh/cli
-    working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
-    stage: "clone"
-    commands:
-      - pwd
-      - ls -ail
-
   build:
     title: "Building Docker image for pipeline and trigger merge"
     type: "build"
     image_name: "lrochette/ptm"
     working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
-    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
+    tag: "1.0"
     dockerfile: "Dockerfile"
     disable_push: true
     stage: "build"
 
   push:
     type: push
-    title: "Pushing ptm image"
+    title: "Pushing ptm imageto Docker registry"
     candidate: ${{build}}
     image_name: "lrochette/ptm"
-    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
+    tag: "1.0"
     registry: docker-lr
     stage: "push"
+    when:
+      branch:
+        only:
+        - pipeline_trigger_merge

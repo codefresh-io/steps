@@ -27,7 +27,9 @@ process_file() {
 }
 export curdir=`pwd`
 export count=1
+echo "Merging pipeline spec $SPEC with triggers $TRIGGERS"
 for f in `echo $TRIGGERS` ; do
     process_file $f
 done
+echo "Creating/Updating final pipeline"
 codefresh create pipeline -f $SPEC || codefresh replace -f $SPEC

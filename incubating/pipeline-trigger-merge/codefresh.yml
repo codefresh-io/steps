@@ -26,9 +26,17 @@ steps:
     disable_push: true
     stage: "build"
 
+  typed_step:
+    title: "Create the typed step"
+    image: codefresh/cli
+    working_directory: "${{clone}}/incubating/pipeline-trigger-merge"
+    commands:
+      - codefresh create step-type -f step.yaml || codefresh replace step-type -f step.yaml
+    stage: "push"
+    
   push:
     type: push
-    title: "Pushing ptm imageto Docker registry"
+    title: "Pushing ptm image to Docker registry"
     candidate: ${{build}}
     image_name: "lrochette/ptm"
     tag: "1.0"

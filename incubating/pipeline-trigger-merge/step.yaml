@@ -9,19 +9,21 @@ metadata:
     create a codefresh full pipeline.
     Directories are processed recursively. Unknown files are simply ignored.
   sources:
-    - https://github.com/codefresh-io/steps/tree/master/incubating/pipeline-trigger-merge
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/pipeline-trigger-merge
   stage: incubating
   maintainers:
     - name: Laurent Rochette
-      email: laurent.rochette@codefresh.io
+    - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-  official: true
+  official: false
   tags: []
   examples:
     - description: pipeline-trigger-merge
       workflow:
-        ConformCompositionYAML:
+        MergeTriggersIntoPipeline:
+          title: "Merge the triggers into the pipeline spec"
           type: laurent-cf/pipeline_trigger_merge
           arguments:
             SPEC: spec.yml
@@ -43,7 +45,7 @@ spec:
         },
         "TRIGGERS": {
           "type": "string",
-          "description": "A space seprated list of trigger files and/or folders."
+          "description": "A space separated list of trigger files and/or folders."
         }
       }
     }

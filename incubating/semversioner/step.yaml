@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: semversioner
-  version: 0.1.0-alpha
+  version: 0.1.0
   isPublic: true
-  description: Manage semvers
+  description: Operates on semver versions
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/semversioner
   stage: incubating
@@ -21,13 +21,25 @@ metadata:
         bumpVersion:
           type: semversioner
           arguments:
-            SEMVERSIONER_VERSION: "1.0.1"
+            SEMVERSIONER_VERSION: "5.7.1"
             SEMVERSIONER_ACTION: bump
             SEMVERSIONER_PART: major
         checkVersion:
           image: alpine
           commands:
-            - echo VERSION= ${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
+            - echo VERSION=${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
+    - description: compare-sermver-versions
+      workflow:
+        bumpVersion:
+          type: semversioner
+          arguments:
+            SEMVERSIONER_VERSION: "5.7.1"
+            SEMVERSIONER_ACTION: compare
+            SEMVERSIONER_VERSION_TO_COMPARE: "5.6.98"
+        checkVersion:
+          image: alpine
+          commands:
+            - echo COMPARISON_RESULT=${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
 spec:
   arguments: |-
     {
@@ -42,7 +54,7 @@ spec:
       "properties": {
         "SEMVERSIONER_ACTION": {
           "type": "string",
-          "description": "Options: 'bump' or 'compare'",
+          "description": "Options: 'bump' or 'compare'. Default: 'bump'",
           "default": "bump"
         },
         "SEMVERSIONER_VERSION": {
@@ -51,7 +63,7 @@ spec:
         },
         "SEMVERSIONER_PART": {
           "type": "string",
-          "description": "Part of the semver to be bumped. Options: 'major', 'minor' and 'patch'",
+          "description": "Part of the semver to be bumped. Options: 'major', 'minor' and 'patch'. Default: 'patch'",
           "default": "patch"
         },
         "SEMVERSIONER_VERSION_TO_COMPARE": {
@@ -75,14 +87,14 @@ spec:
         "properties": {
             "SEMVERSIONER_RESULT": {
                 "type": "string",
-                "description": "Result of operation"
+                "description": "Result of the action performed"
             }
         }
     }  
   stepsTemplate: |-
     semversioner:
       name: semversioner
-      image: franciscocodefresh/semversioner:0.1.0-alpha
+      image: franciscocodefresh/semversioner:0.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

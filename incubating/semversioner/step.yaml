@@ -9,7 +9,7 @@ metadata:
     - https://github.com/codefresh-io/steps/tree/master/incubating/semversioner
   stage: incubating
   maintainers:
-    - name: Francsico Cocozza
+    - name: Francisco Cocozza
       email: francisco@codefresh.io
   categories:
     - utilities

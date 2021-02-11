@@ -19,7 +19,7 @@ metadata:
     - description: bump-minor-version
       workflow:
         bumpVersion:
-          type: francisco-codefresh/semversioner
+          type: semversioner
           arguments:
             SEMVERSIONER_VERSION: "1.0.1"
             SEMVERSIONER_ACTION: bump

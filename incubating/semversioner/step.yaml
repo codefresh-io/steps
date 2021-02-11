@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: semversioner
-  version: 0.1.0
+  version: 0.1.1
   isPublic: true
   description: Operates on semver versions
   sources:
@@ -16,7 +16,7 @@ metadata:
   official: false
   tags: []
   examples:
-    - description: bump-minor-version
+    - description: bump-major-version
       workflow:
         bumpVersion:
           type: semversioner
@@ -40,6 +40,13 @@ metadata:
           image: alpine
           commands:
             - echo COMPARISON_RESULT=${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
+    - description: bump-minor-version
+      workflow:
+        bumpVersion:
+          type: semversioner
+          arguments:
+            SEMVERSIONER_VERSION: "5.7.1"
+            SEMVERSIONER_PART: minor
 spec:
   arguments: |-
     {
@@ -94,7 +101,7 @@ spec:
   stepsTemplate: |-
     semversioner:
       name: semversioner
-      image: franciscocodefresh/semversioner:0.1.0
+      image: franciscocodefresh/semversioner:0.1.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

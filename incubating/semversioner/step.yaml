@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: semversioner
-  version: 0.1.1
+  version: 0.1.2
   isPublic: true
   description: Operates on semver versions
   sources:
@@ -15,6 +15,10 @@ metadata:
     - utilities
   official: false
   tags: []
+  icon:
+    type: png
+    url: https://avatars.githubusercontent.com/u/8051653?s=200&v=4
+    background: "#000000"
   examples:
     - description: bump-major-version
       workflow:
@@ -94,14 +98,14 @@ spec:
         "properties": {
             "SEMVERSIONER_RESULT": {
                 "type": "string",
-                "description": "Result of the action performed"
+                "description": "Result of the action performed. If SEMVERSIONER_ACTION is 'bump', the result will be a semver version. If the SEMVERSIONER_ACTION is 'compare', the result will be '-1', '0' or '1'"
             }
         }
     }  
   stepsTemplate: |-
     semversioner:
       name: semversioner
-      image: franciscocodefresh/semversioner:0.1.1
+      image: franciscocodefresh/semversioner:0.1.2
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

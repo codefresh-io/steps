@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.0.8
+  version: 1.1.0
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -56,9 +56,6 @@ spec:
             "IMAGE",
             "JIRA_PROJECT_PREFIX",
             "MESSAGE",
-            "JIRA_HOST",
-            "JIRA_EMAIL",
-            "JIRA_API_TOKEN"
         ],
         "properties": {
             "JIRA_PROJECT_PREFIX": {
@@ -82,6 +79,10 @@ spec:
             "JIRA_API_TOKEN": {
                 "type": "string",
                 "description": "Token that you generate in jira"
+            },
+            "JIRA_CONTEXT": {
+                "type": "string",
+                "description": "Jira integration name, (Account settings -> Atlassian Jira)"
             },
             "IMAGE": {
                "type": "string",

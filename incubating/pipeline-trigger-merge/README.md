@@ -29,3 +29,8 @@ create_pipeline:
     - TRIGGERS=trig1.yml trig2.yml TRIGGERS
     - SPEC=spec.yml
 ```
+
+There is a full example in the sample directory.
+
+The foobar trigger does not exist and should give a warning
+creator.yml is the main pipeline to create/merge the spec and the triggers.

@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: dustinvanbuskirk/pipeline_trigger_merge
+  name: laurent-cf/pipeline_trigger_merge
   version: 1.0.0
   isPublic: false
   description: >-
@@ -53,7 +53,7 @@ spec:
   stepsTemplate: |-
     pipeline-trigger-merge:
       name: pipeline-trigger-merge
-      image: dustinvanbuskirk/pipeline_trigger_merge:1.0.0
+      image: lrochette/ptm:1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-scanner-cli
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
@@ -37,13 +37,18 @@ spec:
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "patterns": [],
       "required": [
         "SONAR_HOST_URL",
         "SONAR_LOGIN"
       ],
       "properties": {
+        "SONAR_CLI_IMAGE": {
+          "type": "string",
+          "default": "sonarsource/sonar-scanner-cli",
+          "description": "The Docker image registry/image for step."
+        },        
         "SONAR_HOST_URL": {
           "type": "string",
           "default": "",
@@ -74,7 +79,7 @@ spec:
   stepsTemplate: |-
     main:
       name: sonar-scanner-cli
-      image: 'sonarsource/sonar-scanner-cli:[[.Arguments.SONAR_SCANNER_CLI_VERSION]]'
+      image: '[[.Arguments.SONAR_CLI_IMAGE]]:[[.Arguments.SONAR_SCANNER_CLI_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

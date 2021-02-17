@@ -1,0 +1,36 @@
+spec:
+  triggers:
+    - name: acceptance-india
+      type: git
+      repo: lrochette/pipeline-creator
+      events:
+        - push.heads
+      pullRequestAllowForkEvents: false
+      commentRegex: /.*/gi
+      branchRegex: /codefresh/gi
+      branchRegexInput: regex
+      provider: github
+      disabled: true
+      options:
+        noCache: false
+        noCfCache: false
+        resetVolume: false
+      verified: true
+      context: github
+      contexts: []
+      variables:
+        - key: GEO_LOCATION
+          value: india
+        - key: CLUSTER_NAME
+          value: qa-india-cluster
+        - key: NAMESPACE
+          value: codefresh-beauto
+        - key: RELEASE_NAME
+          value: acceptance-codefresh
+        - key: ENV
+          value: beauto
+      runtimeEnvironment:
+        name: qa.india.atlas-antelope.com/codefresh
+        cpu: 1000m
+        memory: 1024Mi
+        dindStorage: nullGi

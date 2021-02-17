@@ -1,0 +1,43 @@
+# More examples of Codefresh YAML can be found at
+# https://codefresh.io/docs/docs/yaml-examples/examples/
+
+version: "1.0"
+kind: pipeline
+metadata:
+  name: Creator/full
+  project: Creator
+
+
+# Stages can help you organize your steps in stages
+spec:
+  stages:
+    - "clone"
+    - "build"
+    - "test"
+
+
+  steps:
+    clone:
+      title: "Cloning repository"
+      type: "git-clone"
+      repo: "https://github.com/codefresh-io/cli/"
+      revision: "master"
+      stage: "clone"
+
+    build:
+      title: "Building Docker image"
+      type: "build"
+      image_name: "codefresh-io/cli"
+      working_directory: "${{clone}}"
+      tag: "latest"
+      dockerfile: "Dockerfile"
+      stage: "build"
+
+    test:
+      title: "Running test"
+      type: "freestyle" # Run any command
+      image: "codefresh-io/cli" # The image in which command will be executed
+      working_directory: "${{clone}}" # Running command where code cloned
+      commands:
+        - "ls"
+      stage: "test"

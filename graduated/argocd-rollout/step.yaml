@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.5.0
+  version: 1.6.0
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:
@@ -98,6 +98,11 @@ spec:
               "type": "string",
               "description": "Additional flags for argocd app wait command ( like --grpc-web, so on )",
               "default": ""
+          },
+          "debug": {
+              "type": "boolean",
+              "description": "Debug sync command ( print in terminal )",
+              "default": false
           }
       }
     }
@@ -110,7 +115,7 @@ spec:
           cf-argo-plugin rollout "${{app_name}}"
           --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
           --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
-          --k8s-context=${{k8s_context}} --rollout-name=${{rollout_name}} --rollout-namespace=${{rollout_namespace}} --wait-healthy=${{wait_healthy}}
+          --k8s-context=${{k8s_context}} --rollout-name=${{rollout_name}} --rollout-namespace=${{rollout_namespace}} --wait-healthy=${{wait_healthy}} --debug=${{debug}}
           --out-commands-file /codefresh/volume/argo-executor --out-export-file /codefresh/volume/argo-export_url --wait-additional-flags="${{additional_flags_for_wait_cmd}}"
         - chmod +x /codefresh/volume/argo-executor
         - chmod +x /codefresh/volume/argo-export_url

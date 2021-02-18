@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: laurent-cf/pipeline_trigger_merge
+  name: pipeline-trigger-merge
   version: 1.0.0
-  isPublic: false
+  isPublic: true
   description: >-
     Merge a pipeline spec and a list of triggers (files or directories) to
     create a codefresh full pipeline.
@@ -17,24 +17,24 @@ metadata:
     - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-  official: false
+  official: true
   tags: []
   examples:
     - description: pipeline-trigger-merge
       workflow:
         MergeTriggersIntoPipeline:
           title: "Merge the triggers into the pipeline spec"
-          type: laurent-cf/pipeline_trigger_merge
+          type: pipeline-trigger-merge
           arguments:
             SPEC: spec.yml
-            TRIGGERS: trig1.yml TRIGS trig2.yml
+            TRIGGERS: trig1.yml ./trigger_dir trig2.yml
 spec:
   arguments: |-
     {
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "patterns": [],
       "required": [
         "SPEC"
@@ -53,7 +53,7 @@ spec:
   stepsTemplate: |-
     pipeline-trigger-merge:
       name: pipeline-trigger-merge
-      image: lrochette/ptm:1.0
+      image: codefreshplugins/pipeline-trigger-merge:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

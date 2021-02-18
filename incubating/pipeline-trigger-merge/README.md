@@ -26,7 +26,7 @@ create_pipeline:
   commands:
     - /merge.sh
   environment:
-    - TRIGGERS=trig1.yml trig2.yml TRIGGERS
+    - TRIGGERS=trig1.yml trig2.yml ./trigger_dir
     - SPEC=spec.yml
 ```
 

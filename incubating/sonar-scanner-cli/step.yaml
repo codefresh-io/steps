@@ -7,7 +7,7 @@ metadata:
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
     - >-
-      https://github.com/codefresh-io/steps/incubating/sonar-scanner-cli
+      https://github.com/codefresh-io/steps/tree/master/incubating/sonar-scanner-cli
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk

@@ -1,0 +1,65 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: pipeline-trigger-merge
+  version: 1.0.0
+  isPublic: true
+  description: >-
+    Merge a pipeline spec and a list of triggers (files or directories) to
+    create a codefresh full pipeline.
+    Directories are processed recursively. Unknown files are simply ignored.
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/pipeline-trigger-merge
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  examples:
+    - description: pipeline-trigger-merge
+      workflow:
+        MergeTriggersIntoPipeline:
+          title: "Merge the triggers into the pipeline spec"
+          type: pipeline-trigger-merge
+          arguments:
+            SPEC: spec.yml
+            TRIGGERS: trig1.yml ./trigger_dir trig2.yml
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SPEC"
+      ],
+      "properties": {
+        "SPEC": {
+          "type": "string",
+          "description": "The name of the file containing the pipeline spec."
+        },
+        "TRIGGERS": {
+          "type": "string",
+          "description": "A space separated list of trigger files and/or folders."
+        }
+      }
+    }
+  stepsTemplate: |-
+    pipeline-trigger-merge:
+      name: pipeline-trigger-merge
+      image: codefreshplugins/pipeline-trigger-merge:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - /merge.sh
+  delimiters:
+    left: '[['
+    right: ']]'

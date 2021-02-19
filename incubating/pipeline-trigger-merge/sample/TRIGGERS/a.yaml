@@ -1,0 +1,20 @@
+spec:
+  triggers:
+    - name: triga
+      type: git
+      repo: ORG/REPO
+      events:
+        - push.heads
+      pullRequestAllowForkEvents: false
+      commentRegex: /.*/gi
+      branchRegex: /branch-a/gi
+      branchRegexInput: regex
+      provider: github
+      disabled: true
+      options:
+        noCache: false
+        noCfCache: false
+        resetVolume: false
+      verified: true
+      context: github
+      contexts: [ ]

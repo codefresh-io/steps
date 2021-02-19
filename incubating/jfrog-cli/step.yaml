@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.7
+  version: 0.0.8
   isPublic: true
   description: Publishes artifacts to a Build in Artifactory. Also allows you to run additional Jfrog CLI commands during the publishing.
   sources:
@@ -151,6 +151,16 @@ spec:
           "description": "List of case insensitive patterns in the form of 'value1;value2;...'. Environment variables match those patterns will be excluded. This environment variable is used by the 'jfrog rt build-publish' command, in case the --env-exclude command option is not sent.",
           "default": "*password*;*secret*;*key*;*token*"
         },
+        "JFROG_CLI_IMAGE": {
+          "type": "string",
+          "description": "The Docker image registry/image for step.",
+          "default": "codefreshplugins/cfstep-jfrog-cli"
+        },
+        "JFROG_CLI_IMAGE_TAG": {
+          "type": "string",
+          "description": "The Docker image tag for step.",
+          "default": "0.0.8"
+        },
         "GRADLE_DEPLOY_REPO": {
           "type": "string",
           "description": "Upload gradle-built jar file to this gradle repo in Artifactory"
@@ -188,7 +198,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: codefreshplugins/cfstep-jfrog-cli:0.0.7
+      image: '[[.Arguments.JFROG_CLI_IMAGE]]:[[.Arguments.JFROG_CLI_IMAGE_TAG]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

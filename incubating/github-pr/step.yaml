@@ -64,11 +64,11 @@ spec:
             },
             "GITHUB_PR_NUMBER": {
                 "type": "number",
-                "description": "The number of updated pull request. Required for open/close/update operations"
+                "description": "The number of updated pull request. Required for open/close/update/merge operations"
             },
             "GITHUB_PR_OPERATION": {
                 "type": "string",
-                "description": "Operation on pull request. Options - create, update, open, close. Default - create.",
+                "description": "Operation on pull request. Options - create, update, open, close, and merge. Default - create.",
                 "default": "create"
             },
             "HEAD": {

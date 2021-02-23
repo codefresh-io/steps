@@ -99,7 +99,4 @@ echo body:
 echo ${BODY}
 echo
 
-echo -H "${AUTHORIZATION_HEADER}" -X ${METHOD} -d "${BODY}" ${PULLS_URI}${OPTIONAL_PR_NUMBER}
-echo
-
 curl -H "${AUTHORIZATION_HEADER}" -X ${METHOD} -d "${BODY}" ${PULLS_URI}${OPTIONAL_PR_NUMBER}

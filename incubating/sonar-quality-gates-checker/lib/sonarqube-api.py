@@ -31,7 +31,6 @@ def exportResults(status):
 
 def actBasedOnStatus(status):
     qualitygates_status = status['projectStatus']['status']
-    qualitygates_status = 'ERROR'
     if qualitygates_status == 'ERROR':
         print(f"Quality Gates status is '{qualitygates_status}'. FAILLING THE PROCESS")
         print(f'This the full Quality Gate report:\n { json.dumps(status, indent=4, sort_keys=True) }')

@@ -16,8 +16,6 @@ def exportResults(status):
     if not os.path.exists(env_file_path):
         print(f"Quality Gates status is \n'{qualitygates_status}'")     
         print(f"Quality Gates status JSON is \n'{qualitygates_status_json}'")        
-        # for current_secret in formatted_secrets:            
-        #     print(current_secret.export_name + "=" + current_secret.secret_value)
     else:
         env_file = open(env_file_path, "a")
         qualitygates_status_json_file_path = f"/codefresh/volume/sonarqualitygates-{os.getenv('CF_SHORT_REVISION')}.json"          

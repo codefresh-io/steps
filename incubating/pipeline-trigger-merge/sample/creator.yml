@@ -1,0 +1,21 @@
+version: "1.0"
+
+stages:
+  - clone
+
+steps:
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "ORG/REPO"
+    revision: "master"
+    stage: clone
+
+  create_pipeline:
+    type: laurent-cf/pipeline_trigger_merge
+    title: "Creating pipeline"
+    working_directory: ${{clone}}/sample
+    stage: clone
+    arguments:
+      TRIGGERS: foobar trig1.yml trig2.yml TRIGGERS
+#      SPEC: spec.yml

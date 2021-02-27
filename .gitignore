@@ -5,4 +5,4 @@ modules.xml
 steps.iml
 .idea/
 .vscode
-incubating/sonar-quality-gates-checker/lib/env
+.DS_Store

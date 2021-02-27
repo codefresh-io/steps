@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jfrog-cli
-  version: 0.0.5
+  version: 0.0.8
   isPublic: true
-  description: Hybrid/On Premise only, Use JFrog CLI from step
+  description: Publishes artifacts to a Build in Artifactory. Also allows you to run additional Jfrog CLI commands during the publishing.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/jfrog-cli
     - https://bintray.com/jfrog/jfrog-cli-go/jfrog-cli-linux-amd64
@@ -13,6 +13,8 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustin@codefresh.io
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
   categories:
     - utilities
   official: false
@@ -48,6 +50,18 @@ metadata:
             TAG: mytag
             REGISTRY: registry-fqdn
             REPOSITORY: repository
+    - description: publish-build-gradle
+      workflow:
+        JFrogPublishBuild:
+          type: jfrog-cli
+          arguments:
+            JFROG_HOST: ${{JFROG_HOST}}
+            JFROG_USER: ${{JFROG_USER}}
+            JFROG_API_KEY: ${{JFROG_API_KEY}}
+            JFROG_CLI_BUILD_NAME: ${{CF_REPO_NAME}}
+            JFROG_CLI_BUILD_NUMBER: ${{CF_BUILD_ID}}
+            JFROG_CLI_BUILD_URL: ${{CF_BUILD_URL}}
+            GRADLE_DEPLOY_REPO: my-artifactory-gradle-repo
     - description: publish-build-docker-scan-build
       workflow:
         JFrogPublishBuild:
@@ -70,7 +84,7 @@ spec:
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "patterns": [],
       "required": [
         "JFROG_HOST",
@@ -87,7 +101,7 @@ spec:
         },
         "JFROG_PROTOCOL": {
           "type": "string",
-          "description": "JFrog Protocol.",
+          "description": "JFrog Protocol: https (default) or http.",
           "default": "https",
           "enum": [ 
             "http",
@@ -137,21 +151,35 @@ spec:
           "description": "List of case insensitive patterns in the form of 'value1;value2;...'. Environment variables match those patterns will be excluded. This environment variable is used by the 'jfrog rt build-publish' command, in case the --env-exclude command option is not sent.",
           "default": "*password*;*secret*;*key*;*token*"
         },
+        "JFROG_CLI_IMAGE": {
+          "type": "string",
+          "description": "The Docker image registry/image for step.",
+          "default": "codefreshplugins/cfstep-jfrog-cli"
+        },
+        "JFROG_CLI_IMAGE_TAG": {
+          "type": "string",
+          "description": "The Docker image tag for step.",
+          "default": "0.0.8"
+        },
+        "GRADLE_DEPLOY_REPO": {
+          "type": "string",
+          "description": "Upload gradle-built jar file to this gradle repo in Artifactory"
+        },
         "IMAGE": {
           "type": "string",
-          "description": "Docker image name"
+          "description": "Docker image name. This functionality is for hybrid/on-premise Runners only."
         },
         "TAG": {
           "type": "string",
-          "description": "Docker image tag"
+          "description": "Docker image tag. This functionality is for hybrid/on-premise Runners only."
         },
         "REGISTRY": {
           "type": "string",
-          "description": "Docker registry FQDN"
+          "description": "Docker registry FQDN. This functionality is for hybrid/on-premise Runners only."
         },  
         "REPOSITORY": {
           "type": "string",
-          "description": "Docker repository"
+          "description": "Docker repository. This functionality is for hybrid/on-premise Runners only."
         },            
         "XRAY_SCAN": {
           "type": "boolean",
@@ -170,7 +198,7 @@ spec:
   stepsTemplate: |-
     build-publish:
       name: jfrog-cli
-      image: codefreshplugins/cfstep-jfrog-cli
+      image: '[[.Arguments.JFROG_CLI_IMAGE]]:[[.Arguments.JFROG_CLI_IMAGE_TAG]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -187,6 +215,10 @@ spec:
         - [[ $cmd ]]
         - jfrog rt build-collect-env
         - jfrog rt build-add-git
+      [[- if .Arguments.GRADLE_DEPLOY_REPO ]]
+        - jfrog rt gradle-config --server-id-deploy artifactory --repo-deploy $GRADLE_DEPLOY_REPO
+        - jfrog rt gradle artifactoryPublish --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
+      [[- end ]]
       [[- if .Arguments.IMAGE ]]
         - jfrog rt docker-pull $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
         - jfrog rt docker-push $REGISTRY/$IMAGE:$TAG $REPOSITORY --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
@@ -199,6 +231,7 @@ spec:
       [[- if eq .Arguments.XRAY_SCAN true ]]
         - jfrog rt build-scan
       [[- end ]]
+        - cf_export build-publish_CF_OUTPUT_URL="$JFROG_PROTOCOL://$JFROG_HOST/artifactory/webapp/builds/$JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER"
   delimiters:
     left: '[['
     right: ']]'

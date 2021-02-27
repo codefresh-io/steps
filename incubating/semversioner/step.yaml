@@ -1,0 +1,116 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: semversioner
+  version: 0.1.3
+  isPublic: true
+  description: Operates on semver versions
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/semversioner
+    - https://pypi.org/project/semver
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza
+      email: francisco@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: png
+    url: https://avatars.githubusercontent.com/u/8051653?s=200&v=4
+    background: "#000000"
+  examples:
+    - description: bump-major-version
+      workflow:
+        bumpVersion:
+          type: semversioner
+          arguments:
+            SEMVERSIONER_VERSION: "5.7.1"
+            SEMVERSIONER_ACTION: bump
+            SEMVERSIONER_PART: major
+        checkVersion:
+          image: alpine
+          commands:
+            - echo VERSION=${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
+    - description: compare-sermver-versions
+      workflow:
+        bumpVersion:
+          type: semversioner
+          arguments:
+            SEMVERSIONER_VERSION: "5.7.1"
+            SEMVERSIONER_ACTION: compare
+            SEMVERSIONER_VERSION_TO_COMPARE: "5.6.98"
+        checkVersion:
+          image: alpine
+          commands:
+            - echo COMPARISON_RESULT=${{steps.bumpVersion.output.SEMVERSIONER_RESULT}}
+    - description: bump-minor-version
+      workflow:
+        bumpVersion:
+          type: semversioner
+          arguments:
+            SEMVERSIONER_VERSION: "5.7.1"
+            SEMVERSIONER_PART: minor
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "SEMVERSIONER_VERSION"
+      ],
+      "properties": {
+        "SEMVERSIONER_ACTION": {
+          "type": "string",
+          "description": "Options: 'bump' or 'compare'. Default: 'bump'",
+          "default": "bump"
+        },
+        "SEMVERSIONER_VERSION": {
+          "type": "string",
+          "description": "Input semver version"
+        },
+        "SEMVERSIONER_PART": {
+          "type": "string",
+          "description": "Part of the semver to be bumped. Options: 'major', 'minor' and 'patch'. Default: 'patch'",
+          "default": "patch"
+        },
+        "SEMVERSIONER_VERSION_TO_COMPARE": {
+          "type": "string",
+          "description": "Input semver version to compare against SEMVERSIONER_VERSION"
+        }
+      }
+    }
+
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "SEMVERSIONER_RESULT"
+        ]
+        ,
+        "properties": {
+            "SEMVERSIONER_RESULT": {
+                "type": "string",
+                "description": "Result of the action performed. If SEMVERSIONER_ACTION is 'bump', the result will be a semver version. If the SEMVERSIONER_ACTION is 'compare', the result will be '-1', '0' or '1'"
+            }
+        }
+    }  
+  stepsTemplate: |-
+    semversioner:
+      name: semversioner
+      image: codefreshplugins/semversioner:0.1.3
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

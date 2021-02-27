@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-pr
   title: Open or update a GitHub PR
-  version: 0.0.5
+  version: 0.0.6
   isPublic: true
   description: Create, edit, or annotate a GitHub pull request.
   sources:
@@ -64,11 +64,11 @@ spec:
             },
             "GITHUB_PR_NUMBER": {
                 "type": "number",
-                "description": "The number of updated pull request. Required for open/close/update operations"
+                "description": "The number of updated pull request. Required for open/close/update/merge operations"
             },
             "GITHUB_PR_OPERATION": {
                 "type": "string",
-                "description": "Operation on pull request. Options - create, update, open, close. Default - create.",
+                "description": "Operation on pull request. Options - create, update, open, close, and merge. Default - create.",
                 "default": "create"
             },
             "HEAD": {
@@ -88,7 +88,7 @@ spec:
   steps:
     main:
       name: github-pr
-      image: codefresh/github-pr-plugin
+      image: codefreshplugins/github-pr-plugin:0.0.6
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'

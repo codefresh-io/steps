@@ -44,6 +44,15 @@ apply_patch () {
     OPTIONAL_PR_NUMBER='/'${GITHUB_PR_NUMBER}
 }
 
+apply_put_and_merge () {
+    echo ${GITHUB_PR_NUMBER}
+    if [[ ! -n "${GITHUB_PR_NUMBER}" ]]; then
+        error 'Environment variable "GITHUB_PR_NUMBER" is not provided!'
+    fi
+    METHOD=PUT
+    OPTIONAL_PR_NUMBER='/'${GITHUB_PR_NUMBER}'/merge'
+}
+
 join_by () { local IFS="$1"; shift; echo "$*"; }
 
 make_update_body () {
@@ -76,6 +85,8 @@ process_command () {
         apply_patch '{"state": "open"}'
     elif [[ ${GITHUB_PR_OPERATION} == 'close' ]]; then
         apply_patch '{"state": "close"}'
+    elif [[ ${GITHUB_PR_OPERATION} == "merge" ]]; then
+        apply_put_and_merge
     else
         error "PR_OPERATION '${GITHUB_PR_OPERATION}' is not supported!"
     fi

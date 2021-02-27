@@ -57,7 +57,7 @@ spec:
           },
           "git": {
               "type": "string",
-              "description": "The name of the git integration (non-OAuth2) you want to use. Oauth2 compatibility is coming soon. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
+              "description": "The name of the git integration you want to use. If left empty, Codefresh will attempt to use the git provider that was used during account sign-up. Note that this might have unexpected results if you are changing your Git integrations."
           },
           "commit_message": {
               "type": "string",

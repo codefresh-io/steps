@@ -1,0 +1,41 @@
+# this pipeline should not be run on version tag releases (it may cause a non correct sha to override version tagged image in dockerhub)
+version: "1.0"
+# Stages can help you organize your steps in stages
+stages:
+  - "clone"
+  - "build"
+  - "test"
+  - "push"
+
+steps:
+  clone:
+    title: "Cloning steps repository for ptm"
+    type: "git-clone"
+    arguments:
+      repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
+      revision: '${{CF_REVISION}}'
+
+  GettingPluginVersion:
+    title: Getting Plugin Version
+    image: codefresh/cli
+    commands:
+      - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/pipeline-trigger-merge/step.yaml)
+
+  BuildImage:
+    title: Building Docker Image
+    type: build
+    working_directory: "./steps/incubating/pipeline-trigger-merge"
+    dockerfile: "Dockerfile"
+    image_name: codefreshplugins/pipeline-trigger-merge
+
+  PushingToRegistry:
+    type: push
+    title: Pushing To Dockerhub Registry
+    registry: cfpluginmgr
+    candidate: ${{BuildImage}}
+    tags: [ "${{PLUGIN_VERSION}}" ]
+    when:
+      branch:
+        only:
+        - master

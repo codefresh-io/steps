@@ -2,16 +2,16 @@ kind: step-type
 version: '1.0'
 metadata:
   name: smtp
-  version: 0.0.2
+  version: 1.0.0
   isPublic: true
   description: Sends Email using SMTP Server
   sources:
     - >-
-      https://github.com/codefresh-io/steps/incubating/smtp
+      https://github.com/codefresh-io/steps/tree/master/incubating/smtp
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk
-      email: dustinb@codefresh.io
+      email: dustin@codefresh.io
   categories:
     - utility
   official: true
@@ -40,7 +40,7 @@ spec:
         "definitions": {},
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "patterns": [],
         "required": [
             "BODY",
@@ -48,6 +48,7 @@ spec:
             "FROM",
             "SUBJECT",
             "SMTP_PASSWORD",
+            "SMTP_PORT",
             "SMTP_SERVER",
             "SMTP_USERNAME"
         ],
@@ -101,7 +102,7 @@ spec:
   stepsTemplate: |-
     main:
       name: smtp
-      image: codefreshplugins/cfstep-smtp
+      image: codefreshplugins/cfstep-smtp:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

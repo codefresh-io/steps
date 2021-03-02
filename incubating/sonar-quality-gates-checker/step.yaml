@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-quality-gates-checker
-  version: 0.1.0
+  version: 0.1.1
   isPublic: true
   description: Check Quality Gates from Sonarqube or Sonarcloud
   sources:
@@ -11,8 +11,6 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustin@codefresh.io
-    - name: Francisco Cocozza
-      email: francisco@codefresh.io
   categories:
     - utilities
   official: true
@@ -90,7 +88,7 @@ spec:
   stepsTemplate: |-
     sonar:
       name: sonar
-      image: codefreshplugins/sonar-quality-gates-checker:0.1.0
+      image: codefreshplugins/sonar-quality-gates-checker:0.1.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

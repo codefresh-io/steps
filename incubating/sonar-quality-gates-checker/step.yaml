@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-quality-gates-checker
-  version: 0.1.0-alpha
+  version: 0.1.0
   isPublic: true
   description: Check Quality Gates from Sonarqube or Sonarcloud
   sources:
@@ -90,7 +90,7 @@ spec:
   stepsTemplate: |-
     sonar:
       name: sonar
-      image: codefreshplugins/sonar-quality-gates-checker:0.1.0-alpha
+      image: codefreshplugins/sonar-quality-gates-checker:0.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

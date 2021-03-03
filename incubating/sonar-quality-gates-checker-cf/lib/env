@@ -1,0 +1,4 @@
+CF_BRANCH=sonar-analysis
+SONAR_PROJECT_KEY=francisco-org 
+SONARCLOUD_TOKEN=c686687957604c726aea81ee3f029df99f383ca0
+SONAR_HOST_URL=https://sonarcloud.io

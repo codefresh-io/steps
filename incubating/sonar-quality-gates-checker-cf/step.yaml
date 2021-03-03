@@ -1,0 +1,100 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: sonar-quality-gates-checker
+  version: 0.1.1
+  isPublic: true
+  description: Check Quality Gates from Sonarqube or Sonarcloud
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/sonarqube
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/sonar-scanner-cli/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Get Quality Gates from a SonarCloud Project
+      workflow:
+        check_quality_gates:
+          type: sonar-quality-gates-checker
+          arguments:
+            SONAR_TOKEN: ${{MY_SONAR_TOKEN}}
+            SONAR_PROJECT_KEY: ${{MY_SONAR_PROJECT}}
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "SONAR_PROJECT_KEY"
+      ],
+      "properties": {
+        "SONAR_HOST_URL": {
+          "type": "string",
+          "default": "https://sonarcloud.io",
+          "description": "SonarCloud or SonarQube URL."
+        },
+        "SONAR_TOKEN": {
+          "type": "string",
+          "description": "SonarCloud Token."
+        },
+        "SONAR_PASSWORD": {
+          "type": "string",
+          "description": "SonarQube Passsword."
+        },
+        "SONAR_USERNAME": {
+          "type": "string",
+          "description": "SonarQube Username."
+        },
+        "SONAR_PROJECT_KEY": {
+          "type": "string",
+          "description": "SonarQube|Cloud Project."
+        },
+      }
+    }
+
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "SONAR_QUALITYGATES_STATUS"
+        ]
+        ,
+        "properties": {
+            "SONAR_QUALITYGATES_STATUS": {
+                "type": "string",
+                "description": "Quality Gates status of a Project"
+            },
+            "SONAR_QUALITYGATES_STATUS_JSON_PATH": {
+                "type": "string",
+                "description": "Path to the JSON file response of the Quality Gates status of a Project" 
+            }
+        }
+    }  
+  stepsTemplate: |-
+    sonar:
+      name: sonar
+      image: codefreshplugins/sonar-quality-gates-checker:0.1.1
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /sonarqube-api.py
+  delimiters:
+    left: '[['
+    right: ']]'

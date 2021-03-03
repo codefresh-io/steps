@@ -90,7 +90,7 @@ spec:
                "description": "Your image to which you want assign issues",
                "examples": ["gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"]
             },
-            "FAIL_ON_NOT_FOUND: {
+            "FAIL_ON_NOT_FOUND": {
                "type": "boolean",
                "description": "show debug logs",
                "default": false

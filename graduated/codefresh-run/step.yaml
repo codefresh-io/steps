@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -142,7 +142,7 @@ spec:
     first:
         image: codefresh/cli
         commands:
-        [[- $cmd := (printf "codefresh run %s -d" .Arguments.PIPELINE_ID ) -]]
+        [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
             [[- $cmd = (printf "%s -t %s" $cmd .Arguments.TRIGGER_ID) -]]
         [[- end -]]
@@ -165,7 +165,7 @@ spec:
             [[- $cmd = (printf "%s --reset-volume" $cmd) -]]
         [[- end -]]
         [[ range .Arguments.VARIABLE ]]
-            [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
+            [[- $cmd = (printf "%s --variable \"%s\"" $cmd .) -]]
         [[- end -]]
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context %s" $cmd .) -]]

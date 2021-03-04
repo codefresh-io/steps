@@ -6,7 +6,7 @@ metadata:
   isPublic: true
   description: Check Quality Gates from Sonarqube or Sonarcloud
   sources:
-    - https://github.com/codefresh-io/steps/tree/master/incubating/sonarqube
+    - https://github.com/codefresh-io/steps/blob/master/incubating/sonar-quality-gates-checker
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk

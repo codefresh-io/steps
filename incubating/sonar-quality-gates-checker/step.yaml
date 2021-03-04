@@ -59,7 +59,7 @@ spec:
         "SONAR_PROJECT_KEY": {
           "type": "string",
           "description": "SonarQube|Cloud Project."
-        },
+        }
       }
     }
 

@@ -39,7 +39,7 @@ steps:
     commands:
       - |
         version=`cdk version`
-        if [[] $version =~ ^1.91 ]] ; then
+        if [[ $version =~ ^1.91.0 ]] ; then
           exit 0
         else
           exit 1

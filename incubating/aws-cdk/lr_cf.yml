@@ -13,21 +13,21 @@ steps:
     type: "git-clone"
     arguments:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
-      git: "cf_github"
+      git: "github"
       revision: '${{CF_REVISION}}'
 
-  GettingPluginVersion:
-    title: Getting Plugin Version
-    image: codefresh/cli
-    commands:
-      - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/aws-cdk/step.yaml)
+  # GettingPluginVersion:
+  #   title: Getting Plugin Version
+  #   image: codefresh/cli
+  #   commands:
+  #     - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/aws-cdk/step.yaml)
 
   BuildImage:
     title: Building Docker Image
     type: build
     working_directory: "./steps/incubating/aws-cdk"
     dockerfile: "Dockerfile"
-    image_name: codefreshplugins/aws-cdk
+    image_name: lrochette/aws-cdk
 
   PushingToRegistry:
     type: push
@@ -38,4 +38,4 @@ steps:
     when:
       branch:
         only:
-        - master
+        - aws-cdk

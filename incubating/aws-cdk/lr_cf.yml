@@ -32,25 +32,29 @@ steps:
     dockerfile: "Dockerfile"
     image_name: lrochette/aws-cdk
 
-  test-version:
-    title: Testing CDK version
-    image: ${{BuildImage}}
+  test:
+    type: parallel
     stage: test
-    commands:
-      - |
-        set +x
-        version=`cdk version`
-        if [[ $version =~ ^1.91.0 ]] ; then
-          echo "version is correct"
-          exit 0
-        else
-          echo "version is incorrect"
-          exit 1
-        fi
-  test-synth:
-    title: test synth command
-    image: ${{BuildImage}}
-    stage: test
+    steps:
+      test-version:
+        title: Testing CDK version
+        image: ${{BuildImage}}
+        commands:
+          - |
+            version=`cdk version`
+            if [[ $version =~ ^1.91.0 ]] ; then
+              echo "version is correct"
+              exit 0
+            else
+              echo "version is incorrect"
+              exit 1
+            fi
+      test-synth:
+        title: test synth command
+        image: ${{BuildImage}}
+        working_directory: "./steps/incubating/aws-cdk/test"
+        commands:
+          - cdk ls
 
   PushingToRegistry:
     type: push

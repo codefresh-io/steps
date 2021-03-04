@@ -32,7 +32,7 @@ steps:
   PushingToRegistry:
     type: push
     title: Pushing To Dockerhub Registry
-    registry: cfpluginmgr
+    registry: docker-lr
     candidate: ${{BuildImage}}
     tags: [ "${{PLUGIN_VERSION}}" ]
     when:

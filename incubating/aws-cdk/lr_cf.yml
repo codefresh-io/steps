@@ -29,6 +29,12 @@ steps:
     dockerfile: "Dockerfile"
     image_name: lrochette/aws-cdk
 
+  test:
+    title: Testing image
+    image: ${{BuildImage}}
+    commands:
+      - cdk version
+
   PushingToRegistry:
     type: push
     title: Pushing To Dockerhub Registry

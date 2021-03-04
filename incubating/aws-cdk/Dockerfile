@@ -1,7 +1,7 @@
 # based on the work from Vu duration
 # https://dev.to/vumdao/create-aws-cdk-image-container-43ei
 
-FROM amazon/aws-lambda-pyton:3.8
+FROM amazon/aws-lambda-python:3.8
 
 ENV AWS_CDK_VERSION=1.91.0
 ENV AWS_DEFAULT_REGION=us-east-1

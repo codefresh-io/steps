@@ -32,18 +32,26 @@ steps:
     dockerfile: "Dockerfile"
     image_name: lrochette/aws-cdk
 
-  test:
-    title: Testing image
+  test-version:
+    title: Testing CDK version
     image: ${{BuildImage}}
     stage: test
     commands:
       - |
+        set +x
         version=`cdk version`
         if [[ $version =~ ^1.91.0 ]] ; then
+          echo "version is correct"
           exit 0
         else
+          echo "version is incorrect"
           exit 1
         fi
+  test-synth:
+    title: test synth command
+    image: ${{BuildImage}}
+    stage: test
+
   PushingToRegistry:
     type: push
     title: Pushing To Dockerhub Registry

@@ -1,0 +1,64 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: pipeline-trigger-merge
+  version: 1.0.0-alpha
+  isPublic: false
+  description: >-
+    Integration with AWS Cloud Development Kit.
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza & Laurent Rochette
+    - email: francisco@codefresh.io, laurent.rochette@codefresh.io
+  categories:
+    - utilities
+    - deployment
+    - build
+  official: false
+  tags: []
+  examples:
+    - description: aws-cdk
+      workflow:
+        AwsCDKSynth:
+          title: "Build the app"
+          type: aws-cdk
+          arguments:
+            ARG1: TBD
+            ARG2: TBD
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+      ],
+      "properties": {
+        "ARG1": {
+          "type": "string",
+          "description": ""
+        },
+        "ARG2": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    }
+  stepsTemplate: |-
+    aws-cdk:
+      name: aws-cdk
+      image: codefreshplugins/pipeline-trigger-merge:1.0.0-alpha
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - /cdk.sh
+  delimiters:
+    left: '[['
+    right: ']]'

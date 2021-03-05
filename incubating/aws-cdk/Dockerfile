@@ -15,4 +15,4 @@ RUN yum -y update && \
     pip3 install aws-cdk.aws-ec2 aws-cdk.aws-route53 aws-cdk.aws-iam aws-cdk.aws-elasticloadbalancingv2 aws-cdk.core
 
 #CMD ["cdk version"]
-CMD ["/bin/env"]
+ENTRYPOINT ["/bin/bash"]

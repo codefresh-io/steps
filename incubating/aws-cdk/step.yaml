@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: pipeline-trigger-merge
+  name: lrochette/aws-cdk
   version: 1.0.0-alpha
   isPublic: false
   description: >-
@@ -52,7 +52,7 @@ spec:
   stepsTemplate: |-
     aws-cdk:
       name: aws-cdk
-      image: codefreshplugins/pipeline-trigger-merge:1.0.0-alpha
+      image: lrochette/aws-cdk:1.0.0-alpha
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

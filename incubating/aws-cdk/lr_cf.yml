@@ -17,6 +17,12 @@ steps:
       git: "github"
       revision: '${{CF_REVISION}}'
 
+  set-var:
+    image: "codefresh/cli"
+    stage: clone
+    commands:
+        - cf_export FOOBAR=weird
+
   GettingPluginVersion:
     title: Getting Plugin Version
     image: codefresh/cli
@@ -41,6 +47,7 @@ steps:
         image: ${{BuildImage}}
         commands:
           - |
+            env
             version=`cdk version`
             if [[ $version =~ ^1.91.0 ]] ; then
               echo "version is correct"
@@ -55,6 +62,7 @@ steps:
         working_directory: "./steps/incubating/aws-cdk/test"
         commands:
           - cdk ls
+          - env
 
   PushingToRegistry:
     type: push

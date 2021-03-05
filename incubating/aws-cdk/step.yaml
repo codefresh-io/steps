@@ -58,7 +58,7 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-        - /cdk.sh
+        - /bin/env
   delimiters:
     left: '[['
     right: ']]'

@@ -49,16 +49,16 @@ spec:
         }
       }
     }
-  stepsTemplate: |-
-    aws-cdk:
-      name: aws-cdk
-      image: lrochette/aws-cdk:1.0.0-alpha
-      environment:
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
-      commands:
-        - /bin/env
-  delimiters:
-    left: '[['
-    right: ']]'
+  # stepsTemplate: |-
+  #   aws-cdk:
+  #     name: aws-cdk
+  #     image: lrochette/aws-cdk:1.0.0-alpha
+  #     environment:
+  #     [[ range $key, $val := .Arguments ]]
+  #       - '[[ $key ]]=[[ $val ]]'
+  #     [[- end ]]
+  #     commands:
+  #       - /bin/env
+  # delimiters:
+  #   left: '[['
+  #   right: ']]'

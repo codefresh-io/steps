@@ -61,7 +61,7 @@ steps:
     title: Pushing To Dockerhub Registry
     registry: docker-lr
     candidate: ${{BuildImage}}
-    tags: [ "${{PLUGIN_VERSION}}" ]
+    tags: [ "latest", "${{PLUGIN_VERSION}}" ]
     stage: push
     when:
       branch:

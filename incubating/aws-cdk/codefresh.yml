@@ -34,7 +34,7 @@ steps:
     title: Pushing To Dockerhub Registry
     registry: cfpluginmgr
     candidate: ${{BuildImage}}
-    tags: [ "${{PLUGIN_VERSION}}" ]
+    tags: [ "latest", "${{PLUGIN_VERSION}}" ]
     when:
       branch:
         only:

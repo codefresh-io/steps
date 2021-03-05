@@ -52,7 +52,7 @@ spec:
   stepsTemplate: |-
     aws-cdk:
       name: aws-cdk
-      image: lrochette/aws-cdk:1.0.0-alpha
+      image: lrochette/aws-cdk
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

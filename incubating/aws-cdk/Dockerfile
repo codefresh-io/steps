@@ -14,4 +14,5 @@ RUN yum -y update && \
     npm install -g aws-cdk@${AWS_CDK_VERSION} && \
     pip3 install aws-cdk.aws-ec2 aws-cdk.aws-route53 aws-cdk.aws-iam aws-cdk.aws-elasticloadbalancingv2 aws-cdk.core
 
-CMD ["cdk version"]
+#CMD ["cdk version"]
+CMD ["bash env"]

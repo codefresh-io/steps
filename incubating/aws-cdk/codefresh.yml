@@ -28,6 +28,7 @@ steps:
     working_directory: "./steps/incubating/aws-cdk"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/aws-cdk
+    disable_push: true
 
   PushingToRegistry:
     type: push

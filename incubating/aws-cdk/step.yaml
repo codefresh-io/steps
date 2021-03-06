@@ -4,11 +4,9 @@ metadata:
   name: laurent-cf/aws-cdk
   version: 1.0.0-alpha
   isPublic: false
-  description: >-
-    Integration with AWS Cloud Development Kit.
+  description: Integration with AWS Cloud Development Kit.
   sources:
-    - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
+    - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
   stage: incubating
   maintainers:
     - name: Francisco Cocozza & Laurent Rochette
@@ -19,6 +17,9 @@ metadata:
     - build
   official: false
   tags: []
+  icon:
+    type: png
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aws-cdk/icon.svg
   examples:
     - description: aws-cdk
       workflow:
@@ -52,7 +53,7 @@ spec:
   steps:
     main:
       name: aws-cdk
-      image: lrochette/aws-cdk:latest
+      image: lrochette/aws-cdk
       commands:
         - env
   # stepsTemplate: |-

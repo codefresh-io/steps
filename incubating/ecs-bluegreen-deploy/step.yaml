@@ -2,11 +2,12 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-bluegreen-deploy
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
-  description: Deploys  a  new task definition to the specified ECS service. Only services that use CodeDeploy for deployments are supported.
+  description: Updates an AWS ECS Service with a new image, and then deploys it with CodeDeploy. Works with all deployment configurations, including AllAtOnce, Linear, and Canary.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-bluegreen-deploy'
+    - 'https://aws.amazon.com/blogs/containers/aws-codedeploy-now-supports-linear-and-canary-deployments-for-amazon-ecs/'
   stage: incubating
   maintainers:
     - name: Pavel Nosovets

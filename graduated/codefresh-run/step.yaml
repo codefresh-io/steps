@@ -165,7 +165,7 @@ spec:
             [[- $cmd = (printf "%s --reset-volume" $cmd) -]]
         [[- end -]]
         [[ range .Arguments.VARIABLE ]]
-            [[- $cmd = (printf "%s --variable \"%s\"" $cmd .) -]]
+            [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context %s" $cmd .) -]]

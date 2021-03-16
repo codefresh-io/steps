@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.2.0
+  version: 1.2.1
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -92,7 +92,7 @@ spec:
             },
             "FAIL_ON_NOT_FOUND": {
                "type": "boolean",
-               "description": "show debug logs",
+               "description": "Fail in case if ticket not found",
                "default": false
             }
         }

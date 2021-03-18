@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.0.7
+  version: 1.0.8
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -176,7 +176,11 @@ spec:
         [[ range .Arguments.SKIP ]]
             [[- $cmd = (printf "%s --skip %s" $cmd .) -]]
         [[- end ]]
-          - export BUILD_ID=$([[ $cmd ]]); if [ -z "$BUILD_ID" ]; then exit 1; fi
+
+        [[/* Multiline string is required to support usage of 'colon' (:) character in the string. For example in the pipeline name. */]]
+        [[/* Otherwise after template render there is a chance to have an object instead of a string. */]]
+          - >-
+            export BUILD_ID=$([[ $cmd ]]); if [ -z "$BUILD_ID" ]; then exit 1; fi
           - cf_export first_CF_OUTPUT_URL="${{CF_URL}}/build/$BUILD_ID"
           - cf_export BUILD_ID
       [[- if eq .Arguments.DETACH false ]]

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.0
+  version: 2.0.1
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -19,14 +19,14 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://github.com/aws/aws-cdk/blob/master/logo/svg/AWS-Cloud-Development-Kit_Icon_48_Squid.svg
+    url: https://raw.githubusercontent.com/aws/aws-cdk/master/logo/svg/AWS-Cloud-Development-Kit_Icon_48_Squid.svg
     background: "#f4f4f4"
   examples:
     - description: aws-cdk
       workflow:
         AwsCDKDeploy:
           title: Deploy the CDK application
-          type: cf-support/aws-cdk:1.94.1
+          type: cf-support/aws-cdk
           stage: deploy
           working_directory: ${{gitClone}}/cdk/lambda-cron
           arguments:

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 1.0.0-hack
+  version: 1.0.0
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -92,7 +92,7 @@ spec:
   steps:
     planner:
       name: aws-cdk-planner
-      title: create the bash file to execute
+      title: create the bash file to execute cdk action
       image: lrochette/aws-cdk-planner
 
     execute-typescript:
@@ -100,7 +100,7 @@ spec:
       title: execute commands for Typescript
       image: lrochette/aws-cdk-executor-typescript
       commands:
-        ./aws-cdk_script.sh
+        - ./aws-cdk_script.sh
       condition:
         any:
           noLanguage: 'includes("${{language}}", "${{language}}") == true'

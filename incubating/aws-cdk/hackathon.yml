@@ -14,7 +14,7 @@ steps:
     stage: "clone"
     arguments:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
-      git: "https://github.com/codefresh-io/steps/tree/aws-cdk/incubating/aws-cdk"
+      git: "github (cf-ci-bot)"
       revision: '${{CF_REVISION}}'
 
   GettingPluginVersion:

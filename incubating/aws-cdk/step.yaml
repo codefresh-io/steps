@@ -76,7 +76,7 @@ spec:
              "type": "string"
           },
           "description": "Commands to execute in plugin container for `freestyle` action)"
-        },
+        }
       }
     }
   returns: |-

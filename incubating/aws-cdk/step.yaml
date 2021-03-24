@@ -9,7 +9,7 @@ metadata:
     - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
   stage: incubating
   maintainers:
-    - name: Francisco Cocozza,Laurent Rochette, LUkas Goodfellow
+    - name: Francisco Cocozza,Laurent Rochette, Lukas Goodfellow
     - email: francisco@codefresh.io, laurent.rochette@codefresh.io, lukas.goodfellow@codefresh.io
   categories:
     - utilities
@@ -18,17 +18,25 @@ metadata:
   official: false
   tags: []
   icon:
-    type: image
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aws-cdk/icon.png
+    type: svg
+    url: https://github.com/aws/aws-cdk/blob/master/logo/svg/AWS-Cloud-Development-Kit_Icon_48_Squid.svg
+    background: "#f4f4f4"
   examples:
     - description: aws-cdk
       workflow:
-        AwsCDKSynth:
-          title: "Build the app"
-          type: aws-cdk
+        AwsCDKDeploy:
+          title: Deploy the CDK application
+          type: cf-support/aws-cdk:1.94.1
+          stage: deploy
+          working_directory: ${{gitClone}}/cdk/lambda-cron
           arguments:
-            ARG1: TBD
-            ARG2: TBD
+            action: deploy
+            language: TypeScript
+            cdk_version: 1.94.1
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
+            AWS_DEFAULT_REGION: us-east-1a
 spec:
   arguments: |-
     {

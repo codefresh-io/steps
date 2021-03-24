@@ -52,7 +52,15 @@ spec:
         },
         "language": {
           "type": "string",
-          "description": "The language of the applciation. Default is "
+          "description": "The language of the applciation. Default is TypeScript"
+        },
+        "debug": {
+          "type": "boolean",
+          "description": "Add the --verbose flag if true"
+        },
+        "cmd_ps": {
+          "type": "string",
+          "description": "Additional flags to pass to the aws cdk command"
         }
       }
     }
@@ -85,23 +93,23 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute
-      image: lrochette/cdk-planner
-        - env
+      image: lrochette/cdk-planner:hackathon
+
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/cdk-executor-typescript
+      image: lrochette/cdk-executor-typescript:hackathon
       commands:
         ./aws-cdk_script.sh
       condition:
         any:
           noLanguage: 'includes("${{language}}", "${{language}}") == true'
           TypeScript: '"${{language}}" == "TypeScript"'
-          
+
     outputValues:
       name: setOutputValues
       title: Set the output values for the step
-      image: alpine
+      image: alpine:latest
       commands:
         - cf_export STATUS=0
         - cf_export STATUS_JSON_FILE=/codefresh/volume/aws-cdk-result.json

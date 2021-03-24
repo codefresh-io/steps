@@ -13,10 +13,11 @@ Getting started with AWS CDK: https://docs.aws.amazon.com/cdk/latest/guide/getti
 Example `codefresh.yml` build is below with required Arguments in place.
 
 | Arguments | DEFAULT | TYPE | REQUIRED | VALUES | DESCRIPTION |
-|----------------------------|----------|---------|----------|----------|---------------------------------------------------------------------------------------------------------------------------------|
+| :----------------------------| :----------: | :---------| :---: |----------|---------------------------------------------------------------------------------------------------------------------------------|
 | action | | string | yes | synth, bootstrap, deploy, diff, list, destroy, freestyle |The CDK operation to execute |
 | project_dir | . | string | no | | the folder where the CDK app is located |
 | language | TypeScript | string | yes | TypeScript, python | The language for the application |
+| verbose | false | boolean | no | true, false | Add the --verbose flag to the command if true |
 
 
 

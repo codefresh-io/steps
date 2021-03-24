@@ -42,6 +42,18 @@ spec:
         "language"
       ],
       "properties": {
+        "AWS_ACCESS_KEY_ID": {
+            "type": "string",
+            "description": "Amazon access key ID"
+        },
+        "AWS_SECRET_ACCESS_KEY": {
+            "type": "string",
+            "description": "amazon secret key (make sure it's encrypted)"
+        },
+        "AWS_DEFAULT_REGION": {
+            "type": "string",
+            "description": "aws region"
+        },
         "action": {
           "type": "string",
           "description": "The CDK operation to execute. Value can be synth, bootstrap, deploy, diff, list, destroy, freestyle"
@@ -53,7 +65,7 @@ spec:
         "language": {
           "type": "string",
           "default": "TypeScript",
-          "examples": ["TypeScript", "python"],
+          "examples": ["TypeScript", "Python"],
           "description": "The language of the applciation. Default is TypeScript"
         },
         "debug": {
@@ -109,10 +121,18 @@ spec:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
       image: lrochette/aws-cdk-planner:1.94.1
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
       image: lrochette/aws-cdk-executor-typescript:1.94.1
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
       commands:
         - ./aws-cdk_script.sh
     outputValues:

@@ -16,7 +16,7 @@ Example `codefresh.yml` build is below with required Arguments in place.
 | :----------------------------| :----------: | :---------| :---: |----------|---------------------------------------------------------------------------------------------------------------------------------|
 | action | | string | yes | synth, bootstrap, deploy, diff, list, destroy, freestyle |The CDK operation to execute |
 | project_dir | . | string | no | | the folder where the CDK app is located |
-| language | TypeScript | string | yes | TypeScript, python | The language for the application |
+| language | TypeScript | string | yes | TypeScript, Python | The language for the application |
 | verbose | false | boolean | no | true, false | Add the --verbose flag to the command if true |
 | cdk_version | 1.94.1 | string | no | | Version of the CDK used in the image
 

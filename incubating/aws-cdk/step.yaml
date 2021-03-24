@@ -109,22 +109,15 @@ spec:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
       image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
-
-    # Executor for TypeScript
-    #
-    [[ if .Arguments.language eq "TypeScript"]]
+    [[/* Executor for TypeScript */]]
+    [[ if .Arguments.language eq "TypeScript" ]]
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
       image: lrochette/aws-cdk-executor-typescript:[[ .Arguments.cdk_version ]]
       commands:
         - ./aws-cdk_script.sh
-      condition:
-        any:
-          noLanguage: 'includes("${{language}}", "${{language}}") == true'
-          TypeScript: '"${{language}}" == "TypeScript"'
     [[ end ]]
-
     outputValues:
       name: setOutputValues
       title: Set the output values for the step
@@ -133,6 +126,7 @@ spec:
         - cf_export STATUS=0
         - cf_export STATUS_JSON_FILE=/codefresh/volume/aws-cdk-result.json
         - cf_export CLOUDFORMATION_FILE=/codefresh/volume/cdk.out
+        - exit 0
   delimiters:
     left: '[['
     right: ']]'

@@ -1,16 +1,16 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: laurent-cf/aws-cdk
-  version: 1.0.0-alpha
+  name: cf-support/aws-cdk
+  version: 1.0.0-hack
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
   stage: incubating
   maintainers:
-    - name: Francisco Cocozza & Laurent Rochette
-    - email: francisco@codefresh.io, laurent.rochette@codefresh.io
+    - name: Francisco Cocozza,Laurent Rochette, LUkas Goodfellow
+    - email: francisco@codefresh.io, laurent.rochette@codefresh.io, lukas.goodfellow@codefresh.io
   categories:
     - utilities
     - deployment
@@ -38,24 +38,36 @@ spec:
       "additionalProperties": true,
       "patterns": [],
       "required": [
+        "action",
+        "language"
       ],
       "properties": {
-        "ARG1": {
+        "action": {
           "type": "string",
-          "description": ""
+          "description": "The CDK operation to execute. Value can be synth, bootstrap, deploy, diff, list, destroy, freestyle"
         },
-        "ARG2": {
+        "project_dir": {
           "type": "string",
-          "description": ""
+          "description": "the path where the CDK application is located"
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the applciation. Default is "
         }
       }
     }
   steps:
-    main:
-      name: aws-cdk
-      image: lrochette/aws-cdk
-      commands:
+    planner:
+      name: aws-cdk-planner
+      title: create the bash file to execute
+      image: lrochette/cdk-planner
         - env
+    execute-tyupescript:
+      name: aws-cdk-executor-typescript
+      title: execute commands for Typescript
+      image: lrochette/cdk-executor-typescript
+      commands:
+        ./cdk-executor-typescript.sh
   # stepsTemplate: |-
   #   aws-cdk:
   #     name: aws-cdk

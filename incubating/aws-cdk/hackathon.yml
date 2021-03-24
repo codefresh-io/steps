@@ -14,7 +14,7 @@ steps:
     stage: "clone"
     arguments:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
-      git: "github"
+      git: "https://github.com/codefresh-io/steps/tree/aws-cdk/incubating/aws-cdk"
       revision: '${{CF_REVISION}}'
 
   GettingPluginVersion:
@@ -24,55 +24,10 @@ steps:
     commands:
       - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/aws-cdk/step.yaml)
 
-  BuildImage:
-    title: Building Docker Image
-    type: build
-    stage: build
-    working_directory: ".steps/incubating/aws-cdk"
-    dockerfile: "Dockerfile"
-    image_name: lrochette/aws-cdk
-    push: false
-
-  test:
-    type: parallel
-    stage: test
-    steps:
-      test-version:
-        title: Testing CDK version
-        image: ${{BuildImage}}
-        commands:
-          - |
-            version=`cdk version`
-            if [[ $version =~ ^1.91.0 ]] ; then
-              echo "version is correct"
-              exit 0
-            else
-              echo "version is incorrect"
-              exit 1
-            fi
-      test-synth:
-        title: test synth command
-        image: ${{BuildImage}}
-        working_directory: "./steps/incubating/aws-cdk/test"
-        commands:
-          - cdk ls
-
-  PushingToRegistry:
-    type: push
-    title: Pushing To Dockerhub Registry
-    registry: docker-lr
-    candidate: ${{BuildImage}}
-    tags: [ "latest", "${{PLUGIN_VERSION}}" ]
-    stage: push
-    when:
-      branch:
-        only:
-        - aws-cdk
-
   updateStep:
     title: "Update the step itself"
     image: codefresh/cli
     stage: push
     working_directory: "steps/incubating/aws-cdk"
     commands:
-      - codefresh replace step-type -f step.yaml
+      - codefresh replace step-type -f step.yaml || codefresh create step-type -f step.yaml

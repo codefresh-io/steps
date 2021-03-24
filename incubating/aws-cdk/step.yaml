@@ -18,8 +18,8 @@ metadata:
   official: false
   tags: []
   icon:
-    type: png
-    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aws-cdk/icon.svg
+    type: image
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/aws-cdk/icon.png
   examples:
     - description: aws-cdk
       workflow:

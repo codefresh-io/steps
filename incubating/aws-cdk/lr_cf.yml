@@ -28,9 +28,10 @@ steps:
     title: Building Docker Image
     type: build
     stage: build
-    working_directory: "./steps/incubating/aws-cdk"
+    working_directory: ".steps/incubating/aws-cdk"
     dockerfile: "Dockerfile"
     image_name: lrochette/aws-cdk
+    push: false
 
   test:
     type: parallel
@@ -67,3 +68,11 @@ steps:
       branch:
         only:
         - aws-cdk
+
+  updateStep:
+    title: "Update the step itself"
+    image: codefresh/cli
+    stage: push
+    working_directory: "steps/incubating/aws-cdk"
+    commands:
+      - codefresh replace step-type -f step.yaml

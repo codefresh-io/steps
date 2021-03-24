@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: cf/codecov-enricher
   title: Enrich codefresh image with Codecov info
-  version: 1.0.2
+  version: 1.0.8
   isPublic: true
   description: Enrich codefresh image with Codecov info
   sources:
@@ -82,9 +82,9 @@ spec:
                 "examples": ["codefresh.github.com"],
                 "default": "github.com"
             },
-            "CODECOV_API_KEY": {
+            "CODECOV_INTEGRATION": {
                 "type": "string",
-                "description": "Codecov token"
+                "description": "Codecov integration name"
             }
         }
     }
@@ -94,9 +94,12 @@ spec:
       image: codefresh/cli
       environment:
         - GIT_PROVIDER_NAME=${{GIT_PROVIDER_NAME}}
+        - CODECOV_INTEGRATION=${{CODECOV_INTEGRATION}}
       commands:
         - export GITHUB_TOKEN=$(codefresh get context $GIT_PROVIDER_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
         - echo GITHUB_TOKEN=$GITHUB_TOKEN >> /meta/env_vars_to_export
+        - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
+        - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
     main:
       name: enrich-image
       image: pashacodefresh/codecov

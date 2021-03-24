@@ -108,16 +108,13 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
-    [[/* Executor for TypeScript */]]
-    [[ if .Arguments.language eq "TypeScript" ]]
+      image: lrochette/aws-cdk-planner:1.94.1
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript:[[ .Arguments.cdk_version ]]
+      image: lrochette/aws-cdk-executor-typescript:1.94.1
       commands:
         - ./aws-cdk_script.sh
-    [[ end ]]
     outputValues:
       name: setOutputValues
       title: Set the output values for the step

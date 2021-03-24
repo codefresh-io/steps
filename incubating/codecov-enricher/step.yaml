@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: cf/codecov-enricher
   title: Enrich codefresh image with Codecov info
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Enrich codefresh image with Codecov info
   sources:
@@ -81,6 +81,10 @@ spec:
                 "description": "Support on-premises github host, by default github.com",
                 "examples": ["codefresh.github.com"],
                 "default": "github.com"
+            },
+            "CODECOV_TOKEN": {
+                "type": "string",
+                "description": "Codecov token"
             }
         }
     }
@@ -103,3 +107,4 @@ spec:
           - REPO=${{REPO}}
           - GITHUB_TOKEN=${{GITHUB_TOKEN}}
           - GITHUB_HOST=${{GITHUB_HOST}}
+          - CODECOV_TOKEN=${{CODECOV_TOKEN}}

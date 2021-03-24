@@ -110,7 +110,7 @@ spec:
                 "type": "string",
                 "description": "The path in the Codefresh Volume to the JSON answer from the ACTION performed."
             },
-            "CLOUDFORMATION_FILE": {
+            "CDK_OUT_DIR_PATH": {
                 "type": "string",
                 "description": "The path in the Codefresh Volume to the template saved as the cdk.out JSON file."
             }
@@ -120,7 +120,7 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner:80a03b1
+      image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
 
       environment:
       [[ range $key, $val := .Arguments ]]
@@ -129,33 +129,17 @@ spec:
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript:80a03b1
+      image: lrochette/aws-cdk-executor-typescript:[[ .Arguments.cdk_version ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-        - ./aws-cdk_script.sh
-    outputValues:
-      name: setOutputValues
-      title: Set the output values for the step
-      image: alpine:latest
-      commands:
-        - cf_export STATUS=0
-        - cf_export STATUS_JSON_FILE=/codefresh/volume/aws-cdk-result.json
-        - cf_export CLOUDFORMATION_FILE=/codefresh/volume/cdk.out
-        - exit 0
+        - |
+          ./aws-cdk_script.sh
+          export STATUS=$?
+          cf_export STATUS
+          exit $STATUS
   delimiters:
     left: '[['
     right: ']]'
-
-  # stepsTemplate: |-
-  #   aws-cdk:
-  #     name: aws-cdk
-  #     image: lrochette/aws-cdk
-  #     environment:
-  #     [[ range $key, $val := .Arguments ]]
-  #       - '[[ $key ]]=[[ $val ]]'
-  #     [[- end ]]
-  #     commands:
-  #       - env

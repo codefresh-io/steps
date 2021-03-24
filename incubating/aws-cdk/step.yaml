@@ -53,7 +53,7 @@ spec:
         "language": {
           "type": "string",
           "default": "TypeScript",
-          "examples": ["TypeScript", "python"]
+          "examples": ["TypeScript", "python"],
           "description": "The language of the applciation. Default is TypeScript"
         },
         "debug": {

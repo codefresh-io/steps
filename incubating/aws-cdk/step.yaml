@@ -120,7 +120,8 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner:1.94.1
+      image: lrochette/aws-cdk-planner:80a03b1
+
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -128,7 +129,7 @@ spec:
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript:1.94.1
+      image: lrochette/aws-cdk-executor-typescript:80a03b1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

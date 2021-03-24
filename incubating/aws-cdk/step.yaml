@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 1.0.0
+  version: 1.94.1
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -52,6 +52,8 @@ spec:
         },
         "language": {
           "type": "string",
+          "default": "TypeScript",
+          "examples": ["TypeScript", "python"]
           "description": "The language of the applciation. Default is TypeScript"
         },
         "debug": {
@@ -61,7 +63,20 @@ spec:
         "cmd_ps": {
           "type": "string",
           "description": "Additional flags to pass to the aws cdk command"
-        }
+        },
+        "cdk_version": {
+           "type": "string",
+            "examples": ["1.91.0", "1.94.1"],
+            "default": "1.94.1",
+            "description": "Version of AWS CDK"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+             "type": "string"
+          },
+          "description": "Commands to execute in plugin container for `freestyle` action)"
+        },
       }
     }
   returns: |-
@@ -89,22 +104,26 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner:1.94.1
+      image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
 
+    # Executor for TypeScript
+    #
+    [[ if .Arguments.language eq "TypeScript"]]
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript:1.94.1
+      image: lrochette/aws-cdk-executor-typescript:[[ .Arguments.cdk_version ]]
       commands:
         - ./aws-cdk_script.sh
       condition:
         any:
           noLanguage: 'includes("${{language}}", "${{language}}") == true'
           TypeScript: '"${{language}}" == "TypeScript"'
+    [[ end ]]
 
     outputValues:
       name: setOutputValues
@@ -114,6 +133,10 @@ spec:
         - cf_export STATUS=0
         - cf_export STATUS_JSON_FILE=/codefresh/volume/aws-cdk-result.json
         - cf_export CLOUDFORMATION_FILE=/codefresh/volume/cdk.out
+  delimiters:
+    left: '[['
+    right: ']]'
+
   # stepsTemplate: |-
   #   aws-cdk:
   #     name: aws-cdk
@@ -124,6 +147,3 @@ spec:
   #     [[- end ]]
   #     commands:
   #       - env
-  # delimiters:
-  #   left: '[['
-  #   right: ']]'

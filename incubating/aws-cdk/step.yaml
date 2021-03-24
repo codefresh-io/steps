@@ -93,12 +93,12 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner
+      image: lrochette/aws-cdk-planner:1.94.1
 
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript
+      image: lrochette/aws-cdk-executor-typescript:1.94.1
       commands:
         - ./aws-cdk_script.sh
       condition:

@@ -56,18 +56,56 @@ spec:
         }
       }
     }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "STATUS"
+        ],
+        "properties": {
+            "STATUS": {
+                "type": "number",
+                "description": "exit code. 0 indicates success"
+            },
+            "STATUS_JSON_FILE": {
+                "type": "string",
+                "description": "The path in the Codefresh Volume to the JSON answer from the ACTION performed."
+            },
+            "CLOUDFORMATION_FILE": {
+                "type": "string",
+                "description": "The path in the Codefresh Volume to the template saved as the cdk.out JSON file."
+            }
+        }
+    }
   steps:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute
       image: lrochette/cdk-planner
         - env
-    execute-tyupescript:
+    execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
       image: lrochette/cdk-executor-typescript
       commands:
-        ./cdk-executor-typescript.sh
+        ./aws-cdk_script.sh
+      condition:
+        any:
+          noLanguage: 'includes("${{language}}", "${{language}}") == true'
+          TypeScript: '"${{language}}" == "TypeScript"'
+          
+    outputValues:
+      name: setOutputValues
+      title: Set the output values for the step
+      image: alpine
+      commands:
+        - cf_export STATUS=0
+        - cf_export STATUS_JSON_FILE=/codefresh/volume/aws-cdk-result.json
+        - cf_export CLOUDFORMATION_FILE=/codefresh/volume/cdk.out
   # stepsTemplate: |-
   #   aws-cdk:
   #     name: aws-cdk

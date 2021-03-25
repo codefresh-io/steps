@@ -14,13 +14,13 @@ Example `codefresh.yml` build is below with required Arguments in place.
 
 | Arguments | DEFAULT | TYPE | REQUIRED | VALUES | DESCRIPTION |
 | :----------------------------| :----------: | :---------| :---: |----------|---------------------------------------------------------------------------------------------------------------------------------|
-| action | | string | yes | synth, bootstrap, deploy, diff, list, destroy, freestyle |The CDK operation to execute |
+| action | | string | yes | deploy, destroy<br/>To come: synth, bootstrap, deploy, diff, list, destroy, freestyle |The CDK operation to execute |
 | project_dir | . | string | no | | the folder where the CDK app is located |
 | language | TypeScript | string | yes | TypeScript, Python | The language for the application |
 | verbose | false | boolean | no | true, false | Add the --verbose flag to the command if true |
 | cdk_version | 1.94.1 | string | no | 1.90.0, 1.94.1 | Version of the CDK used in the image |
 | AWS_ACCESS_KEY_ID | | string | no | Amazon access key|
-| AWS_SECRET_ACCESS_KEY | | string | no | Amazon secret key. Don't forget to encrypt it|
+| AWS_SECRET_ACCESS_KEY | | string | no | Amazon secret key.<br/>Don't forget to encrypt it|
  | AWS_DEFAULT_REGION | us-east-1| string | no | Amazon region|
 
 
@@ -71,7 +71,6 @@ steps:
       AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
       AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
       AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
-
 
   projectDestroy:
     title: Destroying the lambda CDK project

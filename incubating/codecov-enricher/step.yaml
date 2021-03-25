@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: cf/codecov-enricher
   title: Enrich codefresh image with Codecov info
-  version: 1.0.8
+  version: 1.0.10
   isPublic: true
   description: Enrich codefresh image with Codecov info
   sources:
@@ -19,7 +19,7 @@ metadata:
   icon:
     type: svg
     url: >-
-      https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/image-enricher/git.svg
+      https://about.codecov.io/wp-content/themes/codecov/assets/brand/icons/codecov/codecov-circle.svg
     background: '#f4f4f4'
   examples:
     - description: example-1
@@ -55,7 +55,8 @@ spec:
             "IMAGE",
             "BRANCH",
             "REPO",
-            "GIT_PROVIDER_NAME"
+            "GIT_PROVIDER_NAME",
+            "CODECOV_INTEGRATION"
         ],
         "properties": {
             "IMAGE": {

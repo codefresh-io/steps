@@ -64,7 +64,7 @@ spec:
         },
         "action": {
           "type": "string",
-          "default": "deploy"
+          "default": "deploy",
           "description": "The CDK operation to execute. Value can be synth, bootstrap, deploy, diff, list, destroy, freestyle"
         },
         "project_dir": {

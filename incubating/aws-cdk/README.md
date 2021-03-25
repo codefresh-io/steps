@@ -21,9 +21,8 @@ Example `codefresh.yml` build is below with required Arguments in place.
 | cdk_version | 1.94.1 | string | no | 1.90.0, 1.94.1 | Version of the CDK used in the image |
 | AWS_ACCESS_KEY_ID | | string | no | Amazon access key|
 | AWS_SECRET_ACCESS_KEY | | string | no | Amazon secret key.<br/>Don't forget to encrypt it|
- | AWS_DEFAULT_REGION | us-east-1| string | no | Amazon region|
-
-
+| AWS_DEFAULT_REGION | us-east-1 | string | no | Amazon region|
+| stacks | | string | no | a comma-separated list of stacks|
 
 
 ### codefresh.yml

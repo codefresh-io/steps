@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.5
+  version: 2.0.6
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -98,6 +98,10 @@ spec:
              "type": "string"
           },
           "description": "Commands to execute in plugin container for `freestyle` action)"
+        },
+        "stacks": {
+          "type": "string",
+          "description": "a comma-separated list of stacks"
         }
       }
     }

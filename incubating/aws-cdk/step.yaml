@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.4
+  version: 2.0.5
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -137,10 +137,10 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
 
-    execute-[[ .Argument.language ]]:
-      name: aws-cdk-executor-[[ .Argument.language ]]
-      title: execute commands for [[ .Argument.language ]]
-      image: lrochette/aws-cdk-executor-[[ .Argument.language ]]:[[ .Arguments.cdk_version ]]
+    execute-[[ .Arguments.language ]]:
+      name: aws-cdk-executor-[[ .Arguments.language ]]
+      title: execute commands for [[ .Arguments.language ]]
+      image: lrochette/aws-cdk-executor-[[ .Arguments.language ]]:[[ .Arguments.cdk_version ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

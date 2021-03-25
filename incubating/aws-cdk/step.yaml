@@ -73,9 +73,9 @@ spec:
         },
         "language": {
           "type": "string",
-          "default": "TypeScript",
-          "examples": ["TypeScript", "Python"],
-          "description": "The language of the application. Default is TypeScript"
+          "default": "typescript",
+          "examples": ["typescript", "python"],
+          "description": "The language of the application. Default is typescript"
         },
         "versbose": {
           "type": "boolean",
@@ -136,11 +136,11 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
-  [[ if .Argument.language == "TypeScript" ]]
-    execute-typescript:
-      name: aws-cdk-executor-typescript
-      title: execute commands for Typescript
-      image: lrochette/aws-cdk-executor-typescript:[[ .Arguments.cdk_version ]]
+
+    execute-[[ .Argument.language ]]:
+      name: aws-cdk-executor-[[ .Argument.language ]]
+      title: execute commands for [[ .Argument.language ]]
+      image: lrochette/aws-cdk-executor-[[ .Argument.language ]]:[[ .Arguments.cdk_version ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -151,7 +151,6 @@ spec:
           export STATUS=$?
           cf_export STATUS
           exit $STATUS
-  [[- end ]]
   delimiters:
     left: '[['
     right: ']]'

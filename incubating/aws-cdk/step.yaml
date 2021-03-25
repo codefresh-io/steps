@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.2
+  version: 2.0.3
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -51,19 +51,20 @@ spec:
       ],
       "properties": {
         "AWS_ACCESS_KEY_ID": {
-            "type": "string",
-            "description": "Amazon access key ID"
+          "type": "string",
+          "description": "Amazon access key ID"
         },
         "AWS_SECRET_ACCESS_KEY": {
-            "type": "string",
-            "description": "amazon secret key (make sure it's encrypted)"
+          "type": "string",
+          "description": "amazon secret key (make sure it's encrypted)"
         },
         "AWS_DEFAULT_REGION": {
-            "type": "string",
-            "description": "aws region"
+          "type": "string",
+          "description": "aws region"
         },
         "action": {
           "type": "string",
+          "default": "deploy"
           "description": "The CDK operation to execute. Value can be synth, bootstrap, deploy, diff, list, destroy, freestyle"
         },
         "project_dir": {
@@ -74,11 +75,12 @@ spec:
           "type": "string",
           "default": "TypeScript",
           "examples": ["TypeScript", "Python"],
-          "description": "The language of the applciation. Default is TypeScript"
+          "description": "The language of the application. Default is TypeScript"
         },
-        "debug": {
+        "versbose": {
           "type": "boolean",
-          "description": "Add the --verbose flag if true"
+          "default": "true"
+          "description": "Add the --verbose flag to the commands if true. Default is true"
         },
         "cmd_ps": {
           "type": "string",
@@ -88,7 +90,7 @@ spec:
            "type": "string",
             "examples": ["1.91.0", "1.94.1"],
             "default": "1.94.1",
-            "description": "Version of AWS CDK"
+            "description": "Version of AWS CDK. The matching image needs to exist"
         },
         "commands": {
           "type": "array",
@@ -134,6 +136,7 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
+[[ if .Argument.language == "TypeScript" ]]
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
@@ -148,6 +151,7 @@ spec:
           export STATUS=$?
           cf_export STATUS
           exit $STATUS
+[[ edd ]]
   delimiters:
     left: '[['
     right: ']]'

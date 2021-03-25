@@ -136,7 +136,7 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
-[[ if .Argument.language == "TypeScript" ]]
+  [[ if .Argument.language == "TypeScript" ]]
     execute-typescript:
       name: aws-cdk-executor-typescript
       title: execute commands for Typescript
@@ -151,7 +151,7 @@ spec:
           export STATUS=$?
           cf_export STATUS
           exit $STATUS
-[[ edd ]]
+  [[- end ]]
   delimiters:
     left: '[['
     right: ']]'

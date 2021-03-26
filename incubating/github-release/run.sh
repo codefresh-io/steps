@@ -91,7 +91,7 @@ function setDefaultVarValues() {
     fi
 
     if [ ! -z "$BASE_URL" ]; then
-        BASE_URL="--base-url $BASE_URL";
+        BASE_URL="--baseurl $BASE_URL";
     else 
         BASE_URL="";
     fi

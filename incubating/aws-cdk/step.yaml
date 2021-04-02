@@ -135,20 +135,22 @@ spec:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
       image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
-
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
-
     debug:
       name: asw-cdk-debug
       title: "Debuggin step"
       image: alpine
       commands:
+        - echo "Running DEBUG"
         - ls -ail
-        - env
-        
+        - pwd
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
     execute-[[ .Arguments.language ]]:
       name: aws-cdk-executor-[[ .Arguments.language ]]
       title: execute commands for [[ .Arguments.language ]]
@@ -159,6 +161,9 @@ spec:
       [[- end ]]
       commands:
         - |
+          echo "Running Executor"
+          pwd
+          ls -ail
           ./aws-cdk_script.sh
           export STATUS=$?
           cf_export STATUS

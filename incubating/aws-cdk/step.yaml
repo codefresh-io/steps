@@ -1,0 +1,164 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: aws-cdk
+  version: 2.1.1
+  isPublic: true
+  description: Integration with AWS Cloud Development Kit.
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza, Laurent Rochette, Lukas Goodfellow
+    - email: francisco@codefresh.io, laurent.rochette@codefresh.io, lukas.goodfellow@codefresh.io
+  categories:
+    - utilities
+    - deployment
+    - build
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-cdk/incubating/aws-cdk/images/AWS-Cloud-Development-Kit_Icon_48_Squid.svg
+    background: "#f4f4f4"
+  examples:
+    - description: aws-cdk
+      workflow:
+        AwsCDKDeploy:
+          title: Deploy the CDK application
+          type: aws-cdk
+          stage: deploy
+          working_directory: ${{gitClone}}/cdk/lambda-cron
+          arguments:
+            action: deploy
+            language: TypeScript
+            cdk_version: 1.94.1
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
+            AWS_DEFAULT_REGION: us-east-1a
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "action",
+        "language"
+      ],
+      "properties": {
+        "AWS_ACCESS_KEY_ID": {
+          "type": "string",
+          "description": "Amazon access key ID"
+        },
+        "AWS_SECRET_ACCESS_KEY": {
+          "type": "string",
+          "description": "Amazon secret key (make sure it's encrypted)"
+        },
+        "AWS_DEFAULT_REGION": {
+          "type": "string",
+          "description": "AWS region. Default is us-east-1"
+          "default": "us-east-1"
+        },
+        "action": {
+          "type": "string",
+          "default": "deploy",
+          "description": "The CDK operation to execute. Value can be synth, bootstrap, deploy, diff, list, destroy, freestyle"
+        },
+        "project_dir": {
+          "type": "string",
+          "description": "the path where the CDK application is located"
+        },
+        "language": {
+          "type": "string",
+          "default": "typescript",
+          "examples": ["typescript", "python"],
+          "description": "The language of the application. Default is typescript"
+        },
+        "verbose": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add the --verbose flag to the commands if true. Default is true"
+        },
+        "cmd_ps": {
+          "type": "string",
+          "description": "Additional flags to pass to the aws cdk command"
+        },
+        "cdk_version": {
+           "type": "string",
+            "examples": ["1.91.0", "1.94.1"],
+            "default": "1.94.1",
+            "description": "Version of AWS CDK. The matching image needs to exist"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+             "type": "string"
+          },
+          "description": "Commands to execute in plugin container for `freestyle` action)"
+        },
+        "stacks": {
+          "type": "string",
+          "description": "a comma-separated list of stacks"
+        },
+        "debug": {
+          "type": "string",
+          "default": "false",
+          "description": "a hidden option show more debug info"
+        }
+      }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "STATUS"
+        ],
+        "properties": {
+            "STATUS": {
+                "type": "number",
+                "description": "exit code. 0 indicates success"
+            },
+            "STATUS_JSON_FILE": {
+                "type": "string",
+                "description": "The path in the Codefresh Volume to the JSON answer from the ACTION performed."
+            },
+            "CDK_OUT_DIR_PATH": {
+                "type": "string",
+                "description": "The path in the Codefresh Volume to the template saved as the cdk.out JSON file."
+            }
+        }
+    }
+  stepsTemplate: |-
+    planner:
+      name: aws-cdk-planner
+      title: create the bash file to execute cdk action
+      image: codefreshplugins/aws-cdk-planner:[[ .Arguments.cdk_version ]]
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+    execute-[[ .Arguments.language ]]:
+      name: aws-cdk-executor-[[ .Arguments.language ]]
+      title: execute commands for [[ .Arguments.language ]]
+      image: codefreshplugins/aws-cdk-executor-[[ .Arguments.language ]]:[[ .Arguments.cdk_version ]]
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - |
+          ./aws-cdk_script.sh
+          export STATUS=$?
+          cf_export STATUS
+          exit $STATUS
+  delimiters:
+    left: '[['
+    right: ']]'

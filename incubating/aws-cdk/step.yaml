@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.9
+  version: 2.0.10
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -140,10 +140,6 @@ spec:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
       image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
-      environment:
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

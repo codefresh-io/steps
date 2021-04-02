@@ -1,15 +1,15 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-support/aws-cdk
-  version: 2.0.12
-  isPublic: false
+  name: aws-cdk
+  version: 2.1.0
+  isPublic: true
   description: Integration with AWS Cloud Development Kit.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
   stage: incubating
   maintainers:
-    - name: Francisco Cocozza,Laurent Rochette, Lukas Goodfellow
+    - name: Francisco Cocozza, Laurent Rochette, Lukas Goodfellow
     - email: francisco@codefresh.io, laurent.rochette@codefresh.io, lukas.goodfellow@codefresh.io
   categories:
     - utilities
@@ -26,7 +26,7 @@ metadata:
       workflow:
         AwsCDKDeploy:
           title: Deploy the CDK application
-          type: cf-support/aws-cdk
+          type: aws-cdk
           stage: deploy
           working_directory: ${{gitClone}}/cdk/lambda-cron
           arguments:
@@ -56,11 +56,12 @@ spec:
         },
         "AWS_SECRET_ACCESS_KEY": {
           "type": "string",
-          "description": "amazon secret key (make sure it's encrypted)"
+          "description": "Amazon secret key (make sure it's encrypted)"
         },
         "AWS_DEFAULT_REGION": {
           "type": "string",
-          "description": "aws region"
+          "description": "AWS region. Default is us-east-1"
+          "default": "us-east-1"
         },
         "action": {
           "type": "string",
@@ -139,7 +140,7 @@ spec:
     planner:
       name: aws-cdk-planner
       title: create the bash file to execute cdk action
-      image: lrochette/aws-cdk-planner:[[ .Arguments.cdk_version ]]
+      image: codefreshplugins/aws-cdk-planner:[[ .Arguments.cdk_version ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -147,7 +148,7 @@ spec:
     execute-[[ .Arguments.language ]]:
       name: aws-cdk-executor-[[ .Arguments.language ]]
       title: execute commands for [[ .Arguments.language ]]
-      image: lrochette/aws-cdk-executor-[[ .Arguments.language ]]:[[ .Arguments.cdk_version ]]
+      image: codefreshplugins/aws-cdk-executor-[[ .Arguments.language ]]:[[ .Arguments.cdk_version ]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

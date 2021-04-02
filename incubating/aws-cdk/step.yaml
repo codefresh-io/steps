@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: aws-cdk
-  version: 2.1.0
+  version: 2.1.1
   isPublic: true
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -154,13 +154,11 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-        - echo "Running Executor"
-        - pwd
-        - ls -ail
-        - ./aws-cdk_script.sh
-        - export STATUS=$?
-        - cf_export STATUS
-        - exit $STATUS
+        - |
+          ./aws-cdk_script.sh
+          export STATUS=$?
+          cf_export STATUS
+          exit $STATUS
   delimiters:
     left: '[['
     right: ']]'

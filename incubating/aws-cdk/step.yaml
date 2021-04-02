@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.11
+  version: 2.0.12
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -78,8 +78,8 @@ spec:
           "description": "The language of the application. Default is typescript"
         },
         "verbose": {
-          "type": "string",
-          "default": "true",
+          "type": "boolean",
+          "default": true,
           "description": "Add the --verbose flag to the commands if true. Default is true"
         },
         "cmd_ps": {

@@ -160,14 +160,13 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-        - |
-          echo "Running Executor"
-          pwd
-          ls -ail
-          ./aws-cdk_script.sh
-          export STATUS=$?
-          cf_export STATUS
-          exit $STATUS
+        - echo "Running Executor"
+        - pwd
+        - ls -ail
+        - ./aws-cdk_script.sh
+        - export STATUS=$?
+        - cf_export STATUS
+        - exit $STATUS
   delimiters:
     left: '[['
     right: ']]'

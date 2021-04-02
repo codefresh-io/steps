@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: cf-support/aws-cdk
-  version: 2.0.8
+  version: 2.0.9
   isPublic: false
   description: Integration with AWS Cloud Development Kit.
   sources:
@@ -102,6 +102,11 @@ spec:
         "stacks": {
           "type": "string",
           "description": "a comma-separated list of stacks"
+        },
+        "debug": {
+          "type": "string",
+          "default": "false",
+          "description": "a hidden option show more debug info"
         }
       }
     }
@@ -139,14 +144,6 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
-    debug:
-      name: asw-cdk-debug
-      title: "Debuggin step"
-      image: alpine
-      commands:
-        - echo "Running DEBUG"
-        - ls -ail
-        - pwd
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

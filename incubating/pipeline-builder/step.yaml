@@ -1,38 +1,40 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: cf-support/aws-cdk
-  version: 2.0.7
+  name: lrochette/pipeline-builder
+  version: 0.0.1
   isPublic: false
-  description: Integration with AWS Cloud Development Kit.
+  description: Create a pipeline by merging a set fo different folder containing YAML code
   sources:
-    - https://github.com/codefresh-io/steps/tree/master/incubating/aws-cdk
+    - https://github.com/codefresh-io/steps/tree/master/incubating/pipeline-builder
   stage: incubating
   maintainers:
-    - name: Francisco Cocozza,Laurent Rochette, Lukas Goodfellow
-    - email: francisco@codefresh.io, laurent.rochette@codefresh.io, lukas.goodfellow@codefresh.io
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-    - deployment
     - build
   official: false
   tags: []
-  icon:
-    type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-cdk/incubating/aws-cdk/images/AWS-Cloud-Development-Kit_Icon_48_Squid.svg
-    background: "#f4f4f4"
   examples:
-    - description: aws-cdk
+    - description: pipeline-builder
       workflow:
-        AwsCDKDeploy:
-          title: Deploy the CDK application
-          type: cf-support/aws-cdk
-          stage: deploy
-          working_directory: ${{gitClone}}/cdk/lambda-cron
+        clone:
+          title: Clone your repo where you pipleine code live
+          type: clone
+          stage: clone
+        buildPipeline:
+          working_directory: ${{clone}}/pipeline
           arguments:
-            action: deploy
-            language: TypeScript
-            cdk_version: 1.94.1
+            pipeline_name: PROJ/PIPE
+            start: true
+            steps:
+              - STEPS/
+            triggers:
+              - TRIG1 / 
+            stages:
+              - stage1
+              - stage2
             AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
             AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
             AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
@@ -141,14 +143,6 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
 
-    debug:
-      name: asw-cdk-debug
-      title: "Debuggin step"
-      image: alpine
-      commands:
-        - ls -ail
-        - env
-        
     execute-[[ .Arguments.language ]]:
       name: aws-cdk-executor-[[ .Arguments.language ]]
       title: execute commands for [[ .Arguments.language ]]

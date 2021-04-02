@@ -14,15 +14,16 @@ Example `codefresh.yml` build is below with required Arguments in place.
 
 | Arguments | DEFAULT | TYPE | REQUIRED | VALUES | DESCRIPTION |
 | :----------------------------| :----------: | :---------| :---: |----------|---------------------------------------------------------------------------------------------------------------------------------|
-| action | deploy | string | yes | deploy, destroy<br/>To come: synth, bootstrap, diff, list, freestyle |The CDK operation to execute |
-| project_dir | . | string | no | | the folder where the CDK app is located |
-| language | TypeScript | string | yes | TypeScript, Python | The language for the application |
-| verbose | true | boolean | no | true, false | Add the --verbose flag to the command if true |
+| action | deploy | string | yes | deploy, destroy, synth<br/>To come: bootstrap, diff, list, freestyle |The CDK operation to execute |
 | cdk_version | 1.94.1 | string | no | 1.90.0, 1.94.1 | Version of the CDK used in the image |
+| language | TypeScript | string | yes | TypeScript, Python | The language for the application |
+| project_dir | . | string | no | | the folder where the CDK app is located |
+| verbose | true | boolean | no | true, false | Add the --verbose flag to the command if true |
+| stacks | | string | no | a comma-separated list of stacks|
 | AWS_ACCESS_KEY_ID | | string | no | Amazon access key|
 | AWS_SECRET_ACCESS_KEY | | string | no | Amazon secret key.<br/>Don't forget to encrypt it|
 | AWS_DEFAULT_REGION | us-east-1 | string | no | Amazon region|
-| stacks | | string | no | a comma-separated list of stacks|
+
 
 
 ### codefresh.yml

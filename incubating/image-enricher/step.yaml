@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.2.2
+  version: 1.3.0
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -85,14 +85,6 @@ spec:
         }
     }
   steps:
-    get_github_token:
-      title: "Get token"
-      image: codefresh/cli
-      environment:
-        - GIT_PROVIDER_NAME=${{GIT_PROVIDER_NAME}}
-      commands:
-        - export GITHUB_TOKEN=$(codefresh get context $GIT_PROVIDER_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
-        - echo GITHUB_TOKEN=$GITHUB_TOKEN >> /meta/env_vars_to_export
     main:
       name: enrich-image
       image: codefresh/github-enricher
@@ -101,6 +93,5 @@ spec:
           - IMAGE_SHA=${{IMAGE}}
           - BRANCH=${{BRANCH}}
           - REPO=${{REPO}}
-          - GITHUB_TOKEN=${{GITHUB_TOKEN}}
           - GITHUB_HOST=${{GITHUB_HOST}}
           - GIT_PROVIDER_NAME=${{GIT_PROVIDER_NAME}}

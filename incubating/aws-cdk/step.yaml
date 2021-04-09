@@ -60,7 +60,7 @@ spec:
         },
         "AWS_DEFAULT_REGION": {
           "type": "string",
-          "description": "AWS region. Default is us-east-1"
+          "description": "AWS region. Default is us-east-1",
           "default": "us-east-1"
         },
         "action": {

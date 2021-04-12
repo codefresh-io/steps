@@ -9,8 +9,8 @@ metadata:
     - https://github.com/codefresh-io/steps/blob/master/incubating/sonar-quality-gates-checker
   stage: incubating
   maintainers:
-    - name: Dustin Van Buskirk
-      email: dustin@codefresh.io
+    - name: Francisco Cocozza, Dustin Van Buskirk
+      email: francisco@codefresh.io, dustin@codefresh.io
   categories:
     - utilities
   official: true

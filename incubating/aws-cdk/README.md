@@ -12,10 +12,10 @@ Getting started with AWS CDK: https://docs.aws.amazon.com/cdk/latest/guide/getti
 
 Example `codefresh.yml` build is below with required Arguments in place.
 
-| Arguments | DEFAULT | TYPE | REQUIRED | VALUES | DESCRIPTION |
+| Arguments | Default value | Type | Required | Values | Description |
 | :----------------------------| :----------: | :---------| :---: |----------|---------------------------------------------------------------------------------------------------------------------------------|
 | action | deploy | string | yes | deploy, destroy, synth<br/>To come: bootstrap, diff, list, freestyle |The CDK operation to execute |
-| cdk_version | 1.94.1 | string | no | 1.90.0, 1.94.1 | Version of the CDK used in the image |
+| cdk_version | 1.98.0 | string | no | 1.90.0, 1.94.1, 1.98.0 | Version of the CDK used in the image |
 | language | TypeScript | string | yes | TypeScript, Python | The language for the application |
 | project_dir | . | string | no | | the folder where the CDK app is located |
 | verbose | true | boolean | no | true, false | Add the --verbose flag to the command if true |
@@ -31,60 +31,70 @@ Example `codefresh.yml` build is below with required Arguments in place.
 Codefresh build step to execute AWS CDK commands
 
 ```yaml
-version: '1.0'
+version: "1.0"
+
 stages:
-  - "clone"
-  - "build"
-  - "test"
+  - clone
+  - build
+  - synth
+  - deploy
+  - destroy
 
 steps:
   gitClone:
-    title: Cloning Project Repo
+    title: Cloning Sample Project Repository
     type: git-clone
     stage: clone
     arguments:
-      repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
-      git: github
-      revision: ${{CF_REVISION}}
+      repo: codefresh-io/aws-cdk-samples
+      revision: main
 
   projectBuild:
-    title: Building the lambda CDK project
     stage: build
-    working_directory: ${{gitClone}}/cdk/lambda-cron
-    arguments:
-      image: node
-      commands:
-        - npm install -g aws-cdk
-        - npm install
-        - npm run build
+    title: Building the lambda CDK project for TypeScript
+    type: freestyle
+    working_directory: ${{gitClone}}/lambda-cron
+    image: node
+    commands:
+      - npm install -g aws-cdk
+      - npm install
+      - npm run build
 
-  AwsCDKDeploy:
-    title: Deploy the app
-    type: cf-support/aws-cdk
-    stage: test
-    working_directory: ${{gitClone}}/cdk/lambda-cron
+  deploy:
+    stage: deploy
+    title: Deploy the Typescript app
+    type: aws-cdk
+    registry: docker-lr
+    working_directory: ${{gitClone}}/lambda-cron
     arguments:
       action: deploy
-      language: TypeScript
-      verbose: true
-      cdk_version: 1.94.1
+      language: typescript
+      #verbose: true
+      #cdk_version: 1.98.0
       AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
       AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
       AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
 
-  projectDestroy:
-    title: Destroying the lambda CDK project
-    stage: test
-    type: cf-support/aws-cdk
-    working_directory: ${{gitClone}}/cdk/lambda-cron
+  wait-approval:
+    title: "Wait for approval before destruction"
+    stage: destroy
+    type: "pending-approval"
+    timeout:
+      duration: 1
+      finalState: denied
+
+  destroy:
+    title: "Destroying the TypeScript lambda CDK project"
+    stage: destroy
+    type: aws-cdk
+    working_directory: ${{gitClone}}/lambda-cron
     arguments:
       action: destroy
       cmd_ps: --force
-      verbose: true
-      cdk_version: 1.94.1
+      verbose: false
+      language: typescript
       AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
       AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
       AWS_SESSION_TOKEN: ${{AWS_SESSION_TOKEN}}
-
 
 ```

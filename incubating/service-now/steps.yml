@@ -1,0 +1,124 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: service-now
+  version: 0.0.1
+  isPublic: false
+  description: Integration with ServiceNow Change Management
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/service-now
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - utilities
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-cdk/incubating/service-now/images/servicenow-1.svg
+    background: "#f4f4f4"
+  examples:
+    - description: service-now
+      workflow:
+        createChange:
+          title: Create a Service Now Change Request
+          type: service-now
+          stage: deploy
+          arguments:
+            action: createCR
+            SN_INSTANCE: https://instance.service-now.com
+            SN_USER: ${{SN_USER}}
+            SN_PASSWORD: ${{SN_PASSWORD}}
+            title: Change request for my application deployment in Prod
+            description: This is the long form of my description for my change
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SN_INSTANCE",
+        "SN_USER",
+        "SN_PASSWORD"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "default": "createCR",
+          "description": "The ServiceNow operation to execute. Value can be createCR"
+        },
+        "SN_INSTANCE": {
+            "type": "string",
+            "description": "The URL to your Service-now instance aka https://instance.service-now.com"
+        },
+        "SN_USER": {
+            "type": "string",
+            "description": "The username to log into the instance"
+        },
+        "SN_PASSWORD": {
+            "type": "string",
+            "description": "The password associated to the username to log  into the instance"
+        },
+        "title": {
+            "type": "string",
+            "description": "The short description of your CR"
+        },
+        "description": {
+            "type": "string",
+            "description": "The full description of your CR"
+        },
+        "SN_IMAGE": {
+            "type": "string",
+            "description": "The docker image for the step. Can be overwritten to work around Docker rate imit of if a registry is down.",
+            "default": "codefreshplugins/service-now"
+        },
+        "SN_IMAGE_TAG": {
+            "type": "string",
+            "description": "The docker image tag for the step.",
+            "default": "0.0.1"
+        },
+        "debug": {
+          "type": "string",
+          "default": "false",
+          "description": "a hidden option show more debug info"
+        }
+      }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "STATUS"
+        ],
+        "properties": {
+            "sys_id": {
+                "type": "string",
+                "description": "The sys_id of the CR created"
+            },
+            "cr_number": {
+                "type": "string",
+                "description": "The number of the CR created."
+            },
+        }
+    }
+  stepsTemplate: |-
+    rest_call:
+      name: service-now
+      title: Use REST API to connect to Service-Now instance
+      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_TAG]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

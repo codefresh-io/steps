@@ -72,8 +72,8 @@ spec:
         - CODECOV_API_KEY=${{CODECOV_API_KEY}}
         - REPORT_DIRECTORY=${{REPORT_DIRECTORY}}
       commands:
-        - cd $REPORT_DIRECTORY
         - "ci_env=`curl -s https://codecov.io/env`"
         - npm install codecov -g
+        - cd $REPORT_DIRECTORY
         - codecov -t ${{CODECOV_API_KEY}} | tee codecov.log
         - cf_export second_CF_OUTPUT_URL=$(grep -A0 'View report at:' codecov.log | awk 'BEGIN{FS="at:\ ";}{print $2}')

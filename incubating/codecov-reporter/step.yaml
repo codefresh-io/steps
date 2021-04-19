@@ -73,7 +73,7 @@ spec:
     }
   steps:
     first:
-      title: "Get token"
+      title: "get token"
       image: codefresh/cli
       environment:
         - CODECOV_INTEGRATION=${{codecov_integration}}
@@ -81,7 +81,7 @@ spec:
         - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
         - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
     second:
-      name: enrich-image
+      name: "send report"
       image: node:15.2
       environment:
         - CODECOV_API_KEY=${{CODECOV_API_KEY}}

@@ -14,7 +14,7 @@ metadata:
       email: pavel@codefresh.io
   categories:
     - build
-  official: false
+  official: true
   tags: []
   icon:
     type: svg

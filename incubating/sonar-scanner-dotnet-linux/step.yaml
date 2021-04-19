@@ -62,10 +62,6 @@ spec:
           "type": "string",
           "description": "Sonarqube Server Host URL."
         },
-        "SONAR_HOST_URL": {
-          "type": "string",
-          "description": "Sonarqube Server Host URL."
-        },
         "SONAR_LOGIN": {
           "type": "string",
           "description": "Sonarqube Username or Token."

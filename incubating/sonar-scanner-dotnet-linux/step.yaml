@@ -112,6 +112,14 @@ spec:
             "dotnet build"
           ]
         },
+        "PRE_COMMANDS": {
+          "type": "array",
+          "description": "Commands to execute before scan command."
+        },
+        "POST_COMMANDS": {
+          "type": "array",
+          "description": "Commands to execute after scan command."
+        },
         "WORKING_DIRECTORY": {
           "type": "string",
           "description": "Subdirectory where dotnet project file exists."
@@ -128,6 +136,9 @@ spec:
       [[- end ]]
       commands:
         - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/[[.Arguments.WORKING_DIRECTORY]]
+      [[ range $pre_cmds := .Arguments.PRE_COMMANDS ]]
+        - '[[ $pre_cmds ]]'
+      [[- end ]]
       [[- $begin_cmd := (printf "dotnet sonarscanner begin /k:%s /d:sonar.host.url=%s /d:sonar.login=%s" .Arguments.SONAR_PROJECT_KEY .Arguments.SONAR_HOST_URL .Arguments.SONAR_LOGIN ) -]]
       [[- if .Arguments.SONAR_PASSWORD ]]
         [[- $begin_cmd = (printf "%s /d:sonar.password=%s" $begin_cmd .Arguments.SONAR_PASSWORD) -]]
@@ -145,14 +156,17 @@ spec:
         [[- $begin_cmd = (printf "%s /d:%s" $begin_cmd $arg) -]]
       [[- end ]]
         - [[ $begin_cmd ]]
-      [[ range $dotnet_cmd := .Arguments.DOTNET_COMMANDS ]]
-        - '[[ $dotnet_cmd ]]'
+      [[ range $dotnet_cmds := .Arguments.DOTNET_COMMANDS ]]
+        - '[[ $dotnet_cmds ]]'
       [[- end ]]
       [[- $end_cmd := (printf "dotnet sonarscanner end /d:sonar.login=%s" .Arguments.SONAR_LOGIN ) -]]
       [[- if .Arguments.SONAR_PASSWORD ]]
         [[- $end_cmd = (printf "%s /d:sonar.password=%s" $end_cmd .Arguments.SONAR_PASSWORD) -]]
       [[- end ]]
         - [[ $end_cmd ]]
+      [[ range $post_cmds := .Arguments.POST_COMMANDS ]]
+        - '[[ $post_cmds ]]'
+      [[- end ]]
   delimiters:
     left: '[['
     right: ']]'

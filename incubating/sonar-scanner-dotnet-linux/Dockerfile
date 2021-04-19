@@ -4,6 +4,7 @@ RUN set -eux; \
     apt-get clean; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+        nuget \
 		bzip2 \
 		unzip \
 		xz-utils \

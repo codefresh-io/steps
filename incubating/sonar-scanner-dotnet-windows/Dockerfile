@@ -21,7 +21,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 RUN powershell.exe -Command \
     $Url = 'https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip'; \
     $ZipFile = 'C:\\ZipFolder\\' + $(Split-Path -Path $Url -Leaf); \
-    $Destination= C:\Extracted\; \
+    $Destination= 'C:\\Extracted\\'; \
     Invoke-WebRequest -Uri $Url -OutFile $ZipFile; \
     $ExtractShell = New-Object -ComObject Shell.Application; \
     $Files = $ExtractShell.Namespace($ZipFile).Items(); \

@@ -20,6 +20,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 
 RUN powershell.exe -Command \
     New-Item -Path c:\ -Name ZipFolder -ItemType directory; \
+    New-Item -Path c:\ -Name Extracted -ItemType directory; \
     $Url = 'https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip'; \
     echo "Url : $Url"; \
     $ZipFile = 'C:\ZipFolder\' + $(Split-Path -Path $Url -Leaf); \

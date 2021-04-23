@@ -29,9 +29,8 @@ RUN powershell.exe -Command \
     Invoke-WebRequest -Uri $Url -OutFile $ZipFile; \
     Get-ChildItem C:\ZipFolder\; \
     $ExtractShell = New-Object -ComObject Shell.Application; \
-    Get-ChildItem C:\Destination\; \
-    $ExtractShell.NameSpace($Destination).CopyHere($Zipfile)
-     Get-ChildItem C:\Extracted\; \
+    $ExtractShell.NameSpace($Destination).CopyHere($Zipfile); \
+    Get-ChildItem C:\Extracted\; \
     #Start-Process $Destination
 
 # RUN powershell -Command $Url = "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip"

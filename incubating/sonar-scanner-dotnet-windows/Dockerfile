@@ -22,16 +22,11 @@ RUN powershell.exe -Command \
     New-Item -Path c:\ -Name ZipFolder -ItemType directory; \
     New-Item -Path c:\ -Name Extracted -ItemType directory; \
     $Url = 'https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip'; \
-    echo "Url : $Url"; \
-    $ZipFile = 'C:\ZipFolder\' + $(Split-Path -Path $Url -Leaf); \
-    echo "ZipFile : $Zipfile"; \
     $Destination= 'C:\Extracted\'; \
-    echo "Destination : $Destination"; \
+    $ZipFile = 'C:\ZipFolder\' + $(Split-Path -Path $Url -Leaf); \
     Invoke-WebRequest -Uri $Url -OutFile $ZipFile; \
-    Get-ChildItem C:\ZipFolder\; \
-    $ExtractShell = New-Object -ComObject Shell.Application; \
-    $ExtractShell.NameSpace($Destination).CopyHere($Zipfile); \
-    Get-ChildItem C:\Extracted\; \
+    Expand-Archive -Path $ZipFile -DestinationPath $Destination; \
+    Get-ChildItem $Destination;
     #Start-Process $Destination
 
 # RUN powershell -Command $Url = "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip"

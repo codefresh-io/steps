@@ -19,6 +19,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 #   Remove-Item c:\python-3.5.1.exe -Force
 
 RUN powershell.exe -Command \
+    New-Item -Path c:\ -Name ZipFolder -ItemType directory; \
     $Url = 'https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip'; \
     $ZipFile = 'C:\\ZipFolder\\' + $(Split-Path -Path $Url -Leaf); \
     $Destination= 'C:\\Extracted\\'; \

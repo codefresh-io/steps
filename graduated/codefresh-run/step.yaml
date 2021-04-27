@@ -78,61 +78,61 @@ spec:
                 "default": false
             },
             "NO_CF_CACHE": {
-                   "type": "boolean",
-                   "description": "Ignore Codefresh cache optimizations",
-                   "default": false
-               },
+                "type": "boolean",
+                "description": "Ignore Codefresh cache optimizations",
+                "default": false
+            },
             "ENABLE_NOTIFICATIONS": {
                 "type": "boolean",
                 "description": "Report notifications about pipeline execution",
                 "default": false
             },
             "RESET_VOLUME": {
-                  "type": "boolean",
-                  "description": "Reset pipeline cached volume",
-                  "default": false
+                "type": "boolean",
+                "description": "Reset pipeline cached volume",
+                "default": false
             },
             "DETACH": {
-                 "type": "boolean",
-                 "description": "Run pipeline and print build ID",
-                 "default": false
-             },
+                "type": "boolean",
+                "description": "Run pipeline and print build ID",
+                "default": false
+            },
             "CONTEXT": {
-                 "type": "array",
-                 "items": {
-                     "type": "string"
-                 },
-                 "description": "Run pipeline with contexts",
-                 "examples": ["git-context-1"],
-                 "default": []
-             },
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Run pipeline with contexts",
+                "examples": ["git-context-1"],
+                "default": []
+            },
             "VARIABLE": {
-                 "type": "array",
-                 "items": {
-                     "type": "string"
-                 },
-                 "description": "Set build variables",
-                 "examples": ["key=val"],
-                 "default": []
-             },
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Set build variables",
+                "examples": ["key=val"],
+                "default": []
+            },
             "ONLY": {
-                  "type": "array",
-                  "items": {
-                      "type": "string"
-                  },
-                  "description": "run only specifc steps",
-                  "examples": ["step1", "step2"],
-                  "default": []
-              },
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "run only specifc steps",
+                "examples": ["step1", "step2"],
+                "default": []
+            },
             "SKIP": {
-                  "type": "array",
-                  "items": {
-                      "type": "string"
-                  },
-                  "description": "skip specifc steps",
-                  "examples": ["step1", "step2"],
-                  "default": []
-              }
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "skip specifc steps",
+                "examples": ["step1", "step2"],
+                "default": []
+            }
         }
     }
   delimiters:

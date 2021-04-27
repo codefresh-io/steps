@@ -97,6 +97,11 @@ spec:
                 "description": "Run pipeline and print build ID",
                 "default": false
             },
+            "FOLLOW_LOGS": {
+                "type": "boolean",
+                "description": "Follow the pipeline's logs (if not detached)",
+                "default": true
+            },
             "CONTEXT": {
                 "type": "array",
                 "items": {
@@ -189,8 +194,10 @@ spec:
       image: codefresh/cli
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
+        [[- if eq .Arguments.FOLLOW_LOGS true ]]
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f $BUILD_ID
+        [[- end ]]
         - codefresh wait $BUILD_ID
       [[- end -]]
 

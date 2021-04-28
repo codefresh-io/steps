@@ -1,0 +1,168 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: sonar-scanner-dotnet-linux
+  version: 0.0.1
+  isPublic: false
+  description: SonarScanner for .NET Core Sonarqube 7.5
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/sonar-scanner-dotnet-linux
+    - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/sonar-scanner-dotnet-linux/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: scan-project-default
+      workflow:
+        SonarqubeDotnetScan:
+          type: sonar-scanner-dotnet-linux
+          arguments:
+            SONAR_HOST_URL: https://sonarqube.codefresh.io
+            SONAR_PROJECT_KEY: myprojectkey
+            SONAR_LOGIN: myuser
+            SONAR_PASSWORD: mypassword
+    - description: scan-project-custom
+      workflow:
+        SonarqubeCustomDotnetScan:
+          type: scan-project-custom-command
+          arguments:
+            SONAR_HOST_URL: https://sonarqube.codefresh.io
+            SONAR_PROJECT_KEY: myprojectkey
+            SONAR_LOGIN: myuser
+            SONAR_PASSWORD: mypassword
+            DOTNET_COMMANDS:
+              - docker build...
+            SONAR_ANALYSIS_PARAMETERS:
+              - sonar.projectDescription='myprojectdesc'
+              - sonar.log.level=TRACE
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SONAR_HOST_URL",
+        "SONAR_LOGIN",
+        "SONAR_PROJECT_KEY"
+      ],
+      "properties": {
+        "SONAR_HOST_URL": {
+          "type": "string",
+          "description": "Sonarqube Server Host URL."
+        },
+        "SONAR_LOGIN": {
+          "type": "string",
+          "description": "Sonarqube Username or Token."
+        },
+        "SONAR_PASSWORD": {
+          "type": "string",
+          "description": "Sonarqube Password if using Username for SONAR_LOGIN."
+        },
+        "SONAR_PROJECT_KEY": {
+          "type": "string",
+          "description": "Sonarqube Project Key."
+        },
+        "SONAR_PROJECT_NAME": {
+          "type": "string",
+          "description": "Sonarqube Project Name."
+        },
+        "SONAR_VERBOSE": {
+          "type": "boolean",
+          "description": "Sonarqube Project Key."
+        },
+        "SONAR_ANALYSIS_PARAMETERS": {
+          "type": "array",
+          "description": "Array of additional Sonarqube Analysis Parameters Ex. - sonar.projectDescription='mycustomdescription'. List: https://docs.sonarqube.org/latest/analysis/analysis-parameters/"
+        },
+        "REGISTRY": {
+          "type": "string",
+          "description": "Sonarqube dotnet scanner Docker Registry.",
+          "default": ""
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "Sonarqube dotnet scanner Docker image.",
+          "default": "codefreshplugins/sonar-scanner-dotnet-linux"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "description": "Sonarqube dotnet scanner Docker image tag.",
+          "default": "0.0.1"
+        },
+        "DOTNET_COMMANDS": {
+          "type": "array",
+          "description": "Commands to execute instead of the default scanning commands.",
+          "default": [
+            "dotnet build"
+          ]
+        },
+        "PRE_COMMANDS": {
+          "type": "array",
+          "description": "Commands to execute before scan command."
+        },
+        "POST_COMMANDS": {
+          "type": "array",
+          "description": "Commands to execute after scan command."
+        },
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "description": "Subdirectory where dotnet project file exists."
+        }
+      }
+    }
+  stepsTemplate: |-
+    build-publish:
+      name: sonar-scanner-dotnet-linux
+      image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/[[.Arguments.WORKING_DIRECTORY]]
+      [[ range $pre_cmds := .Arguments.PRE_COMMANDS ]]
+        - '[[ $pre_cmds ]]'
+      [[- end ]]
+      [[- $begin_cmd := (printf "dotnet sonarscanner begin /k:%s /d:sonar.host.url=%s /d:sonar.login=%s" .Arguments.SONAR_PROJECT_KEY .Arguments.SONAR_HOST_URL .Arguments.SONAR_LOGIN ) -]]
+      [[- if .Arguments.SONAR_PASSWORD ]]
+        [[- $begin_cmd = (printf "%s /d:sonar.password=%s" $begin_cmd .Arguments.SONAR_PASSWORD) -]]
+      [[- end -]]
+      [[- if .Arguments.SONAR_PROJECT_NAME ]]
+        [[- $begin_cmd = (printf "%s /n:%s" $begin_cmd .Arguments.SONAR_PROJECT_NAME) -]]
+      [[- end -]]
+      [[- if .Arguments.SONAR_PROJECT_VERSION ]]
+        [[- $begin_cmd = (printf "%s /v:%s" $begin_cmd .Arguments.SONAR_PROJECT_VERSION) -]]
+      [[- end -]]
+      [[- if .Arguments.SONAR_VERBOSE ]]
+        [[- $begin_cmd = (printf "%s /d:sonar.verbose=true" $begin_cmd) -]]
+      [[- end -]]
+      [[ range $arg := .Arguments.SONAR_ANALYSIS_PARAMETERS ]]
+        [[- $begin_cmd = (printf "%s /d:%s" $begin_cmd $arg) -]]
+      [[- end ]]
+        - [[ $begin_cmd ]]
+      [[ range $dotnet_cmds := .Arguments.DOTNET_COMMANDS ]]
+        - '[[ $dotnet_cmds ]]'
+      [[- end ]]
+      [[- $end_cmd := (printf "dotnet sonarscanner end /d:sonar.login=%s" .Arguments.SONAR_LOGIN ) -]]
+      [[- if .Arguments.SONAR_PASSWORD ]]
+        [[- $end_cmd = (printf "%s /d:sonar.password=%s" $end_cmd .Arguments.SONAR_PASSWORD) -]]
+      [[- end ]]
+        - [[ $end_cmd ]]
+      [[ range $post_cmds := .Arguments.POST_COMMANDS ]]
+        - '[[ $post_cmds ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

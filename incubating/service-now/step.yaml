@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: service-now
-  version: 0.0.1
+  name: laurent-cf/service-now
+  version: 0.0.2
   isPublic: false
   description: Integration with ServiceNow Change Management
   sources:
@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-cdk/incubating/service-now/images/servicenow-1.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/incubating/service-now/images/servicenow-1.svg
     background: "#f4f4f4"
   examples:
     - description: service-now
@@ -107,7 +107,7 @@ spec:
             "cr_number": {
                 "type": "string",
                 "description": "The number of the CR created."
-            },
+            }
         }
     }
   stepsTemplate: |-

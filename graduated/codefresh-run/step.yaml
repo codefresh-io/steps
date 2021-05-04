@@ -140,7 +140,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     first:
-        image: codefresh/cli
+        image: quay.io/codefresh/cli
         commands:
         [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
@@ -186,7 +186,7 @@ spec:
       [[- if eq .Arguments.DETACH false ]]
     second:
       name: step1
-      image: codefresh/cli
+      image: quay.io/codefresh/cli
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
         - echo "Retrieving logs for build $BUILD_ID"

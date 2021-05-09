@@ -69,7 +69,7 @@ spec:
   steps:
     herokuDeployer:
       title: herokuDeployer
-      image: nazarcodefresh/heroku-cli:alpine
+      image: quay.io/codefreshplugins/heroku-cli:alpine
       commands:
         - printf "machine api.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\nmachine git.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\n" > ~/.netrc
         - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}

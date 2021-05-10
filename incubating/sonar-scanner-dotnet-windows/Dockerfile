@@ -12,7 +12,7 @@ RUN choco install git \
 
 # Install Sonarqube Windows Scanner
 
-RUN -Command \
+RUN powershell -Command \
     New-Item -Path c:\ -Name ZipFolder -ItemType directory; \
     New-Item -Path c:\ -Name Extracted -ItemType directory; \
     $Url = 'https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.0.29862/sonar-scanner-msbuild-5.2.0.29862-net46.zip'; \

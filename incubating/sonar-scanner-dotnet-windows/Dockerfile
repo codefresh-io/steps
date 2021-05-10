@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 RUN choco install git -y
 RUN choco install vim -y
-RUN choco install nuget.commandline -y
+RUN choco install nuget.commandline netfx-4.8 netfx-4.8-devpack visualstudio2019buildtools -y
 
 # Install Sonarqube Windows Scanner
 

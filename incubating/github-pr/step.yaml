@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-pr
   title: Open or update a GitHub PR
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Create, edit, or annotate a GitHub pull request.
   sources:
@@ -11,8 +11,6 @@ metadata:
       https://github.com/codefresh-io/steps/tree/master/incubating/github-pr
   stage: incubating
   maintainers:
-    - name: Nick Sakovich
-      email: nick.sakovich@codefresh.io
     - name: Yaroslav Drachenko
       email: yaroslav@codefresh.io
   categories:
@@ -63,7 +61,7 @@ spec:
                 "description": "Name of repo"
             },
             "GITHUB_PR_NUMBER": {
-                "type": "number",
+                "type": "string",
                 "description": "The number of updated pull request. Required for open/close/update/merge operations"
             },
             "GITHUB_PR_OPERATION": {
@@ -88,7 +86,7 @@ spec:
   steps:
     main:
       name: github-pr
-      image: codefreshplugins/github-pr-plugin:0.0.6
+      image: codefreshplugins/github-pr-plugin:0.0.7
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'

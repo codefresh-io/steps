@@ -12,14 +12,20 @@ steps:
     tag: 1.1.6
     dockerfile: ./Dockerfile
     working_directory: ./incubating/healthcheck
-  PushingToDockerRegistry:
-    title: Pushing to Docker Registry
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}
     tags:
     - 1.1.6
-    registry: cfpluginmgr
     when:
       branch:
         only:
         - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: cfpluginmgr
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

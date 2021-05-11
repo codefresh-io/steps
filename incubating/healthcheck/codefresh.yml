@@ -9,7 +9,7 @@ steps:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/cfstep-healthcheck
-    tag: 1.1.6
+    tag: 1.1.5
     dockerfile: ./Dockerfile
     working_directory: ./incubating/healthcheck
   PushingToDockerRegistry:
@@ -17,7 +17,7 @@ steps:
     type: push
     candidate: ${{BuildingDockerImage}}
     tags:
-    - 1.1.6
+    - 1.1.5
     registry: dockerhub
     when:
       branch:

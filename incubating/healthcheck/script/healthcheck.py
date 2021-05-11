@@ -86,7 +86,7 @@ def kube_http_client(healthcheck_type, cluster, namespace, resource):
     replicas = response_dict['status']['replicas']
     if healthcheck_type.strip() == 'kubernetes_deployment':
         try:
-            unavailable_replicas = response_dict['status']['unavailableReplicas']
+            current_replicas = response_dict['status']['unavailableReplicas']
         except:
             print('All Replicas are reporting Healthy.')
             unavailable_replicas = 0

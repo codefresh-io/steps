@@ -18,7 +18,7 @@ steps:
     candidate: ${{BuildingDockerImage}}
     tags:
     - 1.1.6
-    registry: dockerhub
+    registry: cfpluginmgr
     when:
       branch:
         only:

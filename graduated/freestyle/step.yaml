@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: freestyle
   title: Run a shell script
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Run any shell command on top of a Docker image
   sources:
@@ -27,7 +27,7 @@ metadata:
           type: freestyle
           working_directory: '${{CLONE_STEP_NAME}}'
           arguments:
-            image: alpine:3.8
+            image: quay.io/codefreshplugins/alpine:3.8
             commands:
               - echo "Hello world"
               - echo "asdasd"
@@ -38,7 +38,7 @@ metadata:
           type: freestyle
           working_directory: '/'
           arguments:
-            image: alpine:3.8
+            image: quay.io/codefreshplugins/alpine:3.8
             commands:
               - echo "Hello world"
               - echo "asdasd"

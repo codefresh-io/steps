@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  version: '1.0.0'
+  version: '1.0.1'
   name: heroku-deployer
   isPublic: true
   description: Deploy to heroku via codefresh pipeline

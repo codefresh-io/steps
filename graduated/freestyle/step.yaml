@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: freestyle
   title: Run a shell script
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Run any shell command on top of a Docker image
   sources:

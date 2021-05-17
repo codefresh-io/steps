@@ -42,7 +42,8 @@ def actBasedOnStatus(status):
 
 
 def main():
-    branch = os.getenv('CF_BRANCH', 'main')
+    branch = os.getenv('CF_BRANCH', None)
+    pr = os.getenv('CF_PULL_REQUEST_NUMBER', None)
     sonar_project = os.getenv('SONAR_PROJECT_KEY')
     sonarcloud_token = os.getenv('SONAR_TOKEN')
     sonarqube_password = os.getenv('SONAR_PASSWORD')
@@ -56,7 +57,10 @@ def main():
 
     # Code: https://github.com/shijl0925/python-sonarqube-api/blob/376cf1d6ef231ee084694c77dadf551733395d4f/sonarqube/community/qualitygates.py#L182
     # Docs: https://python-sonarqube-api.readthedocs.io/en/1.2.1/examples/qualitygates.html#
-    qualitygates_status = sonar.qualitygates.get_project_qualitygates_status(projectKey=sonar_project, branch=branch)
+    if pr is not None: 
+        print(f"PR Quality Gate for PR #{pr}")
+        branch = None # since the QG check accepts only branch or PR
+    qualitygates_status = sonar.qualitygates.get_project_qualitygates_status(projectKey=sonar_project, branch=branch, pullRequest=pr)
     exportResults(qualitygates_status)
     actBasedOnStatus(qualitygates_status)
 

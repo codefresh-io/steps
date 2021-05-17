@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-pr
   title: Open or update a GitHub PR
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Create, edit, or annotate a GitHub pull request.
   sources:
@@ -11,8 +11,6 @@ metadata:
       https://github.com/codefresh-io/steps/tree/master/incubating/github-pr
   stage: incubating
   maintainers:
-    - name: Nick Sakovich
-      email: nick.sakovich@codefresh.io
     - name: Yaroslav Drachenko
       email: yaroslav@codefresh.io
   categories:
@@ -25,9 +23,9 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/github-pr/icon.svg
     background: "#f4f4f4"
   examples:
-    - description: example-1
+    - description: Create a PR
       workflow:
-        github-pr:
+        create-github-pr:
           type: github-pr
           arguments:
             GITHUB_TOKEN: ${{GITHUB_TOKEN}}
@@ -36,6 +34,23 @@ metadata:
             HEAD: ${{CF_BRANCH}}
             TITLE: Codefresh PR for ${{CF_BRANCH}}
             BASE: master
+    - description: Merge a PR from a 'Pull request merged' trigger event
+      workflow:
+        merge_github_pr:
+          type: github-pr
+          arguments:
+            GITHUB_TOKEN: '${{GITHUB_TOKEN}}'
+            GITHUB_REPO_OWNER: '${{CF_REPO_OWNER}}'
+            GITHUB_REPO_NAME: '${{CF_REPO_NAME}}'
+            GITHUB_PR_NUMBER: '${{CF_PULL_REQUEST_NUMBER}}'
+            GITHUB_PR_OPERATION: merge
+        delete_merged_branch:
+          image: alpine/git:latest
+          commands:
+            - rm -rf ${{CF_REPO_NAME}}  # Always pre-clean repo dirs where you make changes
+            - git clone https://codefresh:${{GITHUB_TOKEN}}@github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}.git
+            - cd ${{CF_REPO_NAME}}
+            - git push origin --delete ${{CF_BRANCH}}  # Won't delete current branch (main/master)
 spec:
   arguments: |-
     {
@@ -63,7 +78,7 @@ spec:
                 "description": "Name of repo"
             },
             "GITHUB_PR_NUMBER": {
-                "type": "number",
+                "type": "string",
                 "description": "The number of updated pull request. Required for open/close/update/merge operations"
             },
             "GITHUB_PR_OPERATION": {
@@ -88,7 +103,7 @@ spec:
   steps:
     main:
       name: github-pr
-      image: codefreshplugins/github-pr-plugin:0.0.6
+      image: codefreshplugins/github-pr-plugin:0.0.7
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'GITHUB_REPO_OWNER=${{GITHUB_REPO_OWNER}}'

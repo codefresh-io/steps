@@ -7,8 +7,9 @@ RUN choco install vim \
         nuget.commandline \
         visualstudio2019buildtools -y -v
 
-RUN choco install git \
-        netfx-4.8 \
+RUN choco install git.install --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y -v
+
+RUN choco install netfx-4.8 \
         netfx-4.8-devpack -y -v
 
 # Install Sonarqube Windows Scanner

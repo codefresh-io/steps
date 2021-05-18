@@ -9,7 +9,7 @@ RUN choco upgrade chocolatey-core.extension
 
 RUN choco install nuget.commandline -y
 
-RUN choco install git  --params "/CLOSEAPPLICATIONS" -y -f
+RUN choco install git --trace -y -f
 
 RUN choco install vim -y  --params "/CLOSEAPPLICATIONS" -y -f
 

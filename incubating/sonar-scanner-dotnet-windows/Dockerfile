@@ -5,9 +5,7 @@ RUN powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; [Syste
 
 RUN choco upgrade all
 
-RUN choco install nuget.commandline \
-
-RUN choco install visualstudio2019buildtools -y
+RUN choco install nuget.commandline -y
 
 RUN choco install vim -y
 
@@ -16,6 +14,8 @@ RUN choco install git.install --params "/GitAndUnixToolsOnPath /NoGitLfs /SChann
 RUN choco install netfx-4.8 -y
 
 RUN choco install netfx-4.8-devpack -y
+
+RUN choco install visualstudio2019buildtools -y
 
 # Install Sonarqube Windows Scanner
 

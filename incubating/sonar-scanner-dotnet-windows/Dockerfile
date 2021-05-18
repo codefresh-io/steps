@@ -7,6 +7,8 @@ RUN choco upgrade all
 
 RUN choco install nuget.commandline -y
 
+RUN choco install git -y
+
 RUN choco install vim -y
 
 RUN choco install git.install --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y -v

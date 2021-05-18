@@ -11,7 +11,8 @@ RUN powershell -NoProfile -ExecutionPolicy Bypass -Command \
 
 RUN choco install nuget.commandline -y
 
-RUN choco install git -y
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command \
+    choco install git -y --debug
 
 RUN choco install vim -y
 

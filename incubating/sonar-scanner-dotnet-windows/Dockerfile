@@ -7,11 +7,9 @@ RUN choco upgrade chocolatey-core.extension
 
 RUN choco install nuget.commandline -y
 
-RUN choco install git  --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y --not-silent
+RUN choco install git  --params "/CLOSEAPPLICATIONS" -y -f
 
-RUN choco install vim -y
-
-RUN choco install git.install --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y -v
+RUN choco install vim -y  --params "/CLOSEAPPLICATIONS" -y -f
 
 RUN choco install netfx-4.8 -y
 

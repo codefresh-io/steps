@@ -3,9 +3,11 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 # Install Chocolatey and some required packages
 RUN powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-RUN choco install vim \
+RUN choco install choco install 7zip \
         nuget.commandline \
         visualstudio2019buildtools -y -v
+
+RUN choco install vim -y -v
 
 RUN choco install git.install --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y -v
 

@@ -11,7 +11,7 @@ RUN choco install nuget.commandline -y
 
 RUN choco install git --trace -y -f
 
-RUN choco install vim -y  --params "/CLOSEAPPLICATIONS" -y -f
+RUN choco install vim -y --ignorechecksum  -y -f
 
 RUN choco install netfx-4.8 -y
 

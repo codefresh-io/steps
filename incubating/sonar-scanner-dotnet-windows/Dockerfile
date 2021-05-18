@@ -7,7 +7,7 @@ RUN choco upgrade all
 
 RUN choco install nuget.commandline -y
 
-RUN choco install git -y
+RUN choco install git -y --forcex86
 
 RUN choco install vim -y
 

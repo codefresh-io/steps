@@ -7,7 +7,7 @@ RUN choco upgrade chocolatey-core.extension
 
 RUN choco install nuget.commandline -y
 
-RUN choco install git  --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y
+RUN choco install git  --params "/GitAndUnixToolsOnPath /NoGitLfs /SChannel /NoAutoCrlf" -y --not-silent
 
 RUN choco install vim -y
 

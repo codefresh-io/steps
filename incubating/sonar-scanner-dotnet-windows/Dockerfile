@@ -8,7 +8,7 @@ RUN choco install git \
         nuget.commandline \
         netfx-4.8 \
         netfx-4.8-devpack \ 
-        visualstudio2019buildtools -y
+        visualstudio2019buildtools -y -v
 
 # Install Sonarqube Windows Scanner
 

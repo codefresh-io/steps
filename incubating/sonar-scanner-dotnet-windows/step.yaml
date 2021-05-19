@@ -75,6 +75,6 @@ spec:
   steps:
     main:
       name: sonar-scanner-dotnet-windows
-      image: codefresh-plugins/sonar-scanner-dotnet-windows:0.0.1
+      image: codefreshplugins/sonar-scanner-dotnet-windows:0.0.1
       commands:
         - powershell -Command cd "C:\codefresh\volume\${{WORKING_DIRECTORY}}"; nuget restore .; C:\Extracted\SonarScanner.MSBuild.exe begin /k:"${{SONAR_PROJECT_KEY}}" /d:sonar.host.url="${{SONAR_HOST_URL}}" /d:sonar.login="${{SONAR_LOGIN}}"; MSBuild.exe . /t:Rebuild /v:diag;  C:\Extracted\SonarScanner.MSBuild.exe end /d:sonar.login="${{SONAR_LOGIN}}"

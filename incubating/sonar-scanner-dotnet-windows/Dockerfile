@@ -11,7 +11,7 @@ RUN Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointMa
 
 RUN choco install nuget.commandline -y
 
-RUN choco install netfx-4.8-devpack -y
+RUN choco install netfx-4.8-devpack -y --debug
 
 RUN choco install visualstudio2019buildtools -y
 

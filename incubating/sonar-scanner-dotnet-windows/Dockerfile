@@ -2,18 +2,10 @@ FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019
 
 SHELL ["powershell", "-command"]
 
-# Install Chocolatey and some required packages
+# Install Chocolatey and JAVA package
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-# RUN powershell -NoProfile -ExecutionPolicy Bypass -Command \
-#     $Env:chocolateyVersion = '0.10.15' ; \
-#     $Env:chocolateyUseWindowsCompression = 'false' ; \
-#     "[Net.ServicePointManager]::SecurityProtocol = \"tls12, tls11, tls\"; iex ((New-Object System.Net.WebClient).DownloadString('http://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
 RUN choco install jdk8 -y
-
-# RUN choco install netfx-4.8-devpack -y --debug
-
-# RUN choco install visualstudio2019buildtools -y
 
 # Install Sonarqube Windows Scanner
 

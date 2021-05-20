@@ -1,0 +1,80 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: sonar-scanner-dotnet-windows
+  version: 0.0.1
+  isPublic: true
+  description: SonarScanner for .NET 4.8 Sonarqube 7.5
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/sonar-scanner-dotnet-windows
+    - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/sonar-scanner-dotnet-windows/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: scan-project-default
+      workflow:
+        SonarqubeDotnetScan:
+          type: sonar-scanner-dotnet-windows
+          arguments:
+            NUGET_RESTORE: true
+            SONAR_HOST_URL: https://sonarqube.codefresh.io
+            SONAR_PROJECT_KEY: myprojectkey
+            SONAR_LOGIN: myprojecttoken
+            WINDOWS_OS_BUILD_NUMBER: "17763.1935"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SONAR_HOST_URL",
+        "SONAR_LOGIN",
+        "SONAR_PROJECT_KEY",
+        "WINDOWS_OS_BUILD_NUMBER",
+        WORKING_DIRECTORY
+      ],
+      "properties": {
+        "SONAR_HOST_URL": {
+          "type": "string",
+          "description": "Sonarqube Server Host URL."
+        },
+        "SONAR_LOGIN": {
+          "type": "string",
+          "description": "Sonarqube Project Token."
+        },
+        "SONAR_PROJECT_KEY": {
+          "type": "string",
+          "description": "Sonarqube Project Key Name."
+        },
+        "WINDOWS_OS_BUILD_NUMBER": {
+          "type": "string",
+          "description": "Step only supports specific Windows OS Builds, these are the tested OS Builds.",
+          "enum": [
+            "17763.1935"
+          ]
+        },
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "description": "Directory where dotnet project file exists. Example: REPO_NAME or REPO_NAME\SUBDIR"
+        }
+      }
+    }
+  steps:
+    main:
+      name: sonar-scanner-dotnet-windows
+      image: codefreshplugins/sonar-scanner-dotnet-windows:0.0.1
+      commands:
+        - powershell -Command cd "C:\codefresh\volume\${{WORKING_DIRECTORY}}"; nuget restore .; C:\Extracted\SonarScanner.MSBuild.exe begin /k:"${{SONAR_PROJECT_KEY}}" /d:sonar.host.url="${{SONAR_HOST_URL}}" /d:sonar.login="${{SONAR_LOGIN}}"; MSBuild.exe . /t:Rebuild /v:diag;  C:\Extracted\SonarScanner.MSBuild.exe end /d:sonar.login="${{SONAR_LOGIN}}"

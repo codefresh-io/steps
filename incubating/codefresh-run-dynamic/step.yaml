@@ -7,7 +7,8 @@ metadata:
   isPublic: false  # FIXME set to true
   description: Accept a YAML file specifying a list of pipelines and build arguments, and run them concurrently.
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
+    # - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
+    - 'https://github.com/codefresh-io/steps/tree/new-step/codefresh-run-list/incubating/codefresh-run-dynamic'  # FIXME use above
   stage: graduated
   maintainers:
     - name: Ted Spinks
@@ -101,7 +102,7 @@ spec:
       image: gtspinks/codefresh-run-dynamic:0.0.1  # FIXME remove gtspinks
       # shell: bash
       commands:
-        - python3 /codefresh-run-list.py
+        - python3 /codefresh-run-dynamic.py
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -1,0 +1,111 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: codefreshdemo/codefresh-run-dynamic  # FIXME remove codefreshdemo
+  title: Run mulitple Codefresh pipelines based on a dynamic list
+  version: 0.0.1
+  isPublic: false  # FIXME set to true
+  description: Accept a YAML file specifying a list of pipelines and build arguments, and run them concurrently.
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
+  stage: graduated
+  maintainers:
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
+  categories:
+    - featured
+  official: false
+  tags: []
+  icon:
+    type: svg
+    # url: https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/icon-1.svg
+    url: https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run/icon-1.svg  # FIXME use above
+    background: '#C7DCFF'
+  examples:
+    - description: Start pipelines but don't wait
+      workflow:
+        codefresh-run:
+          title: Run Codefresh pipelines specified in a YAML list
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+    - description: Start pipelines and wait
+      workflow:
+        codefresh-run:
+          title: Run Codefresh pipelines specified in a YAML list
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+            WAIT: true
+    - description: Start pipelines and wait with options
+      workflow:
+        codefresh-run:
+          title: Run Codefresh pipelines specified in a YAML list
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+            WAIT: true
+            TIMEOUT_MINS: '90'
+            LOG_INTERVAL_MINS: '15'
+            LOG_DIRECTORY: /codefresh/volume/my-run-logs
+  latest: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "RUN_LIST_YAML_FILE"
+        ],
+        "properties": {
+            "RUN_LIST_YAML_FILE": {
+                "type": "string",
+                "description": "Path to the YAML file containing a list of pipelines to run. See example: https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml"
+            },
+            "DEBUG": {
+                "type": "string",
+                "description": "Set to 'true' to enable debug logging. Default is 'false'."
+            },
+            "WAIT": {
+                "type": "string",
+                "description": "Wait for builds to finish and log the status of each build."
+            },
+            "COLUMNS": {
+                "type": "string",
+                "description": "When WAIT is specified, choose which columns to log with build statuses. Default is 'id,pipeline-name,trigger,branch,status'. Available columns are 'id,pipeline-name,pipeline-id,status,created,started,finished,buildtime,totaltime,trigger,webhook,repository,branch,commit-id,pipeline-trigger-id'."
+            },
+            "TIMEOUT_MINS": {
+                "type": "string",
+                "description": "When WAIT is specified, wait up to this amount of minutes for them to finish. Default is 60."
+            },
+            "CHECK_INTERVAL_MINS": {
+                   "type": "string",
+                   "description": "When WAIT is specified, check the build status at this interval. Default is every 1 min."
+               },
+            "LOG_INTERVAL_MINS": {
+                "type": "string",
+                "description": "When WAIT is specified, log the build statuses at this interval. Default is every 5 min."
+            },
+            "LOG_DIRECTORY": {
+                  "type": "boolean",
+                  "description": "Write build logs to files in thie directory."
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+      name: codefresh-run-dynamic
+      image: gtspinks/codefresh-run-dynamic:0.0.1  # FIXME remove gtspinks
+      # shell: bash
+      commands:
+        - python3 /codefresh-run-list.py
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

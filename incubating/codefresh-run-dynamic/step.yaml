@@ -2,14 +2,18 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefreshdemo/codefresh-run-dynamic  # FIXME remove codefreshdemo
-  title: Run mulitple Codefresh pipelines based on a dynamic list
+  title: Dynamically run Codefresh pipelines
   version: 0.0.1
   isPublic: false  # FIXME set to true
-  description: Accept a YAML file specifying a list of pipelines and build arguments, and run them concurrently.
+  description: >-
+    Accepts a YAML file specifying a list of pipelines and options, and builds them concurrently. You can specify most
+    `codefresh run` options on a per-build basis within the YAML file, including: branch, sha, no_cache, no_cf_cache,
+    reset_volume, variables[], contexts[], skip[], and only[]. See example YAML file: 
+    https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml
   sources:
     # - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
     - 'https://github.com/codefresh-io/steps/tree/new-step/codefresh-run-list/incubating/codefresh-run-dynamic'  # FIXME use above
-  stage: graduated
+  stage: incubating
   maintainers:
     - name: Ted Spinks
       email: ted.spinks@codefresh.io
@@ -19,35 +23,36 @@ metadata:
   tags: []
   icon:
     type: svg
-    # url: https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/icon-1.svg
-    url: https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run/icon-1.svg  # FIXME use above
+    # url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/codefresh-run-dynamic/icon-1.svg # FIXME use this
+    url: >-
+      https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/codefresh-run/icon-1.svg
     background: '#C7DCFF'
   examples:
     - description: Start pipelines but don't wait
       workflow:
-        codefresh-run:
-          title: Run Codefresh pipelines specified in a YAML list
+        run_cf_pipelines:
+          title: Start pipelines but don't wait
           type: codefresh-run-dynamic
           arguments:
             RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
     - description: Start pipelines and wait
       workflow:
-        codefresh-run:
-          title: Run Codefresh pipelines specified in a YAML list
+        run_cf_pipelines:
+          title: Start pipelines and wait
           type: codefresh-run-dynamic
           arguments:
             RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
             WAIT: true
-    - description: Start pipelines and wait with options
+    - description: Start pipelines and wait - with extra options
       workflow:
-        codefresh-run:
-          title: Run Codefresh pipelines specified in a YAML list
+        run_cf_pipelines:
+          title: Start pipelines and wait - with extra options
           type: codefresh-run-dynamic
           arguments:
             RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
             WAIT: true
             TIMEOUT_MINS: '90'
-            LOG_INTERVAL_MINS: '15'
+            LOG_INTERVAL_MINS: '30'
             LOG_DIRECTORY: /codefresh/volume/my-run-logs
   latest: true
 spec:
@@ -64,10 +69,10 @@ spec:
         "properties": {
             "RUN_LIST_YAML_FILE": {
                 "type": "string",
-                "description": "Path to the YAML file containing a list of pipelines to run. See example: https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml"
+                "description": "Path to the YAML file containing the list of pipelines and run options."
             },
             "DEBUG": {
-                "type": "string",
+                "type": "boolean",
                 "description": "Set to 'true' to enable debug logging. Default is 'false'."
             },
             "WAIT": {
@@ -80,7 +85,7 @@ spec:
             },
             "TIMEOUT_MINS": {
                 "type": "string",
-                "description": "When WAIT is specified, wait up to this amount of minutes for them to finish. Default is 60."
+                "description": "When WAIT is specified, wait up to this amount of minutes for builds to finish. Default is 60."
             },
             "CHECK_INTERVAL_MINS": {
                    "type": "string",
@@ -88,25 +93,46 @@ spec:
                },
             "LOG_INTERVAL_MINS": {
                 "type": "string",
-                "description": "When WAIT is specified, log the build statuses at this interval. Default is every 5 min."
+                "description": "When WAIT is specified, log the build statuses at this interval. Default is every 15 min."
             },
             "LOG_DIRECTORY": {
                   "type": "string",
-                  "description": "Write build logs to files in thie directory."
+                  "description": "Write build logs to files in this directory."
             }
         }
     }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+          "CF_BUILDS_STARTED"
+      ],
+      "properties": {
+          "CF_BUILDS_STARTED": {
+              "type": "string",
+              "description": "List of builds that were started, space-separated"
+          }
+      }
+    }    
   stepsTemplate: |-
-    main:
-      name: codefresh-run-dynamic
-      image: gtspinks/codefresh-run-dynamic:0.0.1  # FIXME remove gtspinks
-      # shell: bash
+    run_child_pipelines:
+      image: gtspinks/codefresh-run-dynamic:0.0.1  # FIXME replace gtspinks with codefreshplugins
       commands:
         - python3 /codefresh-run-dynamic.py
+        - export CF_BUILDS_STARTED=$(cat /tmp/cf_builds_started)
+        - cf_export CF_BUILDS_STARTED
+        - export SUCCESS=$(cat /tmp/success)
+        - if [ "$SUCCESS" != "true" ]; then echo "One or more builds failed."; exit 1; fi
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
+
+
   delimiters:
     left: '[['
     right: ']]'

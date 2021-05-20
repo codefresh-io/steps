@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 
-""" Run a codefresh build for each pipeline in the provided YAML list file. See example YAML file: 
-        https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml"
+""" Purpose:
+        Accepts a YAML file specifying a list of pipelines and options, and builds them concurrently. You can specify
+        most `codefresh run` options on a per-build basis within the YAML file, including: branch, sha, no_cache,
+        no_cf_cache, reset_volume, variables[], contexts[], skip[], and only[]. See example YAML file: 
+        https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml
     Required environment variables:
       - RUN_LIST_YAML_FILE - Path to the YAML file containing a list of pipelines to run 
     Optional environment variables:
       - DEBUG - Set to 'true' to enable debug logging. Default is 'false'.
       - WAIT - Wait for builds to finish and log the status of each build.
-      - COLUMNS - When WAIT is specified, choose which columns to log with build statuses.
-            Default is 'id,pipeline-name,trigger,branch,status'. Available columns are
-            "id,pipeline-name,pipeline-id,status,created,started,finished,buildtime,
-            totaltime,trigger,webhook,repository,branch,commit-id,pipeline-trigger-id".
-      - TIMEOUT_MINS - When WAIT is specified, wait up to this amount of minutes for
-            them to finish. Default is 60.
-      - CHECK_INTERVAL_MINS - When WAIT is specified, check the build status every
-            X minutes. Default is 1 min.
-      - LOG_INTERVAL_MINS - When WAIT is specified, log the build statuses every
-            X minutes. Default is 5 min.
+      - COLUMNS - When WAIT is specified, choose which columns to include when logging build statuses. Default is
+            "id,pipeline-name,trigger,branch,status". Available columns are "id,pipeline-name,pipeline-id,status,
+            created,started,finished,buildtime,totaltime,trigger,webhook,repository,branch,commit-id,
+            pipeline-trigger-id".
+      - TIMEOUT_MINS - When WAIT is specified, wait up to this amount of minutes for builds to finish. Default is 60.
+      - CHECK_INTERVAL_MINS - When WAIT is specified, check the build status at this interval. Default is every 1 min.
+      - LOG_INTERVAL_MINS - When WAIT is specified, log the build statuses at this interval. Default is every 15 min.
       - LOG_DIRECTORY - Write build logs to files in thie directory.
+    Output files:
+      - /tmp/cf_builds_started - a space-separated list of the build IDs that were started.
+      - /tmp/success - contains 'true' or 'false' to indicate is all pipelines finished successfully.
 """
 
 import os           # to read env vars
-import sys          # for sys.exit()
 import time         # for sleep() and calculating wait timeout
 import logging      # for debug logging
 import subprocess   # to run the 'codefresh' process
@@ -166,17 +168,6 @@ def run_pipeline(pipeline):
     return build_number
 
 
-def set_pipeline_var(var_name, var_value):
-    """ Call the cf_export command to create the specified Codefresh pipeline var. Ignores
-        non-zero exit code for testing this script locally.
-    """
-    logging.debug("Setting pipeline variable {}:{}".format(var_name, var_value))
-    cmd = "/bin/sh cf_export"
-    cmd_args = [var_name + "=" + var_value]
-    output, exit_code = run_cmd(cmd, cmd_args, no_echo_cmd=True)
-    print(output)
-
-
 def get_build_info(build_number):
     """ Get a dictionary of info for the specified build.
     """
@@ -233,15 +224,18 @@ def get_build_log(build_number):
 
 
 def wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_interval_mins, columns):
-    """ Waits for the list of builds to all finish, up to the specified timeout. 
-        Returns True if all the builds finish before the timeout, otherwise False.
+    """ Wait for the list of builds to all finish, up to the specified timeout. 
+        Return True if all the builds finish before the timeout, otherwise False.
+        Noteworthy args:
+            check_interval_mins - how often to check the status of the builds to see if they're done
+            log_interval_mins - how often to print the status of the builds
     """
     logging.info("Waiting for pipeline builds to finish...")
     timeout_secs = int(timeout_mins) * 60
-    log_interval_seconds = int(log_interval_mins) * 60  # Could be a string from the env var
-    check_interval_seconds = int(check_interval_mins) * 60
     wait_start_time = time.time()
     wait_end_time = wait_start_time + timeout_secs
+    check_interval_seconds = int(check_interval_mins) * 60
+    log_interval_seconds = int(log_interval_mins) * 60  # Could be a string from the env var
     log_interval_tracker = []  # Keeps track of which logging interval we're in; only log once per logging interval
     while not all_builds_finished(builds_started) and time.time() < wait_end_time:
         ### Only log once per logging interval
@@ -261,11 +255,22 @@ def wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_inter
 
 
 def verify_or_create_dir(dir_name):
-    """ Creates the specified directory if it doesn't already exist.
+    """ Create the specified directory if it doesn't already exist.
     """
     cmd = "mkdir -p " + dir_name
     cmd_args = []
     output, exit_code = run_cmd(cmd, cmd_args, no_echo_cmd=True)
+
+
+def write_output_files(builds_started, success):
+    """ Store outputs in temp files so that this script's parent step
+        can read them into environment vars with export + cf_export.
+    """
+    space_separated_list = " ".join(builds_started)
+    with open("/tmp/cf_builds_started", "w") as write_file:
+        write_file.write(space_separated_list)
+    with open("/tmp/success", "w") as write_file:
+        write_file.write(str(success).lower())
 
 
 def main():
@@ -286,15 +291,10 @@ def main():
         build_number = run_pipeline(pipeline)
         builds_started.append(build_number)
         print("Started build https://g.codefresh.io/build/" + build_number + "\n")
-
-    # Output list of builds to a pipeline variable
-    space_separated_list = " ".join(builds_started)
-    # comma_separated_list = ",".join(builds_started)
-    set_pipeline_var("CF_BUILDS_STARTED", space_separated_list)
-    
+   
     # Optionally wait for builds to finish
     if wait:
-        print("Waiting for builds to finish...")
+        print("\nWaiting for builds to finish...")
         success = wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_interval_mins, columns)
         print_build_statuses(builds_started, columns)
         # Optionally write log files out to the specified directory
@@ -305,8 +305,8 @@ def main():
                 with open("{}/{}.log".format(log_directory,build_number), "w") as write_file:
                     write_file.write(build_log)
             print("Log files were written to " + log_directory)
-        if not success:
-            sys.exit("Not all pipelines finished successfully.")
+    
+    write_output_files(builds_started, success)
 
 
 if __name__ == "__main__":

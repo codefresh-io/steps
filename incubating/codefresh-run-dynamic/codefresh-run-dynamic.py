@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-""" Run a codefresh build for each pipeline in the provided YAML list file.
+""" Run a codefresh build for each pipeline in the provided YAML list file. See example YAML file: 
+        https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml"
     Required environment variables:
       - RUN_LIST_YAML_FILE - Path to the YAML file containing a list of pipelines to run 
     Optional environment variables:
@@ -170,7 +171,7 @@ def set_pipeline_var(var_name, var_value):
         non-zero exit code for testing this script locally.
     """
     logging.debug("Setting pipeline variable {}:{}".format(var_name, var_value))
-    cmd = "cf_export"
+    cmd = "/bin/sh cf_export"
     cmd_args = [var_name + "=" + var_value]
     output, exit_code = run_cmd(cmd, cmd_args, no_echo_cmd=True)
     print(output)

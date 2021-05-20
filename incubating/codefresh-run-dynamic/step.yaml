@@ -71,7 +71,7 @@ spec:
                 "description": "Set to 'true' to enable debug logging. Default is 'false'."
             },
             "WAIT": {
-                "type": "string",
+                "type": "boolean",
                 "description": "Wait for builds to finish and log the status of each build."
             },
             "COLUMNS": {
@@ -91,7 +91,7 @@ spec:
                 "description": "When WAIT is specified, log the build statuses at this interval. Default is every 5 min."
             },
             "LOG_DIRECTORY": {
-                  "type": "boolean",
+                  "type": "string",
                   "description": "Write build logs to files in thie directory."
             }
         }

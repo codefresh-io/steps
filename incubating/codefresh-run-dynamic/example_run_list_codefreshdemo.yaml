@@ -5,7 +5,7 @@
     CLIENT: fanduel
     REGION: ew1
     ENV: np01
-    FULLLAYERPATH: bede
+    FULLLAYERPATH: some/path
 - pipeline_id: "ted-experiments/Terraform Plan and Apply"
   trigger_id: "called-by-scheduler"
   branch: main
@@ -13,4 +13,4 @@
     CLIENT: pointsbet
     REGION: en1
     ENV: dv01
-    FULLLAYERPATH: bede/virtualNetwork
+    FULLLAYERPATH: some/other/path

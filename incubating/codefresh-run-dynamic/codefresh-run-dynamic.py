@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """ Purpose:
-        Accepts a YAML file specifying a list of pipelines and options, and builds them concurrently. You can specify
+        Accepts a YAML file specifying a list of pipelines and options, and runs them concurrently. You can specify
         most `codefresh run` options on a per-build basis within the YAML file, including: branch, sha, no_cache,
         no_cf_cache, reset_volume, variables[], contexts[], skip[], and only[]. See example YAML file: 
         https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml

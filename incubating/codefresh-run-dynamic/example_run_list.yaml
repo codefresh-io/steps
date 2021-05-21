@@ -1,16 +1,28 @@
-- pipeline_id: "ted-experiments/Terraform Plan and Apply"
-  trigger_id: "called-by-scheduler"
+# Run a pipeline with minimal arguments
+- pipeline_id: my-project/my-pipeline1
+
+# Run a pipeline with typical arguments and some variables
+- pipeline_id: my-project/my-pipeline2
+  trigger_id: my-trigger-name
   branch: main
   variables:
-    CLIENT: fanduel
-    REGION: ew1
-    ENV: np01
-    FULLLAYERPATH: bede
-- pipeline_id: "ted-experiments/Terraform Plan and Apply"
-  trigger_id: "called-by-scheduler"
-  branch: main
+    REGION: west
+    ENV: stage01
+
+# Run a pipeline with lots of arguments
+- pipeline_id: my-project/my-pipeline3
+  trigger_id: my-trigger-name
+  sha: 941852163761eb98f21a339a9988cbb7f2cdd589
+  no_cache: true        # disable Docker cache
+  no_cf_cache: true     # disable other cache optimizations
+  reset_volume: true    # create a fresh pipeline cache volume
   variables:
-    CLIENT: pointsbet
-    REGION: en1
-    ENV: dv01
-    FULLLAYERPATH: bede/virtualNetwork
+    SOME_VAR: blah
+    SOME_OTHER_VAR: blahblah
+  contexts:
+    - my-github
+  skip:
+    - some_step
+    - some_other_step
+  # only:
+  #   - my-best-step

@@ -1,0 +1,16 @@
+- pipeline_id: "ted-experiments/Terraform Plan and Apply"
+  trigger_id: "called-by-scheduler"
+  branch: main
+  variables:
+    CLIENT: fanduel
+    REGION: ew1
+    ENV: np01
+    FULLLAYERPATH: bede
+- pipeline_id: "ted-experiments/Terraform Plan and Apply"
+  trigger_id: "called-by-scheduler"
+  branch: main
+  variables:
+    CLIENT: pointsbet
+    REGION: en1
+    ENV: dv01
+    FULLLAYERPATH: bede/virtualNetwork

@@ -13,13 +13,28 @@ def getBaseUrl(instance):
     return baseUrl
 
 def processResponse(function, response):
+    status = 'OK'
+    env_file_path = "/meta/env_vars_to_export"
+
     if (response.status_code != 200):
         print(f"{function} failed with code {response.status_code}")
         print(f"Error: {response.text}")
+        status= 'ERROR'
+
+    if not os.path.exists(env_file_path):
+        print(f"Create Change Request status is \n'{status}'")
+    else:
+        env_file = open(env_file_path, "a")
+        qualitygates_status_json_file_path = f"/codefresh/volume/sonarqualitygates-{os.getenv('CF_SHORT_REVISION')}.json"
+        env_file.write("SERVICENOW_STATUS=" + status + "\n")
+        env_file.close()
+
+
+
 
 def createChangeRequest(user, password, baseUrl, title, description):
     crBody= {
-        "cf_build_id": os.getenv('CF_BUILD_ID'), 
+        "cf_build_id": os.getenv('CF_BUILD_ID'),
         "title":  title,
         "description" : description
     }

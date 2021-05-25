@@ -12,6 +12,7 @@ def main():
 
     email_body = os.getenv('BODY')
     email_recepient = os.getenv('TO')
+    email_recepient = list(email_recepient.replace(" ","").split(","))
     email_sender = os.getenv('FROM')
     email_subject = os.getenv('SUBJECT')
     mime_type = os.getenv('MIME_TYPE', 'plain')
@@ -23,7 +24,7 @@ def main():
     message = MIMEMultipart()
     message["Subject"] = email_subject
     message["From"] = email_sender
-    message["To"] = email_recepient
+    message["To"] = ", ".join(email_recepient)
 
     message_body = MIMEText(email_body, mime_type)
 

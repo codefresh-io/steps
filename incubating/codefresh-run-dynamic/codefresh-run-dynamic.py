@@ -72,7 +72,8 @@ def verify_input_file_structure(pipelines_to_run):
         assert 'pipeline_id' in pipeline.keys(), error_msg
         # Make sure the 'variable' property is a dictionary with valid sub-properties
         if 'variables' in pipeline.keys():
-            assert (isinstance(pipeline['variables'], dict)), "'variables' property must be a dictionary of key:value pairs"
+            assert (isinstance(pipeline['variables'], dict)), \
+                "'variables' property must be a dictionary of key:value pairs"
             for var_name in pipeline['variables'].keys():
                 var_value = pipeline['variables'][var_name]
                 scalar_types = [str, int, float, complex, bool]
@@ -122,7 +123,8 @@ def get_inputs_from_env_vars_and_defaults():
     log_interval_mins = os.environ.get('LOG_INTERVAL_MINS')
     if not log_interval_mins: log_interval_mins = 15
     log_directory = os.environ.get('LOG_DIRECTORY')
-    return run_list_yaml_file, columns, debug, wait, timeout_mins, check_interval_mins, log_interval_mins, log_directory
+    return run_list_yaml_file, columns, debug, wait, timeout_mins, check_interval_mins, \
+        log_interval_mins, log_directory
 
 
 def run_pipeline(pipeline):

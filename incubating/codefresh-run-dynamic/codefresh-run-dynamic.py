@@ -17,10 +17,10 @@
       - TIMEOUT_MINS - When WAIT is specified, wait up to this amount of minutes for builds to finish. Default is 60.
       - CHECK_INTERVAL_MINS - When WAIT is specified, check the build status at this interval. Default is every 1 min.
       - LOG_INTERVAL_MINS - When WAIT is specified, log the build statuses at this interval. Default is every 15 min.
-      - LOG_DIRECTORY - Write build logs to files in thie directory.
+      - LOG_DIRECTORY - Write build logs to files in this directory.
     Output files:
       - /tmp/cf_builds_started - a space-separated list of the build IDs that were started.
-      - /tmp/success - contains 'true' or 'false' to indicate is all pipelines finished successfully.
+      - /tmp/success - contains 'true' or 'false' to indicate whether all pipelines finished successfully.
 """
 
 import os           # to read env vars
@@ -31,8 +31,8 @@ import yaml
 
 
 def run_cmd(cmd, cmd_args=[], input=None, fail_on_non_zero=True, no_echo_cmd=False, redact_cmd=False):
-    """Run a command in the OS. Any command args that contain spaces should be 
-       passed separately in the cmd_args list param (don't include quotes).
+    """ Run a command in the OS. Any command args that contain spaces should be 
+        passed separately in the cmd_args list param (don't include quotes).
     """
     log_cmd = cmd
     for arg in cmd_args:
@@ -202,8 +202,8 @@ def all_builds_finished(build_numbers_to_check):
 
 
 def print_build_statuses(build_numbers, columns):
-    """ Print the specified info (columns) from each build. 'columns' should be
-        a comma-separated list (no spaces). Accepable values are:
+    """ Print the specified info (columns) from each build. 'columns' should be a string
+        containing column names (comma-separated, no spaces). Accepable values are:
             id,pipeline-name,pipeline-id,status,created,started,finished,buildtime,totaltime,
             trigger,webhook,repository,branch,commit-id,pipeline-trigger-id
     """

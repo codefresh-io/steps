@@ -44,7 +44,7 @@ spec:
         "SONAR_LOGIN",
         "SONAR_PROJECT_KEY",
         "WINDOWS_OS_BUILD_NUMBER",
-        WORKING_DIRECTORY
+        "WORKING_DIRECTORY"
       ],
       "properties": {
         "SONAR_HOST_URL": {
@@ -68,7 +68,7 @@ spec:
         },
         "WORKING_DIRECTORY": {
           "type": "string",
-          "description": "Directory where dotnet project file exists. Example: REPO_NAME or REPO_NAME\SUBDIR"
+          "description": "Directory where dotnet project file exists. Example: REPO_NAME or REPO_NAME\\SUBDIR"
         }
       }
     }

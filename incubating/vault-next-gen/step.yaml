@@ -1,8 +1,8 @@
 kind: step-type
-version: '1.0'
+version: "1.0"
 metadata:
   name: vault-next-gen
-  version: 1.0.1-alpha
+  version: 1.0.2-alpha
   title: Fetch specific secrets from Hashicorp Vault
   isPublic: true
   description: >-
@@ -32,7 +32,7 @@ metadata:
             MOUNT_POINT: ${{MOUNT_POINT}}
             VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
             SECRETS:
-                - EXPORT_NAME=path:secret
+              - EXPORT_NAME=path:secret
     - description: Client Certificate
       workflow:
         Vault_to_Env:
@@ -45,7 +45,7 @@ metadata:
             VAULT_CLIENT_CERT_BASE64: ${{VAULT_CLIENT_CERT_BASE64}}
             VAULT_CLIENT_KEY_BASE64: ${{VAULT_CLIENT_KEY_BASE64}}
             SECRETS:
-                - EXPORT_NAME=path:secret
+              - EXPORT_NAME=path:secret
     - description: Approle Authentication
       workflow:
         Vault_to_Env:
@@ -54,11 +54,11 @@ metadata:
           arguments:
             VAULT_ADDR: ${{VAULT_ADDR}}
             MOUNT_POINT: ${{MOUNT_POINT}}
-            VAULT_AUTH_METHOD: 'APPROLE'
+            VAULT_AUTH_METHOD: "APPROLE"
             APPROLE_ROLE_ID: ${{APPROLE_ROLE_ID}}
             APPROLE_SECRET_ID: ${{APPROLE_SECRET_ID}}
             SECRETS:
-                - EXPORT_NAME=path:secret
+              - EXPORT_NAME=path:secret
     - description: Retrieve Multiple Paths
       workflow:
         Vault_to_Env:
@@ -69,8 +69,8 @@ metadata:
             MOUNT_POINT: ${{MOUNT_POINT}}
             VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
             SECRETS:
-                - EXPORT_NAME=path:secret
-                - EXPORT_NAME2=path2:secret2
+              - EXPORT_NAME=path:secret
+              - EXPORT_NAME2=path2:secret2
     - description: Retrieve Version 1 Secrets
       workflow:
         Vault_to_Env:
@@ -82,8 +82,8 @@ metadata:
             VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_KV_VERSION: 1
             SECRETS:
-                - EXPORT_NAME=path:secret
-                - EXPORT_NAME2=path2:secret2
+              - EXPORT_NAME=path:secret
+              - EXPORT_NAME2=path2:secret2
     - description: Base64 Encode Secrets
       workflow:
         Vault_to_Env:
@@ -94,10 +94,22 @@ metadata:
             MOUNT_POINT: ${{MOUNT_POINT}}
             VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
             VAULT_KV_VERSION: 1
-            NEW_LINE_REPLACEMENT_STRING: 'BASE64'
+            NEW_LINE_REPLACEMENT_STRING: "BASE64"
             SECRETS:
-                - EXPORT_NAME=path:secret
-                - EXPORT_NAME2=path2:secret2
+              - EXPORT_NAME=path:secret
+              - EXPORT_NAME2=path2:secret2
+    - description: Substitute secrets in the files
+      workflow:
+        Vault_to_Env:
+          title: Importing vault values
+          type: vault-next-gen
+          arguments:
+            VAULT_ADDR: ${{VAULT_ADDR}}
+            MOUNT_POINT: ${{MOUNT_POINT}}
+            VAULT_TOKEN: ${{VAULT_AUTH_TOKEN}}
+            FILES:
+              - /path/to/file/with/secret/file-with-secrets-name
+            SECRET_NAME_SEPARATOR: "!"
 spec:
   arguments: |-
     {
@@ -159,6 +171,17 @@ spec:
                   },
                   "description": "Array list of secrets in this pattern - exportvariablename=path:secretname"
             },
+            "FILES": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Array list of files names with secrets path like %vault:path!secretname%"
+            },
+            "SECRET_NAME_SEPARATOR": {
+                "type": "string",
+                "description": "Specify the value to use as separator for the secretname: Default is :"
+            },
             "VERBOSE": {
                 "type": "boolean",
                 "description": "Add more detailed logging"
@@ -178,6 +201,9 @@ spec:
       [[ range $arg := .Arguments.SECRETS ]]
         - 'SECRETSVALUES_[[ $arg ]]'
       [[- end -]]
+      [[ range $arg := .Arguments.FILES ]]
+        - 'SECRETSFILES_[[ $arg ]]'
+      [[- end -]]
   delimiters:
-    left: '[['
-    right: ']]'
+    left: "[["
+    right: "]]"

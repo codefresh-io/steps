@@ -1,7 +1,8 @@
 import os
 import sys
 
-class StepUtility:    
+
+class StepUtility:
     @staticmethod
     def getEnvironmentVariable(key, env):
         value = env.get(key, "")
@@ -14,5 +15,5 @@ class StepUtility:
         print('{}: {}'.format(type(exc).__name__, exc))
 
     @staticmethod
-    def printFail(message, end = '\n'):
+    def printFail(message, end='\n'):
         sys.stderr.write('\x1b[1;31m' + message.strip() + '\x1b[0m' + end)

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/service-now
-  version: 0.0.3
+  version: 0.0.5
   isPublic: false
   description: Integration with ServiceNow Change Management
   sources:
@@ -72,15 +72,14 @@ spec:
             "type": "string",
             "description": "The full description of your CR"
         },
-        "SN_IMAGE": {
+        "endpoint": {
             "type": "string",
-            "description": "The docker image for the step. Can be overwritten to work around Docker rate imit of if a registry is down.",
-            "default": "lrochette/service-now"
+            "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
+            "default": "x_409723_codefresh/codefresh/createChange"
         },
-        "SN_IMAGE_TAG": {
+        "body": {
             "type": "string",
-            "description": "The docker image tag for the step.",
-            "default": "0.0.3"
+            "description": "Additional dfata to pass to ServiceNow through a JSON block"
         },
         "debug": {
           "type": "string",

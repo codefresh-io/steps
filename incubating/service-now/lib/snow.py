@@ -3,11 +3,10 @@ import sys
 import json
 import requests
 
-APP_NAME = "x_409723_codefresh"
 DEBUG = True
 
 def getBaseUrl(instance):
-    baseUrl = "%s/api/%s" %(instance, APP_NAME);
+    baseUrl = "%s/api/%s" %(instance);
     if DEBUG:
         print("baseUrl: " + baseUrl)
     return baseUrl
@@ -29,16 +28,13 @@ def processResponse(function, response):
         env_file.write("SERVICENOW_STATUS=" + status + "\n")
         env_file.close()
 
-
-
-
-def createChangeRequest(user, password, baseUrl, title, description):
+def createChangeRequest(user, password, baseUrl, endpoint, title, description):
     crBody= {
         "cf_build_id": os.getenv('CF_BUILD_ID'),
         "title":  title,
         "description" : description
     }
-    url="%s/codefresh/createChange" % (baseUrl)
+    url="%s/%s" % (baseUrl, endpoint)
 
     if DEBUG:
         print(f"Entering createChangeRequest:")
@@ -59,14 +55,16 @@ def main():
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
+    ENDPOINT = os.getenv('endpoint');
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
-    TITLE = os.getenv('action', 'Change Request created by Codefresh')
+    TITLE = os.getenv('title', 'Change Request created by Codefresh')
     DESCRIPTION = os.getenv('description', '')
 
     if ACTION == "createcr":
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
+            endpoint=ENDPOINT,
             title=TITLE,
             description=DESCRIPTION)
 if __name__ == "__main__":

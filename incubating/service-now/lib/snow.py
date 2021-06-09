@@ -6,7 +6,7 @@ import requests
 DEBUG = True
 
 def getBaseUrl(instance):
-    baseUrl = "%s/api/%s" %(instance);
+    baseUrl = "%s/api" %(instance);
     if DEBUG:
         print("baseUrl: " + baseUrl)
     return baseUrl

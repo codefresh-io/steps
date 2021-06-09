@@ -30,12 +30,17 @@ def processResponse(function, response):
 
 def createChangeRequest(user, password, baseUrl, endpoint, title, body, description):
 
-    crBody= {
-        "cf_build_id": os.getenv('CF_BUILD_ID'),
-        "title":  title,
-        "description" : description,
-        "options": body
-    }
+    if (bool(body)):
+        crBody=json.load(body)
+    else:
+        crBody= {}
+
+    crBody.cf_build_id = os.getenv('CF_BUILD_ID')
+    if (! crBody.title):
+        crBody.title=title
+    if (! crBody.description):
+        crBody.description=description
+
     url="%s/%s" % (baseUrl, endpoint)
 
     if DEBUG:

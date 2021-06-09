@@ -28,11 +28,13 @@ def processResponse(function, response):
         env_file.write("SERVICENOW_STATUS=" + status + "\n")
         env_file.close()
 
-def createChangeRequest(user, password, baseUrl, endpoint, title, description):
+def createChangeRequest(user, password, baseUrl, endpoint, title, body, description):
+
     crBody= {
         "cf_build_id": os.getenv('CF_BUILD_ID'),
         "title":  title,
-        "description" : description
+        "description" : description,
+        "options": body
     }
     url="%s/%s" % (baseUrl, endpoint)
 
@@ -55,7 +57,9 @@ def main():
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
-    ENDPOINT = os.getenv('endpoint');
+    ENDPOINT = os.getenv('endpoint')
+    BODY     = os.getenv('body')
+
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
     TITLE = os.getenv('title', 'Change Request created by Codefresh')
     DESCRIPTION = os.getenv('description', '')
@@ -66,6 +70,7 @@ def main():
             baseUrl=getBaseUrl(instance=INSTANCE),
             endpoint=ENDPOINT,
             title=TITLE,
+            body=BODY,
             description=DESCRIPTION)
 if __name__ == "__main__":
     main()

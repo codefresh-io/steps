@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/service-now
-  version: 0.0.5
+  version: 0.0.6
   isPublic: false
   description: Integration with ServiceNow Change Management
   sources:
@@ -113,7 +113,7 @@ spec:
     rest_call:
       name: service-now
       title: Use REST API to connect to Service-Now instance
-      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_TAG]]'
+      image: 'lrochette/service-now:snow'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

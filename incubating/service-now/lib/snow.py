@@ -36,8 +36,8 @@ def createChangeRequest(user, password, baseUrl, endpoint, title, body, descript
         crBody= {}
 
     crBody.cf_build_id = os.getenv('CF_BUILD_ID')
-    if (! crBody.title):
-        crBody.title=title
+    if (! crBody.short_description):
+        crBody.short_description=title
     if (! crBody.description):
         crBody.description=description
 

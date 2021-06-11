@@ -79,7 +79,7 @@ spec:
         },
         "body": {
             "type": "string",
-            "description": "Additional dfata to pass to ServiceNow through a JSON block"
+            "description": "Additional data to pass to ServiceNow through a JSON block"
         },
         "debug": {
           "type": "string",
@@ -106,6 +106,10 @@ spec:
             "cr_number": {
                 "type": "string",
                 "description": "The number of the CR created."
+            },
+            "cr_sysid": {
+                "type": "string",
+                "description": "The sys_id of the CR created."
             }
         }
     }

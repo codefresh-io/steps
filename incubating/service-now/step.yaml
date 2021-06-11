@@ -31,8 +31,7 @@ metadata:
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            title: Change request for my application deployment in Prod
-            description: This is the long form of my description for my change
+            cr_body: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
 spec:
   arguments: |-
     {
@@ -64,22 +63,14 @@ spec:
             "type": "string",
             "description": "The password associated to the username to log  into the instance"
         },
-        "title": {
-            "type": "string",
-            "description": "The short description of your CR"
-        },
-        "description": {
-            "type": "string",
-            "description": "The full description of your CR"
-        },
-        "endpoint": {
+        "namespace": {
             "type": "string",
             "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
-            "default": "x_409723_codefresh/codefresh/createChange"
+            "default": "409723"
         },
-        "body": {
+        "cr_body": {
             "type": "string",
-            "description": "Additional data to pass to ServiceNow through a JSON block"
+            "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
         },
         "debug": {
           "type": "string",

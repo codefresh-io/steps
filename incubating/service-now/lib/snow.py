@@ -4,6 +4,7 @@ import json
 import requests
 
 DEBUG = True
+API_NAMESPACE=409723
 
 def getBaseUrl(instance):
     baseUrl = "%s/api" %(instance);
@@ -19,33 +20,41 @@ def processResponse(function, response):
         print(f"{function} failed with code {response.status_code}")
         print(f"Error: {response.text}")
         status= 'ERROR'
+        return response.status_code
+    else:
+        print(f"Change Request Number: {response.body.number})
+        print(f"Change Request Number: {response.body.sys_id})
+        print(f"Change Request full answer: \n{response.body})
 
     if not os.path.exists(env_file_path):
         print(f"Create Change Request status is \n'{status}'")
     else:
         env_file = open(env_file_path, "a")
-        qualitygates_status_json_file_path = f"/codefresh/volume/sonarqualitygates-{os.getenv('CF_SHORT_REVISION')}.json"
-        env_file.write("SERVICENOW_STATUS=" + status + "\n")
+        qualitygates_status_json_file_path = f"/codefresh/volume/servicenow-cr.json"
+        env_file.write("CR_NUMBER=" +response.body.number + "\n")
+        env_file.write("CR_SYS_ID=" +response.body.sys_id + "\n)
+        env_file.write("CR_FULL_JSON=/codefresh/volume/servicenow-cr.json"+ "\n)  
         env_file.close()
 
-def createChangeRequest(user, password, baseUrl, endpoint, title, body, description):
+        json_file=open("/codefresh/volume/servicenow-cr.json", "w")
+        json_file.write(response.body)
+        json_file.close()
+
+def createChangeRequest(user, password, baseUrl, endpoint, title, data, description):
 
     if DEBUG:
         print(f"Entering createChangeRequest:")
-        print(f"Body: {body}")
+        print(f"Body: {data}")
 
-    if (bool(body)):
-        crBody=json.loads(body)
+    if (bool(data)):
+        crBody=json.loads(data)
     else:
         crBody= {}
 
     crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
-    if not crBody.get('short_description'):
-        crBody["short_description"]=title
-    if not crBody.get('description'):
-        crBody["description"]=description
 
-    url="%s/%s" % (baseUrl, endpoint)
+
+    url="%s/now/table/change_request" % (baseUrl, endpoint)
 
     if DEBUG:
         print(f"Entering createChangeRequest:")

@@ -35,8 +35,7 @@ def createChangeRequest(user, password, baseUrl, endpoint, title, body, descript
         print(f"Body: {body}")
 
     if (bool(body)):
-        print(f)
-        crBody=json.load(body)
+        crBody=json.loads(body)
     else:
         crBody= {}
 

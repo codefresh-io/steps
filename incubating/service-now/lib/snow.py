@@ -30,7 +30,12 @@ def processResponse(function, response):
 
 def createChangeRequest(user, password, baseUrl, endpoint, title, body, description):
 
+    if DEBUG:
+        print(f"Entering createChangeRequest:")
+        print(f"Body: {crBody}")
+
     if (bool(body)):
+        print(f)
         crBody=json.load(body)
     else:
         crBody= {}

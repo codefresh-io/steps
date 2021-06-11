@@ -32,7 +32,7 @@ def createChangeRequest(user, password, baseUrl, endpoint, title, body, descript
 
     if DEBUG:
         print(f"Entering createChangeRequest:")
-        print(f"Body: {crBody}")
+        print(f"Body: {body}")
 
     if (bool(body)):
         print(f)

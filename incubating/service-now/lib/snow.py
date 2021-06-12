@@ -22,22 +22,25 @@ def processChangeRequestResponse(function, response):
         print("Error: " + response.text)
         status= 'ERROR'
         return response.status_code
-    else:
-        print("Change Request creation successful")
-        data=json.loads(response.text)
-        print("Change Request Number: %s" % (data["result"]["number"]))
-        print("Change Request sys_id: %s" % (data["result"]["sys_id"]))
-        print("Change Request full answer: \n" + response.text)
+
+    print("Change Request creation successful")
+    data=json.loads(response.text)
+    CR_NUMBER=data["result"]["number"]
+    CR_SYSID=data["result"]["sys_id"]
+    FULL_JSON=json.dumps(data, indent=2)
+    print(f"Change Request Number: {CR_NUMBER}")
+    print(f"Change Request sys_id: {CR_SYSID}")
+    print("Change Request full answer:\n" + FULL_JSON)
 
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
-        env_file.write("CR_NUMBER=" +response.body.number + "\n")
-        env_file.write("CR_SYS_ID=" +response.body.sys_id + "\n")
+        env_file.write(f"CR_NUMBER={CR_NUMBER}\n")
+        env_file.write(f"CR_SYS_ID={CR_SYSID}\n")
         env_file.write("CR_FULL_JSON=/codefresh/volume/servicenow-cr.json\n")
         env_file.close()
 
         json_file=open("/codefresh/volume/servicenow-cr.json", "w")
-        json_file.write(response.body)
+        json_file.write(FULL_JSON)
         json_file.close()
 
 def createChangeRequest(user, password, baseUrl, title, data, description):

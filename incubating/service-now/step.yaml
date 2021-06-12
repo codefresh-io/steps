@@ -68,7 +68,7 @@ spec:
             "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
             "default": "409723"
         },
-        "cr_body": {
+        "data": {
             "type": "string",
             "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
         },
@@ -105,14 +105,20 @@ spec:
         }
     }
   stepsTemplate: |-
-    rest_call:
-      name: service-now
-      title: Use REST API to connect to Service-Now instance
+    createCR:
+      name: Create a ServiceNow Change Request
+      title: Use REST API to create a CR
       image: 'lrochette/service-now:snow'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
+    createAnnotation:
+      name: Assign CR_NUMBER as annotation
+      image: codefresh/cli
+      commands:
+        - codefresh annotation build ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+        - cf_export CF_BUILD_URL="${{SN_INSTANCE}}/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%${{CR_SYS_ID}}"
   delimiters:
     left: '[['
     right: ']]'

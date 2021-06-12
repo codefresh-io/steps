@@ -12,28 +12,26 @@ def getBaseUrl(instance):
         print("baseUrl: " + baseUrl)
     return baseUrl
 
-def processResponse(function, response):
+def processChangeRequestResponse(function, response):
     status = 'OK'
     env_file_path = "/meta/env_vars_to_export"
 
     if (response.status_code != 200):
-        print(f"{function} failed with code {response.status_code}")
-        print(f"Error: {response.text}")
+        print("Change Request creation  failed with code %s" % (response.status_code))
+        print("Error: " + response.text)
         status= 'ERROR'
         return response.status_code
     else:
-        print(f"Change Request Number: {response.body.number})
-        print(f"Change Request Number: {response.body.sys_id})
-        print(f"Change Request full answer: \n{response.body})
+        data=json.loads(response.test)
+        print("Change Request Number: %s" % (data["number"]))
+        print("Change Request sys_id: %s" % (data["sys_id"]))
+        print("Change Request full answer: \n" + response.text())
 
-    if not os.path.exists(env_file_path):
-        print(f"Create Change Request status is \n'{status}'")
-    else:
+    if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
-        qualitygates_status_json_file_path = f"/codefresh/volume/servicenow-cr.json"
         env_file.write("CR_NUMBER=" +response.body.number + "\n")
-        env_file.write("CR_SYS_ID=" +response.body.sys_id + "\n)
-        env_file.write("CR_FULL_JSON=/codefresh/volume/servicenow-cr.json"+ "\n)  
+        env_file.write("CR_SYS_ID=" +response.body.sys_id + "\n")
+        env_file.write("CR_FULL_JSON=/codefresh/volume/servicenow-cr.json\n")
         env_file.close()
 
         json_file=open("/codefresh/volume/servicenow-cr.json", "w")
@@ -43,8 +41,8 @@ def processResponse(function, response):
 def createChangeRequest(user, password, baseUrl, endpoint, title, data, description):
 
     if DEBUG:
-        print(f"Entering createChangeRequest:")
-        print(f"Body: {data}")
+        print("Entering createChangeRequest:")
+        print("Body: " + data)
 
     if (bool(data)):
         crBody=json.loads(data)
@@ -66,7 +64,7 @@ def createChangeRequest(user, password, baseUrl, endpoint, title, data, descript
         json = crBody,
         headers = {"content-type":"application/json"},
         auth=(user, password))
-    processResponse(function="createChangeRequest", response=resp)
+    processChangeRequestResponse(function="createChangeRequest", response=resp)
 
 def main():
     global DEBUG
@@ -88,7 +86,7 @@ def main():
             baseUrl=getBaseUrl(instance=INSTANCE),
             endpoint=ENDPOINT,
             title=TITLE,
-            body=BODY,
+            data=BODY,
             description=DESCRIPTION)
 if __name__ == "__main__":
     main()

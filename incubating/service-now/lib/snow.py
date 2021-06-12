@@ -52,7 +52,7 @@ def createChangeRequest(user, password, baseUrl, endpoint, title, data, descript
     crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
 
 
-    url="%s/now/table/change_request" % (baseUrl, endpoint)
+    url="%s/now/table/change_request" % (baseUrl)
 
     if DEBUG:
         print(f"Entering createChangeRequest:")

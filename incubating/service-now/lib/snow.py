@@ -16,16 +16,18 @@ def processChangeRequestResponse(function, response):
     status = 'OK'
     env_file_path = "/meta/env_vars_to_export"
 
-    if (response.status_code != 200):
-        print("Change Request creation  failed with code %s" % (response.status_code))
+    print("Processing answer from REST call")
+    if (response.status_code != 200 and response.status_code != 201):
+        print("Change Request creation failed with code %s" % (response.status_code))
         print("Error: " + response.text)
         status= 'ERROR'
         return response.status_code
     else:
-        data=json.loads(response.test)
-        print("Change Request Number: %s" % (data["number"]))
-        print("Change Request sys_id: %s" % (data["sys_id"]))
-        print("Change Request full answer: \n" + response.text())
+        print("Change Request creation successful")
+        data=json.loads(response.text)
+        print("Change Request Number: %s" % (data["result"]["number"]))
+        print("Change Request sys_id: %s" % (data["result"]["sys_id"]))
+        print("Change Request full answer: \n" + response.text)
 
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
@@ -38,7 +40,7 @@ def processChangeRequestResponse(function, response):
         json_file.write(response.body)
         json_file.close()
 
-def createChangeRequest(user, password, baseUrl, endpoint, title, data, description):
+def createChangeRequest(user, password, baseUrl, title, data, description):
 
     if DEBUG:
         print("Entering createChangeRequest:")
@@ -73,8 +75,7 @@ def main():
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
-    ENDPOINT = os.getenv('endpoint')
-    BODY     = os.getenv('body')
+    DATA     = os.getenv('data')
 
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
     TITLE = os.getenv('title', 'Change Request created by Codefresh')
@@ -84,9 +85,8 @@ def main():
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
-            endpoint=ENDPOINT,
             title=TITLE,
-            data=BODY,
+            data=DATA,
             description=DESCRIPTION)
 if __name__ == "__main__":
     main()

@@ -24,7 +24,7 @@ def processChangeRequestResponse(function, response):
         return response.status_code
 
     print("Change Request creation successful")
-    data=json.loads(response.text)
+    data=response.json() # json.loads(response.text)
     CR_NUMBER=data["result"]["number"]
     CR_SYSID=data["result"]["sys_id"]
     FULL_JSON=json.dumps(data, indent=2)

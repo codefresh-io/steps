@@ -87,7 +87,8 @@ spec:
         "additionalProperties": true,
         "patterns": [],
         "required": [
-          "SERVICENOW_STATUS"
+          "CR_NUMBER",
+          "CR_SYS_ID"
         ],
         "properties": {
             "sys_id": {
@@ -117,8 +118,10 @@ spec:
       name: Assign CR_NUMBER as annotation
       image: codefresh/cli
       commands:
-        - codefresh annotation build ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-        - cf_export CF_BUILD_URL="${{SN_INSTANCE}}/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%${{CR_SYS_ID}}"
+        - |
+          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+          cf_export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri\=%2Fchange_request.do%3Fsys_id%3D${{CR_SYS_ID}}'
+
   delimiters:
     left: '[['
     right: ']]'

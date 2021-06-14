@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.1.0
+  version: 1.2.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -97,6 +97,11 @@ spec:
                  "description": "Run pipeline and print build ID",
                  "default": false
              },
+            "FOLLOW_LOGS": {
+                 "type": "boolean",
+                 "description": "Run pipeline and follow its logs",
+                 "default": true
+             },
             "CONTEXT": {
                  "type": "array",
                  "items": {
@@ -189,8 +194,10 @@ spec:
       image: quay.io/codefresh/cli
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
+      [[- if eq .Arguments.FOLLOW_LOGS true ]]
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f $BUILD_ID
-        - codefresh wait $BUILD_ID
+      [[- end ]]
+        - codefresh wait --verbose $BUILD_ID
       [[- end -]]
 

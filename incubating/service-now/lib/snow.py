@@ -95,15 +95,16 @@ def callback(user, password, baseUrl, number, cf_build_id, token):
         print("CF Build ID: " + cf_build_id)
 
     url = "%s/%s/codefresh/callback" % (baseUrl, API_NAMESPACE)
+
     body = {
-        "cr_number": {number},
-        "cf_build_id": {cf_build_id},
-        "cf_token": {token},
+        "cr_number": number,
+        "cf_build_id": cf_build_id,
+        "cf_token": token,
         "cf_url": os.getenv("CF_URL")
     }
     if DEBUG:
+        print("Calling POST on " + url)
         print("Data: " + json.dumps(body))
-        print("------")
 
     resp=requests.post(url,
         json = body,

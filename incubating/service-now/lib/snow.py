@@ -5,6 +5,7 @@ import requests
 
 DEBUG = True
 API_NAMESPACE=409723
+env_file_path = "/meta/env_vars_to_export"
 
 def getBaseUrl(instance):
     baseUrl = "%s/api" %(instance);
@@ -12,15 +13,24 @@ def getBaseUrl(instance):
         print("baseUrl: " + baseUrl)
     return baseUrl
 
-def processChangeRequestResponse(function, response):
-    status = 'OK'
-    env_file_path = "/meta/env_vars_to_export"
+def processCallbackResponse(response):
+    print("Processing answer from CR creation REST call")
+    print("Callback returned code %s" % (response.status_code))
+    if (response.status_code != 200 and response.status_code != 201):
+        print("Callback creation failed with code %s" % (response.status_code))
+        print("Error: " + response.text)
+        return response.status_code
 
-    print("Processing answer from REST call")
+    print("Callback creation successful")
+
+
+def processChangeRequestResponse(response):
+
+    print("Processing answer from CR creation REST call")
+    print("Change Request returned code %s" % (response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
         print("Change Request creation failed with code %s" % (response.status_code))
         print("Error: " + response.text)
-        status= 'ERROR'
         return response.status_code
 
     print("Change Request creation successful")
@@ -43,6 +53,9 @@ def processChangeRequestResponse(function, response):
         json_file.write(FULL_JSON)
         json_file.close()
 
+#
+# Call SNow REST API to create a new Change Request
+# Fields required are past in the data
 def createChangeRequest(user, password, baseUrl, title, data, description):
 
     if DEBUG:
@@ -69,7 +82,30 @@ def createChangeRequest(user, password, baseUrl, title, data, description):
         json = crBody,
         headers = {"content-type":"application/json"},
         auth=(user, password))
-    processChangeRequestResponse(function="createChangeRequest", response=resp)
+    processChangeRequestResponse(response=resp)
+
+# Use rest API to call scripted REST API to start a flow that will wait for CR
+# to be approved or rejected, then callback Codefreh to approve/deny pipeline
+#
+def callback(user, password, baseUrl, number, cf_build_id, "token"):
+
+    if DEBUG:
+        print("Entering callback:")
+        print("CR Number: " + number)
+        print("CF Build ID: " + cf_build_id)
+
+    url="%s/%s/codefresh/callback" % (baseUrl, API_NAMESPACE)
+
+    resp=requests.post(url,
+        json = {
+            "number": {number},
+            "cf_build_id": {cf_build_id}},
+            "cf_token": {token}
+            "cf_url": os.getenv("CF_URL")
+        },
+        headers = {"content-type":"application/json"},
+        auth=(user, password))
+    processCallbackResponse(response=resp)
 
 def main():
     global DEBUG
@@ -91,5 +127,17 @@ def main():
             title=TITLE,
             data=DATA,
             description=DESCRIPTION)
+    elif ACTION == "callback":
+        CR_NUMBER = os.getenv('CR_NUMBER');
+        CF_BUILDID = os.gentenv('CF_BUILD_ID')
+        createChangeRequest(user=USER,
+            password=PASSWORD,
+            baseUrl=getBaseUrl(instance=INSTANCE),
+            number=CR_NUMBER)
+
+    else:
+        sys.exit(f"Unknown action: {ACTION}")
+
+
 if __name__ == "__main__":
     main()

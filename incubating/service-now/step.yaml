@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/service-now
-  version: 0.0.10
+  version: 0.1.0
   isPublic: false
   description: Integration with ServiceNow Change Management
   sources:
@@ -43,14 +43,10 @@ spec:
       "required": [
         "SN_INSTANCE",
         "SN_USER",
-        "SN_PASSWORD"
+        "SN_PASSWORD",
+        "TOKEN"
       ],
       "properties": {
-        "action": {
-          "type": "string",
-          "default": "createCR",
-          "description": "The ServiceNow operation to execute. Value can be createCR"
-        },
         "SN_INSTANCE": {
             "type": "string",
             "description": "The URL to your Service-now instance aka https://instance.service-now.com"
@@ -63,6 +59,10 @@ spec:
             "type": "string",
             "description": "The password associated to the username to log  into the instance"
         },
+        "TOKEN": {
+            "type": "string",
+            "description": "The Codefresh API token to allow ServiceNow to approve/deny the pipeline"
+          }
         "namespace": {
             "type": "string",
             "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
@@ -111,6 +111,7 @@ spec:
       title: Use REST API to create a CR
       image: 'lrochette/service-now:snow'
       environment:
+        - action=createCR
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
@@ -120,8 +121,19 @@ spec:
       commands:
         - |
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-          cf_export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri\=%2Fchange_request.do%3Fsys_id%3D${{CR_SYS_ID}}'
+          # export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D${{CR_SYS_ID}}'
+          # echo $createAnnotation_CF_OUTPUT_URL
+          # cf_export createAnnotation_CF_OUTPUT_URL
+    callback:
+      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is parroved/rejected
+      title: ServiceNow callback setup
 
+      image: 'lrochette/service-now:snow'
+      environment:
+        - action=callback
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
   delimiters:
     left: '[['
     right: ']]'

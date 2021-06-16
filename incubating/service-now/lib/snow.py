@@ -87,22 +87,26 @@ def createChangeRequest(user, password, baseUrl, title, data, description):
 # Use rest API to call scripted REST API to start a flow that will wait for CR
 # to be approved or rejected, then callback Codefreh to approve/deny pipeline
 #
-def callback(user, password, baseUrl, number, cf_build_id, "token"):
+def callback(user, password, baseUrl, number, cf_build_id, token):
 
     if DEBUG:
         print("Entering callback:")
         print("CR Number: " + number)
         print("CF Build ID: " + cf_build_id)
 
-    url="%s/%s/codefresh/callback" % (baseUrl, API_NAMESPACE)
+    url = "%s/%s/codefresh/callback" % (baseUrl, API_NAMESPACE)
+    body = {
+        "cr_number": {number},
+        "cf_build_id": {cf_build_id},
+        "cf_token": {token},
+        "cf_url": os.getenv("CF_URL")
+    }
+    if DEBUG:
+        print("Data: " + json.dumps(body))
+        print("------")
 
     resp=requests.post(url,
-        json = {
-            "number": {number},
-            "cf_build_id": {cf_build_id}},
-            "cf_token": {token}
-            "cf_url": os.getenv("CF_URL")
-        },
+        json = body,
         headers = {"content-type":"application/json"},
         auth=(user, password))
     processCallbackResponse(response=resp)
@@ -128,12 +132,13 @@ def main():
             data=DATA,
             description=DESCRIPTION)
     elif ACTION == "callback":
-        CR_NUMBER = os.getenv('CR_NUMBER');
-        CF_BUILDID = os.gentenv('CF_BUILD_ID')
-        createChangeRequest(user=USER,
+        callback(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
-            number=CR_NUMBER)
+            number=os.getenv('CR_NUMBER'),
+            token=os.getenv('TOKEN'),
+            cf_build_id=os.getenv('CF_BUILD_ID')
+        )
 
     else:
         sys.exit(f"Unknown action: {ACTION}")

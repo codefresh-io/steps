@@ -62,7 +62,7 @@ spec:
         "TOKEN": {
             "type": "string",
             "description": "The Codefresh API token to allow ServiceNow to approve/deny the pipeline"
-          }
+        },
         "namespace": {
             "type": "string",
             "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",

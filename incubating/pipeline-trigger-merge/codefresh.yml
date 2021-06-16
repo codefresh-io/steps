@@ -29,10 +29,21 @@ steps:
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/pipeline-trigger-merge
 
-  PushingToRegistry:
+  PushingToDockerhubRegistry:
     type: push
     title: Pushing To Dockerhub Registry
     registry: cfpluginmgr
+    candidate: ${{BuildImage}}
+    tags: [ "${{PLUGIN_VERSION}}" ]
+    when:
+      branch:
+        only:
+        - master
+        
+   PushingToQueyRegistry:
+    type: push
+    title: Pushing To Quey Registry
+    registry: quey
     candidate: ${{BuildImage}}
     tags: [ "${{PLUGIN_VERSION}}" ]
     when:

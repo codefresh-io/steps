@@ -14,7 +14,7 @@ metadata:
       email: pavel@codefresh.io
   categories:
     - build
-  official: false
+  official: true
   tags: []
   icon:
     type: svg
@@ -22,14 +22,29 @@ metadata:
       https://about.codecov.io/wp-content/themes/codecov/assets/brand/icons/codecov/codecov-circle.svg
     background: '#f4f4f4'
   examples:
-    - description: example-1
+    - description: 'send codecov report'
       workflow:
         codecov-report:
           title: Codecov report
           type: codecov-reporter
           arguments:
-            CODECOV_INTEGRATION: codecov
-            REPORT_DIRECTORY: ./report_directory
+            codecov_integration: codecov
+    - description: 'send codecov report with working_directory'
+      workflow:
+        codecov-report:
+          title: Codecov report
+          type: codecov-reporter
+          arguments:
+            codecov_integration: codecov
+            working_directory: '/codefresh/volume/${{CF_REPO_NAME}}'
+    - description: 'send codecov report using manual trigger'
+      workflow:
+        codecov-report:
+          title: Codecov report
+          type: codecov-reporter
+          arguments:
+            codecov_integration: codecov
+            working_directory: './report-directory'
   created_at: '2021-04-15T15:42:47.178Z'
   updated_at: '2021-04-15T15:42:47.178Z'
   latest: true
@@ -42,38 +57,38 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "CODECOV_INTEGRATION",
-            "REPORT_DIRECTORY"
+            "codecov_integration"
         ],
         "properties": {
-            "CODECOV_INTEGRATION": {
+            "codecov_integration": {
                 "type": "string",
                 "description": "Codecov integration name"
             },
-            "REPORT_DIRECTORY": {
+            "working_directory": {
                 "type": "string",
-                "description": "Directory with coverage report file."
+                "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is '/codefresh/volume/${{CF_REPO_NAME}}'",
+                "default": "/codefresh/volume/${{CF_REPO_NAME}}"
             }
         }
     }
   steps:
     first:
-      title: "Get token"
+      title: "get token"
       image: codefresh/cli
       environment:
-        - CODECOV_INTEGRATION=${{CODECOV_INTEGRATION}}
+        - CODECOV_INTEGRATION=${{codecov_integration}}
       commands:
         - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
         - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
     second:
-      name: enrich-image
+      name: "send report"
       image: node:15.2
       environment:
         - CODECOV_API_KEY=${{CODECOV_API_KEY}}
-        - REPORT_DIRECTORY=${{REPORT_DIRECTORY}}
+        - WORKING_DIRECTORY=${{working_directory}}
       commands:
+        - cd ${WORKING_DIRECTORY}
         - "ci_env=`curl -s https://codecov.io/env`"
         - npm install codecov -g
-        - cd $REPORT_DIRECTORY
         - codecov -t ${{CODECOV_API_KEY}} | tee codecov.log
         - cf_export second_CF_OUTPUT_URL=$(grep -A0 'View report at:' codecov.log | awk 'BEGIN{FS="at:\ ";}{print $2}')

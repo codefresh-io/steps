@@ -95,7 +95,7 @@ spec:
   steps:
     main:
       name: azure-build
-      image: codefreshplugins/cf-azure-builder
+      image: quay.io/codefreshplugins/cf-azure-builder
       environment:
         - 'AUTH=${{AUTH}}'
         - 'USER=${{USER}}'

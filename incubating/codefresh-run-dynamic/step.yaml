@@ -118,7 +118,7 @@ spec:
     }    
   stepsTemplate: |-
     run_child_pipelines:
-      image: codefreshplugins/codefresh-run-dynamic:0.0.1
+      image: quay.io/codefreshplugins/codefresh-run-dynamic:0.0.1
       commands:
         - python3 /codefresh-run-dynamic.py
         - export CF_BUILDS_STARTED=$(cat /tmp/cf_builds_started)

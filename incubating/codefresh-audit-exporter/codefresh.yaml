@@ -1,4 +1,4 @@
-version: '1.0'
+version: '1.1'
 
 stages:
 - google
@@ -18,10 +18,18 @@ steps:
     dockerfile: Dockerfile.google
     tag: ${{CF_REVISION}}
   
-  push_google:
+  push_image_to_dockerhub:
     stage: google
     type: push
     candidate: ${{build_google}}
     registry: dockerhub
+    tags:
+    - latest
+    
+  push_image_to_quay:
+    stage: google
+    type: push
+    candidate: ${{build_google}}
+    registry: quay
     tags:
     - latest

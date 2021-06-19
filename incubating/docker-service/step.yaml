@@ -71,6 +71,6 @@ spec:
   steps:
     main:
       name: docker-service
-      image: codefreshplugins/docker-service
+      image: quay.io/codefreshplugins/docker-service
       environment:
         - 'DOCKER_MACHINE_NAME=${{DOCKER_MACHINE_NAME}}'

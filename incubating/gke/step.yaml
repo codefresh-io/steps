@@ -80,7 +80,7 @@ spec:
   steps:
     main:
       name: gke
-      image: 'codefreshplugins/gke:latest'
+      image: 'quay.io/codefreshplugins/gke:latest'
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - GOOGLE_SERVICE_ACCOUNT_KEY=${{GOOGLE_SERVICE_ACCOUNT_KEY}}

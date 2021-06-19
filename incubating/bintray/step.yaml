@@ -68,7 +68,7 @@ spec:
   steps:
     main:
       name: bintray
-      image: codefreshplugins/bintray
+      image: quay.io/codefreshplugins/bintray
       environment:
         - 'BINTRAY_USER=${{BINTRAY_USER}}'
         - 'BINTRAY_KEY=${{BINTRAY_KEY}}'

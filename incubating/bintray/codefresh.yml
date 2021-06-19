@@ -6,3 +6,16 @@ steps:
     image_name: codefreshplugins/cfstep-bintray
     tag: ${{CF_BRANCH}}
     dockerfile: Dockerfile
+  
+PushingToQuayRegistry:
+    title: Pushing to Quay Registry
+    type: push
+    candidate: ${{build_step}}
+    tags:
+    - latest
+    registry: cfpluginmgr-quay
+    when:
+      branch:
+        only:
+        - master
+

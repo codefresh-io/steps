@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: k8s-blue-green-deployment
-      image: codefreshplugins/k8s-blue-green:latest
+      image: quay.io/codefreshplugins/k8s-blue-green:latest
       environment:
         - KUBE_CONTEXT=${{KUBE_CONTEXT}}
         - SERVICE_NAME=${{SERVICE_NAME}}

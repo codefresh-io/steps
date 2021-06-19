@@ -5,7 +5,17 @@ steps:
     type: build
     image-name: codefreshplugins/cf-deploy-ecs
 
-  push to registry:
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{build-step}}
-    tags: [ "latest", "0.1.0" ]
+    tags:
+    - "latest"
+    - "0.1.0"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

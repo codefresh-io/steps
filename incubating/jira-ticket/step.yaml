@@ -73,7 +73,7 @@ spec:
   steps:
     main:
       name: jira-cli-docker
-      image: codefreshplugins/jira-cli
+      image: quay.io/codefreshplugins/jira-cli
       commands:
         - >-
           yes n | jira-cli update ${{JIRA_ID}} --comment ${{COMMENT}} --jira-url ${{JIRA_URL}} -u ${{JIRA_USR}} -p

@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: sendgrid
-      image: codefresh/sendgrid:0.0.3
+      image: quay.io/codefresh/sendgrid:0.0.3
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
         - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'

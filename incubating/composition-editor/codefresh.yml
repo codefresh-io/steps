@@ -14,13 +14,22 @@ steps:
     working_directory: "./steps/incubating/composition-editor"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/composition-editor
-  PushingToRegistry:
+
+    PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Docker Hub Registry...
-    registry: dockerhub
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.0" ]
+    tags:
+    - "latest"
+    - "1.0.0"
     when:
       branch:
         only:
         - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

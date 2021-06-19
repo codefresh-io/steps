@@ -60,7 +60,7 @@ spec:
   steps:
     main:
       name: git-submodules
-      image: codefreshplugins/cfstep-gitsubmodules
+      image: quay.io/codefreshplugins/cfstep-gitsubmodules
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'CF_SUBMODULE_SYNC=${{CF_SUBMODULE_SYNC}}'

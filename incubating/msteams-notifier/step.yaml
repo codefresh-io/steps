@@ -104,7 +104,7 @@ spec:
   stepsTemplate: |-
     main:
         name: msteams-notifier
-        image: codefreshplugins/cfstep-msteams-notifier
+        image: quay.io/codefreshplugins/cfstep-msteams-notifier
         environment:
         [[ range $key, $val := .Arguments ]]
             - '[[ $key ]]=[[ $val ]]'

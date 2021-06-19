@@ -75,7 +75,7 @@ spec:
   steps:
     main:
       name: gitter-notifier
-      image: codefresh/gitternotifier
+      image: quay.io/codefresh/gitternotifier
       environment:
         - 'GITTER_WEBHOOK=${{gitter_webhook}}'
         - 'GITTER_STATUS=${{gitter_status}}'

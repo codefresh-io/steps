@@ -80,7 +80,7 @@ spec:
   steps:
     main:
       name: google-kms
-      image: codefreshplugins/google-kms
+      image: quay.io/codefreshplugins/google-kms
       environment:
         - KMS_PROJECT=${{KMS_PROJECT}}
         - KMS_LOCATION=${{KMS_LOCATION}}

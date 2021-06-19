@@ -100,7 +100,7 @@ spec:
   stepsTemplate: |-
     main:
       name: run-jenkins-jobs
-      image: codefresh/run-jenkins-jobs:0.1.4
+      image: quay.io/codefresh/run-jenkins-jobs:0.1.4
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if hasPrefix $key "jenkins_" ]]

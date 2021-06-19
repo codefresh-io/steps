@@ -136,7 +136,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-comment
-        image: codefreshplugins/jira-issue-comment
+        image: quay.io/codefreshplugins/jira-issue-comment
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_BUILD_ID=${{CF_BUILD_ID}}'

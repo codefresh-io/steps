@@ -168,7 +168,7 @@ spec:
   stepsTemplate: |-
     main:
       name: vault-next-gen
-      image: codefreshplugins/vault-next-gen:1.0.1-alpha
+      image: quay.io/codefreshplugins/vault-next-gen:1.0.1-alpha
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if not (hasPrefix $key "SECRETS") ]]

@@ -50,7 +50,7 @@ spec:
   steps:
     main:
       name: npm-publish
-      image: 'codefreshplugins/npm-publish:latest'
+      image: 'quay.io/codefreshplugins/npm-publish:latest'
       environment:
         - 'NPM_TOKEN=${{NPM_TOKEN}}'
       cmd: '${{DIR}}'

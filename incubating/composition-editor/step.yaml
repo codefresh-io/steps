@@ -81,7 +81,7 @@ spec:
   stepsTemplate: |-
     composition-editor:
       name: composition-editor
-      image: codefreshplugins/composition-editor:1.0.0
+      image: quay.io/codefreshplugins/composition-editor:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

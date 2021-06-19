@@ -87,7 +87,7 @@ spec:
   steps:
     main:
       name: enrich-image
-      image: codefresh/github-enricher
+      image: quay.io/codefresh/github-enricher
       working_directory: /app/
       environment:
           - IMAGE_SHA=${{IMAGE}}

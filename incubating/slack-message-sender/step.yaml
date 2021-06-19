@@ -52,7 +52,7 @@ spec:
   steps:
     main:
       name: slack-message-sender
-      image: codefreshplugins/slack-message-sender
+      image: quay.io/codefreshplugins/slack-message-sender
       commands:
         - >-
           slack-message-sender send --webhook-url ${{WEBHOOK_URL}}

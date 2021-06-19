@@ -77,7 +77,7 @@ spec:
   steps:
     main:
       title: azure-files
-      image: codefresh/azure-files-plugin
+      image: quay.io/codefresh/azure-files-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'
         - 'ACCOUNT_KEY=${{ACCOUNT_KEY}}'

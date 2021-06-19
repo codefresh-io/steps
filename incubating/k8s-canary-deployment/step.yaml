@@ -144,7 +144,7 @@ spec:
   stepsTemplate: |-
     main:
       name: k8s-canary-deployment
-      image: codefreshplugins/k8s-canary-deployment
+      image: quay.io/codefreshplugins/k8s-canary-deployment
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

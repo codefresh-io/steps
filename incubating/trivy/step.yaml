@@ -87,7 +87,7 @@ spec:
   steps:
     main:
       name: scan
-      image: codefresh/trivy-scan:latest
+      image: quay.io/codefresh/trivy-scan:latest
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'IMAGES_LIST=${{IMAGES_LIST}}'

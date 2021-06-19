@@ -14,13 +14,22 @@ steps:
     working_directory: "./steps/incubating/k8s-blue-green-deployment"
     tag: ${{CF_BRANCH}}
     dockerfile: Dockerfile
-  PushingDockerImage:
-    title: Pushing Docker Image...
+
+ PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}
-    registry: dockerhub
-    tag: "latest"
+    tags:
+    - "latest"
+    - "0.1"
     when:
       branch:
         only:
           - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

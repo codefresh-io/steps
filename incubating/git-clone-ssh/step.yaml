@@ -74,7 +74,7 @@ spec:
   steps:
     main:
       name: git-clone-ssh
-      image: codefreshplugins/git-clone-ssh
+      image: quay.io/codefreshplugins/git-clone-ssh
       environment:
         - 'REMOTE_URL=${{REMOTE_URL}}'
         - 'BRANCH=${{BRANCH}}'

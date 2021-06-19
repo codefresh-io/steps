@@ -67,7 +67,7 @@ spec:
   steps:
     main:
       name: bump-build-number
-      image: codefreshplugins/bump-build-number
+      image: quay.io/codefreshplugins/bump-build-number
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
         - 'RETRIEVE_CURRENT_VALUE_ONLY=${{RETRIEVE_CURRENT_VALUE_ONLY}}'

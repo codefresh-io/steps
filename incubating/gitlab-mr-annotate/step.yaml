@@ -66,7 +66,7 @@ spec:
   steps:
     main:
       name: gitlab-mr-annotate
-      image: codefreshplugins/cf-gitlab-mr-annotate
+      image: quay.io/codefreshplugins/cf-gitlab-mr-annotate
       environment:
         - 'GIT_CONTEXT=${{GIT_CONTEXT}}'
         - 'LABELS=${{LABELS}}'

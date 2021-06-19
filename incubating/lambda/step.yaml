@@ -82,7 +82,7 @@ spec:
   stepsTemplate: |-
     main:
       name: serverless
-      image: codefreshplugins/cf-plugin-serverless
+      image: quay.io/codefreshplugins/cf-plugin-serverless
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

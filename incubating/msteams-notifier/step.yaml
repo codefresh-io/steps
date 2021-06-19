@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 0.0.6
+  version: 0.0.7
   title: Send message to Microsoft teams
   isPublic: true
   description: Send a notification to a Microsoft Teams channel.

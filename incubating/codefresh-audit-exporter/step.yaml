@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-audit-exporter
-  version: 0.6.1
+  version: 0.6.2
   isPublic: true
   description: Export Codefresh audit log to external storage
   stage: incubating

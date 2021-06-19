@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gitter-notifier
-  version: 1.0.7
+  version: 1.0.8
   title: Gitter notify
   isPublic: true
   description: Send a notification to a gitter disucssion channel.

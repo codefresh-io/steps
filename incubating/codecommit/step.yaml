@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: codecommit
   title: Clone a CodeCommit repository
-  version: 0.0.4
+  version: 0.0.5
   isPublic: false
   description: Clone an AWS CodeCommit repository.
   sources:

@@ -4,7 +4,7 @@ metadata:
   name: webhook
   title: Call a custom webhook
   latest: true
-  version: 0.0.7
+  version: 0.0.8
   isPublic: true
   description: Notify any webook URL with any custom request body.
   sources:

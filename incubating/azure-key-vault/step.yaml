@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: azure-key-vault
   title: Pull secrets from Azure Key Vault
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Fetch secrets from Microsoft Azure Key Vault.
   sources:

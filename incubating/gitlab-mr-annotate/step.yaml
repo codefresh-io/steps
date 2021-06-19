@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: gitlab-mr-annotate
   title: Add a label to a GitLab merge request
-  version: 0.0.5
+  version: 0.0.6
   isPublic: true
   description: Add a comma-separated list of labels to a GitLab merge request.
   sources:

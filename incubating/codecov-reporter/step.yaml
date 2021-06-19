@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codecov-reporter
   title: Sends a code scan report to codecov
-  version: 1.0.10
+  version: 1.0.11
   isPublic: true
   description: Sends a code scan report to codecov
   sources:

@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: backblaze-b2
   title: Upload to Backblaze B2
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Upload files to a Backblaze B2 bucket.
   sources:

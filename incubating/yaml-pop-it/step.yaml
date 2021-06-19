@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefreshdemo/yaml-pop-it
-  version: 1.0.0
+  version: 1.0.1
   isPublic: false
   description: Pop Variables into ConfigMap and Secrets YAML files
   sources:

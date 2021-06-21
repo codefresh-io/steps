@@ -14,8 +14,7 @@ steps:
     working_directory: "./steps/incubating/k8s-canary-deployment"
     tag: ${{CF_BRANCH_TAG_NORMALIZED}}
     dockerfile: Dockerfile
-
- PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}

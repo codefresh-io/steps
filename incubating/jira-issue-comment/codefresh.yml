@@ -13,8 +13,7 @@ steps:
     working_directory: "./steps/incubating/jira-issue-comment"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/jira-issue-comment
-
- PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildImage}}

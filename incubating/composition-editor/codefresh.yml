@@ -14,8 +14,7 @@ steps:
     working_directory: "./steps/incubating/composition-editor"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/composition-editor
-
-    PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildImage}}

@@ -1,4 +1,4 @@
-version: "1.0"
+version: '1.0'
 steps:
   Clone:
     title: Cloning Repsitory...
@@ -14,8 +14,7 @@ steps:
     working_directory: "./steps/incubating/k8s-blue-green-deployment"
     tag: ${{CF_BRANCH}}
     dockerfile: Dockerfile
-
- PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}

@@ -14,17 +14,17 @@ steps:
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/jira-issue-comment
   PushingToRegistries:
-    title: Pushing to Registry
-    type: push
-    candidate: ${{BuildImage}}
-    tags:
-    - "latest"
-    - "0.1"
+     title: Pushing to Registry
+     type: push
+     candidate: ${{BuildImage}}
+     tags:
+      - "latest"
+      - "0.1"
      when:
       branch:
         only:
         - master
-    scale:
+     scale:
       PushingToDockerHubRegistry:
         title: Pushing To DockerHub Registry
         registry: dockerhub

@@ -69,7 +69,7 @@ spec:
   steps:
     main:
       name: anchore
-      image: codefresh/anchore-plugin
+      image: quay.io/codefresh/anchore-plugin
       environment:
         - 'ANCHORE_CLI_URL=${{ANCHORE_CLI_URL}}'
         - 'ANCHORE_CLI_USER=${{ANCHORE_CLI_USER}}'

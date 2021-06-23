@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: bump-build-number
-  version: 1.0.3
+  version: 1.0.4
   title: Bump Build Number
   isPublic: true
   description: Bump the build number
@@ -67,7 +67,7 @@ spec:
   steps:
     main:
       name: bump-build-number
-      image: codefreshplugins/bump-build-number
+      image: quay.io/codefreshplugins/bump-build-number
       environment:
         - 'ANNOTATION_NAME=${{ANNOTATION_NAME}}'
         - 'RETRIEVE_CURRENT_VALUE_ONLY=${{RETRIEVE_CURRENT_VALUE_ONLY}}'

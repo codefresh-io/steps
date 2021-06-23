@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: backblaze-b2
   title: Upload to Backblaze B2
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Upload files to a Backblaze B2 bucket.
   sources:
@@ -77,7 +77,7 @@ spec:
   steps:
     main:
       name: backblaze-b2
-      image: codefreshplugins/backblaze-b2
+      image: quay.io/codefreshplugins/backblaze-b2
       environment:
         - 'APPLICATION_KEY_ID=${{APPLICATION_KEY_ID}}'
         - 'APPLICATION_KEY=${{APPLICATION_KEY}}'

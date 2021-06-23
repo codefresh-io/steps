@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: codefresh-inc/azure-files
   title: Upload to Azure Files
-  version: 0.0.4
+  version: 0.0.5
   isPublic: true
   description: Push files to Microsoft Azure Files.
   sources:
@@ -77,7 +77,7 @@ spec:
   steps:
     main:
       title: azure-files
-      image: codefresh/azure-files-plugin
+      image: quay.io/codefresh/azure-files-plugin
       environment:
         - 'ACCOUNT_NAME=${{ACCOUNT_NAME}}'
         - 'ACCOUNT_KEY=${{ACCOUNT_KEY}}'

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: paclair
-  version: 0.0.6
+  version: 0.0.7
   title: Run a Clair security scan
   isPublic: true
   description: Scan a Docker image with Clair Security scanner.
@@ -130,7 +130,7 @@ spec:
   steps:
     main:
       name: paclair
-      image: codefresh/paclair:0.0.3
+      image: quay.io/codefresh/paclair:0.0.3
       environment:
         - API_PREFIX=${{API_PREFIX}}
         - CLAIR_URL=${{CLAIR_URL}}

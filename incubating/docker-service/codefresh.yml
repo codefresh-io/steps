@@ -4,7 +4,17 @@ steps:
     type: build
     image-name: codefreshplugins/docker-service
 
-  push_to_registry:
+    PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{build_step}}
-    tag: "0.1"
+    tags:
+    - "latest"
+    - "0.1"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

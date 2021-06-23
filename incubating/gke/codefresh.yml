@@ -4,8 +4,18 @@ steps:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/plugin-gke
-  PushingToRegistry:
+
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tag: "0.1"
+    tags:
+    - "latest"
+    - "0.1"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

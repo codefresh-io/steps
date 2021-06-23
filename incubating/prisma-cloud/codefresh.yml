@@ -13,13 +13,22 @@ steps:
     working_directory: "./steps/incubating/prisma-cloud"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/cfstep-prisma-cloud
-  PushingToRegistry:
+
+PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Dockerhub Registry
-    registry: dockerhub
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.0" ]
+    tags:
+    - "latest"
+    - "1.0.0"
     when:
       branch:
         only:
-        - master
+          - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

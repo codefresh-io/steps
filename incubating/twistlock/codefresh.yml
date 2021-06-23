@@ -6,11 +6,22 @@ steps:
     description: image build step
     dockerfile: Dockerfile
     image_name: codefreshplugins/cf-twistlock
-  push_image:
+ 
+PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    candidate: ${{buildimage}}
-    tag: "latest"
+    candidate: ${{BuildImage}}
+    tags:
+    - "latest"
+    - "master"
     when:
       branch:
         only:
           - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

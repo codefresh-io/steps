@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: codefresh-audit-exporter
-  version: 0.6.1
+  version: 0.6.2
   isPublic: true
   description: Export Codefresh audit log to external storage
   stage: incubating
@@ -96,7 +96,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     export:
-      image: codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
+      image: quay.io/codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
       working_directory: IMAGE_WORK_DIR
       commands:
       - sh /plugin/[[ .Arguments.EXPORTER_TARGET ]].sh

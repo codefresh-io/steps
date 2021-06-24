@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: trivy-scan
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: The step scans the list of docker images and sends the report to a Slack webhook URL.
   sources:
@@ -87,7 +87,7 @@ spec:
   steps:
     main:
       name: scan
-      image: codefresh/trivy-scan:latest
+      image: quay.io/codefresh/trivy-scan:latest
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'IMAGES_LIST=${{IMAGES_LIST}}'

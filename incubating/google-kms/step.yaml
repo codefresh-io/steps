@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: google-kms
-  version: 0.0.4
+  version: 0.0.5
   title: Run a KMS command
   isPublic: true
   description: >-
@@ -80,7 +80,7 @@ spec:
   steps:
     main:
       name: google-kms
-      image: codefreshplugins/google-kms
+      image: quay.io/codefreshplugins/google-kms
       environment:
         - KMS_PROJECT=${{KMS_PROJECT}}
         - KMS_LOCATION=${{KMS_LOCATION}}

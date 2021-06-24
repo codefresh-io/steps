@@ -18,10 +18,20 @@ steps:
     dockerfile: Dockerfile.google
     tag: ${{CF_REVISION}}
   
-  push_google:
+  PushingToDockerhubRegistry:
     stage: google
     type: push
     candidate: ${{build_google}}
     registry: dockerhub
     tags:
     - latest
+
+  PushingToQuayRegistry:
+    stage: google
+    type: push
+    candidate: ${{build_google}}
+    registry: cfpluginmgr-quay
+    tags:
+    - latest
+
+    

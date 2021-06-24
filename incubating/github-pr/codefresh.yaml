@@ -18,14 +18,21 @@ steps:
     when:
       branch:
         ignore: [ master ]
-
-  push_latest:
+  
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: "Pushing github-pr-plugin:latest ..."
-    description: Push github-pr-plugin latest image to the DockerHub
     candidate: ${{main_build}}
-    tag: latest
-    image_name: codefresh/github-pr-plugin
-    when:
+    tags:
+    - "latest"
+     when:
       branch:
-        only: [ master ]
+        only: 
+        - "master"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

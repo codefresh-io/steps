@@ -4,8 +4,27 @@ steps:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/google-kms
-  PushingToRegistry:
+  PushingToDockerHubRegistry:
     type: push
-    title: Pushing To Registry
+    title: Pushing To DockerHub Registry
     candidate: ${{BuildImage}}
     tag: "0.1"
+  PushingToQuayRegistry:
+    type: push
+    title: Pushing To Quay Registry
+    candidate: ${{BuildImage}}
+    registry: cfpluginmgr-quay
+    tag: "0.1"  PushingToRegistries:
+    title: Pushing to Registry
+    type: push
+    candidate: ${{BuildImage}}
+    tags:
+    - "latest"
+    - "0.1"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

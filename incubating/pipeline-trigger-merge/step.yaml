@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: pipeline-trigger-merge
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: >-
     Merge a pipeline spec and a list of triggers (files or directories) to
@@ -53,7 +53,7 @@ spec:
   stepsTemplate: |-
     pipeline-trigger-merge:
       name: pipeline-trigger-merge
-      image: codefreshplugins/pipeline-trigger-merge:1.0.0
+      image: quay.io/codefreshplugins/pipeline-trigger-merge:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

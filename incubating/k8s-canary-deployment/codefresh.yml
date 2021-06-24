@@ -14,13 +14,20 @@ steps:
     working_directory: "./steps/incubating/k8s-canary-deployment"
     tag: ${{CF_BRANCH_TAG_NORMALIZED}}
     dockerfile: Dockerfile
-  PushingDockerImage:
-    title: Pushing Docker Image...
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}
-    registry: dockerhub
-    tag: "latest"
+    tags:
+    - "latest"
     when:
       branch:
         only:
           - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

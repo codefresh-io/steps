@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run-dynamic
   title: Dynamically run Codefresh pipelines
-  version: 0.0.1
+  version: 0.0.2
   isPublic: true
   description: >-
     Accepts a YAML file specifying a list of pipelines and options, and runs them concurrently. You can specify most

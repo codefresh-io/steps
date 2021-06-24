@@ -13,10 +13,20 @@ steps:
     working_directory: "./steps/incubating/bump-build-number"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/bump-build-number
-  PushingToRegistry:
+  PushingToDockerHubRegistry:
     type: push
     title: Pushing To Dockerhub Registry
     registry: dockerhub
+    candidate: ${{BuildImage}}
+    tags: [ "latest", "1.0.3" ]
+    when:
+      branch:
+        only:
+        - master
+  PushingToQuayRegistry:
+    type: push
+    title: Pushing To Quay Registry
+    registry: cfpluginmgr-quay
     candidate: ${{BuildImage}}
     tags: [ "latest", "1.0.3" ]
     when:

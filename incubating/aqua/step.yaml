@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: aqua
-      image: codefreshplugins/cfstep-aqua
+      image: quay.io/codefreshplugins/cfstep-aqua
       environment:
         - 'AQUA_HOST=${{AQUA_HOST}}'
         - 'AQUA_PASSWORD=${{AQUA_PASSWORD}}'

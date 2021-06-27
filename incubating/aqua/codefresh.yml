@@ -7,15 +7,21 @@ steps:
     working_directory: ./
     tag: "0.1.0"
     dockerfile: Dockerfile
-  PushingToDockerRegistry:
-    title: Pushing to Docker Registry
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    candidate: '${{BuildingDockerImage}}'
+    candidate: ${{BuildingDockerImage}}
     tags:
-      - "0.1.0"
-      - "latest"
-    registry: dockerhub
-    when:
+    - "0.1.0"
+    - "latest"
+     when:
       branch:
         only:
           - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

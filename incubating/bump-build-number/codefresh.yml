@@ -16,7 +16,7 @@ steps:
   PushingToDockerHubRegistry:
     type: push
     title: Pushing To Dockerhub Registry
-    registry: dockerhub
+    registry: cfpluginmgr
     candidate: ${{BuildImage}}
     tags: [ "latest", "1.0.3" ]
     when:

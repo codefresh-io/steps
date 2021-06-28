@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-scanner-dotnet-linux
-  version: 0.0.1
+  version: 1.0.0
   isPublic: true
   description: SonarScanner for .NET Core Sonarqube 7.5
   sources:

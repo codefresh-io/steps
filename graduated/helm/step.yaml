@@ -188,7 +188,7 @@ spec:
   stepsTemplate: |-
     main:
       name: helm
-      image: codefresh/cfstep-helm:[[ .Arguments.helm_version ]]
+      image: quay.io/codefresh/cfstep-helm:[[ .Arguments.helm_version ]]
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]

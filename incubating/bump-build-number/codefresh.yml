@@ -33,3 +33,4 @@ steps:
       branch:
         only:
         - master
+

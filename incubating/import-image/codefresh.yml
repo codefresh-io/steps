@@ -19,3 +19,4 @@ steps:
       PushingToQuayRegistry:
         title: Pushing To Quay Registry
         registry: cfpluginmgr-quay
+

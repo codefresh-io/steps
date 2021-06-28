@@ -163,7 +163,7 @@ def update_service(cluster_name, service_name, ecs=None, **kwargs):
 
     task_definition_desc = ecs.describe_task_definition(taskDefinition = current_task_def_arn)
     task_definition = task_definition_desc['taskDefinition']
-    keys_to_remove = ["status", "taskDefinitionArn", "requiresAttributes", "revision", "compatibilities"]
+    keys_to_remove = ["status", "taskDefinitionArn", "requiresAttributes", "revision", "compatibilities","registeredAt","registeredBy"]
     for k in keys_to_remove:
         task_definition.pop(k, None)
 

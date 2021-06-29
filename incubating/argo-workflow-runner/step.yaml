@@ -1,0 +1,91 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: argo-workflow-runner
+  title: Argo Workflow Runner
+  version: 1.1.0
+  isPublic: false
+  description: Submit argo workflow
+  sources:
+    - 'https://github.com/codefresh-plugins/argo-workflow-runner'
+  stage: incubating
+  maintainers:
+    - name: Pavel Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - GitOps
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/argo-workflow-runner/argo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: 'Execute argo workflow'
+      workflow:
+        run-workflow:
+          title: Codecov report
+          type: codefresh-inc/argo-workflow-runner
+          arguments:
+            namespace: argo
+            argo_host: argo-server.argo:2746
+            workflow: |
+              workflow:
+                metadata:
+                  generateName: step-
+                spec:
+                  entrypoint: argosay
+                  arguments:
+                    parameters:
+                      - name: message
+                        value: hello argo
+                  templates:
+                    - name: argosay
+                      inputs:
+                        parameters:
+                          - name: message
+                            value: '{{workflow.parameters.message}}'
+                      container:
+                        name: main
+                        image: 'argoproj/argosay:v2'
+                        command:
+                          - /argosay
+                        args:
+                          - echo
+                          - '{{inputs.parameters.message}}'
+  latest: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+        ],
+        "properties": {
+            "argo_host": {
+                "type": "string",
+                "description": "Argo host"
+            },
+            "workflow": {
+                "type": "string",
+                "description": "Something"
+            },
+            "namespace": {
+                "type": "string",
+                "description": "Something",
+                "default": "argo"
+            }
+        }
+    }
+  steps:
+    runner:
+      title: "Argo Workflow Runner"
+      image: codefresh/argo-workflow-runner
+      environment:
+        - ARGO_HOST=${{argo_host}}
+        - WORKFLOW=${{workflow}}
+        - STEP_NAME=runner
+        - NAMESPACE=${{namespace}}

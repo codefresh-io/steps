@@ -71,11 +71,11 @@ spec:
             },
             "workflow": {
                 "type": "string",
-                "description": "Something"
+                "description": "Argo workflow resource string (https://argoproj.github.io/argo-workflows/fields/)"
             },
             "namespace": {
                 "type": "string",
-                "description": "Something",
+                "description": "Argo namespace ( default value is argo )",
                 "default": "argo"
             }
         }

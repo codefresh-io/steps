@@ -20,14 +20,22 @@ steps:
     working_directory: "./steps/incubating/sonarqube"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/sonarqube
-    
-  PushingToRegistry:
+
+PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Dockerhub Registry
-    registry: cfpluginmgr
     candidate: ${{BuildImage}}
-    tags: [ "${{PLUGIN_VERSION}}" ]
+    tags:
+    - "latest"
+    - "${{PLUGIN_VERSION}}"
     when:
       branch:
         only:
-        - master
+          - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

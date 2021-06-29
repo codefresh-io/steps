@@ -4,8 +4,17 @@ steps:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/azure-build
-  PushingToRegistry:
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tags: [ "latest", "0.1.0" ]
+    tags:
+    - "0.1.0"
+    - "latest"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

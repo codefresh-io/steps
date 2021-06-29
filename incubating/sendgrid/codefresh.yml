@@ -20,13 +20,22 @@ steps:
     working_directory: steps/incubating/sendgrid
     image_name: codefresh/sendgrid
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
-  PushingToRegistry:
+
+PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    registry: dockerhub
-    title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tags: [ "latest", "${{IMAGE_VERSION}}" ]
+    tags:
+    - "latest"
+    - "${{IMAGE_VERSION}}" 
     when:
       branch:
         only:
           - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

@@ -9,15 +9,22 @@ steps:
     dockerfile: Dockerfile
     build_arguments:
     - PYMSTEAMS_VERSION=${{PYMSTEAMS_VERSION}}
-  PushingToDockerRegistry:
-    title: Pushing to Docker Registry
+
+ PushingToRegistries:
+    title: Pushing to Registry
     type: push
     candidate: ${{BuildingDockerImage}}
     tags:
-    - latest
-    - 0.1.0
-    registry: dockerhub
+    - "latest"
+    - "0.1.0"
     when:
       branch:
         only:
-        - master
+          - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

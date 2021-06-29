@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: argo-workflow-runner
   title: Argo Workflow Runner
-  version: 1.1.2
+  version: 1.1.3
   isPublic: true
   description: Submit argo workflow
   sources:
@@ -24,7 +24,7 @@ metadata:
     - description: 'Execute argo workflow'
       workflow:
         run-workflow:
-          title: Codecov report
+          title: Run argo workflow
           type: argo-workflow-runner
           arguments:
             namespace: argo

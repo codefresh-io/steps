@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: argo-workflow-runner
   title: Argo Workflow Runner
-  version: 1.1.1
+  version: 1.1.2
   isPublic: true
   description: Submit argo workflow
   sources:
@@ -25,7 +25,7 @@ metadata:
       workflow:
         run-workflow:
           title: Codecov report
-          type: codefresh-inc/argo-workflow-runner
+          type: argo-workflow-runner
           arguments:
             namespace: argo
             argo_host: argo-server.argo:2746

@@ -96,7 +96,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     export:
-      image: quay.io/codefresh/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
+      image: quay.io/codefreshplugins/audit-exporter-[[ .Arguments.EXPORTER_TARGET ]]
       working_directory: IMAGE_WORK_DIR
       commands:
       - sh /plugin/[[ .Arguments.EXPORTER_TARGET ]].sh

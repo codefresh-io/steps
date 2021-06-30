@@ -94,7 +94,7 @@ spec:
   steps:
     export_access_token:
       title: "Export git access token"
-      image: quay.io/codefresh/cli
+      image: quay.io/codefreshplugins/cli
       environment:
         - GIT_INTEGRATION_NAME=${{git}}
         - ALLOW_EMPTY_BOOL=${{allow_empty}}

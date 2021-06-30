@@ -77,7 +77,7 @@ spec:
   steps:
     main:
       name: kompose
-      image: quay.io/codefresh/plugin-kompose:0.0.5
+      image: quay.io/codefreshplugins/plugin-kompose:0.0.5
       environment:
         - 'KUBE_CONTEXT=${{KUBE_CONTEXT}}'
         - 'FILE=${{FILE}}'

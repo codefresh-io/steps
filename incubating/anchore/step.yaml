@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: anchore
   title: Run an Anchore Security Scan
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore.
   sources:

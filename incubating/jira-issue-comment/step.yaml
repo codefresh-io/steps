@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-issue-comment
-  version: 1.0.0
+  version: 1.0.1
   title: Jira Issue Comment
   isPublic: true
   description: Add or update a Jira issue comment
@@ -136,7 +136,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-comment
-        image: codefreshplugins/jira-issue-comment
+        image: quay.io/codefreshplugins/jira-issue-comment
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_BUILD_ID=${{CF_BUILD_ID}}'

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: smtp
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Sends Email using SMTP Server
   sources:
@@ -116,7 +116,7 @@ spec:
   stepsTemplate: |-
     main:
       name: smtp
-      image: codefreshplugins/cfstep-smtp:1.0.1
+      image: quay.io/codefreshplugins/cfstep-smtp:1.0.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

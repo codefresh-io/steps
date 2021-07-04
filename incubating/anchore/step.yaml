@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: anchore
   title: Run an Anchore Security Scan
-  version: 0.0.6
+  version: 0.0.7
   isPublic: true
   description: Analyze Docker images and generate a detailed manifest using Anchore.
   sources:
@@ -69,7 +69,7 @@ spec:
   steps:
     main:
       name: anchore
-      image: codefresh/anchore-plugin
+      image: quay.io/codefreshplugins/anchore-plugin
       environment:
         - 'ANCHORE_CLI_URL=${{ANCHORE_CLI_URL}}'
         - 'ANCHORE_CLI_USER=${{ANCHORE_CLI_USER}}'

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: twilio
-  version: 0.0.5
+  version: 0.0.6
   title: Send an SMS via Twilio
   isPublic: true
   description: Send any SMS message using Twilio.
@@ -83,7 +83,7 @@ spec:
   steps:
     main:
       name: twilio
-      image: codefresh/twilio
+      image: quay.io/codefreshplugins/twilio
       environment:
         - 'TWILIO_MESSAGE=${{TWILIO_MESSAGE}}'
         - 'TWILIO_SID=${{TWILIO_SID}}'

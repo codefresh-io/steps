@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: gke
-  version: 0.0.4
+  version: 0.0.5
   title: Run a GKE command
   isPublic: false
   description: Run a command on Google Kubernetes Engine, usually used to create GKE clusters for integration tests.
@@ -80,7 +80,7 @@ spec:
   steps:
     main:
       name: gke
-      image: 'codefreshplugins/gke:latest'
+      image: 'quay.io/codefreshplugins/gke:latest'
       environment:
         - 'VAULT_ADDR=${{VAULT_ADDR}}'
         - GOOGLE_SERVICE_ACCOUNT_KEY=${{GOOGLE_SERVICE_ACCOUNT_KEY}}

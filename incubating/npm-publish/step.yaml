@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: npm-publish
-  version: 0.0.5
+  version: 0.0.6
   title: Publish an NPM package
   isPublic: true
   description: Publish an NPM package to the NPM registry.
@@ -50,7 +50,7 @@ spec:
   steps:
     main:
       name: npm-publish
-      image: 'codefreshplugins/npm-publish:latest'
+      image: 'quay.io/codefreshplugins/npm-publish:latest'
       environment:
         - 'NPM_TOKEN=${{NPM_TOKEN}}'
       cmd: '${{DIR}}'

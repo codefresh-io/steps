@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-quality-gates-checker
-  version: 0.1.2
+  version: 0.1.3
   isPublic: true
   description: Check Quality Gates from Sonarqube or Sonarcloud
   sources:

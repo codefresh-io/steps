@@ -170,7 +170,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: quey.io/codefreshplugins/cfstep-healthcheck:1.1.7
+      image: quay.io/codefreshplugins/cfstep-healthcheck:1.1.6
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

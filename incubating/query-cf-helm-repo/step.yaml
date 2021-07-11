@@ -18,7 +18,7 @@ metadata:
     - name: Ted Spinks
       email: ted.spinks@codefresh.io
   categories:
-    - featured
+    - deployment
   official: true
   tags: []
   icon:
@@ -90,7 +90,7 @@ spec:
     }    
   stepsTemplate: |-
     query_cf_helm_repo:
-      image: gtspinks/query-cf-helm-repo:0.0.1 # FIXME codefreshplugins/query-cf-helm-repo:0.0.1
+      image: gtspinks/query-cf-helm-repo:0.0.1 # FIXME quay.io/codefreshplugins/query-cf-helm-repo:0.0.1
       commands:
         # Verify required env var from pipeline
         - >-

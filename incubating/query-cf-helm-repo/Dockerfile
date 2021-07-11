@@ -5,7 +5,7 @@ FROM alpine:3.14.0
 # Install Helm CLI
 ENV HELM_VER=3.6.2
 RUN cd /tmp && \
-    wget https://get.helm.sh/helm-v3.6.2-linux-amd64.tar.gz && \
+    wget https://get.helm.sh/helm-v${HELM_VER}-linux-amd64.tar.gz && \
     tar -zxvf helm-v${HELM_VER}-linux-amd64.tar.gz && \
     chmod +x linux-amd64/helm && \
     mv linux-amd64/helm /usr/local/bin/ && \

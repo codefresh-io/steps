@@ -7,10 +7,10 @@ metadata:
   isPublic: false  # FIXME - update to true
   description: >-
     Query the Codefresh Helm Repository for the specified version of the specified chart.
-    Creates a pipeline variable called CHART_VER_FOUND with a value of 'true' or 'false' to
+    Outputs a pipeline variable called CHART_VER_FOUND with a value of 'true' or 'false' to
     indicate the result of the query. Can optionally throw an error if the query does not
-    return a specified result. Requires adding the CF_HELM_DEFAULT shared configuration to 
-    the pipeline's variables.
+    return a specified result. Requires importing the CF_HELM_DEFAULT shared configuration 
+    into the pipeline's variables.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/query-cf-helm-repo'
   stage: incubating
@@ -94,8 +94,9 @@ spec:
       commands:
         # Verify required env var from pipeline
         - >-
-          if [ -z ${CF_API_KEY+x} ] || [ -z ${CF_CTX_CF_HELM_DEFAULT_URL+x} ]; then 
-          echo Required variables are missing, please add CF_HELM_DEFAULT shared config to your pipeline variables.;
+          if [ -z ${CF_API_KEY+x} ] || [ -z ${CF_CTX_CF_HELM_DEFAULT_URL+x} ]; then
+          echo;
+          echo "Required variables are missing, please import CF_HELM_DEFAULT shared config into the pipeline variables";
           exit 1;
           fi
 
@@ -118,10 +119,17 @@ spec:
           || export RESULT=$?
 
         # Output results
-        - export CHART_VER_FOUND=false
-        - if [ $RESULT -eq 0 ]; then export CHART_VER_FOUND=true; fi
+        - >-
+          echo;
+          if [ $RESULT -eq 0 ]; then
+          echo "Version $CHART_VERSION of chart $CHART_NAME was found in the Helm Repo";
+          export CHART_VER_FOUND=true;
+          else
+          echo "Version $CHART_VERSION of chart $CHART_NAME was not found in the Helm Repo";
+          export CHART_VER_FOUND=false;
+          fi
         - cf_export CHART_VER_FOUND
-        - if [ "$FAIL_WHEN" == "$CHART_VER_FOUND" ]; then exit 1; fi
+        - if [ "$FAIL_WHEN" == "$CHART_VER_FOUND" ]; then echo; echo FAIL_WHEN condition met; exit 1; fi
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

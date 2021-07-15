@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
 """ Purpose:
-        
-    Required environment variables:
-      - 
-    Optional environment variables:
-      - 
-    Output files:
-      - 
+    Accepts environment variables (arguments) from step.yaml as inputs. Applies the specified updates to
+    Chart.yaml, and optionally values.yaml. See step.yaml for explanation of all possible arguments.
 """
 
 import os           # to read env vars
@@ -22,12 +17,31 @@ def str_to_bool(bool_string):
         return True
     return False
 
+
+def list_to_dict(list_to_convert):
+    """ Convert a list formatted like ['myAnnotation=someValue','otherAnnotation=otherValue'] into a
+        dictionary formatted like {'myAnnotation': 'someValue', 'otherAnnotation': 'otherValue'}
+    """
+    dict = {}
+    if not list_to_convert:
+        return dict
+    for element in list_to_convert:
+        err_msg = "Unable to convert list element '{}' into a dictionary key:value pair. " + \
+            "Required format is 'myAnnotation=someValue'"
+        assert element.count("=") == 1, err_msg
+        key_val = element.split('=')
+        key = key_val[0]
+        value = key_val[1]
+        dict[key] = value
+    return dict
+
+
 def get_inputs_from_env_vars():
     """ Read environment variables. Format variables into lists and dictionaries to match their corresponding
-        Chart.yaml structure. See step.yaml for full descriptions of environment variables.
+        Chart.yaml structure. See step.yaml for full descriptions of environment variables. Also, since step.yaml
+        is already enforcing which ones are mandatory, their data types, and default values, we don't do that here.
     """
     increment_chart_version = str_to_bool(os.environ.get("INCREMENT_CHART_VERSION"))
-    print(increment_chart_version)
     values_to_update = os.environ.get("VALUES_TO_UPDATE")
     if values_to_update:
         values_to_update = values_to_update.split(',')
@@ -68,7 +82,8 @@ def get_inputs_from_env_vars():
         dependency_alias = os.environ.get("DEPENDENCY_ALIAS")
         if dependency_alias:
             updated_dependency_fields['alias'] = dependency_alias
-    annotations = os.environ.get("ANNOTATIONS")
+    annotations_list = os.environ.get("ANNOTATIONS")
+    annotations = list_to_dict(annotations_list)
     annotations_replace = str_to_bool(os.environ.get("ANNOTATIONS_REPLACE"))
     return increment_chart_version, values_to_update, fields_to_update, keywords, keywords_replace, sources, \
         sources_replace, updated_dependency_fields, dependency_match_alias, dependency_tags_replace, \
@@ -191,16 +206,61 @@ def update_dependency_list(chart_yaml, updated_dependency_fields, dependency_mat
                 if import_value not in chart['import-values']:
                     chart['import-values'].append(import_value)
             continue
-        # Copy the field exactly / replace whole list
+        # Copy the field exactly / replace a whole list
         chart[key] = updated_dependency_fields[key]   
 
 
 def update_annotations_dict(chart_yaml, annotations, annotations_replace):
-    pass
+    """ Add/update the key:value pairs from annotations to the 'annotations' dictionary in chart_yaml. If
+        annotations_replace is True then don't bother add/updating them, just overwrite the whole dictionary.
+    """
+    if not annotations:
+        return
+    if annotations_replace:
+        chart_yaml['annotations'] = annotations
+    else:
+        if 'annotations' not in chart_yaml.keys():
+            chart_yaml['annotations'] = {}
+        for annotation_key in annotations.keys():
+            chart_yaml['annotations'][annotation_key] = annotations[annotation_key]
+
+
+def update_dict_path(dict, dict_path_string, value):
+    """ Traverses the specified path to a key within the dict, and sets it to the specified value.
+        The format of dict_path_string is 'path.to.variable'. Does not work with lists.
+    """
+    if not dict_path_string:
+        return
+    path_hierarchy = dict_path_string.split('.')
+    # set pointer to root of the dict
+    hierarchy_pointer = dict
+    num_levels = len(path_hierarchy) - 1
+    i = 0
+    # move the pointer down the hierarchy of the dict
+    while i < num_levels:
+        level = path_hierarchy[i]
+        if level not in hierarchy_pointer.keys():
+            hierarchy_pointer[level] = {}
+        hierarchy_pointer = hierarchy_pointer[level]
+        i += 1
+    key = path_hierarchy[-1]
+    try:
+        hierarchy_pointer[key] = value
+    except TypeError:
+        msg = "Unable to apply value '{}' to path '{}'. The path might ".format(value, dict_path_string) + \
+            "conflict with an existing, non-dictionary value in values.yaml: '{}'".format(hierarchy_pointer)
+        raise TypeError(msg)
 
 
 def update_values(values_yaml, values_to_update):
-    pass
+    """ Apply values_to_update (list of strings) as values within the values_yaml dictionary. The format
+        of the strings is: path.to.key=value
+    """
+    for path_and_value in values_to_update:
+        substrings = path_and_value.split('=')
+        path = substrings[0]
+        value = substrings[1]
+        update_dict_path(values_yaml, path, value)
 
 
 def main():
@@ -208,27 +268,30 @@ def main():
     increment_chart_version, values_to_update, fields_to_update, keywords, keywords_replace, sources, \
          sources_replace, updated_dependency_fields, dependency_match_alias, dependency_tags_replace, \
          dependency_import_values_replace, annotations, annotations_replace = get_inputs_from_env_vars()
-    
-    # Read source YAML files
+
+    # Update Chart.yaml
     with open("Chart.yaml", "r") as read_file:
         chart_yaml = yaml.load(read_file, Loader=yaml.SafeLoader)
-    # with open("values.yaml", "r") as read_file:
-    #     values_yaml = yaml.load(read_file, Loader=yaml.SafeLoader)
-
-    # Update chart_yaml
     update_chart_fields(chart_yaml, increment_chart_version, fields_to_update)
     update_list(chart_yaml, 'keywords', keywords, keywords_replace)
     update_list(chart_yaml, 'sources', sources, sources_replace)
-    update_dependency_list(chart_yaml, updated_dependency_fields, dependency_match_alias, dependency_tags_replace, dependency_import_values_replace)
-    # update_annotations_dict(chart_yaml, annotations, annotations_replace)
-    
-    # Output chart_yaml
-    print(chart_yaml)
+    update_dependency_list(chart_yaml, updated_dependency_fields, dependency_match_alias, 
+                           dependency_tags_replace, dependency_import_values_replace)
+    update_annotations_dict(chart_yaml, annotations, annotations_replace)
+    # print(chart_yaml)
     with open("Chart.yaml", "w") as write_file:
         document = yaml.dump(chart_yaml, write_file)
    
-    # Update values_yaml
-    # update_values(values_yaml, values_to_update)
+    # Update values.yaml
+    if values_to_update:
+        with open("values.yaml", "r") as read_file:
+            values_yaml = yaml.load(read_file, Loader=yaml.SafeLoader)
+        if not values_yaml:
+            values_yaml = {}
+        update_values(values_yaml, values_to_update)
+        # print(values_yaml)
+        with open("values.yaml", "w") as write_file:
+            document = yaml.dump(values_yaml, write_file)
 
 
 if __name__ == "__main__":

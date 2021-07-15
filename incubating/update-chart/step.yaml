@@ -99,9 +99,9 @@ spec:
                 "description": "'false' (default) will append to the existing list. 'true' (default) will overwrite the existing list. Default is true.",
                 "default": false
             },
-            "DEPENDENCY_REPLACE": {
+            "DEPENDENCY_MATCH_ALIAS": {
                 "type": "boolean",
-                "description": "If the specifed chart name already exists, overwrite it instead of adding a new entry. Default is true.",
+                "description": "When updating a dependency chart, update the chart that matches BOTH the name and alias. Default is true.",
                 "default": true
             },
             "DEPENDENCY_NAME": {
@@ -168,7 +168,11 @@ spec:
       commands:
         - pwd
         - ls -la
+        - echo Linting before updating chart...
+        - helm lint
+        - echo Updating chart...
         - python3 /update-chart.py
+        - echo Linting the updated chart...
         - helm lint
       environment:
       [[ range $key, $val := .Arguments ]]

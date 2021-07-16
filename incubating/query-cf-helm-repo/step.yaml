@@ -1,10 +1,10 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: codefreshdemo/query-cf-helm-repo # FIXME remove account
+  name: query-cf-helm-repo
   title: Query the Codefresh Helm Repo
   version: 0.0.1
-  isPublic: false  # FIXME - update to true
+  isPublic: true
   description: >-
     Query the Codefresh Helm Repository for the specified version of the specified chart.
     Outputs a pipeline variable called CHART_VER_FOUND with a value of 'true' or 'false' to
@@ -90,7 +90,7 @@ spec:
     }    
   stepsTemplate: |-
     query_cf_helm_repo:
-      image: gtspinks/query-cf-helm-repo:0.0.1 # FIXME quay.io/codefreshplugins/query-cf-helm-repo:0.0.1
+      image: quay.io/codefreshplugins/query-cf-helm-repo:0.0.1
       commands:
         # Verify required env var from pipeline
         - >-

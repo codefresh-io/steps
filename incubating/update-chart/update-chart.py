@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 
-""" Purpose:
+""" DO NOT USE. While testing this script, I realized that becuae it always re-renders the YAML file, it always
+    sorts the keys, which changes their order. This means that when you look at the commit for your updated YAML
+    file in git, it will appear as though the entire file changed, as opposed to the one or two lines you actually
+    intended to change. Unfortunately, I won't be able to use this script - switching to yq instead.
+
+    Purpose:
     Accepts environment variables (arguments) from step.yaml as inputs. Applies the specified updates to
-    Chart.yaml, and optionally values.yaml. See step.yaml for explanation of all possible arguments.
+    Chart.yaml, and optionally values.yaml. Optionally increments the chart version. See step.yaml for
+    explanation of all possible arguments.
 """
 
 import os           # to read env vars

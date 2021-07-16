@@ -80,7 +80,7 @@ spec:
                 "items": {
                     "type": "string"
                 },
-                "description": Updated 'keywords' list; Appends or overwrites existing list based on KEYWORDS_REPLACE."
+                "description": "Updated 'keywords' list; Appends or overwrites existing list based on KEYWORDS_REPLACE."
             },
             "KEYWORDS_REPLACE": {
                 "type": "boolean",
@@ -92,7 +92,7 @@ spec:
                 "items": {
                     "type": "string"
                 },
-                "description": Updated chart 'sources' list; Appends or overwrites existing list based on SOURCES_REPLACE."
+                "description": "Updated chart 'sources' list; Appends or overwrites existing list based on SOURCES_REPLACE."
             },
             "SOURCES_REPLACE": {
                 "type": "boolean",
@@ -153,7 +153,7 @@ spec:
                 "items": {
                     "type": "string"
                 },
-                "description": Updated chart 'annotations' list. Format: myAnnotation=someValue. Appends or overwrites existing list based on ANNOTATIONS_REPLACE."
+                "description": "Updated chart 'annotations' list. Format: myAnnotation=someValue. Appends or overwrites existing list based on ANNOTATIONS_REPLACE."
             },
             "ANNOTATIONS_REPLACE": {
                 "type": "boolean",
@@ -164,7 +164,7 @@ spec:
     }
   stepsTemplate: |-
     update_chart:
-      image: gtspinks/update_chart:0.0.1 # FIXME - quay.io/codefreshplugins/update_chart:0.0.1
+      image: gtspinks/update-chart:0.0.1 # FIXME - quay.io/codefreshplugins/update_chart:0.0.1
       commands:
         - pwd
         - ls -la

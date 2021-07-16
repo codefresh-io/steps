@@ -1,0 +1,7 @@
+image: my-image2
+path:
+  to:
+    otherstuff:
+      more: blah
+    stuff: blah
+tag: 1.2.6

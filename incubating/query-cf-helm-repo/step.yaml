@@ -34,10 +34,10 @@ metadata:
           arguments:
             CHART_NAME: my-chart
             CHART_VERSION: 0.0.1
-    - description: Fail pipeline if chart aleady present
+    - description: Fail pipeline if chart is aleady in repo
       workflow:
         check_repo_for_chart:
-          title: Check if a chart verion is already in the repo
+          title: Fail pipeline if chart is aleady in repo
           type: query-cf-helm-repo
           arguments:
             CHART_NAME: my-chart

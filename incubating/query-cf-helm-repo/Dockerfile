@@ -16,4 +16,6 @@ RUN cd /tmp && \
 RUN apk update && apk add git=2.32.0-r0
 RUN helm plugin install https://github.com/chartmuseum/helm-push.git --version 0.9.0
 
+COPY ./query.sh /query.sh
+
 CMD ["/bin/sh"]

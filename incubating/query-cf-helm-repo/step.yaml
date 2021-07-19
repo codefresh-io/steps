@@ -2,15 +2,14 @@ version: '1.0'
 kind: step-type
 metadata:
   name: query-cf-helm-repo
-  title: Query the Codefresh Helm Repo
+  title: Query CF Helm Chart Repo
   version: 0.0.1
   isPublic: true
   description: >-
-    Query the Codefresh Helm Repository for the specified version of the specified chart.
-    Outputs a pipeline variable called CHART_VER_FOUND with a value of 'true' or 'false' to
-    indicate the result of the query. Can optionally throw an error if the query does not
-    return a specified result. Requires importing the CF_HELM_DEFAULT shared configuration 
-    into the pipeline's variables.
+    Query the Codefresh Helm Chart Repository for a version of a chart. Outputs whether or
+    or not ('true' or 'false') the specified chart version was found in a variable called
+    CHART_VER_FOUND. Can optionally throw an error for either result. Requires importing 
+    the CF_HELM_DEFAULT shared configuration into the pipeline's variables.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/query-cf-helm-repo'
   stage: incubating
@@ -67,7 +66,12 @@ spec:
             },
             "FAIL_WHEN": {
                 "type": "string",
-                "description": "Optional. Specify 'true' or 'false'. The step will fail when the query returns the specified result."
+                "description": "Optional. The step will throw an error and fail when the query returns the specified result ('true' or 'false')."
+            },
+            "FAIL_WHEN_MESSAGE": {
+                "type": "string",
+                "description": "Optional. Print this message whenever the pipeline fails due to the FAIL_WHEN condition being met",
+                "default": "FAIL_WHEN condition was met."
             }
         }
     }
@@ -92,44 +96,7 @@ spec:
     query_cf_helm_repo:
       image: quay.io/codefreshplugins/query-cf-helm-repo:0.0.1
       commands:
-        # Verify required env var from pipeline
-        - >-
-          if [ -z ${CF_API_KEY+x} ] || [ -z ${CF_CTX_CF_HELM_DEFAULT_URL+x} ]; then
-          echo;
-          echo "Required variables are missing, please import CF_HELM_DEFAULT shared config into the pipeline variables";
-          exit 1;
-          fi
-
-        # Suppress helm warnings about group-accessible kubeconfig
-        - chmod 600 $KUBECONFIG
-
-        # Set token var for cm:// helm repo protocol
-        - export HELM_REPO_ACCESS_TOKEN=${CF_API_KEY}
-
-        # Add Codefresh Helm Repo
-        - helm repo add codefresh ${CF_CTX_CF_HELM_DEFAULT_URL}
-        - helm repo update
-        - helm repo list
-
-        # Query for the specified chart name. The grep filters out substring matches.
-        - >-
-          helm search repo codefresh/${CHART_NAME} --version ${CHART_VERSION}
-          | grep "^codefresh/${CHART_NAME}\t"
-          && export RESULT=$?
-          || export RESULT=$?
-
-        # Output results
-        - >-
-          echo;
-          if [ $RESULT -eq 0 ]; then
-          echo "Version $CHART_VERSION of chart $CHART_NAME was found in the Helm Repo";
-          export CHART_VER_FOUND=true;
-          else
-          echo "Version $CHART_VERSION of chart $CHART_NAME was not found in the Helm Repo";
-          export CHART_VER_FOUND=false;
-          fi
-        - cf_export CHART_VER_FOUND
-        - if [ "$FAIL_WHEN" == "$CHART_VER_FOUND" ]; then echo; echo FAIL_WHEN condition met; exit 1; fi
+        - /query.sh
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

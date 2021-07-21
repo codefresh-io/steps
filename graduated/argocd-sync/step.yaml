@@ -128,7 +128,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "codefresh/cf-argo-plugin:0.2.1"
+      image: "quay.io/codefreshplugins/cf-argo-plugin:0.2.1"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"

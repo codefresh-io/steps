@@ -3,8 +3,8 @@ kind: step-type
 metadata:
   name: image-factory
   title: Create codefresh image
-  version: 1.0.0
-  isPublic: false
+  version: 1.0.1
+  isPublic: true
   description: Create codefresh image
   sources:
     - 'https://github.com/codefresh-plugins/codefresh-image-factory'
@@ -16,6 +16,11 @@ metadata:
     - build
   official: false
   tags: []
+  icon:
+    type: svg
+    url: >-
+      https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/image-factory/docker-image.png
+    background: '#f4f4f4'
   examples:
     - description: example-1
       workflow:

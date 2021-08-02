@@ -53,5 +53,3 @@ spec:
       working_directory: /app/
       environment:
         - IMAGE=${{IMAGE}}
-        - CF_API_KEY=${{CF_API_KEY}}
-        - CF_URL=${{CF_URL}}

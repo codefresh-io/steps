@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.1
+  version: 1.2.2
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -120,6 +120,12 @@ spec:
                  "examples": ["key=val"],
                  "default": []
              },
+            "TIMEOUT_MINS": {
+                "type": "string",
+                "description": "Timeout in mins",
+                "examples": ["33.3", "45"],
+                "default": "45"
+            },
             "ONLY": {
                   "type": "array",
                   "items": {
@@ -198,6 +204,6 @@ spec:
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f $BUILD_ID
       [[- end ]]
-        - codefresh wait --verbose $BUILD_ID
+        - codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
       [[- end -]]
 

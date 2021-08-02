@@ -4,7 +4,7 @@ metadata:
   name: image-factory
   title: Create codefresh image
   version: 1.0.0
-  isPublic: true
+  isPublic: false
   description: Create codefresh image
   sources:
     - 'https://github.com/codefresh-plugins/codefresh-image-factory'

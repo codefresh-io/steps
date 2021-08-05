@@ -57,12 +57,17 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "codecov_integration"
+            "codecov_integration",
+            "os"
         ],
         "properties": {
             "codecov_integration": {
                 "type": "string",
                 "description": "Codecov integration name"
+            },
+            "os": {
+                "type": "string",
+                "description": "OS being used ( alpline | linux | macos | windows )"
             },
             "working_directory": {
                 "type": "string",
@@ -88,7 +93,13 @@ spec:
         - WORKING_DIRECTORY=${{working_directory}}
       commands:
         - cd ${WORKING_DIRECTORY}
-        - "ci_env=`curl -s https://codecov.io/env`"
-        - npm install codecov -g
-        - codecov -t ${{CODECOV_API_KEY}} | tee codecov.log
-        - cf_export second_CF_OUTPUT_URL=$(grep -A0 'View report at:' codecov.log | awk 'BEGIN{FS="at:\ ";}{print $2}')
+        - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov"
+        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov.SHA256SUM"
+        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov.SHA256SUM.sig"
+        - gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+        - shasum -a 256 -c codecov.SHA256SUM
+        - chmod +x codecov
+        - codecov -t ${{CODECOV_API_KEY}} -Q codefresh | tee codecov.log
+          # [<< timestamp >>] ['info'] {"status":"success","resultURL":"<< Codecov URL >>"}
+        - cf_export second_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')

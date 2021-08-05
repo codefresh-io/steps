@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.2.2
+  version: 1.2.3
   isPublic: true
   description: Extract jira issue from message and convert it to image annotation
   sources:
@@ -34,7 +34,7 @@ metadata:
           title: Enrich image with annotations
           type: jira-issue-extractor
           arguments:
-            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}
+            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}:${{IMAGE_TAG}}
             JIRA_PROJECT_PREFIX: ${{CF_BRANCH}}
             MESSAGE: SAAS-21011-ability-to-remove-user
             JIRA_HOST: codefresh-io.atlassian.net

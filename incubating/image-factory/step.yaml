@@ -28,7 +28,7 @@ metadata:
           title: Create image on codefresh
           type: image-factory
           arguments:
-            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"
+            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}:${{IMAGE_TAG}}"
   created_at: '2019-12-24T15:42:47.178Z'
   updated_at: '2019-12-24T15:42:47.178Z'
   latest: true

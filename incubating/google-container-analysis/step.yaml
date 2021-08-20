@@ -1,0 +1,127 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/google-container-analysis
+  version: 1.0.0
+  isPublic: true
+  description: Invokes scan using gcloud, confirms threshold is not reached.  Pass or fail based on exceeding threshold
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/google-container-analysis
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - security
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/google-container-analysis/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Google Container Analysis
+      workflow:
+        DockerImageScan:
+          type: google-container-analysis
+          arguments:
+            IMAGE: us-docker.pkg.dev/project/repository/image:tag
+            THRESHOLD: MEDIUM
+            GOOGLE_SA_JSON_BASE64: ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2p...
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "IMAGE",
+        "GOOGLE_PROJECT",
+        "GOOGLE_SA_JSON_BASE64"
+      ],
+      "properties": {
+        "CVSS_SCORE": {
+          "type": "integer",
+          "description": "Threshold by CVSS Score, overrides THRESHOLD"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "Fully qualified image. Domain + Image + Tag"
+        },
+        "GOOGLE_LOCATION": {
+          "type": "string",
+          "default": "us",
+          "description": "Google Artifact Registry Location."
+        },
+        "GOOGLE_PROJECT": {
+          "type": "string",
+          "description": "Google Project Name."
+        },
+        "GOOGLE_SA_JSON_BASE64": {
+          "type": "string",
+          "description": "SA.json file contents (base64 encoded) for service account user."
+        },
+        "THRESHOLD": {
+          "type": "string",
+          "default": "MEDIUM",
+          "description": "Threshold of scan.",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "WORKING_DIRECTORY": {
+          "type": "string",
+          "default": "/codefresh/volume",
+          "description": "The login or authentication token of a SonarQube user with Execute Analysis permission on the project."
+        }
+      }
+    }
+  stepsTemplate: |-
+    invoke_scan:
+      name: Scan Docker Image
+      image: gcr.io/google.com/cloudsdktool/cloud-sdk
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - echo -n "$GOOGLE_SA_JSON_BASE64" | base64 -d > $WORKING_DIRECTORY/sa.json
+        - export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=$WORKING_DIRECTORY/sa.json
+        - gcloud artifacts docker images scan "$IMAGE" --remote --location=$GOOGLE_LOCATION --project $GOOGLE_PROJECT > $WORKING_DIRECTORY/scan.yaml
+        - cf_export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=$CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE
+    parse_scan:
+      name: Parse Scan Output
+      image: mikefarah/yq:4
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - cf_export SCAN_ID=$(yq e '.response.scan' $WORKING_DIRECTORY/scan.yaml)
+    record_scan_results:
+      name: Record Scan Results
+      image: gcr.io/google.com/cloudsdktool/cloud-sdk
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - export SCAN_ID=${{steps.parse_scan.output.SCAN_ID}}
+        - export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=${{steps.invoke_scan.output.CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE}}
+        - gcloud artifacts docker images list-vulnerabilities $SCAN_ID --format json | tee $WORKING_DIRECTORY/results.json
+    run_scan_analysis:
+      name: Run Scan Analysis
+      image: dustinvanbuskirk/google-container-analysis:alpha
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -24,16 +24,14 @@ Can also be run in a mode where changes from the last commit are applied.
 ## Example
 
 ```yaml
-create_pipeline:
+CreatePipeline:
   title: "Creating pipeline"
-  image: lrochette/ptm:pipeline_trigger_merge
-  working_directory: ${{clone}}
+  type: pipeline-trigger-merge
+  working_directory: ${{Clone}}
   stage: clone
-  commands:
-    - /merge.sh
-  environment:
-    - TRIGGERS=trig1.yml trig2.yml ./trigger_dir
-    - SPEC=spec.yml
+  arguments:
+    TRIGGERS: trig1.yml trig2.yml ./trigger_dir
+    SPEC: spec.yml
 ```
 
 There is a full example in the sample directory.

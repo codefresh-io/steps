@@ -1,6 +1,6 @@
 FROM codefresh/cli
 
-COPY *.sh /
+COPY merge.sh loop-merge.sh /
 
 RUN chmod +x /*.sh
 

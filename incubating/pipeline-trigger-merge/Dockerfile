@@ -1,5 +1,7 @@
 FROM codefresh/cli
 
-COPY merge.sh /merge.sh
+COPY *.sh /
+
+RUN chmod +x /*.sh
 
 ENTRYPOINT ["/merge.sh"]

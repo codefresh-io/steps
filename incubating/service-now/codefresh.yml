@@ -9,10 +9,11 @@ stages:
 
 steps:
   clone:
-    title: "Cloning steps repository for ptm"
+    title: "Cloning steps repository for servicenow plugins"
     type: "git-clone"
     arguments:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+      git: "cf_github"
       revision: '${{CF_REVISION}}'
 
   GettingPluginVersion:
@@ -24,9 +25,9 @@ steps:
   BuildImage:
     title: Building Docker Image
     type: build
-    working_directory: "./steps/incubating/pipeline-trigger-merge"
+    working_directory: "./steps/incubating/service-now"
     dockerfile: "Dockerfile"
-    image_name: lrochette/service-now
+    image_name: codefreshplugins/service-now
 
   PushingToRegistry:
     type: push

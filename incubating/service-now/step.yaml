@@ -125,7 +125,7 @@ spec:
           # echo $createAnnotation_CF_OUTPUT_URL
           # cf_export createAnnotation_CF_OUTPUT_URL
     callback:
-      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is parroved/rejected
+      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup
 
       image: 'quay.io/codefreshplugins/service-now:1.0.0'

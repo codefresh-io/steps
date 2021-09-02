@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: laurent-cf/service-now
+  name: service-now
   version: 1.0.0
   isPublic: true
   description: Integration with ServiceNow Change Management
@@ -128,7 +128,7 @@ spec:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is parroved/rejected
       title: ServiceNow callback setup
 
-      image: 'quay.io/codefreshplugins/service-now:snow'
+      image: 'quay.io/codefreshplugins/service-now:1.0.0'
       environment:
         - action=callback
       [[ range $key, $val := .Arguments ]]

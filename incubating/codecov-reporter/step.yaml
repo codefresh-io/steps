@@ -93,13 +93,13 @@ spec:
         - WORKING_DIRECTORY=${{working_directory}}
       commands:
         - cd ${WORKING_DIRECTORY}
-        - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov"
-        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov.SHA256SUM"
-        - curl -Os "https://uploader.codecov.io/latest/${{OS}}/codecov.SHA256SUM.sig"
-        - gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+        - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
+        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov"
+        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM"
+        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM.sig"
+        - gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
         - shasum -a 256 -c codecov.SHA256SUM
         - chmod +x codecov
-        - codecov -t ${{CODECOV_API_KEY}} -Q codefresh | tee codecov.log
+        - ./codecov -t ${{CODECOV_API_KEY}} -Q codefresh | tee codecov.log
           # [<< timestamp >>] ['info'] {"status":"success","resultURL":"<< Codecov URL >>"}
         - cf_export second_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')

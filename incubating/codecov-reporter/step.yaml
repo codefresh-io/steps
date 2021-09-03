@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codecov-reporter
   title: Sends a code scan report to codecov
-  version: 1.0.11
+  version: 2.0.0
   isPublic: true
   description: Sends a code scan report to codecov
   sources:
@@ -100,6 +100,6 @@ spec:
         - gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
         - shasum -a 256 -c codecov.SHA256SUM
         - chmod +x codecov
-        - ./codecov -t ${{CODECOV_API_KEY}} -Q codefresh | tee codecov.log
+        - ./codecov -t ${{CODECOV_API_KEY}} -Q codefresh-2.0.0 | tee codecov.log
           # [<< timestamp >>] ['info'] {"status":"success","resultURL":"<< Codecov URL >>"}
         - cf_export second_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')

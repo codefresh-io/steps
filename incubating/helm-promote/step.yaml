@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: helm-promote
+  name: codefreshdemo/helm-promote
   version: 1.0.0
-  isPublic: true
+  isPublic: false
   description: >-
     Promote images and dependencies between helm charts in different directories and bump the chart version.
   sources:

@@ -1,0 +1,122 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: helm-promote
+  version: 1.0.0
+  isPublic: true
+  description: >-
+    Promote images and dependencies between helm charts in different directories and bump the chart version.
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/helm-promote
+  stage: incubating
+  maintainers:
+    - name: Jesse Antoszyk
+    - email: jesse.antoszyk@codefresh.io
+  categories:
+    - utilities
+    - deployment
+  official: false
+  tags: []
+  examples:
+    - description: helm-promote
+      workflow:
+        PromoteHelmChart:
+          title: "Promote helm chart from dev to test"
+          type: helm-promote
+          arguments:
+            PROMOTE_FROM: dev
+            PROMOTE_TO: test
+            PROMOTE_IMAGES: frontend,middleware,backend
+
+    - description: helm-promote-more-options
+      workflow:
+        PromoteHelmChart:
+          title: "Promote between values yamls in the same chart"
+          type: helm-promote
+          working_directory: ${{Clone}}
+          arguments:
+            PROMOTE_FROM: chart
+            PROMOTE_TO: chart
+            FROM_VALUES_YAML: values-dev.yaml
+            TO_VALUES_YAML: values-test.yaml
+            PROMOTE_IMAGES: web-ui
+            IMAGE_FORMAT: global.{{IMAGE}}.tag
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "PROMOTE_IMAGES",
+        "PROMOTE_FROM",
+        "PROMOTE_TO"
+      ],
+      "properties": {
+        "PROMOTE_IMAGES": {
+          "type": "string",
+          "description": "A comma-seperated list of images keys to search for and replace between values.yamls"
+        },
+        "PROMOTE_FROM": {
+          "type": "string",
+          "description": "The directory of the helm chart to get values from"
+        },
+        "PROMOTE_TO": {
+          "type": "string",
+          "description": "The directory of the helm chart to insert values in to"
+        },
+        "PROMOTE_CHARTS": {
+          "type": "string",
+          "description": "The dependency charts tags to search for and replace between Chart.yamls. By default will be the same as PROMOTE_IMAGES"
+        },
+        "BUMP_VERSION": {
+          "type": "string",
+          "description": "The part of the version to bump (major|minor|patch). By default will bump 'patch'"
+        },
+        "IMAGE_FORMAT": {
+          "type": "string",
+          "description": "The format to search and replaces images with in the values yaml, replaces '{{IMAGE}}' with a PROMOTE_IMAGE at runtime. By default will use '{{IMAGE}}.image.tag'"
+        },
+        "CHART_YAML": {
+          "type": "string",
+          "description": "Will use 'Chart.yaml' by default"
+        },
+        "VALUES_YAML": {
+          "type": "string",
+          "description": "Will use 'values.yaml' by default"
+        },
+        "FROM_VALUES_YAML": {
+          "type": "string",
+          "description": "The values YAML name to use for the 'from' chart. Will use 'VALUES_YAML' by default"
+        },
+        "TO_VALUES_YAML": {
+          "type": "string",
+          "description": "The values YAML name to use for the 'to' chart. Will use 'VALUES_YAML' by default"
+        },
+        "FROM_CHART_YAML": {
+          "type": "string",
+          "description": "The chart YAML name to use for the 'from' chart. Will use 'CHART_YAML' by default"
+        },
+        "TO_CHART_YAML": {
+          "type": "string",
+          "description": "The chart YAML name to use for the 'to' chart. Will use 'CHART_YAML' by default"
+        }
+      }
+    }
+
+  stepsTemplate: |-
+    helm-promote:
+      name: helm-promote
+      image: quay.io/codefreshplugins/helm-promote:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - /promote.sh
+  delimiters:
+    left: '[['
+    right: ']]'

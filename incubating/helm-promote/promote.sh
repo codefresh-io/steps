@@ -124,7 +124,7 @@ function nonzero_checks() {
     print_error "PROMOTE_FROM and PROMOTE_TO variables cannot be empty" 2
   fi
 
-  # Make sure vars not equal
+  # Make sure directories AND YAML files not equal
   if [[ "${PROMOTE_FROM}" == "${PROMOTE_TO}" ]] && [[ "${FROM_VALUES_YAML}" == "${TO_VALUES_YAML}" ]]; then
     print_error "PROMOTE_FROM and PROMOTE_TO variables cannot be equal if FROM_VALUES_YAML is equal to TO_VALUES_YAML" 4
   fi

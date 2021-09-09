@@ -21,6 +21,7 @@ The following environment variables are optional:
 - TO_CHART_YAML: The chart YAML name to use for the 'to' chart. Will use 'CHART_YAML' by default
 - TO_VALUES_YAML: The values YAML name to use for the 'to' chart. Will use 'VALUES_YAML' by default
 - VALUES_YAML: Will use 'values.yaml' by default
+- DEBUG: Set to 'true' to display debug messages. 'false' by default
 
 ## Example
 
@@ -32,4 +33,18 @@ HelmPromote:
         PROMOTE_FROM: dev
         PROMOTE_TO: test
         PROMOTE_IMAGES: frontend,middleware,backend
+```
+
+```yaml
+PromoteHelmChart:
+    title: "Promote between values yamls in the same chart"
+    type: helm-promote
+    working_directory: ${{Clone}}
+    arguments:
+        PROMOTE_FROM: chart
+        PROMOTE_TO: chart
+        FROM_VALUES_YAML: values-dev.yaml
+        TO_VALUES_YAML: values-test.yaml
+        PROMOTE_IMAGES: web-ui
+        IMAGE_FORMAT: path.to.{{IMAGE}}.tag
 ```

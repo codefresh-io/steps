@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/helm-promote
+  name: helm-promote
   version: 1.0.0
-  isPublic: false
+  isPublic: true
   description: >-
     Promote images and dependencies between helm charts in different directories and bump the chart version.
   sources:
@@ -17,7 +17,10 @@ metadata:
     - utilities
     - deployment
   official: false
-  tags: []
+  tags:
+    - helm
+    - promote
+    - yaml
   examples:
     - description: helm-promote
       workflow:
@@ -110,7 +113,7 @@ spec:
   stepsTemplate: |-
     helm-promote:
       name: helm-promote
-      image: jcantosz/cf-helm-promote:latest
+      image: quay.io/codefreshplugins/helm-promote:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

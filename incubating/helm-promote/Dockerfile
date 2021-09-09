@@ -1,7 +1,9 @@
-FROM mikefarah/yq:4
+FROM mikefarah/yq:4.12.2
 
-COPY promote.sh .
+WORKDIR /workdir
+
+COPY --chown=yq promote.sh .
 
 RUN chmod +x promote.sh
 
-ENTRYPOINT ["promote.sh"]
+ENTRYPOINT ["/workdir/promote.sh"]

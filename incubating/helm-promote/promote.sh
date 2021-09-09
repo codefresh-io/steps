@@ -8,7 +8,7 @@
 # =====================================================================================
 
 # Which part of the version to bump: major, minor or patch
-BUMP_VERSION="${BUMP_VERSION:-patch}"
+BUMP_VERSION_TYPE="${BUMP_VERSION_TYPE}"
 # YAML path to the image tag
 IMAGE_FORMAT="${IMAGE_FORMAT:-{{IMAGE\}\}.image.tag}"
 # YAML file names with extensions
@@ -24,7 +24,7 @@ FROM_VALUES_YAML="${FROM_VALUES_YAML:-${VALUES_YAML}}"
 TO_VALUES_YAML="${TO_VALUES_YAML:-${VALUES_YAML}}"
 
 # If chart names differ from image names, they can be set independently
-PROMOTE_CHARTS="${PROMOTE_CHARTS:-${PROMOTE_IMAGES}}"
+PROMOTE_SUBCHARTS="${PROMOTE_SUBCHARTS:-${PROMOTE_IMAGES}}"
 
 # Error formatter
 function print_error() {
@@ -68,7 +68,7 @@ bump_semver() {
   MINOR=$(echo ${BASE_VERSION} | sed -e "s#$RE#\2#")
   PATCH=$(echo ${BASE_VERSION} | sed -e "s#$RE#\3#")
 
-  case "${BUMP_VERSION}" in
+  case "${BUMP_VERSION_TYPE}" in
   major)
     let MAJOR+=1
     ;;
@@ -117,7 +117,9 @@ main() {
   nonzero_checks
 
   # Update the chart version
-  update_chart_version
+  if [[ "${BUMP_VERSION}" == "true" ]]; then
+      update_chart_version
+    fi
 
   # These are in a loops -- lots of writes to the same file if updating multiple items :/ Consider a way to unravel
   # ---- UPDATE VALUES.YAML ----
@@ -126,7 +128,7 @@ main() {
   done
 
   # ---- UPDATE CHART.YAML ----
-  for CHART in ${PROMOTE_CHARTS//,/ }; do
+  for CHART in ${PROMOTE_SUBCHARTS//,/ }; do
     update_chart_yaml "${CHART}"
   done
 }

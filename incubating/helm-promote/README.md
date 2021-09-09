@@ -17,7 +17,7 @@ The following environment variables are optional:
 - FROM_CHART_YAML: The chart YAML name to use for the 'from' chart. Will use 'CHART_YAML' by default
 - FROM_VALUES_YAML: The values YAML name to use for the 'from' chart. Will use 'VALUES_YAML' by default
 - IMAGE_FORMAT: The format to search and replaces images with in the values yaml, replaces '{{IMAGE}}' with a PROMOTE_IMAGE at runtime. By default will use '{{IMAGE}}.image.tag'
-- PROMOTE_CHARTS: The dependency charts tags to search for and replace between Chart.yamls. By default will be the same as PROMOTE_IMAGES
+- PROMOTE_SUBCHARTS: The dependency (sub)charts tags to search for and replace between Chart.yamls. Use this when your subchart name does not match your image name. By default will be the same as PROMOTE_IMAGES
 - TO_CHART_YAML: The chart YAML name to use for the 'to' chart. Will use 'CHART_YAML' by default
 - TO_VALUES_YAML: The values YAML name to use for the 'to' chart. Will use 'VALUES_YAML' by default
 - VALUES_YAML: Will use 'values.yaml' by default

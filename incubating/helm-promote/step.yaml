@@ -16,7 +16,7 @@ metadata:
   categories:
     - utilities
     - deployment
-  official: false
+  official: true
   tags:
     - helm
     - promote

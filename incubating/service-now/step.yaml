@@ -121,7 +121,7 @@ spec:
       commands:
         - |
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-          # export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D${{CR_SYS_ID}}'
+          export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%/change_request.do?sys_id=${{CR_SYS_ID}}'
           # echo $createAnnotation_CF_OUTPUT_URL
           # cf_export createAnnotation_CF_OUTPUT_URL
     callback:

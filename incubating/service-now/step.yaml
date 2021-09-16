@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-1.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-1.png
     background: "#f4f4f4"
   examples:
     - description: service-now

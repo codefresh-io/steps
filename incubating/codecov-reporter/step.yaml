@@ -1,0 +1,94 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: codecov-reporter
+  title: Sends a code scan report to codecov
+  version: 1.0.11
+  isPublic: true
+  description: Sends a code scan report to codecov
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/codecov-reporter'
+  stage: incubating
+  maintainers:
+    - name: Pavel Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - build
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: >-
+      https://about.codecov.io/wp-content/themes/codecov/assets/brand/icons/codecov/codecov-circle.svg
+    background: '#f4f4f4'
+  examples:
+    - description: 'send codecov report'
+      workflow:
+        codecov-report:
+          title: Codecov report
+          type: codecov-reporter
+          arguments:
+            codecov_integration: codecov
+    - description: 'send codecov report with working_directory'
+      workflow:
+        codecov-report:
+          title: Codecov report
+          type: codecov-reporter
+          arguments:
+            codecov_integration: codecov
+            working_directory: '/codefresh/volume/${{CF_REPO_NAME}}'
+    - description: 'send codecov report using manual trigger'
+      workflow:
+        codecov-report:
+          title: Codecov report
+          type: codecov-reporter
+          arguments:
+            codecov_integration: codecov
+            working_directory: './report-directory'
+  created_at: '2021-04-15T15:42:47.178Z'
+  updated_at: '2021-04-15T15:42:47.178Z'
+  latest: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "codecov_integration"
+        ],
+        "properties": {
+            "codecov_integration": {
+                "type": "string",
+                "description": "Codecov integration name"
+            },
+            "working_directory": {
+                "type": "string",
+                "description": "The directory to which the repository is cloned. It can be an explicit path in the container’s file system, or a variable that references another step. The default value is '/codefresh/volume/${{CF_REPO_NAME}}'",
+                "default": "/codefresh/volume/${{CF_REPO_NAME}}"
+            }
+        }
+    }
+  steps:
+    first:
+      title: "get token"
+      image: codefresh/cli
+      environment:
+        - CODECOV_INTEGRATION=${{codecov_integration}}
+      commands:
+        - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
+        - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
+    second:
+      name: "send report"
+      image: node:15.2
+      environment:
+        - CODECOV_API_KEY=${{CODECOV_API_KEY}}
+        - WORKING_DIRECTORY=${{working_directory}}
+      commands:
+        - cd ${WORKING_DIRECTORY}
+        - "ci_env=`curl -s https://codecov.io/env`"
+        - npm install codecov -g
+        - codecov -t ${{CODECOV_API_KEY}} | tee codecov.log
+        - cf_export second_CF_OUTPUT_URL=$(grep -A0 'View report at:' codecov.log | awk 'BEGIN{FS="at:\ ";}{print $2}')

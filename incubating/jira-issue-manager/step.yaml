@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-issue-manager
-  version: 1.0.1
+  version: 1.0.6
   title: Jira Issue Manager
   isPublic: true
   description: Create, Update, & Validate Jira Issues
@@ -64,6 +64,9 @@ metadata:
               ISSUE_SUMMARY: "Brandons test 4"
               ISSUE_DESCRIPTION: "Description inserted from codefresh pipeline"
               ISSUE_COMPONENTS: "step,pov"
+              ISSUE_CUSTOMFIELDS:
+                - 'MY FIELD1=MYVALUE1'
+                - customfield_10067=MYVALUE2
               ISSUE_TYPE: "Task"
     - description: Update Jira Issue
       workflow:
@@ -166,7 +169,7 @@ spec:
             },
             "JIRA_USERNAME": {
                 "type": "string",
-                "description": "Jira username"
+                "description": "Jira username or email"
             },
             "JIRA_API_KEY": {
                 "type": "string",
@@ -204,6 +207,13 @@ spec:
                 "type": "string",
                 "description": "List of components using comma separated values: backend,database"
             },
+            "ISSUE_CUSTOMFIELDS": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Custom fields to pass to JIRA Issue Creation.  Key=Value format."
+            },
             "JIRA_COMMENT_ID": {
                 "type": "string",
                 "description": "Jira comment ID to update a comment"
@@ -233,7 +243,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-manager
-        image: codefreshplugins/jira-issue-manager:1.0.1
+        image: quay.io/codefreshplugins/jira-issue-manager:1.0.6
         environment:
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

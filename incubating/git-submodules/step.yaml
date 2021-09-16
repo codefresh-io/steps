@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: git-submodules
   title: Update a Git submodule
-  version: 0.0.5
+  version: 0.0.6
   isPublic: true
   description: Update Git submodules
   sources:
@@ -60,7 +60,7 @@ spec:
   steps:
     main:
       name: git-submodules
-      image: codefreshplugins/cfstep-gitsubmodules
+      image: quay.io/codefreshplugins/cfstep-gitsubmodules
       environment:
         - 'GITHUB_TOKEN=${{GITHUB_TOKEN}}'
         - 'CF_SUBMODULE_SYNC=${{CF_SUBMODULE_SYNC}}'

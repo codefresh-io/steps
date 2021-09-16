@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  version: '1.0.0'
+  version: '1.0.1'
   name: heroku-deployer
   isPublic: true
   description: Deploy to heroku via codefresh pipeline
@@ -69,7 +69,7 @@ spec:
   steps:
     herokuDeployer:
       title: herokuDeployer
-      image: nazarcodefresh/heroku-cli:alpine
+      image: quay.io/codefreshplugins/heroku-cli:alpine
       commands:
         - printf "machine api.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\nmachine git.heroku.com\n  login ${{EMAIL}}\n  password ${{API_TOKEN}}\n" > ~/.netrc
         - cd ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}

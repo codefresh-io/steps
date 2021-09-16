@@ -20,14 +20,20 @@ steps:
     working_directory: "./steps/incubating/jira-issue-manager"
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/jira-issue-manager
-    
-  PushingToRegistry:
+  
+  PushingToRegistries:
     type: push
-    title: Pushing To Dockerhub Registry
-    registry: cfpluginmgr
+    title: Pushing To Registry
     candidate: ${{BuildImage}}
     tags: [ "${{PLUGIN_VERSION}}" ]
     when:
       branch:
         only:
         - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: cfpluginmgr             
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

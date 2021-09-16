@@ -4,8 +4,17 @@ steps:
     title: Building Docker Image
     type: build
     image_name: codefreshplugins/cfstep-gitsubmodules
-  PushingToRegistry:
+
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    title: Pushing To Registry
     candidate: ${{BuildImage}}
-    tags: [ "latest", "latest" ]
+    tags:
+    - "latest"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

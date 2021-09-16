@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: scp
-  version: 0.0.5
+  version: 0.0.6
   title: Run SCP
   isPublic: false
   description: Transfer, copy, or upload files with Secure Copy Protocol.
@@ -78,7 +78,7 @@ spec:
   steps:
     main:
       name: scp
-      image: codefreshplugins/scp-plugin
+      image: quay.io/codefreshplugins/scp-plugin
       environment:
         - 'CF_SCP_HOST=${{CF_SCP_HOST}}'
         - 'CF_SCP_USER_NAME=${{CF_SCP_USER_NAME}}'

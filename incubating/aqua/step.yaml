@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: aqua
   title: Run an Aqua Security Scan
-  version: 0.0.6
+  version: 0.0.8
   isPublic: true
   description: Execute an Aqua container security scan.
   sources:
@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: aqua
-      image: codefreshplugins/cfstep-aqua
+      image: quay.io/codefreshplugins/cfstep-aqua
       environment:
         - 'AQUA_HOST=${{AQUA_HOST}}'
         - 'AQUA_PASSWORD=${{AQUA_PASSWORD}}'

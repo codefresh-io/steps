@@ -10,13 +10,21 @@ steps:
       set:
       - CF_QUALITY: true
 
-  PushDockerHub:
-    title: Pushing to dockerhub
+  PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    candidate: '${{BuildingDockerImage}}'
-    tag: "0.1"
-    registry: dockerhub
-    when:
+    candidate: ${{BuildingDockerImage}}
+    tags:
+    - "latest"
+    - "0.1"
+     when:
       branch:
         only:
         - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

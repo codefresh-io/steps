@@ -2,8 +2,8 @@ kind: step-type
 version: '1.0'
 metadata:
   name: composition-editor
-  version: 1.0.2
-  isPublic: true
+  version: 1.1.0
+  isPublic: false   # FIXME before merging PR
   description: Edit Composition Files for Codefresh Pipeline Usage
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/composition-editor
@@ -11,10 +11,12 @@ metadata:
   maintainers:
     - name: Dustin Van Buskirk
       email: dustin@codefresh.io
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
   categories:
     - utilities
   official: true
-  tags: []
+  tags: []   # FIXME - add tags!
   examples:
     - description: conform-composition-yaml
       workflow:
@@ -33,10 +35,13 @@ metadata:
             YAMLFILE: docker-compose.yml
             KEY_SETS:
               - oldkeyname1;newkeyname1
-              - oldkeyname1;newkeyname1
+              - oldkeyname2;newkeyname2
+              - oldkeytodelete;
             KEYVALUE_PAIRS:
-              - services.myservice.environment.VARNAME1=VARVALUE1
-              - services.myservice.environment.VARNAME2=VARVALUE2
+              - services.myservice.environment1.varname1=varvalue1
+              - services.myservice.environment2.varname2=varvalue2
+              - services.tests.myarray.0=value1
+              - services.tests.myarray.1=value2
 spec:
   arguments: |-
     {
@@ -81,7 +86,8 @@ spec:
   stepsTemplate: |-
     composition-editor:
       name: composition-editor
-      image: quay.io/codefreshplugins/composition-editor:1.0.2
+      image: quay.io/tedspinks/composition-editor:1.1.0 # FIXME
+      # image: quay.io/codefreshplugins/composition-editor:1.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

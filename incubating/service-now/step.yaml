@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-1.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-1.png
     background: "#f4f4f4"
   examples:
     - description: service-now
@@ -109,7 +109,7 @@ spec:
     createCR:
       name: Create a ServiceNow Change Request
       title: Use REST API to create a CR
-      image: 'quay.io/codefreshplugins/service-now:1.0.1'
+      image: 'quay.io/codefreshplugins/service-now:1.0.2'
       environment:
         - action=createCR
       [[ range $key, $val := .Arguments ]]
@@ -127,7 +127,7 @@ spec:
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup
-      image: 'quay.io/codefreshplugins/service-now:1.0.1'
+      image: 'quay.io/codefreshplugins/service-now:1.0.2'
 
       environment:
         - action=callback

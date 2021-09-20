@@ -48,7 +48,6 @@ def setValueInDict(dataDict, mapList, value):
     except:
         pass
     getFromDict(dataDict, mapList[:-1])[keyOrIndex] = value
-    print(dataDict)
     return dataDict
 
 

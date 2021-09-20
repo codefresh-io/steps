@@ -40,8 +40,8 @@ metadata:
               - oldkeyname2;newkeyname2
               - oldkeytodelete;
             KEYVALUE_PAIRS:
-              - services.myservice.environment1.varname1=varvalue1
-              - services.myservice.environment2.varname2=varvalue2
+              - services.myservice.environment1.VARNAME1=varvalue1
+              - services.myservice.environment2.VARNAME2=varvalue2
               - services.myservice.volumes.0=/codefresh/volume/${{CF_REPO_NAME}}/alerting:/alerting
               - services.myservice.volumes.1=/codefresh/volume/${{CF_REPO_NAME}}/reports:/reports
 spec:

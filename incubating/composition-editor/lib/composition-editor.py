@@ -46,6 +46,7 @@ def setValueInDict(dataDict, mapList, value):
         # then assume it represents an array index and convert it to an integer.
         keyOrIndex = convertedToInt
     except:
+        # Else, assume it represents a key and leave it as a string
         pass
     getFromDict(dataDict, mapList[:-1])[keyOrIndex] = value
     return dataDict

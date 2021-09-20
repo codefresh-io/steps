@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: composition-editor
   version: 1.1.0
-  isPublic: false   # FIXME before merging PR
+  isPublic: true
   description: Edit Composition Files for Codefresh Pipeline Usage
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/composition-editor
@@ -16,12 +16,14 @@ metadata:
   categories:
     - utilities
   official: true
-  tags: []   # FIXME - add tags!
+  tags:
+    - yaml
+    - docker-compose
   examples:
     - description: conform-composition-yaml
       workflow:
         ConformCompositionYAML:
-          type: codefreshdemo/composition-editor
+          type: composition-editor
           arguments:
             DIRECTORY: /codefresh/volume/myrepo
             YAMLFILE: docker-compose.yml
@@ -29,9 +31,9 @@ metadata:
     - description: edit-keys-and-values-in-composition-yaml
       workflow:
         EditYAMLFile:
-          type: codefreshdemo/composition-editor
+          type: composition-editor
           arguments:
-            DIRECTORY: /codefresh/volume/myrepo
+            DIRECTORY: /codefresh/volume/${{CF_REPO_NAME}}
             YAMLFILE: docker-compose.yml
             KEY_SETS:
               - oldkeyname1;newkeyname1
@@ -40,8 +42,8 @@ metadata:
             KEYVALUE_PAIRS:
               - services.myservice.environment1.varname1=varvalue1
               - services.myservice.environment2.varname2=varvalue2
-              - services.tests.myarray.0=value1
-              - services.tests.myarray.1=value2
+              - services.myservice.volumes.0=/codefresh/volume/${{CF_REPO_NAME}}/alerting:/alerting
+              - services.myservice.volumes.1=/codefresh/volume/${{CF_REPO_NAME}}/reports:/reports
 spec:
   arguments: |-
     {
@@ -86,8 +88,7 @@ spec:
   stepsTemplate: |-
     composition-editor:
       name: composition-editor
-      image: quay.io/tedspinks/composition-editor:1.1.0 # FIXME
-      # image: quay.io/codefreshplugins/composition-editor:1.1.0
+      image: quay.io/codefreshplugins/composition-editor:1.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

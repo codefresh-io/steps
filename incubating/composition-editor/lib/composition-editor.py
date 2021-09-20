@@ -39,7 +39,16 @@ def getSpecificKeyFromDict(dataDict, mapList):
 
 # Used to update values for specific keys
 def setValueInDict(dataDict, mapList, value):
-    getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
+    keyOrIndex = mapList[-1]
+    try:
+        # If the last part of mapList can be converted to an integer without error...
+        convertedToInt = int(keyOrIndex)
+        # then assume it represents an array index and convert it to an integer.
+        keyOrIndex = convertedToInt
+    except:
+        # Else, assume it represents a key and leave it as a string
+        pass
+    getFromDict(dataDict, mapList[:-1])[keyOrIndex] = value
     return dataDict
 
 

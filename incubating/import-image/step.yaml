@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: import-image
-  version: 0.0.4
+  version: 0.0.5
   title: Import a Docker image
   isPublic: false
   description: Import a Docker image from an external registry with existing metadata.
@@ -81,7 +81,7 @@ spec:
   steps:
     main:
       name: import-image
-      image: codefreshplugins/import-images
+      image: quay.io/codefreshplugins/import-images
       environment:
         - 'IMAGES=${{IMAGES}}'
         - 'REGISTRY=${{REGISTRY}}'

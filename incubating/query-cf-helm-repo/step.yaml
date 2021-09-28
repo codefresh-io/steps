@@ -1,0 +1,106 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: query-cf-helm-repo
+  title: Query CF Helm Chart Repo
+  version: 0.0.1
+  isPublic: true
+  description: >-
+    Query the Codefresh Helm Chart Repository for a version of a chart. Outputs whether or
+    or not ('true' or 'false') the specified chart version was found in a variable called
+    CHART_VER_FOUND. Can optionally throw an error for either result. Requires importing 
+    the CF_HELM_DEFAULT shared configuration into the pipeline's variables.
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/query-cf-helm-repo'
+  stage: incubating
+  maintainers:
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
+  categories:
+    - deployment
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-contrib/cfstep-helmfile/helm-logo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Check if a chart verion is already in the repo
+      workflow:
+        check_repo_for_chart:
+          title: Check if a chart verion is already in the repo
+          type: query-cf-helm-repo
+          arguments:
+            CHART_NAME: my-chart
+            CHART_VERSION: 0.0.1
+    - description: Fail pipeline if chart is aleady in repo
+      workflow:
+        check_repo_for_chart:
+          title: Fail pipeline if chart is aleady in repo
+          type: query-cf-helm-repo
+          arguments:
+            CHART_NAME: my-chart
+            CHART_VERSION: 0.0.1
+            FAIL_WHEN: 'true'
+  latest: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "CHART_NAME",
+            "CHART_VERSION"
+        ],
+        "properties": {
+            "CHART_NAME": {
+                "type": "string",
+                "description": "The name of the chart to look for in your Codefresh Helm Repo."
+            },
+            "CHART_VERSION": {
+                "type": "string",
+                "description": "The version of the chart to look for in your Codefresh Helm Repo."
+            },
+            "FAIL_WHEN": {
+                "type": "string",
+                "description": "Optional. The step will throw an error and fail when the query returns the specified result ('true' or 'false')."
+            },
+            "FAIL_WHEN_MESSAGE": {
+                "type": "string",
+                "description": "Optional. Print this message whenever the pipeline fails due to the FAIL_WHEN condition being met",
+                "default": "FAIL_WHEN condition was met."
+            }
+        }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+          "CHART_VER_FOUND"
+      ],
+      "properties": {
+          "CHART_VER_FOUND": {
+              "type": "string",
+              "description": "Returns 'true' or 'false' to indicate whether or not the specified chart version was found"
+          }
+      }
+    }    
+  stepsTemplate: |-
+    query_cf_helm_repo:
+      image: quay.io/codefreshplugins/query-cf-helm-repo:0.0.1
+      commands:
+        - /query.sh
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

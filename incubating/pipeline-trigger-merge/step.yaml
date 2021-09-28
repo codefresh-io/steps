@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: pipeline-trigger-merge
-  version: 1.0.0
+  version: 1.0.2
   isPublic: true
   description: >-
     Merge a pipeline spec and a list of triggers (files or directories) to
@@ -28,6 +28,16 @@ metadata:
           arguments:
             SPEC: spec.yml
             TRIGGERS: trig1.yml ./trigger_dir trig2.yml
+    - description: pipeline-trigger-merge-loop
+      workflow:
+        MergeTriggersIntoPipelines:
+          title: "Merge the triggers into the pipeline spec(s)"
+          type: pipeline-trigger-merge
+          working_directory: ${{Clone}}
+          arguments:
+            SPEC: spec.yml
+            ONLY_CHANGED: true
+            TRIGGERS_SUBDIR: "triggers"
 spec:
   arguments: |-
     {
@@ -47,19 +57,32 @@ spec:
         "TRIGGERS": {
           "type": "string",
           "description": "A space separated list of trigger files and/or folders."
+        },
+        "ONLY_CHANGED": {
+          "type": "boolean",
+          "description": "Loop through changed files from git instead of applying a single spec."
+        },
+        "TRIGGERS_SUBDIR": {
+          "type": "string",
+          "description": "The subdirectory that holds a pipeline's triggers if looping. Defaults to 'triggers'."
         }
       }
     }
+
   stepsTemplate: |-
     pipeline-trigger-merge:
       name: pipeline-trigger-merge
-      image: codefreshplugins/pipeline-trigger-merge:1.0.0
+      image: quay.io/codefreshplugins/pipeline-trigger-merge:1.0.2
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
+      [[- if .Arguments.ONLY_CHANGED ]]
+        - /loop-merge.sh
+      [[- else ]]
         - /merge.sh
+      [[- end ]]
   delimiters:
     left: '[['
     right: ']]'

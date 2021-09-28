@@ -2,13 +2,16 @@ import json
 import sys
 import os
 import ast
+import re
+import requests
 
 from jira import JIRA
 from step_utility import StepUtility
+from requests.auth import HTTPBasicAuth
 
 class Environment:
     def __init__(self, jira_base_url, jira_username, jira_api_key, action, 
-        issue, issue_project, issue_summary, issue_description, issue_type, issue_components, 
+        issue, issue_project, issue_summary, issue_description, issue_type, issue_components, issue_customfields,
         existing_comment_id, comment_body, status, jql_query, jql_query_max_results, 
         verbose):
         self.jira_base_url = jira_base_url
@@ -21,6 +24,7 @@ class Environment:
         self.issue_description = issue_description
         self.issue_type = issue_type
         self.issue_components = issue_components
+        self.issue_customfields = issue_customfields
         self.existing_comment_id = existing_comment_id
         self.comment_body = comment_body
         self.status = status
@@ -75,6 +79,9 @@ def environment_setup():
             component_string = "{'name': '" + component + "'}"
             issue_components.append(ast.literal_eval(component_string))
 
+    # Retrieve customfields
+    issue_customfields = StepUtility.getEnvironmentVariable('ISSUE_CUSTOMFIELDS', env)
+
     # Retrieve the comment information
     existing_comment_id = StepUtility.getEnvironmentVariable('JIRA_COMMENT_ID', env)
     comment_body = StepUtility.getEnvironmentVariable('COMMENT_BODY', env)
@@ -100,6 +107,7 @@ def environment_setup():
         issue_description,
         issue_type,
         issue_components,
+        issue_customfields,
         existing_comment_id,
         comment_body,
         status,
@@ -170,6 +178,31 @@ def create_issue(jira, current_environment):
     new_issue_dict.update(description = current_environment.issue_description)
     new_issue_dict.update(issuetype = ast.literal_eval(current_environment.issue_type))
     new_issue_dict.update(components = current_environment.issue_components)
+
+    # print(current_environment.issue_customfields)
+    # sys.exit(1)
+
+    if current_environment.issue_customfields:
+
+        url = '{}/rest/api/3/field'.format(current_environment.jira_base_url)
+
+        response = requests.request('GET', url, auth=HTTPBasicAuth(current_environment.jira_username, current_environment.jira_api_key))
+
+        data = response.json()
+
+        customfields = current_environment.issue_customfields.lstrip('[').rstrip(']')
+
+        kv_pairs = re.findall(r'(\w+.*?)\s*=\s*(.*?)(?=(?:\s[^\s=]+|$))', customfields)
+
+        for k, v in kv_pairs:
+
+            if 'customfield' not in k:
+                for item in data:
+                    if k in item['name']:
+                        customfield_id = item['id']
+                new_issue_dict[customfield_id] = v
+            else:
+                new_issue_dict[k] = v
 
     try:
         created_issue = jira.create_issue(new_issue_dict)

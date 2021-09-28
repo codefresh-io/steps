@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-bluegreen-deploy
-  version: 0.0.4
+  version: 0.0.6
   isPublic: true
   description: 'Updates an AWS ECS Service with a new image, and then deploys it with AWS CodeDeploy. Works with all deployment configurations, including AllAtOnce, Linear, and Canary. Authenticate with either an IAM role from your EKS cluster, or with a simple Access Key ID+Token.'
   sources:

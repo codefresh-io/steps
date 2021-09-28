@@ -1,0 +1,139 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: service-now
+  version: 1.0.3
+  isPublic: true
+  description: Integration with ServiceNow Change Management
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/service-now
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-1.png
+    background: "#f4f4f4"
+  examples:
+    - description: service-now
+      workflow:
+        createChange:
+          title: Create a Service Now Change Request
+          type: service-now
+          stage: deploy
+          arguments:
+            action: createCR
+            SN_INSTANCE: https://instance.service-now.com
+            SN_USER: ${{SN_USER}}
+            SN_PASSWORD: ${{SN_PASSWORD}}
+            cr_body: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SN_INSTANCE",
+        "SN_USER",
+        "SN_PASSWORD",
+        "TOKEN"
+      ],
+      "properties": {
+        "SN_INSTANCE": {
+            "type": "string",
+            "description": "The URL to your Service-now instance aka https://instance.service-now.com"
+        },
+        "SN_USER": {
+            "type": "string",
+            "description": "The username to log into the instance"
+        },
+        "SN_PASSWORD": {
+            "type": "string",
+            "description": "The password associated to the username to log  into the instance"
+        },
+        "TOKEN": {
+            "type": "string",
+            "description": "The Codefresh API token to allow ServiceNow to approve/deny the pipeline"
+        },
+        "namespace": {
+            "type": "string",
+            "description": "The endpoint to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
+            "default": "409723"
+        },
+        "data": {
+            "type": "string",
+            "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
+        },
+        "debug": {
+          "type": "string",
+          "default": "false",
+          "description": "a hidden option show more debug info"
+        }
+      }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "CR_NUMBER",
+          "CR_SYS_ID"
+        ],
+        "properties": {
+            "sys_id": {
+                "type": "string",
+                "description": "The sys_id of the CR created"
+            },
+            "cr_number": {
+                "type": "string",
+                "description": "The number of the CR created."
+            },
+            "cr_sysid": {
+                "type": "string",
+                "description": "The sys_id of the CR created."
+            }
+        }
+    }
+  stepsTemplate: |-
+    createCR:
+      name: Create a ServiceNow Change Request
+      title: Use REST API to create a CR
+      image: 'quay.io/codefreshplugins/service-now:1.0.3'
+      environment:
+        - action=createCR
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+    createAnnotation:
+      name: Assign CR_NUMBER as annotation
+      image: codefresh/cli
+      commands:
+        - |
+          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+          export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYS_ID}}'
+          # echo $createAnnotation_CF_OUTPUT_URL
+          # cf_export createAnnotation_CF_OUTPUT_URL
+    callback:
+      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
+      title: ServiceNow callback setup
+      image: 'quay.io/codefreshplugins/service-now:1.0.3'
+
+      environment:
+        - action=callback
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

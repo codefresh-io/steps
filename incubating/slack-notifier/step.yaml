@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-notifier
-  version: 0.0.7
+  version: 0.0.8
   isPublic: true
   description: Send message to slack
   sources:
@@ -78,7 +78,7 @@ spec:
   stepsTemplate: |-
     main:
       name: slack-notifier
-      image: codefresh/slacknotifier:0.0.7
+      image: quay.io/codefreshplugins/slacknotifier:0.0.7
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

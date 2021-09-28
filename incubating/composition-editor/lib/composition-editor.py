@@ -1,6 +1,8 @@
 import os
 import yaml
 import sys
+import operator
+from functools import reduce
 
 def walkDict(dataDict, key, answer=None, sofar=None):
     if sofar is None:
@@ -31,9 +33,22 @@ def getFromDict(dataDict, mapList):
     return dataDict
 
 
+def getSpecificKeyFromDict(dataDict, mapList):
+    return reduce(operator.getitem, mapList[:-1], dataDict)
+
+
 # Used to update values for specific keys
 def setValueInDict(dataDict, mapList, value):
-    getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
+    keyOrIndex = mapList[-1]
+    try:
+        # If the last part of mapList can be converted to an integer without error...
+        convertedToInt = int(keyOrIndex)
+        # then assume it represents an array index and convert it to an integer.
+        keyOrIndex = convertedToInt
+    except:
+        # Else, assume it represents a key and leave it as a string
+        pass
+    getFromDict(dataDict, mapList[:-1])[keyOrIndex] = value
     return dataDict
 
 
@@ -77,8 +92,13 @@ def main():
         # Rename Keys
         keyDict = { }
         oldKey, NewKey = payload.split(";")
-        keyDict[oldKey] = NewKey    
-        dataDict = renameKeyInDict(dataDict, keyDict)
+        if NewKey:
+            keyDict[oldKey] = NewKey
+            dataDict = renameKeyInDict(dataDict, keyDict)
+        # Delete key if new key is empty
+        else: 
+            mapList = oldKey.split('.')
+            del getSpecificKeyFromDict(dataDict, mapList)[mapList[-1]]
     elif edit_object == 'value':
         # Update values
         key, value = payload.split('=')

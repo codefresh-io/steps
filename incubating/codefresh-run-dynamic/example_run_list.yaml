@@ -13,16 +13,20 @@
 - pipeline_id: my-project/my-pipeline3
   trigger_id: my-trigger-name
   sha: 941852163761eb98f21a339a9988cbb7f2cdd589
-  no_cache: true        # disable Docker cache
-  no_cf_cache: true     # disable other cache optimizations
-  reset_volume: true    # create a fresh pipeline cache volume
   variables:
     SOME_VAR: blah
     SOME_OTHER_VAR: blahblah
+  # Import shared configurations
   contexts:
     - my-github
+  # Override Pipeline + Trigger settings
+  no_cache: true              # disable Docker cache
+  no_cf_cache: true           # disable other cache optimizations
+  reset_volume: true          # create a fresh pipeline cache volume
+  enable_notifications: true  # send build status to GitHub
+  # Skip steps
   skip:
     - some_step
     - some_other_step
   # only:
-  #   - my-best-step
+  #   - my_best_step

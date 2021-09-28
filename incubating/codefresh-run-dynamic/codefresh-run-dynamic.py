@@ -163,6 +163,9 @@ def run_pipeline(pipeline):
     if 'skip' in pipeline.keys():
         for item in pipeline['skip']:
             cmd_args.append("--skip=" + item)
+    if 'enable_notifications' in pipeline.keys():
+        if str(pipeline['enable_notifications']).upper() == "TRUE":
+            cmd_args.append("--enable-notifications")
     output, exit_code = run_cmd(cmd, cmd_args)
     if not output:
         raise RuntimeError("No output was returned from 'codefresh run' command - build number was expected")
@@ -196,7 +199,21 @@ def all_builds_finished(build_numbers_to_check):
         is encountered. Returns True if all builds have finished.
     """
     for build_number in build_numbers_to_check:
-        if get_build_status(build_number) not in ['success', 'error', 'terminated', 'terminating']:
+        status = get_build_status(build_number)
+        logging.debug("Build '{}' status: '{}'".format(build_number, status))
+        if status not in ['success', 'error', 'terminated', 'terminating']:
+            return False
+    return True
+
+
+def all_builds_successful(build_numbers_to_check):
+    """ Looks at the status of each build. Returns False as soon as a failed build
+        is encountered. Returns True if all builds were successful.
+    """
+    for build_number in build_numbers_to_check:
+        status = get_build_status(build_number)
+        logging.debug("Build '{}' status: '{}'".format(build_number, status))
+        if status != 'success':
             return False
     return True
 
@@ -227,7 +244,7 @@ def get_build_log(build_number):
 
 def wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_interval_mins, columns):
     """ Wait for the list of builds to all finish, up to the specified timeout. 
-        Return True if all the builds finish before the timeout, otherwise False.
+        Return True if all the builds finish with 'success' before the timeout, otherwise False.
         Noteworthy args:
             check_interval_mins - how often to check the status of the builds to see if they're done
             log_interval_mins - how often to print the status of the builds
@@ -239,7 +256,9 @@ def wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_inter
     check_interval_seconds = int(check_interval_mins) * 60
     log_interval_seconds = int(log_interval_mins) * 60  # Could be a string from the env var
     log_interval_tracker = []  # Keeps track of which logging interval we're in; only log once per logging interval
-    while not all_builds_finished(builds_started) and time.time() < wait_end_time:
+    finished = all_builds_finished(builds_started)
+    time_left = time.time() < wait_end_time
+    while not finished and time_left:
         ### Only log once per logging interval
         current_log_interval = int((time.time() - wait_start_time) // log_interval_seconds)
         logging.debug("Current logging interval is " + str(current_log_interval))
@@ -249,10 +268,12 @@ def wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_inter
         ### Sleep until the next check interval
         logging.debug("Sleeping for " + str(check_interval_seconds) + " seconds...")
         time.sleep(check_interval_seconds)
-    if all_builds_finished(builds_started):
-        success = True
-    else:
-        success = False
+        finished = all_builds_finished(builds_started)
+        time_left = time.time() < wait_end_time
+        if not finished and not time_left:
+            logging.error("Timed out waiting for builds to finish.")
+    print_build_statuses(builds_started, columns)
+    success = all_builds_successful(builds_started)
     return success
 
 
@@ -295,19 +316,23 @@ def main():
         print("Started build https://g.codefresh.io/build/" + build_number + "\n")
    
     # Optionally wait for builds to finish
+    success = True
     if wait:
         print("\nWaiting for builds to finish...")
         success = wait_for_builds(builds_started, timeout_mins, check_interval_mins, log_interval_mins, columns)
-        print_build_statuses(builds_started, columns)
+        logging.debug("Success: " + str(success))
         # Optionally write log files out to the specified directory
         if log_directory:
+            print("Writing build logs...")
             verify_or_create_dir(log_directory)
             for build_number in builds_started:
+                logging.info("Writing log for build number '{}'...".format(build_number))
                 build_log = get_build_log(build_number)
                 with open("{}/{}.log".format(log_directory,build_number), "w") as write_file:
                     write_file.write(build_log)
-            print("Log files were written to " + log_directory)
-    
+            print("Log files were written to {}.".format(log_directory))
+
+    # Outputs are read by step.yaml commands
     write_output_files(builds_started, success)
 
 

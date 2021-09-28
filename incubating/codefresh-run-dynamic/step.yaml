@@ -3,12 +3,12 @@ kind: step-type
 metadata:
   name: codefresh-run-dynamic
   title: Dynamically run Codefresh pipelines
-  version: 0.0.2
+  version: 1.0.0
   isPublic: true
   description: >-
     Accepts a YAML file specifying a list of pipelines and options, and runs them concurrently. You can specify most
     `codefresh run` options on a per-build basis within the YAML file, including: branch, sha, no_cache, no_cf_cache,
-    reset_volume, variables[], contexts[], skip[], and only[]. See example YAML file: 
+    reset_volume, variables[], contexts[], skip[], only[], and enable_notifications. See example YAML file: 
     https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
@@ -19,7 +19,11 @@ metadata:
   categories:
     - featured
   official: true
-  tags: []
+  tags:
+    - yaml
+    - call
+    - child
+    - pipeline
   icon:
     type: svg
     url: >-
@@ -71,11 +75,11 @@ spec:
             },
             "DEBUG": {
                 "type": "boolean",
-                "description": "Set to 'true' to enable debug logging. Default is 'false'."
+                "description": "Set to 'true' to enable debug logging. Default is false."
             },
             "WAIT": {
                 "type": "boolean",
-                "description": "Wait for builds to finish and log the status of each build."
+                "description": "Wait for builds to finish and log the status of each build. Default is false."
             },
             "COLUMNS": {
                 "type": "string",
@@ -96,6 +100,11 @@ spec:
             "LOG_DIRECTORY": {
                   "type": "string",
                   "description": "Write build logs to files in this directory."
+            },
+            "FAIL_FAST": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "If a child build fails, the whole step should fail. Default is true."
             }
         }
     }
@@ -113,18 +122,24 @@ spec:
           "CF_BUILDS_STARTED": {
               "type": "string",
               "description": "List of builds that were started, space-separated"
+          },
+          "CF_BUILDS_SUCCESS": {
+              "type": "string",
+              "description": "When WAIT is specified, this will be 'true' if all builds completed successfully and 'false' if not."
           }
       }
     }    
   stepsTemplate: |-
     run_child_pipelines:
-      image: codefreshplugins/codefresh-run-dynamic:0.0.1
+      image: quay.io/codefreshplugins/codefresh-run-dynamic:1.0.0
       commands:
         - python3 /codefresh-run-dynamic.py
+        # The export command preserves spaces (cf_export by itself would not)
         - export CF_BUILDS_STARTED=$(cat /tmp/cf_builds_started)
         - cf_export CF_BUILDS_STARTED
-        - export SUCCESS=$(cat /tmp/success)
-        - if [ "$SUCCESS" != "true" ]; then echo "One or more builds failed."; exit 1; fi
+        - export CF_BUILDS_SUCCESS=$(cat /tmp/success)
+        - cf_export CF_BUILDS_SUCCESS
+        - if [ "$FAIL_FAST" == "true" ] && [ "$CF_BUILDS_SUCCESS" != "true" ]; then exit 1; fi
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

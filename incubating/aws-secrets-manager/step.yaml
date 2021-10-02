@@ -1,0 +1,132 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: aws-secrets-manager
+  title: Fetch secrets from AWS Secrets Manager
+  version: 1.0.1
+  isPublic: true
+  description: Fetch secrets and export them to be used in subsequent steps.
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/aws-secrets-manager'
+  stage: incubating
+  maintainers:
+    - name: Jesse Antoszyk
+      email: Jesse.Antoszyk@codefresh.io
+  categories:
+    - aws
+    - secret management
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: 'https://d3f44cr96bpmfn.cloudfront.net/AWS-Secrets-Manager.svg'
+    background: '#f4f4f4'
+  examples:
+    - description: using-env-vars
+      workflow:
+        FetchSecrets:
+          title: Fetch secrets from AWS Secrets Manager
+          type: aws-secrets-manager
+          arguments:
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            AWS_DEFAULT_REGION: a-region-1
+            AWS_IAM_ROLE_ARN: 'arn:aws:role/some-role'
+            secrets:
+              - secret_arn: arn:aws:secret-1
+                key: username
+                store_in: USERNAME
+              - secret_arn: arn:aws:secret-1
+                key: password
+                store_in: PASSWORD
+    - description: using-service-account
+      workflow:
+        FetchSecrets:
+          title: Fetch secrets from AWS Secrets Manager using service account IAM role
+          type: aws-secrets-manager
+          arguments:
+            AWS_DEFAULT_REGION: a-region-1
+            secrets:
+              - secret_arn: sercret-name
+                key: username
+                store_in: USERNAME
+              - secret_arn: sercret-name
+                key: password
+                store_in: PASSWORD
+  latest: true
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "secrets",
+        "AWS_DEFAULT_REGION"
+      ],
+      "properties": {
+        "AWS_ACCESS_KEY_ID": {
+          "type": "string",
+          "description": "AWS access key ID. Takes priority over pod's IAM role if set"
+        },
+        "AWS_SECRET_ACCESS_KEY": {
+          "type": "string",
+          "description": "AWS secret access key."
+        },
+        "AWS_DEFAULT_REGION": {
+          "type": "string",
+          "description": "AWS region to operate in."
+        },
+        "AWS_IAM_ROLE_ARN": {
+          "type": "string",
+          "description": "The ARN of AWS IAM role to assume."
+        },
+        "secrets": {
+          "type": "array",
+          "description": "A list of secrets to fetch.",
+          "items": {
+            "type": "object",
+            "required": [
+              "secret_arn",
+              "key",
+              "store_in"
+            ],
+            "properties": {
+              "secret_arn": {
+                "type": "string",
+                "description": "ARN or friendly name of the secret."
+              },
+              "key": {
+                "type": "string",
+                "description": "JSON object key that identifies a secret value in the secret's object."
+              },
+              "store_in": {
+                "type": "string",
+                "description": "Environment variable to store the secret value in."
+              }
+            }
+          }
+        }
+      }
+    }
+  stepsTemplate: |-
+    main:
+      name: aws-secrets-manager
+      image: quay.io/codefreshplugins/aws-secrets-manager:1.0.1
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        [[- if ne $key "secrets" ]]
+        - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+      [[- end ]]
+      [[ $secrets := slice ]]
+      [[ range $secret := .Arguments.secrets ]]
+        [[ $secret_str := (join (slice $secret.secret_arn $secret.key $secret.store_in) "#") ]]
+        [[ $secrets = (append $secret_str $secrets) ]]
+      [[ end ]]
+        - 'SECRETS=[[ join $secrets "|" | trimSpace ]]'
+  delimiters:
+    left: '[['
+    right: ']]'

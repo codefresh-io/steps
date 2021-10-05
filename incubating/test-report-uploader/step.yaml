@@ -5,9 +5,9 @@ metadata:
   title: Test reporting with tests
   version: 1.0.0
   isPublic: true
-  description: Run tests and sends a test report to bucket
+  description: Run tests and send a test report to the bucket even when the test failed (main difference compared to test-reporting step).
   sources:
-    - 'https://github.com/codefresh-io/cf-docker-test-reporting'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/test-report-uploader'
   stage: incubating
   maintainers:
     - name: Pavlo Kostohrys

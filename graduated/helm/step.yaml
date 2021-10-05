@@ -87,6 +87,10 @@ spec:
                 "type": "string",
                 "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
             },
+            "helm_context": {
+                "type": "string",
+                "description": "Helm context to use (the name of the helm repository as configured in Codefresh)"
+            },
             "chart_name": {
                 "type": "string",
                 "description": "Helm chart name to release (path to chart folder, or name of packaged chart)"

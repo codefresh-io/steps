@@ -1,8 +1,8 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: service-now
-  version: 1.0.3
+  name: laurent-cf/service-now
+  version: 1.1.0
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -109,7 +109,8 @@ spec:
     createCR:
       name: Create a ServiceNow Change Request
       title: Use REST API to create a CR
-      image: 'quay.io/codefreshplugins/service-now:1.0.3'
+  #    image: 'quay.io/codefreshplugins/service-now:1.1.0'
+      image: lrochette/service-now:1.1.0'
       environment:
         - action=createCR
       [[ range $key, $val := .Arguments ]]
@@ -127,7 +128,8 @@ spec:
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup
-      image: 'quay.io/codefreshplugins/service-now:1.0.3'
+      #image: 'quay.io/codefreshplugins/service-now:1.1.0'
+      image: lrochette/service-now:1.1.0'
 
       environment:
         - action=callback

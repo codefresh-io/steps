@@ -27,11 +27,10 @@ metadata:
           type: service-now
           stage: deploy
           arguments:
-            action: createCR
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            cr_body: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+            data: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
 spec:
   arguments: |-
     {
@@ -91,15 +90,11 @@ spec:
           "CR_SYS_ID"
         ],
         "properties": {
-            "sys_id": {
-                "type": "string",
-                "description": "The sys_id of the CR created"
-            },
-            "cr_number": {
+            "CR_NUMBER": {
                 "type": "string",
                 "description": "The number of the CR created."
             },
-            "cr_sysid": {
+            "CR_SYS_ID": {
                 "type": "string",
                 "description": "The sys_id of the CR created."
             }

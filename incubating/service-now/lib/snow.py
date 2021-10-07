@@ -55,7 +55,7 @@ def processChangeRequestResponse(response):
 
 #
 # Call SNow REST API to create a new Change Request
-# Fields required are past in the data
+# Fields required are pasted in the data
 def createChangeRequest(user, password, baseUrl, title, data, description):
 
     if DEBUG:
@@ -84,6 +84,47 @@ def createChangeRequest(user, password, baseUrl, title, data, description):
         auth=(user, password))
     processChangeRequestResponse(response=resp)
 
+def processCloseChangeRequestResponse(response):
+
+    print("Processing answer from CR closing REST call")
+    print("Close Change Request returned code %s" % (response.status_code))
+    if (response.status_code != 200 and response.status_code != 201):
+        print("Close Change Request creation failed with code %s" % (response.status_code))
+        print("Error: " + response.text)
+        return response.status_code
+
+    print("Close Change Request creation successful")
+    data=response.json() # json.loads(response.text)
+
+    FULL_JSON=json.dumps(data, indent=2)
+
+    if os.path.exists(env_file_path):
+        env_file = open(env_file_path, "a")
+        env_file.write("CR_CLOSE_FULL_JSON=/codefresh/volume/servicenow-cr-close.json\n")
+        env_file.close()
+
+        json_file=open("/codefresh/volume/servicenow-cr-close.json", "w")
+        json_file.write(FULL_JSON)
+        json_file.close()
+        
+# Call SNow REST API to close a CR
+# Fields required are pasted in the data
+def closeChangeRequest(user, password, baseUrl, sysid, code):
+    if DEBUG:
+        print("Entering closeChangeRequest:")
+        print("Body: " + data)
+    if (bool(data)):
+        crBody=json.loads(data)
+    else:
+        crBody= {}
+    crBody["state"] = 3
+    crBody["close_code"] = code
+    url="%s/now/table/change_request/%s" % (baseUrl, sysid)
+    resp=requests.patch(url,
+        json = crBody,
+        headers = {"content-type":"application/json"},
+        auth=(user, password))
+    processCloseChangeRequestResponse(response=resp)
 # Use rest API to call scripted REST API to start a flow that will wait for CR
 # to be approved or rejected, then callback Codefreh to approve/deny pipeline
 #
@@ -120,12 +161,12 @@ def main():
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
     DATA     = os.getenv('data')
-
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
-    TITLE = os.getenv('title', 'Change Request created by Codefresh')
-    DESCRIPTION = os.getenv('description', '')
 
     if ACTION == "createcr":
+        TITLE = os.getenv('title', 'Change Request created by Codefresh')
+        DESCRIPTION = os.getenv('description', '')
+
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
@@ -140,7 +181,16 @@ def main():
             token=os.getenv('TOKEN'),
             cf_build_id=os.getenv('CF_BUILD_ID')
         )
-
+    elif ACTION == "closecr":
+        CR_SYS_ID= os.getenv('CR_SYS_ID')
+        CODE= "successful" if os.getenv('closeCode') == "success" else "unsuccessful"
+        closeChangeRequest(
+            user=USER,
+            password=PASSWORD,
+            baseUrl=getBaseUrl(instance=INSTANCE),
+            number=os.getenv('CR_SYSID'),
+            code=CODE
+        )
     else:
         sys.exit(f"Unknown action: {ACTION}")
 

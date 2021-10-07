@@ -49,7 +49,8 @@ metadata:
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            data: '{"close_code": "", "close_note": "Closed automatically by Codefreshuild ${{CF_BUILD_ID}}"}'
+            data: '{"close_code":"success", "close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
+
 spec:
   arguments: |-
     {
@@ -129,50 +130,48 @@ spec:
         }
     }
   stepsTemplate: |-
-  [[ if .Arguments.action == "closeCR" ]]
-    createCR:
-      name: Close a ServiceNow Change Request
-      title: Use REST API to close the CR
-  #    image: 'quay.io/codefreshplugins/service-now:1.1.0'
-      image: lrochette/service-now:1.1.0'
-      environment:
-        - action=closeCR
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
-  [[ end ]]
-  [[ if .Arguments.action == "createCR" ]]
-    createCR:
-      name: Create a ServiceNow Change Request
-      title: Use REST API to create a CR
-  #    image: 'quay.io/codefreshplugins/service-now:1.1.0'
-      image: lrochette/service-now:1.1.0'
-      environment:
-        - action=createCR
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
-    createAnnotation:
-      name: Assign CR_NUMBER as annotation
-      image: codefresh/cli
-      commands:
-        - |
-          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-          export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYS_ID}}'
-          # echo $createAnnotation_CF_OUTPUT_URL
-          # cf_export createAnnotation_CF_OUTPUT_URL
-    callback:
-      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
-      title: ServiceNow callback setup
-      #image: 'quay.io/codefreshplugins/service-now:1.1.0'
-      image: lrochette/service-now:1.1.0'
+    [[ if .Arguments.action == "closeCR" ]]
+      createCR:
+        name: Close a ServiceNow Change Request
+        title: Use REST API to close the CR
+        image: lrochette/service-now:1.1.0'
+        environment:
+          - action=closeCR
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+    [[ end ]]
+    [[ if .Arguments.action == "createCR" ]]
+      createCR:
+        name: Create a ServiceNow Change Request
+        title: Use REST API to create a CR
+        image: lrochette/service-now:1.1.0'
+        environment:
+          - action=createCR
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+      createAnnotation:
+        name: Assign CR_NUMBER as annotation
+        image: codefresh/cli
+        commands:
+          - |
+            codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+            export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYS_ID}}'
+            # echo $createAnnotation_CF_OUTPUT_URL
+            # cf_export createAnnotation_CF_OUTPUT_URL
+      callback:
+        name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
+        title: ServiceNow callback setup
+        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
+        image: lrochette/service-now:1.1.0'
 
-      environment:
-        - action=callback
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
-  [[ end ]]
+        environment:
+          - action=callback
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+    [[ end ]]
   delimiters:
     left: '[['
     right: ']]'

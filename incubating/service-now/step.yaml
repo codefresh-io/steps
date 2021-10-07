@@ -34,7 +34,7 @@ metadata:
             data: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
         wait:
           stage: deploy
-          title: Waiting for Change Request to be approved
+          title: Waiting for the Change Request to be approved
           type: pending-approval
           timeout:
             duration: 48
@@ -49,6 +49,7 @@ metadata:
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
+            close_code: ${{workflow.status}}
             data: '{"close_code":"success", "close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
 
 spec:
@@ -62,8 +63,7 @@ spec:
       "required": [
         "SN_INSTANCE",
         "SN_USER",
-        "SN_PASSWORD",
-        "TOKEN"
+        "SN_PASSWORD"
       ],
       "properties": {
         "SN_INSTANCE": {
@@ -82,21 +82,26 @@ spec:
             "type": "string",
             "description": "The Codefresh API token to allow ServiceNow to approve/deny the pipeline"
         },
-        "namespace": {
+        "SN_NAMESPACE": {
             "type": "string",
             "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
             "default": "409723"
         },
-        "data": {
+        "CR_DATA": {
             "type": "string",
             "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
         },
-        "action": {
+        "CR_ACTION": {
             "type": "string",
             "description": "Action to execute: createCR or closeCR",
             "default": "createCR"
         },
-        "debug": {
+        "CR_CLOSE_CODE": {
+          "type": "string",
+          "description": "Close code for the closeCR action: successful or unsuccessful",
+          "default": "successful"
+        },
+        "DEBUG": {
           "type": "string",
           "default": "false",
           "description": "a hidden option show more debug info"
@@ -115,39 +120,37 @@ spec:
           "CR_SYS_ID"
         ],
         "properties": {
-            "sys_id": {
+            "CR_SYS_ID": {
                 "type": "string",
                 "description": "The sys_id of the CR created"
             },
-            "cr_number": {
+            "CR_NUMBER": {
                 "type": "string",
                 "description": "The number of the CR created."
-            },
-            "cr_sysid": {
-                "type": "string",
-                "description": "The sys_id of the CR created."
             }
         }
     }
   stepsTemplate: |-
-    [[ if .Arguments.action == "closeCR" ]]
+    [[ if .Arguments.CR_ACTION == "closeCR" ]]
       createCR:
         name: Close a ServiceNow Change Request
         title: Use REST API to close the CR
-        image: lrochette/service-now:1.1.0'
+        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
+        image: lrochette/service-now:1.1.0
         environment:
-          - action=closeCR
+          - CR_ACTION=closeCR
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
     [[ end ]]
-    [[ if .Arguments.action == "createCR" ]]
+    [[ if .Arguments.CR_ACTION == "createCR" ]]
       createCR:
         name: Create a ServiceNow Change Request
         title: Use REST API to create a CR
-        image: lrochette/service-now:1.1.0'
+        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
+        image: lrochette/service-now:1.1.0
         environment:
-          - action=createCR
+          - CR_ACTION=createCR
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
@@ -164,10 +167,10 @@ spec:
         name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
         title: ServiceNow callback setup
         #image: 'quay.io/codefreshplugins/service-now:1.1.0'
-        image: lrochette/service-now:1.1.0'
+        image: lrochette/service-now:1.1.0
 
         environment:
-          - action=callback
+          - CR_ACTION=callback
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]

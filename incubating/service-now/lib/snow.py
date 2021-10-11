@@ -60,10 +60,12 @@ def createChangeRequest(user, password, baseUrl, data):
 
     if DEBUG:
         print("Entering createChangeRequest:")
-        print(f"Data: {data}") if bool(data)
+
 
     if (bool(data)):
         crBody=json.loads(data)
+        if DEBUG:
+            print(f"Data: {data}")
     else:
         crBody= {}
 

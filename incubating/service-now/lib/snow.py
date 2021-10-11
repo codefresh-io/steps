@@ -68,7 +68,8 @@ def createChangeRequest(user, password, baseUrl, data):
             print(f"Data: {data}")
     else:
         crBody= {}
-
+        if DEBUG:
+            print("Data: None")
     crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
 
 

@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: laurent-cf/service-now
   version: 1.1.0
-  isPublic: true
+  isPublic: false
   description: Integration with ServiceNow Change Management
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/service-now
@@ -13,7 +13,7 @@ metadata:
     - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-  official: true
+  official: false
   tags: []
   icon:
     type: svg
@@ -27,11 +27,11 @@ metadata:
           type: service-now
           stage: deploy
           arguments:
-            action: createCR
+            CR_ACTION: createCR
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            data: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+            CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
         wait:
           stage: deploy
           title: Waiting for the Change Request to be approved
@@ -45,12 +45,13 @@ metadata:
           type: service-now
           stage: cleaning
           arguments:
-            action: closeCR
+            CR_ACTION: closeCR
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            close_code: ${{workflow.status}}
-            data: '{"close_code":"success", "close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
+            CR_CLOSE_CODE: successful
+            CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
+            CR_DATA: '{"close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
 
 spec:
   arguments: |-
@@ -98,8 +99,13 @@ spec:
         },
         "CR_CLOSE_CODE": {
           "type": "string",
-          "description": "Close code for the closeCR action: successful or unsuccessful",
+          "description": "Close code for the closeCR action: successful, successful_issues or unsuccessful",
           "default": "successful"
+        },
+        "CR_CLOSE_NOTES": {
+          "type": "string",
+          "description": "Close notes for the closeCR action: successful, successful_issues or unsuccessful",
+          "default": "Closed by Codefresh"
         },
         "DEBUG": {
           "type": "string",
@@ -117,12 +123,12 @@ spec:
         "patterns": [],
         "required": [
           "CR_NUMBER",
-          "CR_SYS_ID"
+          "CR_SYSID"
         ],
         "properties": {
-            "CR_SYS_ID": {
+            "CR_SYSID": {
                 "type": "string",
-                "description": "The sys_id of the CR created"
+                "description": "The sysid of the CR created"
             },
             "CR_NUMBER": {
                 "type": "string",
@@ -132,13 +138,25 @@ spec:
     }
   stepsTemplate: |-
     [[ if .Arguments.CR_ACTION == "closeCR" ]]
-      createCR:
+      closeCR:
         name: Close a ServiceNow Change Request
         title: Use REST API to close the CR
         #image: 'quay.io/codefreshplugins/service-now:1.1.0'
         image: lrochette/service-now:1.1.0
         environment:
           - CR_ACTION=closeCR
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+    [[ end ]]
+    [[ if .Arguments.CR_ACTION == "updateCR" ]]
+      closeCR:
+        name: Update a ServiceNow Change Request
+        title: Use REST API to close the CR
+        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
+        image: lrochette/service-now:1.1.0
+        environment:
+          - CR_ACTION=updateCR
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
@@ -160,7 +178,7 @@ spec:
         commands:
           - |
             codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-            export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYS_ID}}'
+            export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYSID}}'
             # echo $createAnnotation_CF_OUTPUT_URL
             # cf_export createAnnotation_CF_OUTPUT_URL
       callback:

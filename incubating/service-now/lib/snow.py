@@ -27,20 +27,20 @@ def processCallbackResponse(response):
 def processCreateChangeRequestResponse(response):
 
     print("Processing answer from CR creation REST call")
-    print("Change Request returned code %s" % (response.status_code))
+    print("  Change Request returned code %s" % (response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
-        print("Change Request creation failed with code %s" % (response.status_code))
-        print("Error: " + response.text)
+        print("  Change Request creation failed with code %s" % (response.status_code))
+        print("  Error: " + response.text)
         return response.status_code
 
-    print("Change Request creation successful")
+    print("  Change Request creation successful")
     data=response.json() # json.loads(response.text)
     CR_NUMBER=data["result"]["number"]
     CR_SYSID=data["result"]["sys_id"]
     FULL_JSON=json.dumps(data, indent=2)
-    print(f"Change Request Number: {CR_NUMBER}")
-    print(f"Change Request sys_id: {CR_SYSID}")
-    print("Change Request full answer:\n" + FULL_JSON)
+    print(f"  Change Request Number: {CR_NUMBER}")
+    print(f"  Change Request sys_id: {CR_SYSID}")
+    print("  Change Request full answer:\n" + FULL_JSON)
 
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
@@ -68,17 +68,16 @@ def createChangeRequest(user, password, baseUrl, data):
     else:
         crBody= {}
         if DEBUG:
-            print("Data: None")
+            print("  Data: None")
     crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
 
 
     url="%s/now/table/change_request" % (baseUrl)
 
     if DEBUG:
-        print(f"Entering createChangeRequest:")
-        print(f"URL: {url}")
-        print(f"User: {user}")
-        print(f"Body: {crBody}")
+        print(f"  URL: {url}")
+        print(f"  User: {user}")
+        print(f"  Body: {crBody}")
 
     resp=requests.post(url,
         json = crBody,

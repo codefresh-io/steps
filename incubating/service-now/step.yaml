@@ -31,15 +31,27 @@ metadata:
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+            CR_DATA: {"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}
         wait:
           stage: deploy
           title: Waiting for the Change Request to be approved
           type: pending-approval
+          stage: deploy
           timeout:
             duration: 48
             timeUnit: hours
             finalState: denied
+          modifyCR:
+            title: Close the CR
+            type: service-now
+            stage: deploy
+            arguments:
+              CR_ACTION: closeCR
+              SN_INSTANCE: https://instance.service-now.com
+              SN_USER: ${{SN_USER}}
+              SN_PASSWORD: ${{SN_PASSWORD}}
+              CR_DATA: {"work_notes":"Test pass rate: ${{_TEST_RATE}}"}
+
         closeCR:
           title: Close the CR
           type: service-now
@@ -51,7 +63,7 @@ metadata:
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_CLOSE_CODE: successful
             CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
-            CR_DATA: '{"close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
+            CR_DATA: {"close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
 
 spec:
   arguments: |-
@@ -141,7 +153,6 @@ spec:
       closeCR:
         name: Close a ServiceNow Change Request
         title: Use REST API to close the CR
-        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
         image: lrochette/service-now:1.1.0
         environment:
           - CR_ACTION=closeCR
@@ -153,7 +164,6 @@ spec:
       closeCR:
         name: Update a ServiceNow Change Request
         title: Use REST API to close the CR
-        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
         image: lrochette/service-now:1.1.0
         environment:
           - CR_ACTION=updateCR
@@ -165,7 +175,6 @@ spec:
       createCR:
         name: Create a ServiceNow Change Request
         title: Use REST API to create a CR
-        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
         image: lrochette/service-now:1.1.0
         environment:
           - CR_ACTION=createCR
@@ -184,7 +193,6 @@ spec:
       callback:
         name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
         title: ServiceNow callback setup
-        #image: 'quay.io/codefreshplugins/service-now:1.1.0'
         image: lrochette/service-now:1.1.0
 
         environment:

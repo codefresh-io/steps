@@ -36,7 +36,6 @@ metadata:
           stage: deploy
           title: Waiting for the Change Request to be approved
           type: pending-approval
-          stage: deploy
           timeout:
             duration: 48
             timeUnit: hours
@@ -51,7 +50,6 @@ metadata:
               SN_USER: ${{SN_USER}}
               SN_PASSWORD: ${{SN_PASSWORD}}
               CR_DATA: {"work_notes":"Test pass rate: ${{_TEST_RATE}}"}
-
         closeCR:
           title: Close the CR
           type: service-now
@@ -161,7 +159,7 @@ spec:
         [[- end ]]
     [[ end ]]
     [[ if .Arguments.CR_ACTION == "updateCR" ]]
-      closeCR:
+      updateCR:
         name: Update a ServiceNow Change Request
         title: Use REST API to close the CR
         image: lrochette/service-now:1.1.0
@@ -194,7 +192,6 @@ spec:
         name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
         title: ServiceNow callback setup
         image: lrochette/service-now:1.1.0
-
         environment:
           - CR_ACTION=callback
         [[ range $key, $val := .Arguments ]]

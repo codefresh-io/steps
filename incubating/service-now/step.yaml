@@ -153,7 +153,7 @@ spec:
         title: Use REST API to close the CR
         image: lrochette/service-now:1.1.0
         environment:
-          - CR_ACTION=closeCR
+          - ACTION=closecr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
@@ -164,7 +164,7 @@ spec:
         title: Use REST API to close the CR
         image: lrochette/service-now:1.1.0
         environment:
-          - CR_ACTION=updateCR
+          - ACTION=updatecr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
@@ -175,7 +175,7 @@ spec:
         title: Use REST API to create a CR
         image: lrochette/service-now:1.1.0
         environment:
-          - CR_ACTION=createCR
+          - ACTION=createcr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
@@ -193,7 +193,7 @@ spec:
         title: ServiceNow callback setup
         image: lrochette/service-now:1.1.0
         environment:
-          - CR_ACTION=callback
+          - ACTION=callback
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]

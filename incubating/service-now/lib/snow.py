@@ -194,7 +194,7 @@ def checkSysid(sysid):
 def main():
     global DEBUG
 
-    ACTION = os.getenv('CR_ACTION', 'createCR').lower()
+    ACTION = os.getenv('ACTION').lower()
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')

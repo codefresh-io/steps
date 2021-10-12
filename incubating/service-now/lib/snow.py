@@ -19,7 +19,7 @@ def processCallbackResponse(response):
     if (response.status_code != 200 and response.status_code != 201):
         print("Callback creation failed with code %s" % (response.status_code))
         print("Error: " + response.text)
-        return response.status_code
+        sys.exit(response.status_code)
 
     print("Callback creation successful")
 
@@ -31,7 +31,7 @@ def processCreateChangeRequestResponse(response):
     if (response.status_code != 200 and response.status_code != 201):
         print("  Change Request creation failed with code %s" % (response.status_code))
         print("  ERROR: " + response.text)
-        return response.status_code
+        sys.exit(response.status_code)
 
     print("  Change Request creation successful")
     data=response.json() # json.loads(response.text)
@@ -95,7 +95,7 @@ def processModifyChangeRequestResponse(response, action):
     if (response.status_code != 200 and response.status_code != 201):
         print("  %s Change Request creation failed with code %s" % (action, response.status_code))
         print("  ERROR: " + response.text)
-        return response.status_code
+        sys.exit(response.status_code)
 
     print("  %s Change Request successful" %(action))
     data=response.json() # json.loads(response.text)
@@ -190,12 +190,14 @@ def checkSysid(sysid):
         print("  CR_SYSID: %s" % (sysid))
 
     if ( sysid == None ):
-        sys.exit("FATAL: CR_SYSID is not defined.")
+        print("FATAL: CR_SYSID is not defined.")
+        sys.exit(1)
 
 
 def main():
     global DEBUG
 
+    print("Env Variable DEBUG: %s" % (os.getenv('DEBUG'))
     ACTION = os.getenv('ACTION').lower()
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
@@ -250,7 +252,8 @@ def main():
             data=DATA
         )
     else:
-        sys.exit(f"FATAL: Unknown action: {ACTION}. Allowed values are createCR, closeCR or updateCR.")
+        printf("FATAL: Unknown action: {ACTION}. Allowed values are createCR, closeCR or updateCR.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

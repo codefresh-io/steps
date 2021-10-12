@@ -147,7 +147,7 @@ spec:
         }
     }
   stepsTemplate: |-
-    [[ if .Arguments.CR_ACTION == "closeCR" ]]
+    [[ if eq .Arguments.CR_ACTION "closeCR" ]]
       closeCR:
         name: Close a ServiceNow Change Request
         title: Use REST API to close the CR
@@ -158,7 +158,7 @@ spec:
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
     [[ end ]]
-    [[ if .Arguments.CR_ACTION == "updateCR" ]]
+    [[ if eq .Arguments.CR_ACTION  "updateCR" ]]
       updateCR:
         name: Update a ServiceNow Change Request
         title: Use REST API to close the CR
@@ -169,7 +169,7 @@ spec:
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
     [[ end ]]
-    [[ if .Arguments.CR_ACTION == "createCR" ]]
+    [[ if eq .Arguments.CR_ACTION  "createCR" ]]
       createCR:
         name: Create a ServiceNow Change Request
         title: Use REST API to create a CR

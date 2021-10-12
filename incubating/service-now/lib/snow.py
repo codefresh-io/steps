@@ -203,8 +203,8 @@ def main():
 
     if DEBUG:
         print(f"ACTION: {ACTION}")
-        print(f"DATA: {data}")
-        
+        print(f"DATA: {DATA}")
+
     if ACTION == "createcr":
         createChangeRequest(user=USER,
             password=PASSWORD,

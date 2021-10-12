@@ -190,7 +190,7 @@ def checkSysid(sysid):
         print("  CR_SYSID: %s" % (sysid))
 
     if ( sysid == None ):
-        sys.exit("FATAL: CR_SYS_ID is not defined.")
+        sys.exit("FATAL: CR_SYSID is not defined.")
 
 
 def main():
@@ -203,11 +203,12 @@ def main():
     DATA     = os.getenv('CR_DATA')
     DEBUG = True if os.getenv('DEBUG', "false").lower == "true" else False
 
-    if DEBUG:
-        print("Starting ServiceNow plugin for Codefresh")
-        print(f"  ACTION: {ACTION}")
-        print(f"  DATA: {DATA}")
-        print("---")
+#    if DEBUG:
+    print("Starting ServiceNow plugin for Codefresh")
+    print(f"  ACTION: {ACTION}")
+    print(f"  DATA: {DATA}")
+    print(f"  DEBUG: {DEBUG}")
+    print("---")
 
     if ACTION == "createcr":
         createChangeRequest(user=USER,
@@ -245,7 +246,7 @@ def main():
             user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
-            sysid=os.getenv('CR_SYSID'),
+            sysid=CR_SYSID,
             data=DATA
         )
     else:

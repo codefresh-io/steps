@@ -197,7 +197,7 @@ def checkSysid(sysid):
 def main():
     global DEBUG
 
-    print("Env Variable DEBUG: %s" % (os.getenv('DEBUG'))
+    print("Env Variable DEBUG: %s" % (os.getenv('DEBUG')))
     ACTION = os.getenv('ACTION').lower()
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')

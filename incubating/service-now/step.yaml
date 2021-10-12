@@ -147,66 +147,66 @@ spec:
         }
     }
   stepsTemplate: |-
-      debug:
-        name: debug step
-        image: alpine
-        environment:
-        [[ range $key, $val := .Arguments ]]
-          - '[[ $key ]]=[[ $val ]]'
-        [[- end ]]
-        commands:
-          - echo "ACTION- ${{CR_ACTION}}" || true
-          - env
+    info:
+      name: debug step
+      image: alpine
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - echo "ACTION- ${{CR_ACTION}}" || true
+        - env
     [[ if eq .Arguments.CR_ACTION "closeCR" ]]
-      closeCR:
-        name: Close a ServiceNow Change Request
-        title: Use REST API to close the CR
-        image: lrochette/service-now:1.1.0
-        environment:
-        [[ range $key, $val := .Arguments ]]
-          - '[[ $key ]]=[[ $val ]]'
-        [[- end ]]
-          - ACTION=closecr
+    closeCR:
+      name: Close a ServiceNow Change Request
+      title: Use REST API to close the CR
+      image: lrochette/service-now:1.1.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+        - ACTION=closecr
     [[ end ]]
     [[ if eq .Arguments.CR_ACTION  "updateCR" ]]
-      updateCR:
-        name: Update a ServiceNow Change Request
-        title: Use REST API to update the CR
-        image: lrochette/service-now:1.1.0
-        environment:
-        [[ range $key, $val := .Arguments ]]
-          - '[[ $key ]]=[[ $val ]]'
-        [[- end ]]
-          - ACTION=updatecr
+    updateCR:
+      name: Update a ServiceNow Change Request
+      title: Use REST API to update the CR
+      image: lrochette/service-now:1.1.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+        - ACTION=updatecr
     [[ end ]]
     [[ if eq .Arguments.CR_ACTION  "createCR" ]]
-      createCR:
-        name: Create a ServiceNow Change Request
-        title: Use REST API to create a CR
-        image: lrochette/service-now:1.1.0
-        environment:
-        [[ range $key, $val := .Arguments ]]
-          - '[[ $key ]]=[[ $val ]]'
-        [[- end ]]
-          - ACTION=createcr
-      createAnnotation:
-        name: Assign CR_NUMBER as annotation
-        image: codefresh/cli
-        commands:
-          - |
-            codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
-            export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYSID}}'
-            # echo $createAnnotation_CF_OUTPUT_URL
-            # cf_export createAnnotation_CF_OUTPUT_URL
-      callback:
-        name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
-        title: ServiceNow callback setup
-        image: lrochette/service-now:1.1.0
-        environment:
-        [[ range $key, $val := .Arguments ]]
-          - '[[ $key ]]=[[ $val ]]'
-        [[- end ]]
-          - ACTION=callback
+    createCR:
+      name: Create a ServiceNow Change Request
+      title: Use REST API to create a CR
+      image: lrochette/service-now:1.1.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+        - ACTION=createcr
+    createAnnotation:
+      name: Assign CR_NUMBER as annotation
+      image: codefresh/cli
+      commands:
+        - |
+          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+          export createAnnotation_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYSID}}'
+          # echo $createAnnotation_CF_OUTPUT_URL
+          # cf_export createAnnotation_CF_OUTPUT_URL
+    callback:
+      name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
+      title: ServiceNow callback setup
+      image: lrochette/service-now:1.1.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+        - ACTION=callback
     [[ end ]]
   delimiters:
     left: '[['

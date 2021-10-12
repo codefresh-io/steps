@@ -171,7 +171,7 @@ spec:
     [[ if eq .Arguments.CR_ACTION  "updateCR" ]]
       updateCR:
         name: Update a ServiceNow Change Request
-        title: Use REST API to close the CR
+        title: Use REST API to update the CR
         image: lrochette/service-now:1.1.0
         environment:
         [[ range $key, $val := .Arguments ]]

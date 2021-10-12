@@ -118,7 +118,7 @@ spec:
           "default": "Closed by Codefresh"
         },
         "DEBUG": {
-          "type": "string",
+          "type": "boolean",
           "default": "false",
           "description": "a hidden option show more debug info"
         }

@@ -155,7 +155,7 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-        - echo "ACTION- ${{CR_ACTION}}" || true
+        - echo "ACTION- $CR_ACTION" || true
         - env
     [[ if eq .Arguments.CR_ACTION "closeCR" ]]
     closeCR:

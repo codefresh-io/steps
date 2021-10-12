@@ -119,7 +119,7 @@ spec:
         },
         "DEBUG": {
           "type": "boolean",
-          "default": "false",
+          "default": false,
           "description": "a hidden option show more debug info"
         }
       }

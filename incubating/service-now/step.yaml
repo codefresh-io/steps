@@ -153,10 +153,10 @@ spec:
         title: Use REST API to close the CR
         image: lrochette/service-now:1.1.0
         environment:
-          - ACTION=closecr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
+          - ACTION=closecr
     [[ end ]]
     [[ if eq .Arguments.CR_ACTION  "updateCR" ]]
       updateCR:
@@ -164,10 +164,10 @@ spec:
         title: Use REST API to close the CR
         image: lrochette/service-now:1.1.0
         environment:
-          - ACTION=updatecr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
+          - ACTION=updatecr
     [[ end ]]
     [[ if eq .Arguments.CR_ACTION  "createCR" ]]
       createCR:
@@ -175,10 +175,10 @@ spec:
         title: Use REST API to create a CR
         image: lrochette/service-now:1.1.0
         environment:
-          - ACTION=createcr
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
+          - ACTION=createcr
       createAnnotation:
         name: Assign CR_NUMBER as annotation
         image: codefresh/cli
@@ -193,10 +193,10 @@ spec:
         title: ServiceNow callback setup
         image: lrochette/service-now:1.1.0
         environment:
-          - ACTION=callback
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
+          - ACTION=callback
     [[ end ]]
   delimiters:
     left: '[['

@@ -140,7 +140,7 @@ def closeChangeRequest(user, password, baseUrl, sysid, code, notes, data):
 # Fields required are pasted in the data
 def updateChangeRequest(user, password, baseUrl, sysid, data):
     if DEBUG:
-        print("Entering closeChangeRequest:")
+        print("Entering updateChangeRequest:")
         print(f"DATA: {data}")
     if (bool(data)):
         crBody=json.loads(data)
@@ -202,8 +202,10 @@ def main():
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
 
     if DEBUG:
-        print(f"ACTION: {ACTION}")
-        print(f"DATA: {DATA}")
+        printf("Starting ServiceNow pugin for Codefresh")
+        print(f"  ACTION: {ACTION}")
+        print(f"  DATA: {DATA}")
+        print("---")
 
     if ACTION == "createcr":
         createChangeRequest(user=USER,

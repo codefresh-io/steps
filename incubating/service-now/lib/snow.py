@@ -201,8 +201,11 @@ def main():
     DATA     = os.getenv('CR_DATA')
     #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
 
+    if DEBUG:
+        print(f"ACTION: {ACTION}")
+        print(f"DATA: {data}")
+        
     if ACTION == "createcr":
-
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
@@ -219,7 +222,6 @@ def main():
         CR_SYSID= os.getenv('CR_SYSID')
         CODE=os.getenv('CR_CLOSE_CODE')
         NOTES=os.getenv('CR_CLOSE_NOTES')
-
         checkSysid(CR_SYSID)
 
         closeChangeRequest(

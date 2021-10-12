@@ -3,7 +3,7 @@ import sys
 import json
 import requests
 
-DEBUG = True
+DEBUG = False
 API_NAMESPACE=409723
 env_file_path = "/meta/env_vars_to_export"
 
@@ -25,12 +25,12 @@ def processCallbackResponse(response):
 
 
 def processCreateChangeRequestResponse(response):
-
-    print("Processing answer from CR creation REST call")
-    print("  Change Request returned code %s" % (response.status_code))
+    if DEBUG:
+        print("Processing answer from CR creation REST call")
+        print("  Change Request returned code %s" % (response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
         print("  Change Request creation failed with code %s" % (response.status_code))
-        print("  Error: " + response.text)
+        print("  ERROR: " + response.text)
         return response.status_code
 
     print("  Change Request creation successful")
@@ -38,9 +38,11 @@ def processCreateChangeRequestResponse(response):
     CR_NUMBER=data["result"]["number"]
     CR_SYSID=data["result"]["sys_id"]
     FULL_JSON=json.dumps(data, indent=2)
-    print(f"  Change Request Number: {CR_NUMBER}")
-    print(f"  Change Request sys_id: {CR_SYSID}")
-    print("  Change Request full answer:\n" + FULL_JSON)
+
+    print(f"    Change Request Number: {CR_NUMBER}")
+    print(f"    Change Request sys_id: {CR_SYSID}")
+    if DEBUG:
+        print( "    Change Request full answer:\n" + FULL_JSON)
 
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
@@ -87,16 +89,16 @@ def createChangeRequest(user, password, baseUrl, data):
 
 def processModifyChangeRequestResponse(response, action):
 
-    print("Processing answer from CR %s REST call" %(action))
-    print("Close Change Request returned code %s" % (response.status_code))
+    if DEBUG:
+        print("Processing answer from CR %s REST call" %(action))
+        print("  %s Change Request returned code %s" % (action,response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
-        print("%s Change Request creation failed with code %s" % (action, response.status_code))
-        print("Error: " + response.text)
+        print("  %s Change Request creation failed with code %s" % (action, response.status_code))
+        print("  ERROR: " + response.text)
         return response.status_code
 
-    print("%s Change Request creation successful" %(action))
+    print("  %s Change Request successful" %(action))
     data=response.json() # json.loads(response.text)
-
     FULL_JSON=json.dumps(data, indent=2)
 
     if (action == "close" ):
@@ -106,7 +108,7 @@ def processModifyChangeRequestResponse(response, action):
         jsonVar="CR_UPDATE_FULL_JSON"
         jsonFileName="/codefresh/volume/servicenow-cr-update.json"
     else:
-        print("ERROR: action unknonw. Should not be here. Error should have been caught earlier")
+        print("ERROR: action unknown. Should not be here. Error should have been caught earlier")
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
         env_file.write(f"{jsonVar}=/codefresh/volume/servicenow-cr-close.json\n")
@@ -199,10 +201,10 @@ def main():
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
     DATA     = os.getenv('CR_DATA')
-    #DEBUG = True if os.getenv('debug', "false").lower == "true" else False
+    DEBUG = True if os.getenv('DEBUG', "false").lower == "true" else False
 
     if DEBUG:
-        printf("Starting ServiceNow pugin for Codefresh")
+        print("Starting ServiceNow plugin for Codefresh")
         print(f"  ACTION: {ACTION}")
         print(f"  DATA: {DATA}")
         print("---")

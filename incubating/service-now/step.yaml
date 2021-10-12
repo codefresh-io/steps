@@ -147,6 +147,16 @@ spec:
         }
     }
   stepsTemplate: |-
+      debug:
+        name: debug step
+        image: alpine
+        environment:
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+        commands:
+          - echo "ACTION- ${{CR_ACTION}}" || true
+          - env
     [[ if eq .Arguments.CR_ACTION "closeCR" ]]
       closeCR:
         name: Close a ServiceNow Change Request

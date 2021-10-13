@@ -46,22 +46,24 @@ metadata:
             stage: deploy
             arguments:
               CR_ACTION: closeCR
+              CR_SYSID: ${{CR_SYSID}}'
               SN_INSTANCE: https://instance.service-now.com
               SN_USER: ${{SN_USER}}
               SN_PASSWORD: ${{SN_PASSWORD}}
-              CR_DATA: {"work_notes":"Test pass rate: ${{_TEST_RATE}}"}
+              CR_DATA: {"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}
         closeCR:
           title: Close the CR
           type: service-now
           stage: cleaning
           arguments:
             CR_ACTION: closeCR
+            CR_SYSID: ${{CR_SYSID}}
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_CLOSE_CODE: successful
             CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
-            CR_DATA: {"close_note":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
+            CR_DATA: {"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
 
 spec:
   arguments: |-
@@ -147,16 +149,6 @@ spec:
         }
     }
   stepsTemplate: |-
-    info:
-      name: debug step
-      image: alpine
-      environment:
-      [[ range $key, $val := .Arguments ]]
-        - '[[ $key ]]=[[ $val ]]'
-      [[- end ]]
-      commands:
-        - echo "ACTION- $CR_ACTION" || true
-        - echo "DEBUG- $DEBUG" || true
     [[ if eq .Arguments.CR_ACTION "closeCR" ]]
     closeCR:
       name: Close a ServiceNow Change Request
@@ -180,7 +172,7 @@ spec:
         - ACTION=updatecr
     [[ end ]]
     [[ if eq .Arguments.CR_ACTION  "createCR" ]]
-    createCR:
+    createcr:
       name: Create a ServiceNow Change Request
       title: Use REST API to create a CR
       image: lrochette/service-now:1.1.0
@@ -189,17 +181,14 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
         - ACTION=createcr
-    createAnnotation:
+    annotation:
       name: Assign CR_NUMBER as annotation
       image: codefresh/cli
       commands:
         - |
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_SYSID=${{CR_SYSID}}
-          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D${{CR_SYSID}}'
-          export createCR_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D${{CR_SYSID}}'
-          # echo $createAnnotation_CF_OUTPUT_URL
-          # cf_export createAnnotation_CF_OUTPUT_URL
+          cf_export annotation_CF_OUTPUT_URL="[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D$CR_SYSID"
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup

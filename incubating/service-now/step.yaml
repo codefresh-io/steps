@@ -156,7 +156,7 @@ spec:
       [[- end ]]
       commands:
         - echo "ACTION- $CR_ACTION" || true
-        - env
+        - echo "DEBUG- $DEBUG" || true
     [[ if eq .Arguments.CR_ACTION "closeCR" ]]
     closeCR:
       name: Close a ServiceNow Change Request
@@ -195,6 +195,7 @@ spec:
       commands:
         - |
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_NUMBER=${{CR_NUMBER}}
+          codefresh create annotation workflow ${{CF_BUILD_ID}} CR_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYSID}}'
           export createCR_CF_OUTPUT_URL='[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=/change_request.do?sys_id=${{CR_SYSID}}'
           # echo $createAnnotation_CF_OUTPUT_URL
           # cf_export createAnnotation_CF_OUTPUT_URL

@@ -3,7 +3,6 @@ import sys
 import json
 import requests
 
-DEBUG = False
 API_NAMESPACE=409723
 env_file_path = "/meta/env_vars_to_export"
 
@@ -197,20 +196,19 @@ def checkSysid(sysid):
 def main():
     global DEBUG
 
-    print("Env Variable DEBUG: %s" % (os.getenv('DEBUG')))
     ACTION = os.getenv('ACTION').lower()
     USER = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
     DATA     = os.getenv('CR_DATA')
-    DEBUG = True if os.getenv('DEBUG', "false").lower == "true" else False
+    DEBUG = True if os.getenv('DEBUG', "false").lower() == "true" else False
 
-#    if DEBUG:
-    print("Starting ServiceNow plugin for Codefresh")
-    print(f"  ACTION: {ACTION}")
-    print(f"  DATA: {DATA}")
-    print(f"  DEBUG: {DEBUG}")
-    print("---")
+    if DEBUG:
+        print("Starting ServiceNow plugin for Codefresh")
+        print(f"  ACTION: {ACTION}")
+        print(f"  DATA: {DATA}")
+        print("  SYSID: %s" % (os.getenv('CR_SYSID')))
+        print("---")
 
     if ACTION == "createcr":
         createChangeRequest(user=USER,

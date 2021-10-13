@@ -150,6 +150,8 @@ def updateChangeRequest(user, password, baseUrl, sysid, data):
         print("WARNING: CR_DATA is empty. What are you updating exactly?")
 
     url="%s/now/table/change_request/%s" % (baseUrl, sysid)
+    if DEBUG:
+        print(f"  update CR URL: {url}")
     resp=requests.patch(url,
         json = crBody,
         headers = {"content-type":"application/json"},

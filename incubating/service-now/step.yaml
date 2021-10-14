@@ -1,4 +1,4 @@
-quay.io/codefreshplugins/kind: step-type
+kind: step-type
 version: '1.0'
 metadata:
   name: service-now
@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/snow-issue402/incubating/service-now/images/servicenow-2.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-2.svg
     background: "#f4f4f4"
   examples:
     - description: service-now

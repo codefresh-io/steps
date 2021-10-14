@@ -90,6 +90,11 @@ spec:
         "SONAR_ANALYSIS_PARAMETERS": {
           "type": "array",
           "description": "Array of additional Sonarqube Analysis Parameters Ex. - sonar.projectDescription='mycustomdescription'. List: https://docs.sonarqube.org/latest/analysis/analysis-parameters/"
+        },
+        "SONAR_SCANNER_OPTS": {
+          "type": "string",
+          "default": "-Xmx2048m",
+          "description": "Default jvm memory setting for the Sonar process."
         }
       }
     }

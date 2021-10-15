@@ -1,9 +1,11 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: service-now
-  version: 1.1.0
-  isPublic: true
+  name: laurent-cf/service-now
+  # LR name: service-now
+  version: 1.2.0
+  isPublic: false
+  #LR isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/service-now
@@ -13,7 +15,7 @@ metadata:
     - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-  official: true
+  official: false
   tags: []
   icon:
     type: svg
@@ -153,7 +155,8 @@ spec:
     closeCR:
       name: Close a ServiceNow Change Request
       title: Use REST API to close the CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: lrochette/service-now:1.2.0
+      # LR image: quay.io/codefreshplugins/service-now:1.2.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -164,7 +167,8 @@ spec:
     updateCR:
       name: Update a ServiceNow Change Request
       title: Use REST API to update the CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: lrochette/service-now:1.2.0
+      # LR image: quay.io/codefreshplugins/service-now:1.2.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -175,7 +179,8 @@ spec:
     createcr:
       name: Create a ServiceNow Change Request
       title: Use REST API to create a CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: lrochette/service-now:1.2.0
+      # LR image: quay.io/codefreshplugins/service-now:1.2.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -192,7 +197,8 @@ spec:
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: lrochette/service-now:1.2.0
+      # LR image: quay.io/codefreshplugins/service-now:1.2.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

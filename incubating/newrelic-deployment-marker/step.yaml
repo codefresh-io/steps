@@ -5,6 +5,7 @@ metadata:
   version: 1.0.0
   isPublic: true
   description: Createa a new deployment marker in New Relic.
+  sources:
   - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/newrelic-deployment-marker
   stage: incubating
@@ -48,7 +49,7 @@ metadata:
               DESCRIPTION: '${{CF_BUILD_URL}}'
               AUTHOR: '${{CF_COMMIT_AUTHOR}}'
               CHANGELOG: '${{CF_COMMIT_MESSAGE}}'
-              ACCOUNT_ID: ${NEWRELIC_ACCOUNT_ID}
+              ACCOUNT_ID: '${{NEWRELIC_ACCOUNT_ID}}'
 spec:
   arguments: |-
     {

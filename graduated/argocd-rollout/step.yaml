@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.6.0
+  version: 1.6.1
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:
@@ -109,7 +109,7 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "quay.io/codefreshplugins/cf-argo-plugin:0.2.1"
+      image: "quay.io/codefreshplugins/cf-argo-plugin:0.2.2"
       commands:
         - >-
           cf-argo-plugin rollout "${{app_name}}"
@@ -122,6 +122,6 @@ spec:
         - /codefresh/volume/argo-export_url
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "codefresh/cf-argo-plugin:0.2.1"
+      image: "codefresh/cf-argo-plugin:0.2.2"
       commands:
         - /codefresh/volume/argo-executor

@@ -23,7 +23,7 @@ metadata:
     url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-3.svg
     background: "#f4f4f4"
   examples:
-    - description: service-now
+    - description: create-change-request
       workflow:
         createChange:
           title: Create a Service Now Change Request
@@ -31,29 +31,26 @@ metadata:
           stage: deploy
           arguments:
             CR_ACTION: createCR
+            TOKEN: ${CF_API_TOKEN}
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            CR_DATA: {"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}
-        wait:
+            CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+    - description: modify-change-request
+      workflow:
+        modifyCR:
+          title: Modify the CR
+          type: service-now
           stage: deploy
-          title: Waiting for the Change Request to be approved
-          type: pending-approval
-          timeout:
-            duration: 48
-            timeUnit: hours
-            finalState: denied
-          modifyCR:
-            title: Close the CR
-            type: service-now
-            stage: deploy
-            arguments:
-              CR_ACTION: closeCR
-              CR_SYSID: ${{CR_SYSID}}'
-              SN_INSTANCE: https://instance.service-now.com
-              SN_USER: ${{SN_USER}}
-              SN_PASSWORD: ${{SN_PASSWORD}}
-              CR_DATA: {"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}
+          arguments:
+            CR_ACTION: closeCR
+            CR_SYSID: ${{CR_SYSID}}
+            SN_INSTANCE: https://instance.service-now.com
+            SN_USER: ${{SN_USER}}
+            SN_PASSWORD: ${{SN_PASSWORD}}
+            CR_DATA: '{"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}'
+    - description: close-change-request
+      workflow:
         closeCR:
           title: Close the CR
           type: service-now
@@ -66,7 +63,7 @@ metadata:
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_CLOSE_CODE: successful
             CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
-            CR_DATA: {"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
+            CR_DATA: '{"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
 
 spec:
   arguments: |-

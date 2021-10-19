@@ -20,10 +20,10 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-3.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/snow-409/incubating/service-now/images/servicenow-3.svg
     background: "#f4f4f4"
   examples:
-    - description: create-change-request
+    - description: Create a new Change Request
       workflow:
         createChange:
           title: Create a Service Now Change Request
@@ -36,7 +36,7 @@ metadata:
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
-    - description: modify-change-request
+    - description: Modify an existing Change Request
       workflow:
         modifyCR:
           title: Modify the CR
@@ -49,7 +49,7 @@ metadata:
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_DATA: '{"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}'
-    - description: close-change-request
+    - description: Close an existing Change Request
       workflow:
         closeCR:
           title: Close the CR

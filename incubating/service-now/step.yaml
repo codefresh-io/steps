@@ -20,7 +20,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-2.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-3.svg
     background: "#f4f4f4"
   examples:
     - description: service-now
@@ -89,7 +89,7 @@ spec:
         },
         "SN_IMAGE_VERSION": {
           "type": "string",
-          "default": "1.2.0,
+          "default": "1.2.0",
           "description": "Version of the ServiceNow image to use, Docker image tag."
         },
         "SN_INSTANCE": {
@@ -116,6 +116,16 @@ spec:
         "CR_DATA": {
             "type": "string",
             "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
+        },
+        "CR_CONFLICT_POLICY": {
+            "type": "string",
+            "description": "Policy to exectute in case of schedule conflict. Accepted values are ignore (no check is done), wait (pipeline will wait until the conflict is resolved) or reject ServiceNow flow returns a deny answer",
+            "default": "ignore"
+        },
+        "CR_ACTION": {
+            "type": "string",
+            "description": "Action to execute: createCR or closeCR",
+            "default": "createCR"
         },
         "CR_ACTION": {
             "type": "string",

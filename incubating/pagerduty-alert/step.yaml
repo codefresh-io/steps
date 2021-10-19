@@ -1,0 +1,115 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: pagerduty-alert
+  version: 1.0.0
+  isPublic: true
+  description: Sends Alerts (Incidents or Change Events) to PagerDuty API
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/pagerduty-alert
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - notifications
+  official: true
+  tags:
+    - notifications
+  icon:
+    type: image
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/pagerduty-alert/pagerduty.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/pagerduty-alert/pagerduty.png
+  examples:
+    - description: create-incident
+      workflow:
+        CreateIncident:
+          type: pagerduty-alert
+          arguments:
+            API_TOKEN: x2392fhhgdys867gt3fd
+            PAGERDUTY_ALERT_TYPE: incident
+            ASSIGNEE_USER_ID: PONU62J
+            FROM_EMAIL: dustin@codefresh.io
+            TITLE: "Codefresh Build Failed: ${{CF_BUILD_URL}}"
+            SERVICE_ID: 87hsd2fh38gh7g
+    - description: submit-change-event
+      workflow:
+        SubmitChangeEvent:
+          type: pagerduty-alert
+          arguments:
+            API_TOKEN: x2392fhhgdys867gt3fd
+            PAGERDUTY_ALERT_TYPE: change_event
+            EVENT_SOURCE: Codefresh
+            EVENT_SUMMARY: Deployment Completed
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "API_TOKEN",
+        "PAGERDUTY_ALERT_TYPE"
+      ],
+      "properties": {
+        "API_TOKEN": {
+          "type": "string",
+          "description": "Either User API Token or Routing Key for Change Event Service depending on PAGERDUTY_ALERT type"
+        },
+        "PAGERDUTY_ALERT_TYPE": {
+          "type": "string",
+          "description": "Alert type to send to PagerDuty",
+          "default": "change_event",
+          "enum": [
+            "incident",
+            "change_event"
+          ]
+        },
+        "ASSIGNEE_USER_ID": {
+          "type": "string",
+          "description": "Required for incident type, PagerDuty User ID",
+          "default": "runlist.yaml"
+        },
+        "FROM_EMAIL": {
+          "type": "string",
+          "description": "Required for incident type, PagerDuty User Email"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Title of Incident"
+        },
+        "SERVICE_ID": {
+          "type": "string",
+          "description": "ID of Service for Incident"
+        },
+        "EVENT_SOURCE": {
+          "type": "string",
+          "description": "Source of Change Event",
+          "default": "Codefresh"
+        },
+        "EVENT_SUMMARY": {
+          "type": "string",
+          "description": "Summary of Change Event",
+          "default": "Build Executed"
+        }
+      }
+    }
+  stepsTemplate: |-
+    pagerduty-alert:
+      name: pagerduty-alert
+      image: quay.io/codefreshplugins/pagerduty-alert:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /pagerduty_alert.py
+  delimiters:
+    left: '[['
+    right: ']]'

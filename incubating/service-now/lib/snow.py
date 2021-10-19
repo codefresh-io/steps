@@ -173,8 +173,8 @@ def callback(user, password, baseUrl, number, cf_build_id, token, policy):
         "cr_number": number,
         "cf_build_id": cf_build_id,
         "cf_token": token,
-        "cf_url": os.getenv("CF_URL")
-        "cr_poliy": policy
+        "cf_url": os.getenv("CF_URL"),
+        "cr_policy": policy
     }
     if DEBUG:
         print("Calling POST on " + url)
@@ -209,12 +209,11 @@ def checkConflictPolicy(policy):
         print("Entering checkConflictPolicy: ")
         print("  CR_CONFLICT_POLICY: %s" % (policy))
 
-    match policy:
-        case ignore | reject | wait:
+    if policy == "ignore" or policy == "reject" or policy == "wait":
             return
-        case _:
-            print("FATAL: CR_CONFLICT_POLICY invalida value. Accepted values are ignore, reject or wait.")
-            sys.exit(1)
+    else:
+        print("FATAL: CR_CONFLICT_POLICY invalid value. Accepted values are ignore, reject or wait.")
+        sys.exit(1)
 
 def main():
     global DEBUG
@@ -243,7 +242,8 @@ def main():
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
-            data=DATA)
+            data=DATA
+        )
     elif ACTION == "callback":
         callback(user=USER,
             password=PASSWORD,

@@ -160,7 +160,7 @@ def updateChangeRequest(user, password, baseUrl, sysid, data):
 # Use rest API to call scripted REST API to start a flow that will wait for CR
 # to be approved or rejected, then callback Codefreh to approve/deny pipeline
 #
-def callback(user, password, baseUrl, number, cf_build_id, token):
+def callback(user, password, baseUrl, number, cf_build_id, token, policy):
 
     if DEBUG:
         print("Entering callback:")
@@ -174,6 +174,7 @@ def callback(user, password, baseUrl, number, cf_build_id, token):
         "cf_build_id": cf_build_id,
         "cf_token": token,
         "cf_url": os.getenv("CF_URL")
+        "cr_poliy": policy
     }
     if DEBUG:
         print("Calling POST on " + url)
@@ -194,16 +195,38 @@ def checkSysid(sysid):
         print("FATAL: CR_SYSID is not defined.")
         sys.exit(1)
 
+def checkToken(token):
+    if DEBUG:
+        print("Entering checkToken: ")
+        print("  TOKEN: %s" % (token))
+
+    if ( token == None ):
+        print("FATAL: TOKEN is not defined.")
+        sys.exit(1)
+
+def checkConflictPolicy(policy):
+    if DEBUG:
+        print("Entering checkConflictPolicy: ")
+        print("  CR_CONFLICT_POLICY: %s" % (policy))
+
+    match policy:
+        case ignore | reject | wait:
+            return
+        case _:
+            print("FATAL: CR_CONFLICT_POLICY invalida value. Accepted values are ignore, reject or wait.")
+            sys.exit(1)
 
 def main():
     global DEBUG
 
-    ACTION = os.getenv('ACTION').lower()
-    USER = os.getenv('SN_USER')
+    ACTION   = os.getenv('ACTION').lower()
+    USER     = os.getenv('SN_USER')
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
     DATA     = os.getenv('CR_DATA')
-    DEBUG = True if os.getenv('DEBUG', "false").lower() == "true" else False
+    DEBUG    = True if os.getenv('DEBUG', "false").lower() == "true" else False
+    TOKEN    = os.getenv('TOKEN')
+    POLICY   = os.getenv('CR_CONFLICT_POLICY')
 
     if DEBUG:
         print("Starting ServiceNow plugin for Codefresh")
@@ -213,6 +236,10 @@ def main():
         print("---")
 
     if ACTION == "createcr":
+        # Used only later in the callback but eant to check for error early
+        checkToken(TOKEN)
+        checkConflictPolicy(POLICY)
+
         createChangeRequest(user=USER,
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
@@ -222,8 +249,9 @@ def main():
             password=PASSWORD,
             baseUrl=getBaseUrl(instance=INSTANCE),
             number=os.getenv('CR_NUMBER'),
-            token=os.getenv('TOKEN'),
-            cf_build_id=os.getenv('CF_BUILD_ID')
+            token=TOKEN,
+            cf_build_id=os.getenv('CF_BUILD_ID'),
+            policy=POLICY
         )
     elif ACTION == "closecr":
         CR_SYSID= os.getenv('CR_SYSID')

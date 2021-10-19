@@ -35,6 +35,7 @@ metadata:
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
+            CR_CONFLICT_POLICY: reject
             CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
     - description: Modify an existing Change Request
       workflow:
@@ -107,7 +108,7 @@ spec:
         },
         "SN_NAMESPACE": {
             "type": "string",
-            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
+            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$namespace/codefresh/callback",
             "default": "409723"
         },
         "CR_DATA": {
@@ -118,11 +119,6 @@ spec:
             "type": "string",
             "description": "Policy to exectute in case of schedule conflict. Accepted values are ignore (no check is done), wait (pipeline will wait until the conflict is resolved) or reject ServiceNow flow returns a deny answer",
             "default": "ignore"
-        },
-        "CR_ACTION": {
-            "type": "string",
-            "description": "Action to execute: createCR or closeCR",
-            "default": "createCR"
         },
         "CR_ACTION": {
             "type": "string",

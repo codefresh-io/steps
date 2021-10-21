@@ -1,0 +1,97 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/image-info-extractor  # FIXME
+  version: 1.0.0
+  isPublic: false # true  # FIXME
+  description: Extracts labels and other info from an image in a container registry. Stores them in pipeline variables named CF_IMAGE_<label>.
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/image-info-extractor
+  stage: incubating
+  maintainers:
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
+  categories:
+    - utilities
+    - build
+  official: true
+  tags:
+    - image
+    - docker
+    - label
+  examples:
+    - description: Get image info from Google Artifact Registry
+      workflow:
+        get_image_info_from_gar:
+          type: image-info-extractor
+          arguments:
+            IMAGE_TAG: us-east4-docker.pkg.dev/my-project/my-image-repo/my-image-name:latest
+            JSON_KEY: ${{MY_JSON_KEY}}
+    - description: Get image info from Quay.io
+      workflow:
+        get_image_info_from_quay:
+          type: image-info-extractor
+          arguments:
+            IMAGE_TAG: quay.io/my-account/my-image-name:latest
+            USERNAME: ${{MY_USERNAME}}
+            PASSWORD: ${{MY_PASSWORD}}
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "IMAGE_TAG"
+      ],
+      "properties": {
+        "IMAGE_TAG": {
+          "type": "string",
+          "description": "Full image tag, including the FQDN of its registry."
+        },
+        "JSON_KEY": {
+          "type": "string",
+          "description": "Optional. JSON key for authenticating to a Google GCR or GAR registry. See https://cloud.google.com/artifact-registry/docs/docker/authentication#json-key"
+        },
+        "USERNAME": {
+          "type": "string",
+          "description": "Optional. Username for authenticating to a container registry. Ignored if JSON_KEY is provided."
+        },
+        "PASSWORD": {
+          "type": "string",
+          "description": "Optional. Password for authenticating to a container registry. Ignored if JSON_KEY is provided."
+        }
+      }
+    }
+  stepsTemplate: |-
+    get_image_info:
+      image: gtspinks/image-info-extractor # FIXME
+      # image: quay.io/codefreshplugins/image-info-extractor:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        # ************************ Login to Registry **************************
+        # Extract registry from image tag, ref: https://www.linuxjournal.com/article/8919
+        - export REGISTRY_FQDN=${IMAGE_TAG%%/*}
+      [[- if .Arguments.JSON_KEY ]]
+        - echo ${JSON_KEY} | skopeo login -u _json_key --password-stdin ${REGISTRY_FQDN}
+      [[- else if and .Arguments.USERNAME .Arguments.PASSWORD ]]
+        - skopeo login -u "${USERNAME}" -p "${PASSWORD}" ${REGISTRY_FQDN}
+      [[- end ]]
+        # ************************* Query Registry ****************************
+        - skopeo inspect docker://${IMAGE_TAG} | tee /tmp/inspect.json
+        # **************************** Get Labels *****************************
+        - labels=$(cat /tmp/inspect.json | jq .Labels)
+        # Convert JSON to env vars, ref: https://stackoverflow.com/questions/48512914/exporting-json-to-environment-variables
+        - for s in $(echo $labels | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" ); do cf_export CF_IMAGE_$s; done
+        # ************************ Get Other Fields ***************************
+        - cf_export CF_IMAGE_ARCH=$(cat /tmp/inspect.json | jq .Architecture)
+        - cf_export CF_IMAGE_OS=$(cat /tmp/inspect.json | jq .Os)
+        - cf_export CF_IMAGE_DIGEST=$(cat /tmp/inspect.json | jq .Digest)
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-factory
   title: Create codefresh image
-  version: 1.1.1
+  version: 1.1.2
   isPublic: true
   description: Create codefresh image
   sources:
@@ -67,7 +67,7 @@ spec:
             "INSPECT_SIZE":{
                 "type": "number",
                 "description": "Size of image",
-                "default": ""
+                "default": 0
             },
             "INSPECT_OS":{
                 "type": "string",

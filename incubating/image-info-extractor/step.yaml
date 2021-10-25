@@ -94,7 +94,7 @@ spec:
         # ************************ Get Other Fields ***************************
         - cf_export CF_IMAGE_ARCH=$(cat /tmp/inspect.json | jq .Architecture)
         - cf_export CF_IMAGE_OS=$(cat /tmp/inspect.json | jq .Os)
-        - cf_export CF_IMAGE_DIGEST=$(cat /tmp/inspect.json | jq .Digest)
+        - cf_export CF_IMAGE_ID=$(cat /tmp/inspect.json | jq .Digest)
   delimiters:
     left: '[['
     right: ']]'

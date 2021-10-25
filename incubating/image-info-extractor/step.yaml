@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/image-info-extractor  # FIXME
+  name: image-info-extractor
   version: 1.0.0
-  isPublic: false # true  # FIXME
+  isPublic: true
   description: Extracts labels and other info from an image in a container registry. Stores them in pipeline variables named CF_IMAGE_<label>.
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/image-info-extractor
@@ -15,6 +15,10 @@ metadata:
     - utilities
     - build
   official: true
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/image-info-extractor/icon-2.svg
+    background: "#81D4FA"
   tags:
     - image
     - docker
@@ -49,7 +53,7 @@ spec:
       "properties": {
         "IMAGE_TAG": {
           "type": "string",
-          "description": "Full image tag, including the FQDN of its registry."
+          "description": "Full image tag. This must include the FQDN of its registry (use docker.io for Docker Hub)."
         },
         "JSON_KEY": {
           "type": "string",
@@ -67,8 +71,7 @@ spec:
     }
   stepsTemplate: |-
     get_image_info:
-      image: gtspinks/image-info-extractor # FIXME
-      # image: quay.io/codefreshplugins/image-info-extractor:1.0.0
+      image: quay.io/codefreshplugins/image-info-extractor:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -33,6 +33,7 @@ metadata:
             DEPLOYMENT_NAME: Application A
             DEPLOYMENT_VERSION: '1.0.0'
             DEPLOYMENT_PROJECT: Production
+            ENTITYIDS: CLOUD_APPLICATION-5F93DCB0C0A737CD
     - description: error-event
       workflow:
         CreateErrorEvent:
@@ -44,6 +45,7 @@ metadata:
             DESCRIPTION: "Build Failed: ${{CF_BUILD_URL}}"
             TITLE: CODEFRESH BUILD FAILED
             SOURCE: Codefresh
+            ENTITYIDS: CLOUD_APPLICATION-5F93DCB0C0A737CD
 spec:
   arguments: |-
     {

@@ -1,0 +1,165 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: dynatrace-event
+  version: 1.0.0
+  isPublic: true
+  description: Sends Event Dynatrace
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/dynatrace-event
+    - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/events-v1/post-event/#tabgroup--json-model
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - notifications
+  official: true
+  tags:
+    - notifications
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/dynatrace-event/Dynatrace_Logo_RGB_CNV_370x344px.svg
+    background: "#f4f4f4"
+  examples:
+    - description: deployment-event
+      workflow:
+        CreateDeploymentEvent:
+          type: dynatrace-event
+          arguments:
+            DYNATRACE_ENVIRONMENT_ID: vti11461
+            API_TOKEN: x2392fhhgdys867gt3fd
+            EVENT_TYPE: CUSTOM_DEPLOYMENT
+            DEPLOYMENT_NAME: Application A
+            DEPLOYMENT_VERSION: '1.0.0'
+            DEPLOYMENT_PROJECT: Production
+            ENTITYIDS: CLOUD_APPLICATION-5F93DCB0C0A737CD
+    - description: error-event
+      workflow:
+        CreateErrorEvent:
+          type: dynatrace-event
+          arguments:
+            DYNATRACE_ENVIRONMENT_ID: vti11461
+            API_TOKEN: x2392fhhgdys867gt3fd
+            EVENT_TYPE: ERROR_EVENT
+            DESCRIPTION: "Build Failed: ${{CF_BUILD_URL}}"
+            TITLE: CODEFRESH BUILD FAILED
+            SOURCE: Codefresh
+            ENTITYIDS: CLOUD_APPLICATION-5F93DCB0C0A737CD
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "API_TOKEN",
+        "EVENT_TYPE"
+      ],
+      "properties": {
+        "API_TOKEN": {
+          "type": "string",
+          "description": "Dynatrace API Token"
+        },
+        "CERTIFICATE_PATH": {
+          "type": "string",
+          "description": "Filepath to CA Certificate, if self-hosted and signing cert"
+        },
+        "DYNATRACE_DOMAIN": {
+          "type": "string",
+          "description": "Dynatrace Domain, if self-hosted"
+        },
+        "DYNATRACE_ENVIRONMENT_ID": {
+          "type": "string",
+          "description": "Dynatrace Environment ID, if SaaS"
+        },  
+        "EVENT_TYPE": {
+          "type": "string",
+          "description": "Event type to send to Dynatrace",
+          "default": "CUSTOM_DEPLOYMENT",
+          "enum": [
+            "CUSTOM_ANNOTATION",
+            "CUSTOM_CONFIGURATION",
+            "CUSTOM_DEPLOYMENT",
+            "CUSTOM_INFO",
+            "ERROR_EVENT"
+          ]
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "The name or ID of the external source of the event.",
+          "default": "Codefresh"
+        },
+        "ANNOTATION_TYPE": {
+          "type": "string",
+          "description": "The type of the custom annotation, for example DNS route has been changed."
+        },
+        "ANNOTATION_DESCRIPTION": {
+          "type": "string",
+          "description": "A detailed description of the custom annotation, for example DNS route has been changed to x.mydomain.com."
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "The textual description of the configuration change."
+        },
+        "DEPLOYMENT_NAME": {
+          "type": "string",
+          "description": "The ID of the triggered deployment."
+        },
+        "DEPLOYMENT_VERSION": {
+          "type": "string",
+          "description": "The version of the triggered deployment."
+        },
+        "DEPLOYMENT_PROJECT": {
+          "type": "string",
+          "description": "The project name of the deployed package."
+        },
+        "CI_BACK_LINK": {
+          "type": "string",
+          "description": "The link to the deployed artifact within the 3rd party system."
+        },
+        "REMEDIATION_ACTION": {
+          "type": "string",
+          "description": "The link to the deployment related remediation action within the external tool."
+        },
+        "ORIGINAL": {
+          "type": "string",
+          "description": "The previous value of the configuration."
+        },
+        "CONFIGURATION": {
+          "type": "string",
+          "description": "The ID or the name of the configuration that has been changed by the event."
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "The title of the configuration that has been set by the event."
+        },
+        "ENTITYIDS": {
+          "type": "string",
+          "description": "Semi-colon separated Entity IDs.  Required unless using METYPES + KEYS"
+        },
+        "METYPES": {
+          "type": "string",
+          "description": "Semi-colon separated METYPES. Required unless using ENTITYIDS."
+        },
+        "KEYS": {
+          "type": "string",
+          "description": "Semi-colon separated KEYS. Required unless using ENTITYIDS."
+        }
+      }
+    }
+  stepsTemplate: |-
+    dynatrace-event:
+      name: pagerduty-alert
+      image: quay.io/codefreshplugins/dynatrace-event:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /dynatrace_event.py
+  delimiters:
+    left: '[['
+    right: ']]'

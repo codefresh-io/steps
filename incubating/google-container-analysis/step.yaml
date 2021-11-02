@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/google-container-analysis
+  name: google-container-analysis
   version: 1.0.0
   isPublic: true
   description: Invokes scan using gcloud, confirms threshold is not reached.  Pass or fail based on exceeding threshold
@@ -18,7 +18,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/google-container-analysis/icon.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/google-container-analysis/artifact_registry.svg
     background: "#f4f4f4"
   examples:
     - description: Google Container Analysis
@@ -78,7 +78,7 @@ spec:
         "WORKING_DIRECTORY": {
           "type": "string",
           "default": "/codefresh/volume",
-          "description": "The login or authentication token of a SonarQube user with Execute Analysis permission on the project."
+          "description": "Directory where scan files will be placed"
         }
       }
     }
@@ -117,7 +117,7 @@ spec:
         - gcloud artifacts docker images list-vulnerabilities $SCAN_ID --format json | tee $WORKING_DIRECTORY/results.json
     run_scan_analysis:
       name: Run Scan Analysis
-      image: dustinvanbuskirk/google-container-analysis:alpha
+      image: quay.io/codefreshplugins/google-container-analysis:1.0.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

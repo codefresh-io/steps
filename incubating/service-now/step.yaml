@@ -1,11 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: laurent-cf/service-now
-  # LR name: service-now
+  name: service-now
   version: 1.2.0
-  isPublic: false
-  #LR isPublic: true
+  isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/service-now
@@ -15,15 +13,14 @@ metadata:
     - email: laurent.rochette@codefresh.io
   categories:
     - utilities
-  official: false
-  # LR official: true
+  official: true
   tags: []
   icon:
     type: svg
     url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-3.svg
     background: "#f4f4f4"
   examples:
-    - description: service-now
+    - description: Create a new Change Request
       workflow:
         createChange:
           title: Create a Service Now Change Request
@@ -31,29 +28,27 @@ metadata:
           stage: deploy
           arguments:
             CR_ACTION: createCR
+            TOKEN: ${CF_API_TOKEN}
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            CR_DATA: {"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}
-        wait:
+            CR_CONFLICT_POLICY: reject
+            CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+    - description: Modify an existing Change Request
+      workflow:
+        modifyCR:
+          title: Modify the CR
+          type: service-now
           stage: deploy
-          title: Waiting for the Change Request to be approved
-          type: pending-approval
-          timeout:
-            duration: 48
-            timeUnit: hours
-            finalState: denied
-          modifyCR:
-            title: Close the CR
-            type: service-now
-            stage: deploy
-            arguments:
-              CR_ACTION: closeCR
-              CR_SYSID: ${{CR_SYSID}}'
-              SN_INSTANCE: https://instance.service-now.com
-              SN_USER: ${{SN_USER}}
-              SN_PASSWORD: ${{SN_PASSWORD}}
-              CR_DATA: {"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}
+          arguments:
+            CR_ACTION: closeCR
+            CR_SYSID: ${{CR_SYSID}}
+            SN_INSTANCE: https://instance.service-now.com
+            SN_USER: ${{SN_USER}}
+            SN_PASSWORD: ${{SN_PASSWORD}}
+            CR_DATA: '{"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}'
+    - description: Close an existing Change Request
+      workflow:
         closeCR:
           title: Close the CR
           type: service-now
@@ -66,7 +61,7 @@ metadata:
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_CLOSE_CODE: successful
             CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
-            CR_DATA: {"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
+            CR_DATA: '{"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
 
 spec:
   arguments: |-
@@ -110,7 +105,7 @@ spec:
         },
         "SN_NAMESPACE": {
             "type": "string",
-            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
+            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$namespace/codefresh/callback",
             "default": "409723"
         },
         "CR_DATA": {
@@ -121,11 +116,6 @@ spec:
             "type": "string",
             "description": "Policy to exectute in case of schedule conflict. Accepted values are ignore (no check is done), wait (pipeline will wait until the conflict is resolved) or reject ServiceNow flow returns a deny answer",
             "default": "ignore"
-        },
-        "CR_ACTION": {
-            "type": "string",
-            "description": "Action to execute: createCR or closeCR",
-            "default": "createCR"
         },
         "CR_ACTION": {
             "type": "string",

@@ -2,7 +2,9 @@
 
 ### Prerequisites:
 
-Codefresh Subscription - https://codefresh.io/
+ - Codefresh Subscription - https://codefresh.io/
+ - ServiceNow instance with Change Management enabled
+ - Latest [Update set](incubating/service-now/xml/ServiceNow-Codefresh Integration_1.2.xml)
 
 ### Documentation
 

@@ -4,7 +4,7 @@
 
  - Codefresh Subscription - https://codefresh.io/
  - ServiceNow instance with Change Management enabled
- - Latest [Update set](incubating/service-now/xml/ServiceNow-Codefresh Integration_1.2.xml)
+ - Latest [Update set](xml/ServiceNow-Codefresh Integration_1.2.0.xml)
 
 ### Documentation
 

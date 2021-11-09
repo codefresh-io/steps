@@ -4,8 +4,7 @@
 
 - Codefresh Subscription - https://codefresh.io/
 - ServiceNow instance with Change Management enabled. You can get a free one at https://developer.servicenow.com/
-
-Latest [Update set](./xml/ServiceNow-Codefresh Integration_1.2.0.xml) installed on the instance
+- Latest Update Set [xml/ServiceNow-Codefresh Integration_1.2.0.xml] installed on the instance
 
 ### Documentation
 

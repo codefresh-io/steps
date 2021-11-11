@@ -49,7 +49,7 @@ steps:
     stage: "build"
     commands:
       - echo "Building App"
-      
+
   calculateDate:
      title: "Calculate date for the palnned schedule"
     image: ubuntu:latest
@@ -60,7 +60,7 @@ steps:
         END_DATE=`date -u -d '+1 hour' '+%Y-%m-%d %H:%M:%S'`
         echo START_DATE=\"$START_DATE\" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
         echo  END_DATE=\"$END_DATE\" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
-        
+
   createCR:
     type: service-now
     title: Create Service Now Change Request
@@ -73,8 +73,8 @@ steps:
       TOKEN: ${{CF_TOKEN}}
       CR_CONFLICT_POLICY: reject
       CR_DATA: >-
-        {"short_description": "Globex deployment to Visa QA", 
-        "description": "Change for build ${{CF_BUILD_ID}}.\nThis change was created by the Codefresh plugin", 
+        {"short_description": "Globex deployment to QA", 
+        "description": "Change for build ${{CF_BUILD_ID}}.\nThis change was created by the Codefresh plugin",
         "justification": "I do not need a justification\nMy app is awesome",
         "cmdb_ci":"tomcat",
         "start_date":${{START_DATE}},
@@ -87,7 +87,7 @@ steps:
     timeout:
       duration: 2
       finalState: denied    
-    
+
   modifyCR:
     stage: deploy
     title: "Modify the implementation plan"
@@ -99,8 +99,8 @@ steps:
       SN_USER: admin
       SN_PASSWORD: '${{SN_PASSWORD}}'
       SN_INSTANCE: https://XXXXXX.service-now.com
-      CR_DATA: '{"implementation_plan":"The implementation has been approved."}' 
-      
+      CR_DATA: '{"implementation_plan":"The implementation has been approved."}'
+
   deploy:
     title: "Deploying my Application"
     image: "codefresh/cli"
@@ -116,7 +116,7 @@ steps:
     commands:
       - echo "Testing App"
       - sleep 10
-      
+
   modifyTestPlan:
     stage: test
     title: "Modify the test plan"
@@ -129,7 +129,7 @@ steps:
       SN_PASSWORD: '${{SN_PASSWORD}}'
       SN_INSTANCE: https://XXXXXX.service-now.com
       CR_DATA: '{"test_plan":"The testing suit has passed."}'
- 
+
   closeCR:
     type: service-now
     title: Close Service Now Change Request

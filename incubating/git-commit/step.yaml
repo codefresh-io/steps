@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.13
+  version: 0.0.14
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -100,9 +100,9 @@ spec:
         - ALLOW_EMPTY_BOOL=${{allow_empty}}
         - GIT_USER_NAME=${{git_user_name}}
       commands:
-        - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
+        - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
-        - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.username)
+        - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.username)
         # If the git integration does not include the auth username, then default to the git_user_name argument
         - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
         - echo GIT_ACCESS_TOKEN_USER=$GIT_ACCESS_TOKEN_USER >> /meta/env_vars_to_export

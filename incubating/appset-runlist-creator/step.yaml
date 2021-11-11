@@ -1,0 +1,81 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: appset-runlist-creator
+  version: 1.0.0
+  isPublic: true
+  description: Generate Runlist for Dynamic Run step from ApplicationSet Manifest, to enable Argo Sync of Applications of an ApplicationSet Manifest.
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/appset-runlist-generator
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags:
+    - gitops
+  examples:
+    - description: create-runlist
+      workflow:
+        CreateApplicationSetRunlist:
+          type: appset-runlist-creator
+          arguments:
+            APPLICATIONSET_FILE: /codefresh/volume/myrepo/mydir/applicationset.yaml
+            PIPELINE: pipeline-id
+            RUNLIST_FILE: runlist.yaml
+            SHA: git-sha
+            TRIGGER: git-trigger
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "APPLICATIONSET_FILE",
+        "PIPELINE",
+        "RUNLIST_FILE",
+        "SHA",
+        "TRIGGER"
+      ],
+      "properties": {
+        "APPLICATIONSET_FILE": {
+          "type": "string",
+          "description": "Path and Filename for ApplicationSet Manifest."
+        },
+        "PIPELINE": {
+          "type": "string",
+          "description": "Child Pipeline ID/Name."
+        },
+        "RUNLIST_FILE": {
+          "type": "string",
+          "description": "Runlist Filename.",
+          "default": "runlist.yaml"
+        },
+        "SHA": {
+          "type": "string",
+          "description": "GIT SHA to use for Child Pipeline and GIT Trigger"
+        },
+        "TRIGGER": {
+          "type": "string",
+          "description": "GIT Trigger ID/Name from Child Pipeline"
+        }
+      }
+    }
+  stepsTemplate: |-
+    appset-runlist-creator:
+      name: appset-runlist-creator
+      image: quay.io/codefreshplugins/appset-runlist-creator:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 /appset-runlist-creator.py
+  delimiters:
+    left: '[['
+    right: ']]'

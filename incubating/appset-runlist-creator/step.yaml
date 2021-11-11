@@ -6,7 +6,7 @@ metadata:
   isPublic: true
   description: Generate Runlist for Dynamic Run step from ApplicationSet Manifest, to enable Argo Sync of Applications of an ApplicationSet Manifest.
   sources:
-    - https://github.com/codefresh-io/steps/tree/master/incubating/appset-runlist-generator
+    - https://github.com/codefresh-io/steps/tree/master/incubating/appset-runlist-creator
   stage: incubating
   maintainers:
     - name: Dustin Van Buskirk

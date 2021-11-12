@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: test-report-uploader
   title: Test reporting with tests
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Run tests and send a test report to the bucket even when the test failed (main difference compared to test-reporting step).
   sources:
@@ -38,6 +38,22 @@ metadata:
               - REPORT_INDEX_FILE=mochawesome.html
               - BUCKET_NAME=my-bucket-name
               - CF_STORAGE_INTEGRATION=amazon
+    - description: 'Generate test reporting'
+      workflow:
+        test-report-uploader:
+          title: Run tests
+          type: test-report-uploader
+          working_directory: "${{clone}}"
+          arguments:
+            test_image: node
+            test_image_tag: latest
+            test_reporting_version: latest
+            commands:
+              - npm test
+            environment:
+              - ALLURE_DIR=my-own-allure-results-folder
+              - BUCKET_NAME=my-bucket-name
+              - CF_STORAGE_INTEGRATION=google
 spec:
   arguments: |-
     {
@@ -78,9 +94,13 @@ spec:
                 "items": {
                     "type": "string"
                 },
-                "description": "Environment variables for test reporting step"
+                "description": "Environment variables for test reporting step. For more information about environment variables see the <a href=\"https://codefresh.io/docs/docs/testing/test-reports/\">official documentation about test reporting</a>."
+            },
+            "working_directory": {
+                "type": "string",
+                "description": "The directory from which the commands are executed. It can be an explicit path in the container’s file system, or a variable that references another step. The default working_directory is the cloned repository directory and not the working directory specified by the image. If you need to use the default working directory of the image use IMAGE_WORK_DIR.",
+                "examples": ["/codefresh/volume"]
             }
-
         }
     }
   delimiters:

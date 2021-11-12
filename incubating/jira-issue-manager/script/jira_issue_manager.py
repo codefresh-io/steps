@@ -10,9 +10,9 @@ from step_utility import StepUtility
 from requests.auth import HTTPBasicAuth
 
 class Environment:
-    def __init__(self, jira_base_url, jira_username, jira_api_key, action, 
+    def __init__(self, jira_base_url, jira_username, jira_api_key, action,
         issue, issue_project, issue_summary, issue_description, issue_type, issue_components, issue_customfields,
-        existing_comment_id, comment_body, status, jql_query, jql_query_max_results, 
+        existing_comment_id, comment_body, status, jql_query, jql_query_max_results,
         verbose):
         self.jira_base_url = jira_base_url
         self.jira_username = jira_username
@@ -113,14 +113,14 @@ def environment_setup():
         status,
         jql_query,
         jql_query_max_results,
-        verbose)    
+        verbose)
     return current_environment
 
 
 def authentication(current_environment):
     # Basic authentication with an API Token
     jira = JIRA(
-        current_environment.jira_base_url, 
+        current_environment.jira_base_url,
         basic_auth=(current_environment.jira_username, current_environment.jira_api_key)
     )
     return jira
@@ -136,7 +136,7 @@ def step_action(action, authenticated_jira, current_environment):
         'comment_create': create_comment,
         'comment_update': update_comment,
         'verify_status': verify_issue_status,
-        'update_all_from_jql_query': update_multiple_issues,     
+        'update_all_from_jql_query': update_multiple_issues,
     }
     action_func = actions.get(action, action_required)
     if action_func:
@@ -177,7 +177,8 @@ def create_issue(jira, current_environment):
     new_issue_dict.update(summary = current_environment.issue_summary)
     new_issue_dict.update(description = current_environment.issue_description)
     new_issue_dict.update(issuetype = ast.literal_eval(current_environment.issue_type))
-    new_issue_dict.update(components = current_environment.issue_components)
+    if (current_environment.issue_components):
+        new_issue_dict.update(components = current_environment.issue_components)
 
     # print(current_environment.issue_customfields)
     # sys.exit(1)
@@ -208,6 +209,7 @@ def create_issue(jira, current_environment):
         created_issue = jira.create_issue(new_issue_dict)
         print("Jira issue " + str(created_issue) + " created")
         StepUtility.export_variable("JIRA_ISSUE_ID", created_issue)
+        StepUtility.export_variable("main_CF_OUTPUT_URL", str(current_environment.jira_base_url) + "/browse/" + str(created_issue))
     except Exception as exc:
         StepUtility.printCleanException(exc)
         StepUtility.printFail("Exiting Step - Failed to create issue")
@@ -215,7 +217,7 @@ def create_issue(jira, current_environment):
 
 
 def transition_issue(jira, current_environment):
-    print("\nTransition issue status")    
+    print("\nTransition issue status")
     issue = retrieve_jira_issue(jira, current_environment.issue)
     print("Current issue status: " + str(issue.fields.status))
     print("Desired issue status: " + current_environment.status)
@@ -224,7 +226,7 @@ def transition_issue(jira, current_environment):
         print("Skipping transition as desired state is already met")
     else:
         # Verbose: Print the list of viable transitions before the transition takes place
-        if current_environment.verbose == "true":          
+        if current_environment.verbose == "true":
             transition_list = jira.transitions(current_environment.issue)
             print("Viable transition statuses before:")
             for transition in transition_list:
@@ -244,7 +246,7 @@ def transition_issue(jira, current_environment):
             sys.exit(1)
 
         # Verbose: Print the list of viable transitions after the transition takes place
-        if current_environment.verbose == "true":      
+        if current_environment.verbose == "true":
             print()
             transition_list = jira.transitions(current_environment.issue)
             print("Viable transition statuses after:")
@@ -260,12 +262,12 @@ def transition_issue(jira, current_environment):
 def update_issue(jira, current_environment):
     print("\nUpdate issue")
     issue = retrieve_jira_issue(jira, current_environment.issue)
-    perform_jira_update(jira, current_environment, issue)   
+    perform_jira_update(jira, current_environment, issue)
 
 
 def update_multiple_issues(jira, current_environment):
     print("\nUpdate multiple issues from JQL query")
-    issues_found = jql_query(jira, current_environment)    
+    issues_found = jql_query(jira, current_environment)
     for issue in issues_found:
         perform_jira_update(jira, current_environment, issue)
 
@@ -299,18 +301,18 @@ def verify_issue_status(jira, current_environment):
         # If they have a jql query specified, retrieve the list of issues to be verified
         if current_environment.jql_query:
             issues_to_verify.extend(jql_query(jira, current_environment))
-        
+
         print("\nVerify issue transition status")
         print("Desired Status: " + str(current_environment.status))
-        for current_issue in issues_to_verify:    
+        for current_issue in issues_to_verify:
             if str(current_issue.fields.status) == current_environment.status:
                 print(str(current_issue) + ": " + str(current_issue.fields.status))
             else:
-                StepUtility.printFail("Exiting Step - Jira Issue " 
-                    + str(current_issue) 
-                    + "\n Current Status: " 
+                StepUtility.printFail("Exiting Step - Jira Issue "
+                    + str(current_issue)
+                    + "\n Current Status: "
                     + str(current_issue.fields.status)
-                    + "\n Desired status: " 
+                    + "\n Desired status: "
                     + str(current_environment.status))
                 sys.exit(1)
         print("Successfully verified status")

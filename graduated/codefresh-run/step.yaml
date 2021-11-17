@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.2
+  version: 1.2.3
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -120,6 +120,12 @@ spec:
                  "examples": ["key=val"],
                  "default": []
              },
+            "VARIABLE_FILE": {
+                  "type": "string",
+                  "description": "Set build variables from a file",
+                  "examples": ["/codefresh/volume/my-repo/var_file_example.yml"],
+                  "default": ""
+            },             
             "TIMEOUT_MINS": {
                 "type": "string",
                 "description": "Timeout in mins",
@@ -178,6 +184,9 @@ spec:
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
+        [[ if .Arguments.VARIABLE_FILE ]]
+            [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
+        [[- end -]]        
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context %s" $cmd .) -]]
         [[- end -]]

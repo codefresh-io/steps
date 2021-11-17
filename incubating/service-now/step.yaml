@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.1.0
+  version: 1.2.1
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -16,11 +16,13 @@ metadata:
   official: true
   tags: []
   icon:
-    type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-2.svg
-    background: "#f4f4f4"
+    type: image
+    size:
+      large:
+        url: >-
+           https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/service-now/images/servicenow-2.png
   examples:
-    - description: service-now
+    - description: Create a new Change Request
       workflow:
         createChange:
           title: Create a Service Now Change Request
@@ -28,29 +30,27 @@ metadata:
           stage: deploy
           arguments:
             CR_ACTION: createCR
+            TOKEN: ${CF_API_TOKEN}
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
             SN_PASSWORD: ${{SN_PASSWORD}}
-            CR_DATA: {"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}
-        wait:
+            CR_CONFLICT_POLICY: reject
+            CR_DATA: '{"short_description":"This is a Change Request created by Codefresh","description":"long description for Codefresh build ${{CF_BUILD_ID}}","justification":"because our app is awesome"}'
+    - description: Modify an existing Change Request
+      workflow:
+        modifyCR:
+          title: Modify the CR
+          type: service-now
           stage: deploy
-          title: Waiting for the Change Request to be approved
-          type: pending-approval
-          timeout:
-            duration: 48
-            timeUnit: hours
-            finalState: denied
-          modifyCR:
-            title: Close the CR
-            type: service-now
-            stage: deploy
-            arguments:
-              CR_ACTION: closeCR
-              CR_SYSID: ${{CR_SYSID}}'
-              SN_INSTANCE: https://instance.service-now.com
-              SN_USER: ${{SN_USER}}
-              SN_PASSWORD: ${{SN_PASSWORD}}
-              CR_DATA: {"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}
+          arguments:
+            CR_ACTION: closeCR
+            CR_SYSID: ${{CR_SYSID}}
+            SN_INSTANCE: https://instance.service-now.com
+            SN_USER: ${{SN_USER}}
+            SN_PASSWORD: ${{SN_PASSWORD}}
+            CR_DATA: '{"test_plan":"We ran all the test in the awesome test suite. Test pass rate: ${{TEST_RATE}}"}'
+    - description: Close an existing Change Request
+      workflow:
         closeCR:
           title: Close the CR
           type: service-now
@@ -63,7 +63,7 @@ metadata:
             SN_PASSWORD: ${{SN_PASSWORD}}
             CR_CLOSE_CODE: successful
             CR_CLOSE_NOTES: "CR closed by Codefresh build ${{CF_BUILD_ID}}"
-            CR_DATA: {"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}
+            CR_DATA: '{"work_notes":"Closed automatically by Codefresh build ${{CF_BUILD_ID}}"}'
 
 spec:
   arguments: |-
@@ -79,6 +79,16 @@ spec:
         "SN_PASSWORD"
       ],
       "properties": {
+        "SN_IMAGE": {
+          "type": "string",
+          "default": "quay.io/codefreshplugins/service-now",
+          "description": "The ServiceNow container image registry/image for the step."
+        },
+        "SN_IMAGE_VERSION": {
+          "type": "string",
+          "default": "1.2.1",
+          "description": "Version of the ServiceNow image to use, Docker image tag."
+        },
         "SN_INSTANCE": {
             "type": "string",
             "description": "The URL to your Service-now instance aka https://instance.service-now.com"
@@ -97,12 +107,17 @@ spec:
         },
         "SN_NAMESPACE": {
             "type": "string",
-            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$endpoint",
+            "description": "The endpoint namespace to call if using a different one. The system will call $SN_INSTANCE/api/$namespace/codefresh/callback",
             "default": "409723"
         },
         "CR_DATA": {
             "type": "string",
             "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
+        },
+        "CR_CONFLICT_POLICY": {
+            "type": "string",
+            "description": "Policy to exectute in case of schedule conflict. Accepted values are ignore (no check is done), wait (pipeline will wait until the conflict is resolved) or reject ServiceNow flow returns a deny answer",
+            "default": "ignore"
         },
         "CR_ACTION": {
             "type": "string",
@@ -153,7 +168,7 @@ spec:
     closeCR:
       name: Close a ServiceNow Change Request
       title: Use REST API to close the CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -164,7 +179,7 @@ spec:
     updateCR:
       name: Update a ServiceNow Change Request
       title: Use REST API to update the CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -175,7 +190,7 @@ spec:
     createcr:
       name: Create a ServiceNow Change Request
       title: Use REST API to create a CR
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
@@ -192,7 +207,7 @@ spec:
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup
-      image: quay.io/codefreshplugins/service-now:1.1.0
+      image: '[[.Arguments.SN_IMAGE]]:[[.Arguments.SN_IMAGE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

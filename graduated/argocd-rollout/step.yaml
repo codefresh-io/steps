@@ -104,7 +104,7 @@ spec:
               "description": "Debug sync command ( print in terminal )",
               "default": false
           },
-          "skip-wait-rollout": {
+          "skip_wait_rollout": {
               "type": "boolean",
               "description": "Skip wait rollout",
               "default": false
@@ -121,7 +121,7 @@ spec:
           --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
           --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
           --k8s-context=${{k8s_context}} --rollout-name=${{rollout_name}} --rollout-namespace=${{rollout_namespace}} --wait-healthy=${{wait_healthy}} --debug=${{debug}}
-          --out-commands-file /codefresh/volume/argo-executor --out-export-file /codefresh/volume/argo-export_url --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip-wait-rollout}}
+          --out-commands-file /codefresh/volume/argo-executor --out-export-file /codefresh/volume/argo-export_url --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip_wait_rollout}}
         - chmod +x /codefresh/volume/argo-executor
         - chmod +x /codefresh/volume/argo-export_url
         - /codefresh/volume/argo-export_url

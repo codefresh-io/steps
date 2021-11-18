@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.15.2
+  version: 1.16.0
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -122,6 +122,11 @@ spec:
               "type": "boolean",
               "description": "Do rollback to previous rollout if wait command get failed ",
               "default": false
+          },
+          "skip-wait-rollout": {
+              "type": "boolean",
+              "description": "Skip wait rollout",
+              "default": false
           }
       }
     }
@@ -135,7 +140,7 @@ spec:
           --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
           --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
           --sync=${{sync}} --prune=${{prune}} --wait-healthy=${{wait_healthy}} --wait-suspend=${{wait_for_suspend}} --debug=${{debug}}
-          --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}"
+          --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip-wait-rollout}}
           --out-commands-file /codefresh/volume/${CF_BLOCK_NAME}-argo-executor --out-export-file /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-executor
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url

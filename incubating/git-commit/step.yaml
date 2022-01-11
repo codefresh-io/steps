@@ -114,7 +114,7 @@ spec:
           },
           "gpg_secret_key": {
               "type": "string",
-              "description": "GPG secret key (base64 encoded). for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0` ",
+              "description": "GPG secret key (base64 encoded; for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0`) ",
               "default": ""
           }
       }

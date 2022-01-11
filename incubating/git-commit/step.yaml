@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.14
+  version: 0.0.15
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -33,6 +33,24 @@ metadata:
             git_user_name: 'git-user-name'
             git_user_email: 'git-user@email.com'
             allow_empty: false
+            add:
+              - file1.txt
+              - file2.txt
+              - ./dir3
+    - workflow:
+        gpg_signed_commit:
+          title: Sign commit with GPG and push
+          type: git-commit
+          arguments:
+            repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+            git: 'github'
+            working_directory: '/codefresh/volume/${{CF_REPO_NAME}}'
+            commit_message: 'Some commit message'
+            git_user_name: 'git-user-name'
+            git_user_email: 'git-user@email.com'
+            allow_empty: false
+            gpg_key_id: '${{GPG_KEY_ID}}'
+            gpg_secret_key: '${{GPG_SECRET_KEY}}'
             add:
               - file1.txt
               - file2.txt
@@ -88,6 +106,16 @@ spec:
               },
               "description": "Add file contents to the git index",
               "default": "."
+          },
+          "gpg_key_id": {
+              "type": "string",
+              "description": "GPG key ID (for example `3AA5C34371567BD2`)",
+              "default": ""
+          },
+          "gpg_secret_key": {
+              "type": "string",
+              "description": "GPG secret key (base64 encoded). for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0` ",
+              "default": ""
           }
       }
     }
@@ -114,14 +142,25 @@ spec:
     commit_and_push:
       title: "Commit and push"
       image: quay.io/bitnami/git
+      shell: bash
       environment:
         - REPO=${{repo}}
         - COMMIT_MESSAGE=${{commit_message}}
         - WORKING_DIRECTORY=${{working_directory}}
         - GIT_USER_NAME=${{git_user_name}}
         - GIT_USER_EMAIL=${{git_user_email}}
+        - GPG_KEY_ID=${{gpg_key_id}}
+        - GPG_SECRET_KEY=${{gpg_secret_key}}
 
       commands:
+        - |-
+          if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
+            apt-get update && apt install -y gnupg
+            echo ${GPG_SECRET_KEY} | base64 -d > /tmp/private.key
+            gpg --import /tmp/private.key
+            git config --global user.signingkey ${GPG_KEY_ID}
+            git config --global commit.gpgsign true
+          fi  
         - cd ${WORKING_DIRECTORY}
         - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
         - echo GIT_USER_NAME=$GIT_USER_NAME GIT_USER_EMAIL=$GIT_USER_EMAIL

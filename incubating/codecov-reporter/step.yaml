@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codecov-reporter
   title: Sends a code scan report to codecov
-  version: 2.0.0
+  version: 2.1.0
   isPublic: true
   description: Sends a code scan report to codecov
   sources:
@@ -84,7 +84,9 @@ spec:
         - CODECOV_INTEGRATION=${{codecov_integration}}
       commands:
         - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
+        - export CODECOV_URL=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.url)
         - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
+        - echo CODECOV_URL=$CODECOV_URL >> /meta/env_vars_to_export
     second:
       name: "send report"
       image: node:15.2
@@ -101,6 +103,6 @@ spec:
         - gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
         - shasum -a 256 -c codecov.SHA256SUM
         - chmod +x ./codecov
-        - ./codecov -t ${{CODECOV_API_KEY}} -Q codefresh-2.0.0 | tee codecov.log
+        - ./codecov -t ${{CODECOV_API_KEY}} -u ${{CODECOV_URL}} -Q codefresh-2.0.0 | tee codecov.log
         # [<< timestamp >>] ['info'] {"status":"success","resultURL":"<< Codecov URL >>"}
         - cf_export second_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')

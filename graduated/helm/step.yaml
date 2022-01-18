@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.6
+  version: 1.1.7
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -186,6 +186,10 @@ spec:
             "credentials_in_arguments": {
                 "type": "boolean",
                 "description": "Add credentials to helm command as arguments (username, password). Otherwise its will be added to url http(s)://username:password@url. Should be enabled for JFrog Artifactory helm repository."
+            },
+            "chart_subdir": {
+                "type": "string",
+                "description": "optional subfolder (inside JFrog Artifactory helm repository)"
             }
         }
     }

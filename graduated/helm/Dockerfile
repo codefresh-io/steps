@@ -46,9 +46,11 @@ COPY bin/* /opt/bin/
 RUN chmod +x /opt/bin/*
 COPY lib/* /opt/lib/
 
-# Install Python3
-RUN apk add --no-cache python3 \
-    && rm -rf /root/.cache
+# Install Python3 and awscli
+RUN apk add --no-cache python3 py3-pip\
+    && rm -rf /root/.cache \
+    && pip3 install --upgrade pip \
+    && pip install awscli
 
 ENV HELM_VERSION ${HELM_VERSION}
 

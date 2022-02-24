@@ -27,13 +27,14 @@ def main():
             },
             'assignments': [
                 {
-                    'assignee': {
-                        'id': '{}'.format(assignee_user_id), 
+                    'assignee': { 
                         'type': 'user_reference'
                     }
                 }
             ],
         }
+        if assignee_user_id:
+            payload['assignments'][0]['id']=assignee_user_id
         
         pd_incident = session.rpost('incidents', json=payload)
     

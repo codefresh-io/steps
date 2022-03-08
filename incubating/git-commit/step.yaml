@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.15
+  version: 0.0.16
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -116,6 +116,11 @@ spec:
               "type": "string",
               "description": "GPG secret key (base64 encoded; for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0`) ",
               "default": ""
+          },
+          "force_push": {
+              "type": "boolean",
+              "description": "force git push (false by default)",
+              "default": false
           }
       }
     }
@@ -151,7 +156,7 @@ spec:
         - GIT_USER_EMAIL=${{git_user_email}}
         - GPG_KEY_ID=${{gpg_key_id}}
         - GPG_SECRET_KEY=${{gpg_secret_key}}
-
+        - FORCE_PUSH=${{force_push}}
       commands:
         - |-
           if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
@@ -170,4 +175,9 @@ spec:
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
         - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
-        - git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+        - |-
+          if [ "$FORCE_PUSH" = true ]; then
+            git push --force "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          else
+            git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          fi    

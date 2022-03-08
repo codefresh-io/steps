@@ -119,7 +119,7 @@ spec:
           },
           "force_push": {
               "type": "boolean",
-              "description": "force a Git pish (false by default)",
+              "description": "force git push (false by default)",
               "default": false
           }
       }

@@ -157,6 +157,7 @@ def updateChangeRequest(user, password, baseUrl, sysid, data):
         headers = {"content-type":"application/json"},
         auth=(user, password))
     processModifyChangeRequestResponse(response=resp, action="update")
+
 # Use rest API to call scripted REST API to start a flow that will wait for CR
 # to be approved or rejected, then callback Codefreh to approve/deny pipeline
 #

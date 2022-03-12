@@ -27,7 +27,7 @@ def main():
             }
         }
         if assignee_user_id:
-            payload['assigments'] =
+            payload['assignments'] =
             [
                 {
                     'assignee': {

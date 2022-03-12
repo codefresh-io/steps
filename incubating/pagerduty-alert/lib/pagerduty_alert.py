@@ -27,16 +27,14 @@ def main():
             }
         }
         if assignee_user_id:
-            payload['assignments'] =
-            [
+            payload['assignments'] = [
                 {
                     'assignee': {
                         'id': '{}'.format(assignee_user_id),
                         'type': 'user_reference'
-                    },
+                    }
                 }
-            ],
-        }
+            ]
 
         pd_incident = session.rpost('incidents', json=payload)
 

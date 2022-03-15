@@ -182,7 +182,6 @@ spec:
         - git status
         - |-
           if [ "$REBASE" = true ]; then
-            echo "REBASE"
             git pull --rebase "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           fi
         - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"

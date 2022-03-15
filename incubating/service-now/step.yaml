@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.2.1
+  version: 1.2.2
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -43,7 +43,7 @@ metadata:
           type: service-now
           stage: deploy
           arguments:
-            CR_ACTION: closeCR
+            CR_ACTION: updateCR
             CR_SYSID: ${{CR_SYSID}}
             SN_INSTANCE: https://instance.service-now.com
             SN_USER: ${{SN_USER}}
@@ -121,7 +121,7 @@ spec:
         },
         "CR_ACTION": {
             "type": "string",
-            "description": "Action to execute: createCR or closeCR",
+            "description": "Action to execute: createCR, updateCR or closeCR",
             "default": "createCR"
         },
         "CR_CLOSE_CODE": {

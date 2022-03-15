@@ -121,6 +121,11 @@ spec:
               "type": "boolean",
               "description": "force git push (false by default)",
               "default": false
+          },
+          "rebase": {
+              "type": "boolean",
+              "description": "pull remote changes with rebase flag before push",
+              "default": false
           }
       }
     }
@@ -157,6 +162,7 @@ spec:
         - GPG_KEY_ID=${{gpg_key_id}}
         - GPG_SECRET_KEY=${{gpg_secret_key}}
         - FORCE_PUSH=${{force_push}}
+        - REBASE=${{rebase}}
       commands:
         - |-
           if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
@@ -174,6 +180,10 @@ spec:
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
+        - |-
+          if [ "$REBASE" = true ]; then
+            git pull --rebase "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          fi
         - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
         - |-
           if [ "$FORCE_PUSH" = true ]; then

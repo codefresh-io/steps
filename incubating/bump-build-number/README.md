@@ -22,7 +22,7 @@ RETRIEVE_CURRENT_VALUE_ONLY | No  | Retrieve the current value of the default or
 ### Codefresh.yml
 
 ```yaml
-version: '1.0.0'
+version: '1.0'
 steps:
   BumpBuildNumber:
     title: Bump Build Number

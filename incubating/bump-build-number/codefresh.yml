@@ -18,7 +18,7 @@ steps:
     title: Pushing To Dockerhub Registry
     registry: cfpluginmgr
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.3" ]
+    tags: [ "latest", "1.0.6" ]
     when:
       branch:
         only:
@@ -28,7 +28,7 @@ steps:
     title: Pushing To Quay Registry
     registry: cfpluginmgr-quay
     candidate: ${{BuildImage}}
-    tags: [ "latest", "1.0.3" ]
+    tags: [ "latest", "1.0.6" ]
     when:
       branch:
         only:

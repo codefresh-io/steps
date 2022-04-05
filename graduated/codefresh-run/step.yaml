@@ -131,7 +131,7 @@ spec:
                   "description": "Set build variables from a file",
                   "examples": ["/codefresh/volume/my-repo/var_file_example.yml"],
                   "default": ""
-            },             
+            },
             "TIMEOUT_MINS": {
                 "type": "string",
                 "description": "Timeout in mins",
@@ -189,13 +189,13 @@ spec:
         [[- end -]]
         [[ if .Arguments.RUNTIME_NAME ]]
             [[- $cmd = (printf "%s --runtime-name %s" $cmd .Arguments.RUNTIME_NAME) -]]
-        [[- end -]]    
+        [[- end -]]
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
         [[ if .Arguments.VARIABLE_FILE ]]
             [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
-        [[- end -]]        
+        [[- end -]]
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context %s" $cmd .) -]]
         [[- end -]]
@@ -224,4 +224,3 @@ spec:
       [[- end ]]
         - codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
       [[- end -]]
-

@@ -1,4 +1,4 @@
-FROM codefresh/cli:0.79.0
+FROM codefresh/cli:latest
 WORKDIR /
 COPY . .
 ENTRYPOINT ["/entrypoint.sh"]

@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "handlebars": "^4.0.12",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-emoji": "^1.8.1",
     "node-telegram-bot-api": "^0.40.0",
     "string-template": "^1.0.0"

@@ -73,7 +73,7 @@ spec:
         },
         "ASSIGNEE_USER_ID": {
           "type": "string",
-          "description": "Required for incident type, PagerDuty User ID",
+          "description": "Required for incident type, PagerDuty User ID"
         },
         "FROM_EMAIL": {
           "type": "string",

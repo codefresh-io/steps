@@ -27,7 +27,6 @@ def main():
             }
         }
         if assignee_user_id != "False":
-            print(f"assignee_user_id = {assignee_user_id}")
             payload['assignments'] = [
                 {
                     'assignee': {

@@ -26,7 +26,7 @@ def main():
                 'type': 'service_reference'
             }
         }
-        if assignee_user_id != "False":
+        if assignee_user_id:
             payload['assignments'] = [
                 {
                     'assignee': {

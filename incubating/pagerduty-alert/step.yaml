@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: pagerduty-alert
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Sends Alerts (Incidents or Change Events) to PagerDuty API
   sources:
@@ -73,8 +73,7 @@ spec:
         },
         "ASSIGNEE_USER_ID": {
           "type": "string",
-          "description": "Required for incident type, PagerDuty User ID",
-          "default": "runlist.yaml"
+          "description": "Required for incident type, PagerDuty User ID"
         },
         "FROM_EMAIL": {
           "type": "string",

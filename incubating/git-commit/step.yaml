@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.17
+  version: 0.0.18
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -151,7 +151,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: quay.io/bitnami/git
+      image: bitnami/git
       shell: bash
       environment:
         - REPO=${{repo}}

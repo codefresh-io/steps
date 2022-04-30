@@ -1,16 +1,5 @@
-FROM golang:latest as builder
-RUN mkdir -p /go/src/github.com/codefresh-io/slack-post-channel
-WORKDIR /go/src/github.com/codefresh-io/slack-post-channel
-COPY . .
-RUN "./hack/BUILD.sh"
+FROM python:3.10.0a7-alpine3.13
+RUN pip3 install slack_sdk
 
-
-FROM alpine:3.6
-
-RUN apk add --no-cache ca-certificates
-
-COPY --from=builder /go/src/github.com/codefresh-io/slack-post-channel/dist/bin/slack-post-channel /usr/bin/slack-post-channel
-ENV PATH $PATH:/usr/bin/slack-post-channel
-ENTRYPOINT ["slack-post-channel"]
-
-CMD ["--help"]
+COPY lib/slack.py /slack/slack.py
+ENTRYPOINT [ "python3", "/slack/slack.py" ]

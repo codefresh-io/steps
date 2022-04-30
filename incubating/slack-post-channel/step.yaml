@@ -1,0 +1,72 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: laurent-cf/slack-post-channel
+  version: 0.0.1
+  title: Send a Slack message to a channel
+  isPublic: true
+  description: Send a message to a named Slack user or channel (instead of webhook)
+  sources:
+    - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/slack-post-channel
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+      email: laurent.rochette@codefresh.io
+  categories:
+    - notifications
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/slack-post-channel/icon.svg
+    background: "#49154B"
+  examples:
+    - description: example-1
+      workflow:
+        sendSlack:
+          type: slack-post-channel
+          arguments:
+            SLACK_TOKEN: xxxxxx
+            SLACK_CHANNEL: channel1
+            SLACK_MESSAGE: message
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+          "SLACK_TOKEN",
+          "SLACK_CHANNEL",
+          "SLACK_MESSAGE"
+        ],
+        "properties": {
+            "SLACK_TOKEN": {
+                "type": "string",
+                "description": "The token to connect to Slack API"
+            },
+            "SLACK_CHANNEL": {
+                "type": "string",
+                "description": "Name or ID of the channel to send the message to"
+            },
+            "SLACK_MESSAGE": {
+                "type": "string",
+                "description": "The message to send to the channel"
+            }
+
+        }
+    }
+  stepsTemplate: |-
+    post-to-channel:
+      name: slack-post-channel
+      image: quay.io/lrochette/slack-post-channel:0.0.1
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

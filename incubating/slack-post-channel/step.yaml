@@ -2,10 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/slack-post-channel
-  version: 0.0.1
+  version: 0.0.2
   title: Send a Slack message to a channel
   isPublic: true
-  description: Send a message to a named Slack user or channel (instead of webhook)
+  description: Send a message to a named Slack channel (instead of webhook)
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/slack-post-channel
@@ -44,6 +44,16 @@ spec:
           "SLACK_MESSAGE"
         ],
         "properties": {
+            "SLACK_IMAGE": {
+              "type": "string",
+              "default": "quay.io/codefreshplugins/slack-post-channel",
+              "description": "The slack-post-channel registry/image for the step."
+            },
+            "SLACK_IMAGE_VERSION": {
+              "type": "string",
+              "default": "0.0.2",
+              "description": "Version of the slack-post-channel image to use, or registry image tag."
+            },
             "SLACK_TOKEN": {
                 "type": "string",
                 "description": "The token to connect to Slack API"
@@ -62,7 +72,7 @@ spec:
   stepsTemplate: |-
     post-to-channel:
       name: slack-post-channel
-      image: quay.io/lrochette/slack-post-channel:0.0.1
+      image: [[.Arguments.SLACK_IMAGE]]:[[.Arguments.SLACK_IMAGE_VERSION]]
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -28,6 +28,18 @@ def main():
     logging.info("Connecting to Slack")
     client = WebClient(token=token)
 
+    if ( not channel.startswith('@') and '@' in channel ):
+        try:
+            response = client.users_lookupByEmail(email=channel)
+            assert response["user"]["profile"]["email"] == channel
+            channel = response["user"]["id"]
+        except SlackApiError as e:
+            # You will get a SlackApiError if "ok" is False
+            assert e.response["ok"] is False
+            assert e.response["error"]  # str like 'users_not_found'
+            logging.error("Post error: %s",e.response['error'])
+            sys.exit(2)
+
     try:
         response = client.chat_postMessage(channel=channel, text=message)
         assert response["message"]["text"] == message

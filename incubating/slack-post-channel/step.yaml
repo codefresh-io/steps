@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/slack-post-channel
-  version: 0.0.5
+  version: 0.0.6
   title: Send a Slack message to a channel
   isPublic: true
   description: Send a message to a named Slack channel (instead of using a webhook URL)
@@ -60,7 +60,7 @@ spec:
             },
             "SLACK_CHANNEL": {
                 "type": "string",
-                "description": "Name or ID of the channel to send the message to."
+                "description": "Name or ID of the channel to send the message to. Use <@ID> or email to send to a user as display names are not unique (https://api.slack.com/changelog/2017-09-the-one-about-usernames)." 
             },
             "SLACK_MESSAGE": {
                 "type": "string",

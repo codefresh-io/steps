@@ -1,20 +1,43 @@
+#!/usr/bin/env python3
+'''
+Script to send a message to a named Slack channel
+'''
+
 import os
+import sys
+import logging
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-client = WebClient(token=os.environ['SLACK_TOKEN'])
-
 def main():
-    client = WebClient(token=os.environ['SLACK_TOKEN'])
+    log_format = "%(asctime)s:%(levelname)s:%(name)s.%(funcName)s: %(message)s"
+    logging.basicConfig(format = log_format, level = os.environ['LOG_LEVEL'].upper())
+
+    channel=os.getenv('SLACK_CHANNEL')
+    message=os.getenv('SLACK_MESSAGE', "")
+    token  =os.getenv('SLACK_TOKEN')
+
+    if ( channel == None ):
+        logging.error("SLACK_CHANNEL is not defined")
+        sys.exit(1)
+
+    if ( token == None ):
+        logging.error("SLACK_TOKEN is not defined")
+        sys.exit(1)
+
+    logging.info("Connecting to Slack")
+    client = WebClient(token=token)
 
     try:
-        response = client.chat_postMessage(channel=os.environ['SLACK_CHANNEL'], text=os.environ['SLACK_MESSAGE'])
-        assert response["message"]["text"] == os.environ['SLACK_MESSAGE']
+        response = client.chat_postMessage(channel=channel, text=message)
+        assert response["message"]["text"] == message
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
         assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print(f"Got an error: {e.response['error']}")
+        logging.error("Post error: %s",e.response['error'])
+        sys.exit(2)
+    logging.info("Message posted to Slack")
     
 if __name__ == "__main__":
     main()

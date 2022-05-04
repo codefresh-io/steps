@@ -2,10 +2,10 @@ kind: step-type
 version: '1.0'
 metadata:
   name: laurent-cf/slack-post-channel
-  version: 0.0.3
+  version: 0.0.4
   title: Send a Slack message to a channel
   isPublic: true
-  description: Send a message to a named Slack channel (instead of webhook)
+  description: Send a message to a named Slack channel (instead of using a webhook URL)
   sources:
     - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/slack-post-channel
@@ -51,7 +51,7 @@ spec:
             },
             "SLACK_IMAGE_VERSION": {
               "type": "string",
-              "default": "0.0.3",
+              "default": "0.0.4",
               "description": "Version of the slack-post-channel image to use, or registry image tag."
             },
             "SLACK_TOKEN": {
@@ -65,6 +65,18 @@ spec:
             "SLACK_MESSAGE": {
                 "type": "string",
                 "description": "The message to send to the channel"
+            },
+            "LOG_LEVEL": {
+              "type": "string",
+              "description": "info",
+              "default": ,
+              "enum": [
+                "info",
+                "debug",
+                "warning",
+                "error",
+                "critical"
+              ]
             }
 
         }

@@ -69,7 +69,7 @@ spec:
             "LOG_LEVEL": {
               "type": "string",
               "description": "info",
-              "default": ,
+              "default": "info",
               "enum": [
                 "info",
                 "debug",

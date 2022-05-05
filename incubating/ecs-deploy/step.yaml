@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: ecs-deploy
+  name: bohdan-codefresh/ecs-deploy
   title: Deploy to ECS
   version: 0.0.7
   isPublic: true
@@ -23,7 +23,7 @@ metadata:
         url: >-
           https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/ecs-deploy/icon.jpg
   examples:
-    - description: example-1
+    - description: example without image tag
       workflow:
         deploy to ecs:
           type: ecs-deploy
@@ -33,6 +33,17 @@ metadata:
             aws-region: us-east-2
             cluster_name: MY_ECS_CLUSTER
             service_name: MY_ECS_SERVICE
+    - description: example with image tag
+      workflow:
+        deploy to ecs:
+          type: ecs-deploy
+          arguments:
+            AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            aws-region: us-east-2
+            cluster_name: MY_ECS_CLUSTER
+            service_name: MY_ECS_SERVICE
+            image_tag: 0.0.1
 spec:
   arguments: |-
     {
@@ -68,18 +79,28 @@ spec:
             "service_name": {
                 "type": "string",
                 "description": "ecs service name"
+            },
+            "image_tag": {
+                "type": "string",
+                "description": "app image tag"
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: ecs-deploy
       image: codefresh/cf-deploy-ecs
-      commands:
-        - cfecs-update ${{aws-region}} ${{cluster_name}} ${{service_name}}
       environment:
-        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
-        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
-        - 'aws-region=${{aws-region}}'
-        - 'cluster_name=${{cluster_name}}'
-        - 'service_name=${{service_name}}'
+        - 'AWS_ACCESS_KEY_ID=[[.Arguments.AWS_ACCESS_KEY_ID]]'
+        - 'AWS_SECRET_ACCESS_KEY=[[.Arguments.AWS_SECRET_ACCESS_KEY]]'
+        - 'AWS_REGION=[[index .Arguments "aws-region"]]'
+        - 'AWS_CLUSTER_NAME=[[.Arguments.cluster_name]]'
+        - 'AWS_SERVICE_NAME=[[.Arguments.service_name]]'
+      commands:
+        - cfecs-update ${AWS_REGION} ${AWS_CLUSTER_NAME} ${AWS_SERVICE_NAME} 
+        [[- if .Arguments.image_tag ]]
+          --image-tag [[.Arguments.image_tag]]  
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

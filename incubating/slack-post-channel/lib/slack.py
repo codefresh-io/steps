@@ -37,8 +37,8 @@ def main():
             # You will get a SlackApiError if "ok" is False
             assert e.response["ok"] is False
             assert e.response["error"]  # str like 'users_not_found'
-            logging.error("Post error: %s",e.response['error'])
-            sys.exit(2)
+            logging.error("Lookup error: %s",e.response['error'])
+            sys.exit(3)
 
     try:
         response = client.chat_postMessage(channel=channel, text=message)
@@ -50,6 +50,6 @@ def main():
         logging.error("Post error: %s",e.response['error'])
         sys.exit(2)
     logging.info("Message posted to Slack")
-    
+
 if __name__ == "__main__":
     main()

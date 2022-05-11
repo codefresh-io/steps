@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.15
+  version: 0.0.19
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -116,6 +116,16 @@ spec:
               "type": "string",
               "description": "GPG secret key (base64 encoded; for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0`) ",
               "default": ""
+          },
+          "force_push": {
+              "type": "boolean",
+              "description": "force git push (false by default)",
+              "default": false
+          },
+          "rebase": {
+              "type": "boolean",
+              "description": "pull remote changes with rebase flag before push",
+              "default": false
           }
       }
     }
@@ -141,7 +151,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: quay.io/bitnami/git
+      image: bitnami/git
       shell: bash
       environment:
         - REPO=${{repo}}
@@ -151,7 +161,8 @@ spec:
         - GIT_USER_EMAIL=${{git_user_email}}
         - GPG_KEY_ID=${{gpg_key_id}}
         - GPG_SECRET_KEY=${{gpg_secret_key}}
-
+        - FORCE_PUSH=${{force_push}}
+        - REBASE=${{rebase}}
       commands:
         - |-
           if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
@@ -164,10 +175,19 @@ spec:
         - cd ${WORKING_DIRECTORY}
         - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
         - echo GIT_USER_NAME=$GIT_USER_NAME GIT_USER_EMAIL=$GIT_USER_EMAIL
-        - git config --global user.name ${GIT_USER_NAME}
+        - git config --global user.name "${GIT_USER_NAME}"
         - git config --global user.email ${GIT_USER_EMAIL}
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
+        - |-
+          if [ "$REBASE" = true ]; then
+            git pull --rebase "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          fi
         - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
-        - git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+        - |-
+          if [ "$FORCE_PUSH" = true ]; then
+            git push --force "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          else
+            git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          fi    

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.3
+  version: 1.2.5
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -91,6 +91,12 @@ spec:
                   "type": "boolean",
                   "description": "Reset pipeline cached volume",
                   "default": false
+            },
+            "RUNTIME_NAME": {
+                "type": "string",
+                "description": "Runtime environment to run the pipeline",
+                "examples": ["my-runtime-name"],
+                "default": ""
             },
             "DETACH": {
                  "type": "boolean",
@@ -181,6 +187,9 @@ spec:
         [[ if .Arguments.RESET_VOLUME ]]
             [[- $cmd = (printf "%s --reset-volume" $cmd) -]]
         [[- end -]]
+        [[ if .Arguments.RUNTIME_NAME ]]
+            [[- $cmd = (printf "%s --runtime-name %s" $cmd .Arguments.RUNTIME_NAME) -]]
+        [[- end -]]    
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
@@ -211,7 +220,7 @@ spec:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
       [[- if eq .Arguments.FOLLOW_LOGS true ]]
         - echo "Retrieving logs for build $BUILD_ID"
-        - codefresh logs -f $BUILD_ID
+        - codefresh logs -f --no-timestamps $BUILD_ID
       [[- end ]]
         - codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
       [[- end -]]

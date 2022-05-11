@@ -22,28 +22,29 @@ def main():
             'type': 'incident',
             'title': '{}'.format(title),
             'service': {
-                'id': '{}'.format(service_id), 
+                'id': '{}'.format(service_id),
                 'type': 'service_reference'
-            },
-            'assignments': [
+            }
+        }
+        if assignee_user_id:
+            payload['assignments'] = [
                 {
                     'assignee': {
-                        'id': '{}'.format(assignee_user_id), 
+                        'id': '{}'.format(assignee_user_id),
                         'type': 'user_reference'
                     }
                 }
-            ],
-        }
-        
+            ]
+
         pd_incident = session.rpost('incidents', json=payload)
-    
+
     elif pagerduty_type == 'change_event':
 
         session = ChangeEventsAPISession(api_token)
 
         pd_change_event = session.submit(
-            summary='{}'.format(event_summary), 
-            source='{}'.format(event_source), 
+            summary='{}'.format(event_summary),
+            source='{}'.format(event_source),
             custom_details={"Build ID":'{}'.format(cf_build_id)},
             links=[{'href':'{}'.format(cf_build_url)}]
         )

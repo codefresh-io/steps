@@ -20,7 +20,7 @@ class PluginController {
      * @private
      */
     async _getData() {
-        const buildFailureCauses = await Codefresh.buildFailureCauses(Codefresh.info.build.id, Codefresh.info.apiKey);
+        const buildFailureCauses = await Codefresh.buildFailureCauses(Codefresh.info.build.id, Codefresh.info.apiKey, Codefresh.info.cfUrl);
 
         const { apiKey, ...res } = {
             ...Codefresh.info,

@@ -26,13 +26,14 @@ class Codefresh {
             revision: process.env.CF_REVISION,
             branch: process.env.CF_BRANCH_TAG_NORMALIZED,
             apiKey: process.env.CF_API_KEY,
+            cfUrl: process.env.CF_URL
         };
     }
 
-    async buildFailureCauses(buildId, token) {
+    async buildFailureCauses(buildId, token, cfUrl) {
         console.log(token, buildId);
         const data = await request({
-            uri: `https://g.codefresh.io/api/workflow/${buildId}/context-revision`,
+            uri: `${cfUrl}/api/workflow/${buildId}/context-revision`,
             method: 'GET',
             headers: {
                 'authorization': token,

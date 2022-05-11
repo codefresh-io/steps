@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: healthcheck
-  version: 1.1.8
+  version: 1.1.9
   isPublic: true
   description: Simple Step for running different health checks
   sources:
@@ -170,7 +170,7 @@ spec:
   stepsTemplate: |-
     main:
       name: healthcheck
-      image: quay.io/codefreshplugins/cfstep-healthcheck:1.1.6
+      image: quay.io/codefreshplugins/cfstep-healthcheck:1.1.9
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

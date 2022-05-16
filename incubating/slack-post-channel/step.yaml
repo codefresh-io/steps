@@ -51,7 +51,7 @@ spec:
             },
             "SLACK_IMAGE_VERSION": {
               "type": "string",
-              "default": "0.0.6",
+              "default": "0.0.7",
               "description": "Version (tag) of the slack-post-channel image to use."
             },
             "SLACK_TOKEN": {

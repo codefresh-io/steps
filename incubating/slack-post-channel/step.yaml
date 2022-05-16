@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: slack-post-channel
-  version: 0.0.6
+  version: 0.0.7
   title: Send a Slack message to a channel
   isPublic: true
   description: Send a message to a named Slack channel (instead of using a webhook URL)
@@ -66,6 +66,11 @@ spec:
                 "type": "string",
                 "description": "The message to send to the channel. Use <@ID> to tag a user. Check https://api.slack.com/reference/surfaces/formatting for details.",
                 "default": "Message sent from Codefresh was not defined explicitely."
+            },
+            "SLACK_ATTACHMENTS": {
+                "type": "string",
+                "description": "Attachments to send. Documentation https://api.slack.com/docs/message-attachments",
+                "default": ""
             },
             "LOG_LEVEL": {
               "type": "string",

@@ -1,0 +1,204 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefresh-report-image
+  version: 1.0.0
+  isPublic: true
+  description: Report Docker Image Metadata to Codefresh CD
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-report-image
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/codefresh-report-image/icon.svg
+    background: "#f4f4f4"
+  examples:
+    - description: report-image-metadata
+      workflow:
+        ReportImageMetadata:
+          type: codefresh-report-image
+          arguments:
+            CF_API_KEY: codefresh-cd-api-token
+            CF_IMAGE: docker.io/${CF_REPO_OWNER}/${CF_REPO_NAME}
+            CF_HOST: https://codefresh.mydomain.com
+            CF_LOGS_URL: ${CF_BUILD_URL}
+            CF_WORKFLOW_URL: ${CF_URL}/pipelines/edit/workflow?pipeline=${CF_PIPELINE_NAME}
+    - description: report-image-metadata-all
+      workflow:
+        ReportImageMetadataAll:
+          type: codefresh-report-image
+          arguments:
+            CF_API_KEY: codefresh-cd-api-token
+            CF_IMAGE: docker.io/${CF_REPO_OWNER}/${CF_REPO_NAME}
+            CF_HOST: https://codefresh.mydomain.com
+            CF_LOGS_URL: ${CF_BUILD_URL}
+            CF_WORKFLOW_URL: ${CF_URL}/pipelines/edit/workflow?pipeline=${CF_PIPELINE_NAME}
+            CF_ENRICHERS: jira, git
+            CF_GITHUB_TOKEN: token
+            CF_GIT_PROVIDER: github
+            CF_GIT_REPO: ${CF_REPO}
+            CF_GIT_BRANCH: ${CF_BRANCH}
+            CF_JIRA_API_TOKEN: atlassian-jira-api-token
+            CF_JIRA_EMAIL: dustin@codefresh.io
+            CF_JIRA_HOST_URL: https://codefresh-io.atlassian.net
+            CF_JIRA_MESSAGE: ${CF_COMMIT_MESSAGE}
+            CF_PROJECT_PREFIX: SA
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "CF_API_KEY",
+        "CF_IMAGE",
+        "CF_HOST"
+      ],
+      "properties": {
+        "CF_API_KEY": {
+          "type": "string",
+          "description": "API Key from Codefresh CD platform."
+        },
+        "CF_CI_TYPE": {
+          "type": "string",
+          "description": "Name of integration type.",
+          "default": "codefresh"
+        },
+        "CF_CONTAINER_REGISTRY_INTEGRATION": {
+          "type": "string",
+          "description": "Registry integration name."
+        },
+        "CF_DOCKERHUB_PASSWORD": {
+          "type": "string",
+          "description": "When no registry integration is specified: dockerhub token as password."
+        },
+        "CF_DOCKERHUB_USERNAME": {
+          "type": "string",
+          "description": "When no registry integration is specified: dockerhub username."
+        },
+        "CF_ENRICHERS": {
+          "type": "string",
+          "description": "Comma delimited list of integrations for collecting metadata on the build image/"
+        },
+        "CF_GIT_BRANCH": {
+          "type": "string",
+          "description": "The git branch which is related for the commit."
+        },
+        "CF_GIT_PROVIDER": {
+          "type": "string",
+          "description": "The git integration type use (i.e. github)"
+        },
+        "CF_GIT_REPO": {
+          "type": "string",
+          "description": "The the git repository used for building the image."
+        },
+        "CF_GITHUB_API_URL": {
+          "type": "string",
+          "description": "Specify github host api url.",
+          "default": "https://api.github.com"
+        },
+        "CF_GITHUB_TOKEN": {
+          "type": "string",
+          "description": "Github personal access token. Scope: repo."
+        },
+        "CF_HOST": {
+          "type": "string",
+          "description": "Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
+        },
+        "CF_JIRA_API_TOKEN": {
+          "type": "string",
+          "description": "When no jira integration is specified: Jira token for authenticating."
+        },
+        "CF_IMAGE": {
+          "type": "string",
+          "description": "Fully qualified image name to be reported to Codefresh CD. (i.e. docker.io/codefresh/example-app:1.0.0)"
+        },
+        "CF_JIRA_EMAIL": {
+          "type": "string",
+          "description": "When no jira integration is specified: user email for authenticating with jira."
+        },
+        "CF_JIRA_FAIL_ON_NOT_FOUND": {
+          "type": "string",
+          "description": "Fail pipeline if 'issue' not found."
+        },
+        "CF_JIRA_INTEGRATION": {
+          "type": "string",
+          "description": "When jira integration name is specified instead of providing explicit credentials."
+        },
+        "CF_JIRA_HOST_URL": {
+          "type": "string",
+          "description": "When no jira integration is specified: The jira server url. (i.e. https://codefresh-io.atlassian.net/)"
+        },
+        "CF_JIRA_MESSAGE": {
+          "type": "string",
+          "description": "The message to parse for JIRA ticket. (i.e. fix SA-45)"
+        },
+        "CF_JIRA_PROJECT_PREFIX": {
+          "type": "string",
+          "description": "Jira prefix for identifying the ticket number to use. (i.e. CR)"
+        },
+        "CF_LOGS_URL": {
+          "type": "string",
+          "description": "URL to build logs."
+        },
+        "CF_REGISTRY_DOMAIN": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry domain."
+        },
+        "CF_REGISTRY_INSECURE": {
+          "type": "boolean",
+          "description": "All insecure registry."
+        },
+        "CF_REGISTRY_PASSWORD": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry token/password."
+        },
+        "CF_REGISTRY_USERNAME": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry username."
+        },
+        "CF_WORKFLOW_NAME": {
+          "type": "string",
+          "description": "Given workflow name parameter."
+        },
+        "CF_WORKFLOW_URL": {
+          "type": "string",
+          "description": "Reported url of the workflow building the image."
+        },
+        "REGISTRY": {
+          "type": "string",
+          "description": "Docker Registry for step's image.",
+          "default": "quay.io"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "Image name for step's image.",
+          "default": "codefresh/csdp-report-image"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "description": "Image tag for step's image.",
+          "default": "0.0.40"
+        }
+      }
+    }
+  stepsTemplate: |-
+    codefresh-report-image:
+      name: codefresh-report-image
+      image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -85,8 +85,8 @@ spec:
       [[- else if and .Arguments.USERNAME .Arguments.PASSWORD ]]
         - skopeo login -u "${USERNAME}" -p "${PASSWORD}" ${REGISTRY_FQDN}
       [[- end ]]
-        # ************************* Query Registry ****************************
-        - skopeo inspect docker://${IMAGE_TAG} | tee /tmp/inspect.json
+        # *********** Query Registry (fail if image not found) ****************
+        - skopeo inspect docker://${IMAGE_TAG} 2>&1 | tee /tmp/inspect.json && grep -qve "Error parsing image name" /tmp/inspect.json
         # **************************** Get Labels *****************************
         - labels=$(cat /tmp/inspect.json | jq .Labels)
         # Convert JSON to env vars, ref: https://stackoverflow.com/questions/48512914/exporting-json-to-environment-variables

@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefresh-report-image
+  name: dustinvanbuskirk/codefresh-report-image
   version: 1.0.0
-  isPublic: true
+  isPublic: false
   description: Report Docker Image Metadata to Codefresh CD
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-report-image
@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/codefresh-report-image/icon.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/codefresh-report-image/Codefresh_Logo_Vertical_LightBkgd.svg
     background: "#f4f4f4"
   examples:
     - description: report-image-metadata
@@ -26,30 +26,28 @@ metadata:
           type: codefresh-report-image
           arguments:
             CF_API_KEY: codefresh-cd-api-token
-            CF_IMAGE: docker.io/${CF_REPO_OWNER}/${CF_REPO_NAME}
+            CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_HOST: https://codefresh.mydomain.com
-            CF_LOGS_URL: ${CF_BUILD_URL}
-            CF_WORKFLOW_URL: ${CF_URL}/pipelines/edit/workflow?pipeline=${CF_PIPELINE_NAME}
+            CF_WORKFLOW_URL: ${{CF_BUILD_URL}}
     - description: report-image-metadata-all
       workflow:
         ReportImageMetadataAll:
           type: codefresh-report-image
           arguments:
             CF_API_KEY: codefresh-cd-api-token
-            CF_IMAGE: docker.io/${CF_REPO_OWNER}/${CF_REPO_NAME}
+            CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_HOST: https://codefresh.mydomain.com
-            CF_LOGS_URL: ${CF_BUILD_URL}
-            CF_WORKFLOW_URL: ${CF_URL}/pipelines/edit/workflow?pipeline=${CF_PIPELINE_NAME}
+            CF_WORKFLOW_URL: ${{CF_BUILD_URL}}
             CF_ENRICHERS: jira, git
-            CF_GITHUB_TOKEN: token
+            CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_GIT_PROVIDER: github
-            CF_GIT_REPO: ${CF_REPO}
-            CF_GIT_BRANCH: ${CF_BRANCH}
-            CF_JIRA_API_TOKEN: atlassian-jira-api-token
+            CF_GIT_REPO: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+            CF_GIT_BRANCH: ${{CF_BRANCH}}
+            CF_JIRA_API_TOKEN: ${{JIRA_TOKEN}}
             CF_JIRA_EMAIL: dustin@codefresh.io
             CF_JIRA_HOST_URL: https://codefresh-io.atlassian.net
-            CF_JIRA_MESSAGE: ${CF_COMMIT_MESSAGE}
-            CF_PROJECT_PREFIX: SA
+            CF_JIRA_MESSAGE: ${{CF_COMMIT_MESSAGE}}
+            CF_JIRA_PROJECT_PREFIX: SA
 spec:
   arguments: |-
     {
@@ -71,7 +69,7 @@ spec:
         "CF_CI_TYPE": {
           "type": "string",
           "description": "Name of integration type.",
-          "default": "codefresh"
+          "default": ""
         },
         "CF_CONTAINER_REGISTRY_INTEGRATION": {
           "type": "string",
@@ -146,10 +144,6 @@ spec:
           "type": "string",
           "description": "Jira prefix for identifying the ticket number to use. (i.e. CR)"
         },
-        "CF_LOGS_URL": {
-          "type": "string",
-          "description": "URL to build logs."
-        },
         "CF_REGISTRY_DOMAIN": {
           "type": "string",
           "description": "When no registry integration is specified: registry domain."
@@ -182,12 +176,12 @@ spec:
         "IMAGE": {
           "type": "string",
           "description": "Image name for step's image.",
-          "default": "codefresh/csdp-report-image"
+          "default": "codefresh/codefresh-report-image"
         },
         "IMAGE_TAG": {
           "type": "string",
           "description": "Image tag for step's image.",
-          "default": "0.0.40"
+          "default": "0.0.83"
         }
       }
     }
@@ -195,6 +189,7 @@ spec:
     codefresh-report-image:
       name: codefresh-report-image
       image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
+      working_directory: /code
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

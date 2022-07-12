@@ -73,7 +73,7 @@ spec:
         },
         "CF_CONTAINER_REGISTRY_INTEGRATION": {
           "type": "string",
-          "description": "Registry integration name."
+          "description": "Codefresh Gitops Registry integration name."
         },
         "CF_DOCKERHUB_PASSWORD": {
           "type": "string",
@@ -130,7 +130,7 @@ spec:
         },
         "CF_JIRA_INTEGRATION": {
           "type": "string",
-          "description": "When jira integration name is specified instead of providing explicit credentials."
+          "description": "When Codefresh GitOps jira integration name is specified instead of providing explicit credentials."
         },
         "CF_JIRA_HOST_URL": {
           "type": "string",

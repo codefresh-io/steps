@@ -23,7 +23,9 @@ metadata:
     - description: report-image-metadata
       workflow:
         ReportImageMetadata:
+          title: Report image to Codefresh CD
           type: codefresh-report-image
+          working_directory: /code
           arguments:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
@@ -32,7 +34,9 @@ metadata:
     - description: report-image-metadata-all
       workflow:
         ReportImageMetadataAll:
+          title: Report image to Codefresh CD
           type: codefresh-report-image
+          working_directory: /code
           arguments:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}

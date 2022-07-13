@@ -70,11 +70,6 @@ spec:
           "type": "string",
           "description": "API Key from Codefresh CD platform."
         },
-        "CF_CI_TYPE": {
-          "type": "string",
-          "description": "Name of integration type.",
-          "default": ""
-        },
         "CF_CONTAINER_REGISTRY_INTEGRATION": {
           "type": "string",
           "description": "Codefresh Gitops Registry integration name."
@@ -195,6 +190,7 @@ spec:
       image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
       working_directory: /code
       environment:
+        - CF_CI_TYPE=classic
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]

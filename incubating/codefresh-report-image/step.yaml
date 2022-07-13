@@ -30,7 +30,6 @@ metadata:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_HOST: https://codefresh.mydomain.com
-            CF_WORKFLOW_URL: ${{CF_BUILD_URL}}
     - description: report-image-metadata-all
       workflow:
         ReportImageMetadataAll:
@@ -41,7 +40,6 @@ metadata:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_HOST: https://codefresh.mydomain.com
-            CF_WORKFLOW_URL: ${{CF_BUILD_URL}}
             CF_ENRICHERS: jira, git
             CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_GIT_PROVIDER: github
@@ -163,10 +161,6 @@ spec:
           "type": "string",
           "description": "Given workflow name parameter."
         },
-        "CF_WORKFLOW_URL": {
-          "type": "string",
-          "description": "Reported url of the workflow building the image."
-        },
         "REGISTRY": {
           "type": "string",
           "description": "Docker Registry for step's image.",
@@ -191,6 +185,7 @@ spec:
       working_directory: /code
       environment:
         - CF_CI_TYPE=classic
+        - CF_WORKFLOW_URL=${{CF_BUILD_URL}}
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]

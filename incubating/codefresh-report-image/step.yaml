@@ -174,7 +174,7 @@ spec:
         "IMAGE_TAG": {
           "type": "string",
           "description": "Image tag for step's image.",
-          "default": "0.0.83"
+          "default": "latest"
         }
       }
     }

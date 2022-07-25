@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -174,7 +174,7 @@ spec:
         "IMAGE_TAG": {
           "type": "string",
           "description": "Image tag for step's image.",
-          "default": "0.0.83"
+          "default": "latest"
         }
       }
     }

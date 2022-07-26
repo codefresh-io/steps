@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -40,7 +40,7 @@ metadata:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_HOST: https://codefresh.mydomain.com
-            CF_ENRICHERS: jira, git
+            CF_ENRICHERS: ${{CF_ENRICHERS}}
             CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_GIT_PROVIDER: github
             CF_GIT_REPO: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}

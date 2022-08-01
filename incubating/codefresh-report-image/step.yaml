@@ -29,7 +29,7 @@ metadata:
           arguments:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
-            CF_HOST: https://codefresh.mydomain.com
+            CF_RUNTIME_NAME: codefresh-hosted
     - description: report-image-metadata-all
       workflow:
         ReportImageMetadataAll:
@@ -39,7 +39,7 @@ metadata:
           arguments:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
-            CF_HOST: https://codefresh.mydomain.com
+            CF_RUNTIME_NAME: codefresh-hosted
             CF_ENRICHERS: ${{CF_ENRICHERS}}
             CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_GIT_PROVIDER: github
@@ -60,8 +60,7 @@ spec:
       "patterns": [],
       "required": [
         "CF_API_KEY",
-        "CF_IMAGE",
-        "CF_HOST"
+        "CF_IMAGE"
       ],
       "properties": {
         "CF_API_KEY": {
@@ -108,6 +107,10 @@ spec:
         "CF_HOST": {
           "type": "string",
           "description": "Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
+        },
+        "CF_RUNTIME_NAME": {
+            "type": "string",
+            "description": "Name of runtime to implement the enrichment"
         },
         "CF_JIRA_API_TOKEN": {
           "type": "string",
@@ -186,6 +189,7 @@ spec:
       environment:
         - CF_CI_TYPE=classic
         - CF_WORKFLOW_URL=${{CF_BUILD_URL}}
+        - CF_WORKFLOW_NAME=${{CF_REPO_OWNER}}/${{CF_PIPELINE_NAME}}
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]

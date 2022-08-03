@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.2
+  version: 1.0.3
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -189,7 +189,7 @@ spec:
       environment:
         - CF_CI_TYPE=classic
         - CF_WORKFLOW_URL=${{CF_BUILD_URL}}
-        - CF_WORKFLOW_NAME=${{CF_REPO_OWNER}}/${{CF_PIPELINE_NAME}}
+        - CF_WORKFLOW_NAME=${{CF_PIPELINE_NAME}}
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]

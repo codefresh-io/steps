@@ -109,7 +109,7 @@ spec:
         },
         "CF_GIT_PROVIDER": {
           "type": "string",
-          "description": "The git integration type use (i.e. github)"
+          "description": "The Git provider: Acceptable values are github, gitlab, bitbucket, or bitbucket-server. In case this not provided git credentials will be taken form your runtime git context"
         },
         "CF_GIT_REPO": {
           "type": "string",

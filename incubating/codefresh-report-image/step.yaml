@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.3
+  version: 1.0.4
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -40,7 +40,7 @@ metadata:
             CF_API_KEY: codefresh-cd-api-token
             CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
             CF_RUNTIME_NAME: codefresh-hosted
-            CF_ENRICHERS: ${{CF_ENRICHERS}}
+            CF_CONTAINER_REGISTRY_INTEGRATION: docker-integration
             CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
             CF_GIT_PROVIDER: github
             CF_GIT_REPO: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
@@ -65,11 +65,31 @@ spec:
       "properties": {
         "CF_API_KEY": {
           "type": "string",
-          "description": "API Key from Codefresh CD platform."
+          "description": "Codefresh API KEY"
+        },
+        "CF_HOST": {
+          "type": "string",
+          "description": "Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
+        },
+        "CF_PLATFORM_URL": {
+            "type": "string",
+            "description": "Required for integrations in on-premises environments only. The root URL of the codefresh application. If not specified, uses the default value of https://g.codefresh.io."
+        },
+        "CF_RUNTIME_NAME": {
+            "type": "string",
+            "description": "Name of runtime to implement the enrichment"
+        },
+        "CF_IMAGE": {
+          "type": "string",
+          "description": "Fully qualified image name to be reported to Codefresh CD. (i.e. docker.io/codefresh/example-app:1.0.0)"
         },
         "CF_CONTAINER_REGISTRY_INTEGRATION": {
           "type": "string",
-          "description": "Codefresh Gitops Registry integration name."
+          "description": "Codefresh CD Gitops Registry integration name."
+        },
+        "CF_ISSUE_TRACKING_INTEGRATION": {
+          "type": "string",
+          "description": "The issue tracking integration name."
         },
         "CF_DOCKERHUB_PASSWORD": {
           "type": "string",
@@ -81,7 +101,7 @@ spec:
         },
         "CF_ENRICHERS": {
           "type": "string",
-          "description": "Comma delimited list of integrations for collecting metadata on the build image/"
+          "description": "*deprecated* list of integrations separated by commas: Acceptable values are git, jira. ex: 'jira, git'"
         },
         "CF_GIT_BRANCH": {
           "type": "string",
@@ -104,21 +124,9 @@ spec:
           "type": "string",
           "description": "Github personal access token. Scope: repo."
         },
-        "CF_HOST": {
-          "type": "string",
-          "description": "Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
-        },
-        "CF_RUNTIME_NAME": {
-            "type": "string",
-            "description": "Name of runtime to implement the enrichment"
-        },
         "CF_JIRA_API_TOKEN": {
           "type": "string",
           "description": "When no jira integration is specified: Jira token for authenticating."
-        },
-        "CF_IMAGE": {
-          "type": "string",
-          "description": "Fully qualified image name to be reported to Codefresh CD. (i.e. docker.io/codefresh/example-app:1.0.0)"
         },
         "CF_JIRA_EMAIL": {
           "type": "string",

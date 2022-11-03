@@ -117,8 +117,7 @@ spec:
         },
         "CF_GITHUB_API_URL": {
           "type": "string",
-          "description": "Specify github host api url.",
-          "default": "https://api.github.com"
+          "description": "Specify github host api url."
         },
         "CF_GITHUB_TOKEN": {
           "type": "string",

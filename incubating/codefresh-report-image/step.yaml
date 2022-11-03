@@ -69,7 +69,7 @@ spec:
         },
         "CF_HOST": {
           "type": "string",
-          "description": "Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
+          "description": "*deprecated* Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
         },
         "CF_PLATFORM_URL": {
             "type": "string",

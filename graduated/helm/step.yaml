@@ -190,7 +190,11 @@ spec:
             "chart_subdir": {
                 "type": "string",
                 "description": "optional subfolder (inside JFrog Artifactory helm repository)"
-            }
+            },
+            "skip_kubectl_config_init": {
+                "type": "boolean",
+                "description": "Don't run kubectl config use-context <context>"
+            },
         }
     }
   stepsTemplate: |-

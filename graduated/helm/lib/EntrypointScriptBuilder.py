@@ -28,6 +28,7 @@ class EntrypointScriptBuilder(object):
         self.chart = env.get('CHART_JSON')
         self.helm_version = env.get('HELM_VERSION')
         self.azure_helm_token = None
+        self.skip_kubectl_config_init = env.get('SKIP_KUBECTL_CONFIG_INIT')
 
         # Save chart data in files
         if not self.chart is None:
@@ -173,7 +174,7 @@ class EntrypointScriptBuilder(object):
 
     def _build_kubectl_commands(self):
         lines = []
-        if self.action in ['install', 'promotion', 'auth']:
+        if self.action in ['install', 'promotion', 'auth'] and not self.skip_kubectl_config_init:
             if self.kube_context is None:
                 raise Exception('Must set KUBE_CONTEXT in environment (Name of Kubernetes cluster as named in Codefresh)')
             kubectl_cmd = 'kubectl config use-context "%s"' % self.kube_context

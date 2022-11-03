@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.4
+  version: 1.0.5
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -115,7 +115,7 @@ spec:
           "type": "string",
           "description": "The the git repository used for building the image."
         },
-        "CF_GITHUB_API_URL": {
+        "CF_GITHUB_API_HOST_URL": {
           "type": "string",
           "description": "Specify github host api url."
         },

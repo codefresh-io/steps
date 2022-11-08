@@ -3,9 +3,9 @@ kind: step-type
 metadata:
   name: jira-issue-extractor
   title: Jira issue extractor from any source
-  version: 1.2.3
+  version: 1.2.4
   isPublic: true
-  description: Extract jira issue from message and convert it to image annotation
+  description: Extracts Jira issue from a string and converts it to an image annotation
   sources:
     - 'https://github.com/codefresh-plugins/jira-issue-extractor'
   stage: incubating
@@ -27,6 +27,24 @@ metadata:
           title: "Building Docker image"
           type: "build"
           image_name: "codefresh/${{CF_REPO_NAME}}"
+          tag: '${{IMAGE_TAG}}'
+          dockerfile: "Dockerfile"
+
+        jira-issue-extractor:
+          title: Enrich image with annotations
+          type: jira-issue-extractor
+          arguments:
+            IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}:${{IMAGE_TAG}}
+            JIRA_PROJECT_PREFIX: ${{JIRA_PREFIX}}
+            MESSAGE: ${{CF_BRANCH}}
+            JIRA_CONTEXT: myJiraIntegration
+    
+    - description: example-2
+      workflow:
+        build:
+          title: "Building Docker image"
+          type: "build"
+          image_name: "codefresh/${{CF_REPO_NAME}}"
           tag: '${{PACKAGE_VERSION}}'
           dockerfile: "Dockerfile"
 
@@ -35,8 +53,8 @@ metadata:
           type: jira-issue-extractor
           arguments:
             IMAGE: gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}:${{IMAGE_TAG}}
-            JIRA_PROJECT_PREFIX: ${{CF_BRANCH}}
-            MESSAGE: SAAS-21011-ability-to-remove-user
+            JIRA_PROJECT_PREFIX: ${{JIRA_PREFIX}}
+            MESSAGE: ${{CF_BRANCH}}
             JIRA_HOST: codefresh-io.atlassian.net
             JIRA_EMAIL: pavel@codefresh.io
             JIRA_API_TOKEN: "******"
@@ -60,25 +78,26 @@ spec:
         "properties": {
             "JIRA_PROJECT_PREFIX": {
                 "type": "string",
-                "description": "Jira project prefix like: SAAS,CF, etc"
+                "description": "Jira project prefix like: SAAS, CF, etc. It could be a regex. Ex: (JR|XY)",
+                "examples": ["SAAS", "(JR|XY)"]
             },
             "MESSAGE": {
                 "type": "string",
-                "description": "Message from which you want retrieve issue name, can be branch, commit message, whatever",
+                "description": "Message from which you want retrieve the issue name. It can be branch, commit message, whatever",
                 "examples": ["SAAS-21011-fix", "CF-2111-revert"]
             },
             "JIRA_HOST": {
                 "type": "string",
-                "description": "Jira host, should be without protocol and / in the end",
+                "description": "Jira host. It should be without protocol and / in the end",
                 "examples": ["codefresh-io.atlassian.net"]
             },
             "JIRA_EMAIL": {
                 "type": "string",
-                "description": "Your jira email"
+                "description": "Your Jira email"
             },
             "JIRA_API_TOKEN": {
                 "type": "string",
-                "description": "Token that you generate in jira"
+                "description": "Token that you generate in Jira"
             },
             "JIRA_CONTEXT": {
                 "type": "string",
@@ -87,7 +106,7 @@ spec:
             },
             "IMAGE": {
                "type": "string",
-               "description": "Your image to which you want assign issues",
+               "description": "The image to which you want assign issues",
                "examples": ["gcr.io/codefresh-inc/codefresh/${{CF_REPO_NAME}}"]
             },
             "FAIL_ON_NOT_FOUND": {

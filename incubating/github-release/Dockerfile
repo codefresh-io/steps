@@ -1,4 +1,4 @@
-FROM node:13.0-alpine
+FROM node:13.5.0-alpine
 
 ARG CF_CLI_VERSION=v0.35.0
 

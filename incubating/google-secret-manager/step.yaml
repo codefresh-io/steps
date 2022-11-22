@@ -13,7 +13,7 @@ metadata:
   official: true
   icon:
     type: image
-    url: 'https://cdn.jsdelivr.net/gh/codefresh-contrib/google-secret-manager@main/step/secret_manager.png'
+    url: 'https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/google-secret-manager/images/secret_manager.png'
     background: '#f4f4f4'
   examples:
     - description: fetch-secret-from-gsm

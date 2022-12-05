@@ -10,6 +10,18 @@
 
 Product Documentation: https://docs.servicenow.com/
 
+### Compatibility
+
+The plugin has been tested on the following instance releases:
+
+* Paris
+* Rome
+
+### Known issues
+
+Flow fails with error `No issuer certificate found for GeoTrust TLS DV RSA Mixed`
+Based on https://www.servicenow.com/community/developer-forum/outbound-rest-call-stopped-working-today-no-issuer-certificate/m-p/1701174/page/2, I added the property `com.glide.communications.httpclient.verify_revoked_certificate` with a value of `false` to `sys_properties` and it solved the issue
+
 ### Full List of Arguments
 
 Example `codefresh.yml` build is below with required Arguments in place.
@@ -51,7 +63,7 @@ steps:
       - echo "Building App"
 
   calculateDate:
-     title: "Calculate date for the palnned schedule"
+    title: "Calculate date for the palnned schedule"
     image: ubuntu:latest
     stage: deploy
     commands:

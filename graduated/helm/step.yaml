@@ -205,7 +205,7 @@ spec:
       image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
       [[ else ]]
       image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
-      [[- end -]]
+      [[ end ]]
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]
@@ -227,7 +227,7 @@ spec:
         - bash -c 'source /opt/bin/release_chart'
       [[ else ]]
         - source /opt/bin/release_chart
-      [[- end -]]
+      [[ end ]]
       [[ range $arg := .Arguments.commands ]]
         - '[[ $arg ]]'
       [[ end ]]

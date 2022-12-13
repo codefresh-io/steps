@@ -190,13 +190,22 @@ spec:
             "chart_subdir": {
                 "type": "string",
                 "description": "optional subfolder (inside JFrog Artifactory helm repository)"
+            },
+            "use_debian_image": {
+                "type": "boolean",
+                "description": "Use debian based cfstep-helm image",
+                "default": false
             }
         }
     }
   stepsTemplate: |-
     main:
       name: helm
+      [[ if .Arguments.use_debian_image ]]
+      image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
+      [[ else ]]
       image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
+      [[- end -]]
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]
@@ -214,7 +223,11 @@ spec:
       [[- end -]]
       [[ if .Arguments.commands ]]
       commands:
+      [[ if .Arguments.use_debian_image ]]
+        - bash -c 'source /opt/bin/release_chart'
+      [[ else ]]
         - source /opt/bin/release_chart
+      [[- end -]]
       [[ range $arg := .Arguments.commands ]]
         - '[[ $arg ]]'
       [[ end ]]

@@ -126,6 +126,21 @@ spec:
               "type": "boolean",
               "description": "pull remote changes with rebase flag before push",
               "default": false
+          },
+          "use_ssh": {
+              "type": "boolean",
+              "description: "Is use ssh or https",
+              "default": false
+          },
+          "ssh_repo_url": {
+              "type": "string",
+              "description: "SSH repository url",
+              "default": ""
+          }
+          "private_key": {
+              "type": "string",
+              "description: "Private key for ssh",
+              "default": ""
           }
       }
     }
@@ -163,6 +178,9 @@ spec:
         - GPG_SECRET_KEY=${{gpg_secret_key}}
         - FORCE_PUSH=${{force_push}}
         - REBASE=${{rebase}}
+        - USE_SSH=${{use_ssh}}
+        - REPO=${{ssh_repo_url}}
+        - PRIVATE_KEY=${{private_key}}
       commands:
         - |-
           if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
@@ -180,6 +198,27 @@ spec:
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
+        - |-
+          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          if [ "$USE_SSH" = "true" ]; then
+            [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
+            echo "$PRIVATE_KEY" > /root/.ssh/codefresh
+            chmod 700 ~/.ssh/
+            chmod 600 ~/.ssh/*
+
+            # ssh://git@github.com:username/repo.git
+            # match "github.com" from ssh uri
+            REPO=${REPO#"ssh://"}
+            SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+            echo "Adding "$SSH_HOST" to known_hosts"
+  
+            # removes all keys belonging to hostname from a known_hosts file
+            ssh-keygen -R $SSH_HOST 2>/dev/null
+
+            # skip stderr logs that start with '#'
+            ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+            REPO_URL=$REPO     
+          fi
         - |-
           if [ "$REBASE" = true ]; then
             git pull --rebase "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"

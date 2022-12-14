@@ -136,7 +136,7 @@ spec:
               "type": "string",
               "description: "SSH repository url",
               "default": ""
-          }
+          },
           "private_key": {
               "type": "string",
               "description: "Private key for ssh",

@@ -129,17 +129,12 @@ spec:
           },
           "use_ssh": {
               "type": "boolean",
-              "description: "Is use ssh or https",
+              "description": "Is use ssh or https",
               "default": false
           },
           "ssh_repo_url": {
               "type": "string",
-              "description: "SSH repository url",
-              "default": ""
-          },
-          "private_key": {
-              "type": "string",
-              "description: "Private key for ssh",
+              "description": "SSH repository url",
               "default": ""
           }
       }
@@ -180,7 +175,7 @@ spec:
         - REBASE=${{rebase}}
         - USE_SSH=${{use_ssh}}
         - REPO=${{ssh_repo_url}}
-        - PRIVATE_KEY=${{private_key}}
+        - GIT_INTEGRATION_NAME=${{git}}
       commands:
         - |-
           if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
@@ -201,6 +196,7 @@ spec:
         - |-
           REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
+            PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.sshPrivateKey)
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
             echo "$PRIVATE_KEY" > /root/.ssh/codefresh
             chmod 700 ~/.ssh/

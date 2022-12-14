@@ -221,12 +221,12 @@ spec:
           fi
         - |-
           if [ "$REBASE" = true ]; then
-            git pull --rebase "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+            git pull --rebase $REPO_URL
           fi
-        - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
+        - echo git push $REPO_URL
         - |-
           if [ "$FORCE_PUSH" = true ]; then
-            git push --force "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+            git push --force $REPO_URL
           else
-            git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+            git push $REPO_URL
           fi    

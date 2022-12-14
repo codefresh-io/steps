@@ -59,7 +59,7 @@ spec:
             },
             "PIPELINE_ID": {
                 "type": "string",
-                "description": "Pipeline name or id"
+                "description": "Name or ID of pipeline to run. Get the pipeline name from "
             },
             "TRIGGER_ID": {
                 "type": "string",

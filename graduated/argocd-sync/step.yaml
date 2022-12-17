@@ -143,7 +143,7 @@ spec:
         - >-
           cf-argo-plugin sync "${{app_name}}"
           --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --rollback=${{rollback}}
-          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
+          --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}" --argo-token="${{token}}"
           --sync=${{sync}} --prune=${{prune}} --wait-healthy=${{wait_healthy}} --wait-suspend=${{wait_for_suspend}} --debug=${{debug}}
           --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip_wait_rollout}} --basic-auth=${{basic_auth}}
           --out-commands-file /codefresh/volume/${CF_BLOCK_NAME}-argo-executor --out-export-file /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url

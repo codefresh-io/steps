@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.5
+  version: 1.2.6
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -51,6 +51,12 @@ spec:
             "PIPELINE_ID"
         ],
         "properties": {
+            "IMAGE_TAG": {
+                "type": "string",
+                "description": "Custom image of codefresh-run step",
+                "examples": ["latest-debian"],
+                "default": "latest"
+            },
             "PIPELINE_ID": {
                 "type": "string",
                 "description": "Pipeline name or id"
@@ -163,7 +169,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     first:
-        image: quay.io/codefresh/cli
+        image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
         commands:
         [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
@@ -215,7 +221,7 @@ spec:
       [[- if eq .Arguments.DETACH false ]]
     second:
       name: step1
-      image: quay.io/codefresh/cli
+      image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
       [[- if eq .Arguments.FOLLOW_LOGS true ]]

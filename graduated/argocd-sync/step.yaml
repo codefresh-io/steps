@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.16.2
+  version: 1.16.6
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
@@ -122,20 +122,25 @@ spec:
               "type": "boolean",
               "description": "Skip wait rollout",
               "default": false
+          },
+          "basic_auth": {
+              "type": "boolean",
+              "description": "Use ArgoCD username/password as primary credentials",
+              "default": false
           }
       }
     }
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "codefresh/cf-argo-plugin:0.2.3"
+      image: "codefresh/cf-argo-plugin:0.2.9"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
-          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}"
+          --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --rollback=${{rollback}}
           --argo-host=${{host}} --argo-username=${{username}} --argo-password="${{password}}"
           --sync=${{sync}} --prune=${{prune}} --wait-healthy=${{wait_healthy}} --wait-suspend=${{wait_for_suspend}} --debug=${{debug}}
-          --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip_wait_rollout}}
+          --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip_wait_rollout}} --basic-auth=${{basic_auth}}
           --out-commands-file /codefresh/volume/${CF_BLOCK_NAME}-argo-executor --out-export-file /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-executor
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
@@ -144,11 +149,11 @@ spec:
         - echo ARGOCD_OPTS=$ARGOCD_OPTS >> /meta/env_vars_to_export
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "codefresh/cf-argo-plugin:0.2.3"
+      image: "codefresh/cf-argo-plugin:0.2.9"
       commands:
         - /codefresh/volume/${CF_BLOCK_NAME}-argo-executor
     rollback:
       title: "Rollback"
-      image: "codefresh/cf-argo-plugin:0.2.3"
+      image: "codefresh/cf-argo-plugin:0.2.9"
       commands:
         - cf-argo-plugin rollback ${{app_name}} --code=$ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.6
+  version: 1.3.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -144,6 +144,11 @@ spec:
                 "examples": ["33.3", "45"],
                 "default": "45"
             },
+            "TERMINATE_ON_TIMEOUT": {
+                "type": "boolean",
+                "description": "Terminate build if timeout reached",
+                "default": false
+            },
             "ONLY": {
                   "type": "array",
                   "items": {
@@ -228,6 +233,11 @@ spec:
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f --no-timestamps $BUILD_ID
       [[- end ]]
-        - codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
+        - >-
+          codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
+      [[- if eq .Arguments.TERMINATE_ON_TIMEOUT true ]]
+          || (echo "TERMINATE_ON_TIMEOUT was set to true, sending termination request" &&
+              codefresh terminate $BUILD_ID &&
+              exit 1)
+      [[- end ]]
       [[- end -]]
-

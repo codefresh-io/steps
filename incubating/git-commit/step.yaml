@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: philipp/git-commit
+  name: git-commit
   version: 0.0.19
-  isPublic: false
+  isPublic: true
   description: Commit and push changes to repository
   icon:
     type: svg
@@ -158,7 +158,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: philippplotnikov/git-commit:linux
+      image: codefresh/git-commit
       shell: bash
       environment:
         - REPO=${{repo}}

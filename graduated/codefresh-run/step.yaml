@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.2.5
+  version: 1.3.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -51,56 +51,62 @@ spec:
             "PIPELINE_ID"
         ],
         "properties": {
+            "IMAGE_TAG": {
+                "type": "string",
+                "description": "Custom image of codefresh-run step",
+                "examples": ["latest-debian"],
+                "default": "latest"
+            },
             "PIPELINE_ID": {
                 "type": "string",
-                "description": "Pipeline name or id"
+                "description": "Name or ID of pipeline to run. In the UI, select Pipelines. Click pipeline name, then select Settings, and get the Name and ID."
             },
             "TRIGGER_ID": {
                 "type": "string",
-                "description": "Trigger id or name",
+                "description": "Name or ID of trigger for specified pipeline. Mandatory when BRANCH or SHA are defined. In the UI, select Pipelines. Click pipeline name, then select Workflows > Triggers. Click Edit and get the Name. ",
                 "default": ""
             },
             "BRANCH": {
                 "type": "string",
-                "description": "Branch",
+                "description": "Branch for which to run the pipeline. When defined, TRIGGER_ID must also be defined.",
                 "examples": ["master"],
                 "default": ""
             },
             "SHA": {
                 "type": "string",
-                "description": "Set commit sha",
+                "description": "Git commit hash. When defined, TRIGGER_ID must also be defined.",
                 "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"],
                 "default": ""
             },
             "NO_CACHE": {
                 "type": "boolean",
-                "description": "Ignore cached images",
+                "description": "Ignore cached images.",
                 "default": false
             },
             "NO_CF_CACHE": {
                    "type": "boolean",
-                   "description": "Ignore Codefresh cache optimizations",
+                   "description": "Ignore Codefresh cache optimizations.",
                    "default": false
                },
             "ENABLE_NOTIFICATIONS": {
                 "type": "boolean",
-                "description": "Report notifications about pipeline execution",
+                "description": "Send email notifications on pipeline build status.",
                 "default": false
             },
             "RESET_VOLUME": {
                   "type": "boolean",
-                  "description": "Reset pipeline cached volume",
+                  "description": "Reset pipeline cached volume.",
                   "default": false
             },
             "RUNTIME_NAME": {
                 "type": "string",
-                "description": "Runtime environment to run the pipeline",
+                "description": "Runtime environment to run the pipeline.",
                 "examples": ["my-runtime-name"],
                 "default": ""
             },
             "DETACH": {
                  "type": "boolean",
-                 "description": "Run pipeline and print build ID",
+                 "description": "Run pipeline without assigning to a project and print build ID.",
                  "default": false
              },
             "FOLLOW_LOGS": {
@@ -113,7 +119,7 @@ spec:
                  "items": {
                      "type": "string"
                  },
-                 "description": "Run pipeline with contexts",
+                 "description": "Run pipeline with execution contexts.",
                  "examples": ["git-context-1"],
                  "default": []
              },
@@ -122,28 +128,33 @@ spec:
                  "items": {
                      "type": "string"
                  },
-                 "description": "Set build variables",
+                 "description": "Set build variables.",
                  "examples": ["key=val"],
                  "default": []
              },
             "VARIABLE_FILE": {
                   "type": "string",
-                  "description": "Set build variables from a file",
+                  "description": "Import build variables from a file.",
                   "examples": ["/codefresh/volume/my-repo/var_file_example.yml"],
                   "default": ""
             },             
             "TIMEOUT_MINS": {
                 "type": "string",
-                "description": "Timeout in mins",
+                "description": "Timeout in minutes after which to consider pipeline build as failed.",
                 "examples": ["33.3", "45"],
                 "default": "45"
+            },
+            "TERMINATE_ON_TIMEOUT": {
+                "type": "boolean",
+                "description": "Terminate build if timeout reached",
+                "default": false
             },
             "ONLY": {
                   "type": "array",
                   "items": {
                       "type": "string"
                   },
-                  "description": "run only specifc steps",
+                  "description": "Run only specifc steps defined.",
                   "examples": ["step1", "step2"],
                   "default": []
               },
@@ -152,7 +163,7 @@ spec:
                   "items": {
                       "type": "string"
                   },
-                  "description": "skip specifc steps",
+                  "description": "Skip the specifc steps defined.",
                   "examples": ["step1", "step2"],
                   "default": []
               }
@@ -163,7 +174,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     first:
-        image: quay.io/codefresh/cli
+        image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
         commands:
         [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
@@ -215,13 +226,18 @@ spec:
       [[- if eq .Arguments.DETACH false ]]
     second:
       name: step1
-      image: quay.io/codefresh/cli
+      image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
       [[- if eq .Arguments.FOLLOW_LOGS true ]]
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f --no-timestamps $BUILD_ID
       [[- end ]]
-        - codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
+        - >-
+          codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]]
+      [[- if eq .Arguments.TERMINATE_ON_TIMEOUT true ]]
+          || (echo "TERMINATE_ON_TIMEOUT was set to true, sending termination request" &&
+              codefresh terminate $BUILD_ID &&
+              exit 1)
+      [[- end ]]
       [[- end -]]
-

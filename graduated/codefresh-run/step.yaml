@@ -146,7 +146,7 @@ spec:
             },
             "TERMINATE_ON_TIMEOUT": {
                 "type": "boolean",
-                "description": "Terminate child build if timeout expired",
+                "description": "Terminate build if timeout reached",
                 "default": false
             },
             "ONLY": {

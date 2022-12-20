@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: git-commit
+  name: philipp/git-commit
   version: 0.0.19
-  isPublic: true
+  isPublic: false
   description: Commit and push changes to repository
   icon:
     type: svg
@@ -131,11 +131,6 @@ spec:
               "type": "boolean",
               "description": "Is use ssh or https",
               "default": false
-          },
-          "ssh_repo_url": {
-              "type": "string",
-              "description": "SSH repository url",
-              "default": ""
           }
       }
     }
@@ -151,6 +146,8 @@ spec:
         - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
         - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.username)
+        - export PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.sshPrivateKey)
+        - echo PRIVATE_KEY=$PRIVATE_KEY >> /meta/env_vars_to_export
         # If the git integration does not include the auth username, then default to the git_user_name argument
         - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
         - echo GIT_ACCESS_TOKEN_USER=$GIT_ACCESS_TOKEN_USER >> /meta/env_vars_to_export
@@ -161,7 +158,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: bitnami/git
+      image: philippplotnikov/git-commit:linux
       shell: bash
       environment:
         - REPO=${{repo}}
@@ -174,7 +171,6 @@ spec:
         - FORCE_PUSH=${{force_push}}
         - REBASE=${{rebase}}
         - USE_SSH=${{use_ssh}}
-        - REPO=${{ssh_repo_url}}
         - GIT_INTEGRATION_NAME=${{git}}
       commands:
         - |-
@@ -196,24 +192,23 @@ spec:
         - |-
           REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
-            PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.sshPrivateKey)
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
-            echo "$PRIVATE_KEY" > /root/.ssh/codefresh
-            chmod 700 ~/.ssh/
-            chmod 600 ~/.ssh/*
+            echo "$PRIVATE_KEY" > ~/.ssh/codefresh
+            ssh-keygen -y -f ~/.ssh/codefresh > ~/.ssh/codefresh.pub
+            chmod 0600 ~/.ssh/*
+            chmod 0700 ~/.ssh/
 
             # ssh://git@github.com:username/repo.git
             # match "github.com" from ssh uri
             REPO=${REPO#"ssh://"}
             SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
             echo "Adding "$SSH_HOST" to known_hosts"
-  
+            
             # removes all keys belonging to hostname from a known_hosts file
             ssh-keygen -R $SSH_HOST 2>/dev/null
 
-            # skip stderr logs that start with '#'
             ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
-            REPO_URL=$REPO     
+            REPO_URL=$REPO
           fi
         - |-
           if [ "$REBASE" = true ]; then

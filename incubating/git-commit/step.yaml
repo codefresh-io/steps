@@ -146,7 +146,7 @@ spec:
         - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
         - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.username)
-        - export PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.sshPrivateKey)
+        - export PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq .spec.data.auth.sshPrivateKey)
         - echo PRIVATE_KEY=$PRIVATE_KEY >> /meta/env_vars_to_export
         # If the git integration does not include the auth username, then default to the git_user_name argument
         - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
@@ -193,8 +193,7 @@ spec:
           REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
-            echo "$PRIVATE_KEY" > ~/.ssh/codefresh
-            ssh-keygen -y -f ~/.ssh/codefresh > ~/.ssh/codefresh.pub
+            echo ${PRIVATE_KEY:1:-1} | sed 's/\\n/\n/g' > ~/.ssh/codefresh
             chmod 0600 ~/.ssh/*
             chmod 0700 ~/.ssh/
 
@@ -207,7 +206,7 @@ spec:
             # removes all keys belonging to hostname from a known_hosts file
             ssh-keygen -R $SSH_HOST 2>/dev/null
 
-            ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+            ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
             REPO_URL=$REPO
           fi
         - |-

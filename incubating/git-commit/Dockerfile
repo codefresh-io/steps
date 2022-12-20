@@ -9,10 +9,6 @@ RUN apt-get update -y && \
 # add ssh record on which ssh key to use
 COPY ./.ssh/ /root/.ssh/
 
-# add fingerprint for major git providers
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
-RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
-
 # USER nodeuser
 RUN addgroup --gid 3000 nodegroup && \
     adduser --uid 3000 --ingroup nodegroup --shell /bin/sh --disabled-password nodeuser

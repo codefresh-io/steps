@@ -1,4 +1,4 @@
-#moving to ubuntu instead of debian to solve high vulnerabilities 
+# moving to ubuntu instead of debian to solve high vulnerabilities 
 FROM ubuntu:jammy-20221101
 
 RUN apt-get update -y && \
@@ -7,7 +7,7 @@ RUN apt-get update -y && \
     ln -s /bin/busybox /usr/bin/[[
 
 # add ssh record on which ssh key to use
-COPY ./.ssh/ /root/.ssh/
+COPY ./ssh/ /root/.ssh/
 
 # USER nodeuser
 RUN addgroup --gid 3000 nodegroup && \

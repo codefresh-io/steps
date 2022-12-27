@@ -1,4 +1,4 @@
-# moving to ubuntu instead of debian to solve high vulnerabilities 
+# Moving to ubuntu instead of debian to solve high vulnerabilities 
 FROM ubuntu:jammy-20221101
 
 RUN apt-get update -y && \
@@ -6,7 +6,7 @@ RUN apt-get update -y && \
     apt-get install git bash openssl busybox -y && \
     ln -s /bin/busybox /usr/bin/[[
 
-# add ssh record on which ssh key to use
+# Add ssh record on which ssh key to use
 COPY ./ssh/ /root/.ssh/
 
 # USER nodeuser

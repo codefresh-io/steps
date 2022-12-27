@@ -129,7 +129,7 @@ spec:
           },
           "use_ssh": {
               "type": "boolean",
-              "description": "Is use ssh or https",
+              "description": "Is use ssh or https (ssh key will be taken from git integration defined in git argument)",
               "default": false
           }
       }

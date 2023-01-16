@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-sync
-  version: 1.17.1
+  version: 1.18.0
   isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:

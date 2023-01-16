@@ -132,13 +132,18 @@ spec:
               "type": "boolean",
               "description": "Use ArgoCD username/password as primary credentials",
               "default": false
+          },
+          "custom_external_link": {
+              "type": "string",
+              "description": "Custom external link shown inside build view",
+              "default": ""
           }
       }
     }
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "codefresh/cf-argo-plugin:0.3.1"
+      image: "codefresh/cf-argo-plugin:0.3.2"
       commands:
         - >-
           cf-argo-plugin sync "${{app_name}}"
@@ -147,6 +152,7 @@ spec:
           --sync=${{sync}} --prune=${{prune}} --wait-healthy=${{wait_healthy}} --wait-suspend=${{wait_for_suspend}} --debug=${{debug}}
           --revision="${{revision}}" --wait-additional-flags="${{additional_flags_for_wait_cmd}}" --skip=${{skip_wait_rollout}} --basic-auth=${{basic_auth}}
           --out-commands-file /codefresh/volume/${CF_BLOCK_NAME}-argo-executor --out-export-file /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
+          --custom-external-link="${{custom_external_link}}"
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-executor
         - chmod +x /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
         - /codefresh/volume/${CF_BLOCK_NAME}-argo-export_url
@@ -154,11 +160,11 @@ spec:
         - echo ARGOCD_OPTS=$ARGOCD_OPTS >> /meta/env_vars_to_export
     executeArgoCd:
       title: "ExecuteArgoCd"
-      image: "codefresh/cf-argo-plugin:0.3.1"
+      image: "codefresh/cf-argo-plugin:0.3.2"
       commands:
         - /codefresh/volume/${CF_BLOCK_NAME}-argo-executor
     rollback:
       title: "Rollback"
-      image: "codefresh/cf-argo-plugin:0.3.1"
+      image: "codefresh/cf-argo-plugin:0.3.2"
       commands:
         - cf-argo-plugin rollback ${{app_name}} --code=$ARGO_SYNC_ERROR --cf-host=$CF_URL --cf-token=$CF_API_KEY --cf-integration="${{context}}" --needRollback=${{rollback}}

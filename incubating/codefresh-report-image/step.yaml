@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.5
+  version: 1.0.6
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -185,10 +185,33 @@ spec:
           "type": "string",
           "description": "Image tag for step's image.",
           "default": "latest"
+        },
+        "DOCKERFILE_PATH": {
+          "type": "string",
+          "description": "Path to the Dockerfile used for building image"
+        },
+        "CF_DOCKERFILE_CONTENT": {
+          "type": "string",
+          "description": "Content of the Dockerfile used for building image"
         }
       }
     }
   stepsTemplate: |-
+    [[- if and (not .Arguments.CF_DOCKERFILE_CONTENT) .Arguments.DOCKERFILE_PATH ]]
+    export-dockerfile:
+      name: export-dockerfile
+      image: alpine
+      commands: 
+        - |
+          echo "Exporting Dockerfile: [[.Arguments.DOCKERFILE_PATH]]"
+          if [ -f [[.Arguments.DOCKERFILE_PATH]] ]; then
+            export CF_DOCKERFILE_CONTENT=$(base64 -w 0 [[.Arguments.DOCKERFILE_PATH]])
+            cf_export CF_DOCKERFILE_CONTENT
+          else
+            cf_export CF_DOCKERFILE_CONTENT=""
+          fi
+    [[- end ]]
+
     codefresh-report-image:
       name: codefresh-report-image
       image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
@@ -199,6 +222,9 @@ spec:
         - CF_WORKFLOW_NAME=${{CF_PIPELINE_NAME}}
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- if and (not .Arguments.CF_DOCKERFILE_CONTENT) .Arguments.DOCKERFILE_PATH]]
+        - CF_DOCKERFILE_CONTENT=${{CF_DOCKERFILE_CONTENT}}
       [[- end ]]
   delimiters:
     left: '[['

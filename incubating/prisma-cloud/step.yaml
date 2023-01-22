@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: prisma-cloud
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Execute Prisma Clud image scan as build step
   sources:

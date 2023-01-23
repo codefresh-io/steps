@@ -7,6 +7,13 @@ steps:
       repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
       git: "cf_github"
       revision: '${{CF_REVISION}}'
+
+  GettingPluginVersion:
+    title: Getting Plugin Version
+    image: codefresh/cli
+    commands:
+      - cf_export PLUGIN_VERSION=$(yq -r .metadata.version ./steps/incubating/prisma-cloud/step.yaml)
+  
   BuildImage:
     title: Building Docker Image
     type: build
@@ -20,7 +27,7 @@ PushingToRegistries:
     candidate: ${{BuildImage}}
     tags:
     - "latest"
-    - "1.0.0"
+    - "${{PLUGIN_VERSION}}"
     when:
       branch:
         only:

@@ -21,7 +21,7 @@ steps:
     dockerfile: "Dockerfile"
     image_name: codefreshplugins/cfstep-prisma-cloud
 
-PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildImage}}

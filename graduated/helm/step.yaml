@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.11
+  version: 1.1.12
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -94,6 +94,10 @@ spec:
             "primary_helm_context": {
                 "type": "string",
                 "description": "When multiple contexts are attached to the pipeline this argument lets to select one of them for using in helm command. When omit the last added repo is used"
+            },
+            "use_repos_for_auth_action": {
+                "type": "string",
+                "description": "Add helm repositories from contexts for auth action"
             },
             "chart_name": {
                 "type": "string",

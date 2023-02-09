@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.3.1
+  version: 1.4.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -104,6 +104,11 @@ spec:
                 "examples": ["my-runtime-name"],
                 "default": ""
             },
+            "PACK_NAME": {
+                "type": "string",
+                "description": "Resources size (small, medium or large).",
+                "default": ""
+            },
             "DETACH": {
                  "type": "boolean",
                  "description": "Run pipeline without assigning to a project and print build ID.",
@@ -200,6 +205,9 @@ spec:
         [[- end -]]
         [[ if .Arguments.RUNTIME_NAME ]]
             [[- $cmd = (printf "%s --runtime-name %s" $cmd .Arguments.RUNTIME_NAME) -]]
+        [[- end -]]    
+        [[ if .Arguments.PACK_NAME ]]
+            [[- $cmd = (printf "%s --pack-name %s" $cmd .Arguments.PACK_NAME) -]]
         [[- end -]]    
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]

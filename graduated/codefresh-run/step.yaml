@@ -106,12 +106,12 @@ spec:
             },
             "DETACH": {
                  "type": "boolean",
-                 "description": "Run pipeline without assigning to a project and print build ID.",
+                 "description": "Run child pipeline and export the child pipeline's build ID to the $BUILD_ID variable without waiting for the pipeline to complete.",
                  "default": false
              },
             "FOLLOW_LOGS": {
                  "type": "boolean",
-                 "description": "Run pipeline and follow its logs",
+                 "description": "Run pipeline and follow its logs.",
                  "default": true
              },
             "CONTEXT": {

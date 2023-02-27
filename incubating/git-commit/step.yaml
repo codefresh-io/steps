@@ -191,6 +191,7 @@ spec:
         - git status
         - |-
           REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          REPO_URL_SAFE="https://$GIT_ACCESS_TOKEN_USER:<TRUNCATED>@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
             echo ${PRIVATE_KEY:1:-1} | sed 's/\\n/\n/g' > ~/.ssh/codefresh
@@ -213,7 +214,7 @@ spec:
           if [ "$REBASE" = true ]; then
             git pull --rebase $REPO_URL
           fi
-        - echo git push $REPO_URL
+        - echo git push $REPO_URL_SAFE
         - |-
           if [ "$FORCE_PUSH" = true ]; then
             git push --force $REPO_URL

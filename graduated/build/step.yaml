@@ -191,7 +191,7 @@ spec:
                       "additionalProperties": false
                   }
                 ],
-                "description": "Enable and configure buildx",
+                "description": "Enable and configure buildx (set to `true` to enable buildx with default configuration or set to an object with custom configuration).",
                 "default": false
             },
         }

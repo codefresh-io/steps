@@ -143,6 +143,56 @@ spec:
             "provider": {
                 "type": "object",
                 "additionalProperties": true
-            }
+            },
+            "platform": {
+                "type": "string",
+                "description": "Set target platform for build."
+            },
+            "buildx": {
+                "oneOf": [
+                  {
+                      "type": "boolean"
+                  },
+                  {
+                      "type": "object",
+                      "properties": {
+                        "qemu": {
+                            "type": "object",
+                            "properties": {
+                              "image": {
+                                  "type": "string",
+                                  "description": "QEMU static binaries Docker image.",
+                                  "default": "tonistiigi/binfmt:latest"
+                              },
+                              "platforms": {
+                                  "type": "string",
+                                  "description": "Platforms to install (e.g. arm64,riscv64,arm).",
+                                  "default": "all"
+                              }
+                            },
+                            "additionalProperties": false
+                        },
+                        "builder": {
+                            "type": "object",
+                            "properties": {
+                              "driver": {
+                                  "type": "string",
+                                  "description": "Sets the builder driver to be used.",
+                                  "default": "docker-container"
+                              },
+                              "driver_opts": {
+                                  "type": "string",
+                                  "description": "List of additional driver-specific options (e.g. image=moby/buildkit:master)."
+                              }
+                            },
+                            "additionalProperties": false
+                        }
+                      },
+                      "additionalProperties": false
+                  }
+                ],
+                "description": "Enable and configure buildx",
+                "default": false
+            },
         }
     }

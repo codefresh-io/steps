@@ -213,7 +213,6 @@ spec:
           if [ "$REBASE" = true ]; then
             git pull --rebase $REPO_URL
           fi
-        - echo git push $REPO_URL
         - |-
           if [ "$FORCE_PUSH" = true ]; then
             git push --force $REPO_URL

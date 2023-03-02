@@ -2,6 +2,8 @@
 
 set -o pipefail
 
+FORBID_DECRYPT_MSG="Decrypting contexts is not allowed because 'forbidDecrypt' feature is enabled"
+
 bold() { echo -e "\e[1m$@\e[0m" ; }
 red() { echo -e "\e[31m$@\e[0m" ; }
 green() { echo -e "\e[32m$@\e[0m" ; }
@@ -29,7 +31,15 @@ ALL_VARS=(`echo "${REQUIRED_VARS[@]}"` `echo "${OPTIONAL_VARS[@]}"`)
 
 function getTokenFromContext() {
     bold "Getting a git token from the context \"${GIT_CONTEXT}\"..."
-    GITHUB_TOKEN=$(codefresh get contexts --type git.github $1 --decrypt -o json | jq -r '.spec.data.auth.password') || return 1
+    GITHUB_TOKEN_RESPONSE=$(codefresh get contexts --type git.github $1 --decrypt -o json 2>&1)
+    if [ $? != 0 ]; then
+        red "Failed to get the git token from context \"${GIT_CONTEXT}\" with error: ${GITHUB_TOKEN_RESPONSE}"
+        if [ -z "${GITHUB_TOKEN_RESPONSE##*$FORBID_DECRYPT_MSG*}" ]; then
+            yellow "You should use the 'git_token' argument to pass a github token"
+        fi
+        return 1
+    fi
+    GITHUB_TOKEN=$(echo ${GITHUB_TOKEN_RESPONSE} | jq -r '.spec.data.auth.password')
     export GITHUB_TOKEN
     ok
 }
@@ -117,7 +127,9 @@ function main() {
     setDefaultVarValues
     [ $? != 0 ] && red "Failed to set default value for one of the required variables, exiting..." && return 1
 
-    getTokenFromContext $GIT_CONTEXT
+    if [ -z "$GITHUB_TOKEN" ]; then
+        getTokenFromContext $GIT_CONTEXT
+    fi
 
     validateReqVars
 

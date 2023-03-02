@@ -59,6 +59,9 @@ function checkTrigger() {
 }
 
 function setDefaultVarValues() {
+    if [ ! -z "$GITHUB_TOKEN" ]; then
+        GIT_CONTEXT="_" # This is irrelevant, we are using GITHUB_TOKEN
+    fi
 
     if [ -z "$GIT_CONTEXT" ]; then
         yellow "GIT_CONTEXT var is not set explicitly. Trying to get it from the trigger by default..."
@@ -129,6 +132,7 @@ function main() {
 
     if [ -z "$GITHUB_TOKEN" ]; then
         getTokenFromContext $GIT_CONTEXT
+        [ $? != 0 ] && return 1
     fi
 
     validateReqVars

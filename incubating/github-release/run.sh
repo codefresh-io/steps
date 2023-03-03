@@ -20,6 +20,7 @@ REQUIRED_VARS=(
 )
 
 OPTIONAL_VARS=(
+    GIT_TOKEN
     RELEASE_DESCRIPTION
     FILES
     DRAFT
@@ -59,8 +60,11 @@ function checkTrigger() {
 }
 
 function setDefaultVarValues() {
-    if [ ! -z "$GITHUB_TOKEN" ]; then
-        GIT_CONTEXT="_" # This is irrelevant, we are using GITHUB_TOKEN
+    if [ ! -z "$GIT_TOKEN" ]; then
+        bold "Using git token for authentication..."
+        GIT_CONTEXT="_" # This is irrelevant, we are using git_token method
+        GITHUB_TOKEN="$GIT_TOKEN"
+        export GITHUB_TOKEN
     fi
 
     if [ -z "$GIT_CONTEXT" ]; then

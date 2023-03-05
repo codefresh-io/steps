@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-release
   title: Create a GitHub release
-  version: 1.1.5
+  version: 1.1.7
   isPublic: true
   description: Create a GitHub release.
   sources:
@@ -38,6 +38,19 @@ metadata:
             files:
             - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file1
             - ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/my-file2
+    - description: git-token
+      workflow:
+        github_release:
+          type: github-release
+          title: Using git token example
+          description: |-
+            You can also pass a git token explicitly using the git_token
+            argument. This is useful when you don't want to use a git-context
+            or when the 'forbidDecrypt' feature turned on.
+          arguments:
+            git_token: ${{GITHUB_TOKEN}}
+            release_name: my-release
+            release_tag: my-tag-0.1.0
     - description: full
       workflow:
         github_release:
@@ -95,6 +108,11 @@ spec:
                 "type": "string",
                 "description": "Codefresh Git Context to be used by the plugin. Must be a github git context. If empty, it will try to get the context from the pipeline trigger"
             },
+            "git_token": {
+                "name": "git token",
+                "type": "string",
+                "description": "Git token to use for authentication to github. If empty, we will try to get the token from your Codefresh Git Context specified in `git_context_name`"
+            },
             "release_tag": {
                 "type": "string",
                 "description": "Git tag to create a release"
@@ -142,6 +160,7 @@ spec:
       image: codefresh/github-release
       environment:
         - 'GIT_CONTEXT=${{git_context_name}}'
+        - 'GIT_TOKEN=${{git_token}}'
         - 'CF_BRANCH_TAG_NORMALIZED=${{CF_BRANCH_TAG_NORMALIZED}}'
         - 'CF_REPO_OWNER=${{CF_REPO_OWNER}}'
         - 'CF_REPO_NAME=${{CF_REPO_NAME}}'

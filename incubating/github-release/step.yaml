@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-release
   title: Create a GitHub release
-  version: 1.1.7
+  version: 1.1.8
   isPublic: true
   description: Create a GitHub release.
   sources:
@@ -16,7 +16,7 @@ metadata:
   categories:
     - git
     - release
-  official: false
+  official: true
   tags: []
   icon:
     type: svg

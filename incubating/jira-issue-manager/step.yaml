@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-issue-manager
-  version: 1.0.8
+  version: 1.0.9
   title: Jira Issue Manager
   isPublic: true
   description: Create, Update, & Validate Jira Issues
@@ -245,7 +245,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-manager
-        image: quay.io/codefreshplugins/jira-issue-manager:1.0.7
+        image: quay.io/codefreshplugins/jira-issue-manager:1.0.9
         environment:
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.3.1
+  version: 1.3.2
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -72,6 +72,11 @@ spec:
                 "description": "repo-owner/repo-name",
                 "examples": ["codefresh-plugins/github-enricher"]
             },
+            "REVISION": {
+                "type": "string",
+                "description": "Commit sha",
+                "examples": ["ec8cdced58869a9cbd315a1297a702bbd744a9ed"]
+            },
             "GIT_PROVIDER_NAME": {
                 "type": "string",
                 "description": "Name of git provider to use from Codefresh integrations screen"
@@ -93,5 +98,6 @@ spec:
           - IMAGE_SHA=${{IMAGE}}
           - BRANCH=${{BRANCH}}
           - REPO=${{REPO}}
+          - REVISION=${{REVISION}}
           - GITHUB_HOST=${{GITHUB_HOST}}
           - GIT_PROVIDER_NAME=${{GIT_PROVIDER_NAME}}

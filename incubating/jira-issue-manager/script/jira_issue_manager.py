@@ -10,14 +10,13 @@ from step_utility import StepUtility
 from requests.auth import HTTPBasicAuth
 
 class Environment:
-    def __init__(self, jira_base_url, jira_username, jira_api_key, jira_server_pat, action,
+    def __init__(self, jira_base_url, jira_username, jira_api_key, action,
         issue, issue_project, issue_summary, issue_description, issue_type, issue_components, issue_customfields,
         existing_comment_id, comment_body, status, jql_query, jql_query_max_results,
         verbose):
         self.jira_base_url = jira_base_url
         self.jira_username = jira_username
         self.jira_api_key = jira_api_key
-        self.jira_server_pat = jira_server_pat
         self.action = action
         self.issue = issue
         self.issue_project = issue_project
@@ -33,23 +32,9 @@ class Environment:
         self.jql_query_max_results = jql_query_max_results
         self.verbose = verbose
 
-def valudate_input(current_environment):
-    if not current_environment.jira_api_key and current_environment.jira_username:
-        raise Exception('JIRA_API_KEY required for basic authentication')
-
-    if current_environment.jira_api_key and not current_environment.jira_username:
-        raise Exception('JIRA_USERNAME required for basic authentication')
-
-    if not current_environment.jira_api_key and not current_environment.jira_server_pat:
-        raise Exception('Credentials not provided')
-
-    if current_environment.jira_api_key and current_environment.jira_server_pat:
-        raise Exception('Only one of JIRA_API_KEY and JIRA_SERVER_PAT allowed')
-
 
 def main():
     current_environment = environment_setup()
-    valudate_input(current_environment)
     authenticated_jira = authentication(current_environment)
     step_action(current_environment.action, authenticated_jira, current_environment)
 
@@ -60,7 +45,6 @@ def environment_setup():
     jira_base_url = StepUtility.getEnvironmentVariable('JIRA_BASE_URL', env)
     jira_username = StepUtility.getEnvironmentVariable('JIRA_USERNAME', env)
     jira_api_key = StepUtility.getEnvironmentVariable('JIRA_API_KEY', env)
-    jira_server_pat = StepUtility.getEnvironmentVariable('JIRA_SERVER_PAT', env)
     action = StepUtility.getEnvironmentVariable('ACTION', env)
 
     # Logic here to use the regex to grab the jira issue key and assign it to issue
@@ -116,7 +100,6 @@ def environment_setup():
         jira_base_url,
         jira_username,
         jira_api_key,
-        jira_server_pat,
         action,
         issue,
         issue_project,
@@ -135,14 +118,6 @@ def environment_setup():
 
 
 def authentication(current_environment):
-    if current_environment.jira_server_pat:
-        # Jira Server authentication with a PAT
-        jira = JIRA(
-            current_environment.jira_base_url,
-            token_auth=current_environment.jira_server_pat
-        )
-        return jira
-
     # Basic authentication with an API Token
     jira = JIRA(
         current_environment.jira_base_url,

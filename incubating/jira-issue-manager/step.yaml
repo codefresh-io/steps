@@ -1,7 +1,7 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: local/jira-issue-manager
+  name: andriicodefresh/jira-issue-manager
   version: 1.0.11
   title: Jira Issue Manager
   isPublic: true

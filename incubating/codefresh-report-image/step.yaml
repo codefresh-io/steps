@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.6
+  version: 1.0.7
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -45,6 +45,7 @@ metadata:
             CF_GIT_PROVIDER: github
             CF_GIT_REPO: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
             CF_GIT_BRANCH: ${{CF_BRANCH}}
+            CF_GIT_REVISION: ${{CF_REVISION}}
             CF_JIRA_API_TOKEN: ${{JIRA_TOKEN}}
             CF_JIRA_EMAIL: dustin@codefresh.io
             CF_JIRA_HOST_URL: https://codefresh-io.atlassian.net
@@ -115,6 +116,10 @@ spec:
         "CF_GIT_REPO": {
           "type": "string",
           "description": "The the git repository used for building the image."
+        },
+        "CF_GIT_REVISION": {
+          "type": "string",
+          "description": "The commit sha"
         },
         "CF_GITHUB_API_HOST_URL": {
           "type": "string",

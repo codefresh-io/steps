@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.7
+  version: 1.0.8
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -100,6 +100,14 @@ spec:
         "CF_DOCKERHUB_USERNAME": {
           "type": "string",
           "description": "When no registry integration is specified: dockerhub username."
+        },
+        "CF_GOOGLE_REGISTRY_HOST": {
+          "type": "string",
+          "description": "When no registry integration is specified: the host to Google GCR or Google ACR"
+        },
+        "CF_GOOGLE_JSON_KEY": {
+          "type": "string",
+          "description": "When no registry integration is specified: JSON key for authenticating to a Google GCR or Google ACR"
         },
         "CF_ENRICHERS": {
           "type": "string",

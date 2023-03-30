@@ -1,6 +1,6 @@
-const config = require('../config');
-const request = require('request-promise');
+const got = require('got');
 const Handlebars = require('handlebars');
+const config = require('../config');
 
 class PluginLogic {
     constructor() {
@@ -31,26 +31,17 @@ class PluginLogic {
             }, {});
     }
 
-    /**
-     * Resolve options for auth
-     * @return {*}
-     * @private
-     */
-    _resolveAuth() {
+    _resolveAuthHeaders() {
         if (config.token) {
             return {
-                auth: {
-                    bearer: config.token,
-                },
+                Authorization: `Bearer ${config.token}`,
             };
         }
 
         if (config.username && config.password) {
+            const base64Payload = Buffer.from(`${config.username}:${config.password}`).toString('base64');
             return {
-                auth: {
-                    user: config.username,
-                    pass: config.password,
-                },
+                Authorization: `Basic ${base64Payload}`,
             };
         }
 
@@ -77,14 +68,20 @@ class PluginLogic {
      * @param tplData
      * @return {Promise<void>}
      */
-    sendRequest({ uri, method, body, tplData = {}, defaultHeaders = {} }) {
-        return request({
-            uri,
+
+    sendRequest({
+        uri, method, body, tplData = {}, defaultHeaders = {},
+    }) {
+        return got({
+            url: uri,
             method,
             body: this._processTemplate(body, tplData),
-            qs: this._resolveEnvArray('QUERY', tplData),
-            headers: Object.assign(defaultHeaders, this._resolveEnvArray('HEADER', tplData)),
-            ...this._resolveAuth(),
+            searchParams: this._resolveEnvArray('QUERY', tplData),
+            headers: Object.assign(
+                defaultHeaders,
+                this._resolveAuthHeaders(),
+                this._resolveEnvArray('HEADER', tplData),
+            ),
         });
     }
 }

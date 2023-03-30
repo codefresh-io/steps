@@ -1,9 +1,16 @@
-const request = require('request-promise');
+const got = require('got');
 
 class Codefresh {
     /**
      *
-     * @return {{build: {trigger: *, initiator: *, id: *, timestamp: *, url: *}, repo: {owner: *, name: *}, commit: {author: *, url: *, message: *}, revision: *, branch: *, apiKey: *}}
+     * @return {{
+     *  build: {trigger: *, initiator: *, id: *, timestamp: *, url: *},
+     *  repo: {owner: *, name: *},
+     *  commit: {author: *, url: *, message: *},
+     *  revision: *,
+     *  branch: *,
+     *  apiKey: *
+     * }}
      */
     get info() {
         return {
@@ -26,20 +33,22 @@ class Codefresh {
             revision: process.env.CF_REVISION,
             branch: process.env.CF_BRANCH_TAG_NORMALIZED,
             apiKey: process.env.CF_API_KEY,
-            cfUrl: process.env.CF_URL
+            cfUrl: process.env.CF_URL,
         };
     }
 
     async buildFailureCauses(buildId, token, cfUrl) {
         console.log(token, buildId);
-        const data = await request({
-            uri: `${cfUrl}/api/workflow/${buildId}/context-revision`,
-            method: 'GET',
-            headers: {
-                'authorization': token,
+
+        const data = await got(
+            {
+                url: `${cfUrl}/api/workflow/${buildId}/context-revision`,
+                method: 'GET',
+                headers: {
+                    authorization: token,
+                },
             },
-            json: true,
-        });
+        ).json();
 
         return Object.entries(data.pop().context.stepsMetadata)
             .filter(([, stepInfo]) => stepInfo.status === 'failure')

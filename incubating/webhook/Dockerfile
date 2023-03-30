@@ -1,5 +1,6 @@
 FROM node:14.21.3-bullseye-slim
 
+
 #RUN apk add --no-cache bash git openssh-client
 
 # Create app directory
@@ -14,6 +15,10 @@ RUN yarn install --frozen-lockfile --production
 
 # copy app files
 COPY . ./
+
+RUN useradd -d /home/username -m -s /bin/bash codefresh
+
+USER codefresh
 
 # run application
 CMD ["node", "/app/index.js"]

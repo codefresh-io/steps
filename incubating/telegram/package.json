@@ -5,7 +5,7 @@
   "author": "andrii.shaforostov <andrii@codefresh.io>",
   "license": "MIT",
   "dependencies": {
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.7.7",
     "moment": "^2.24.0",
     "node-emoji": "^1.8.1",
     "node-telegram-bot-api": "^0.40.0",

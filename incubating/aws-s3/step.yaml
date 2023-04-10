@@ -1,0 +1,90 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: aws-s3
+  version: 1.0.0
+  isPublic: true
+  description: Integration with AWS Cloud Development Kit.
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/aws-s3
+  stage: incubating
+  maintainers:
+    - name: Luke Goodfellow
+    - email: luke.goodfellow@codefresh.io
+  categories:
+    - utilities
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-s3/incubating/aws-cdk/images/s3-logo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: aws-s3
+      workflow:
+        uploadToS3:
+          title: Uploading to S3
+          type: aws-s3
+          stage: cleanup
+          working_directory: ${{gitClone}}/myfiles/artifacts
+          arguments:
+            REGION: us-east-1
+            BUCKET: my-s3-bucket
+            S3PREFIX: myDirectory/subdirectory
+            SOURCEDIR: .
+
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": ["BUCKET", "S3PREFIX"],
+      "properties":
+        {
+          "REGION":
+            {
+              "type": "string",
+              "description": "The region the bucket is in. Default is us-east-1",
+              "default": "us-east-1",
+            },
+          "BUCKET":
+            {
+              "type": "string",
+              "description": "The name of the bucket you are using",
+            },
+          "S3PREFIX":
+            {
+              "type": "string",
+              "description": "The directory in S3 you want the files to be uploaded to",
+            },
+          "SOURCE":
+            {
+              "type": "string",
+              "description": "The directory or name of files you want to upload to S3 . Default is the current directory",
+              "default": ".",
+            },
+          "working_directory":
+            {
+              "type": "string",
+              "description": "The directory where you want to be in. The default value is '/codefresh/volume/",
+              "default": "/codefresh/volume/"
+            },
+        }
+    }
+  stepsTemplate: |-
+    uploadFiles:
+      name: upload-to-s3
+      title: uploading the directory to S3
+      image: codefreshplugins/aws-s3:latest
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - ./start.sh
+  delimiters:
+    left: '[['
+    right: ']]'

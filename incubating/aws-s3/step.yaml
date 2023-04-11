@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/aws-s3/incubating/aws-cdk/images/s3-logo.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/aws-s3/incubating/aws-cdk/images/s3-logo.svg
     background: "#f4f4f4"
   examples:
     - description: aws-s3
@@ -69,12 +69,12 @@ spec:
           "S3_PREFIX":
             {
               "type": "string",
-              "description": "The directory in S3 you want the files to be uploaded to"
+              "description": "The prefix or path you want the files to be uploaded to.  If a single file, this will be the object key unless you add a / at the end"
             },
           "SOURCE":
             {
               "type": "string",
-              "description": "The directory or name of file you want to upload to S3. Path from /codefresh/volume/."
+              "description": "The name of the directory or file you want to upload. Path from /codefresh/volume/ "
             },
           "working_directory":
             {

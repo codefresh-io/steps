@@ -31,8 +31,7 @@ metadata:
             BUCKET: my-s3-bucket
             S3_PREFIX: myDirectory/subdirectory
             S3_INTEGRATION: amazon
-            SOURCEDIR: ${{CF_REPO_NAME}}/myDirectory
-
+            SOURCE: ${{CF_REPO_NAME}}/myDirectory
 spec:
   arguments: |-
     {
@@ -41,7 +40,7 @@ spec:
       "type": "object",
       "additionalProperties": true,
       "patterns": [],
-      "required": ["BUCKET", "S3_PREFIX", "S3_INTEGRATION", "SOURCEDIR"],
+      "required": ["BUCKET", "S3_PREFIX", "S3_INTEGRATION", "SOURCE"],
       "properties":
         {
           "S3_INTEGRATION": {
@@ -72,11 +71,10 @@ spec:
               "type": "string",
               "description": "The directory in S3 you want the files to be uploaded to"
             },
-          "SOURCEDIR":
+          "SOURCE":
             {
               "type": "string",
-              "description": "The directory or name of files you want to upload to S3 . Default is the current directory",
-              "default": "."
+              "description": "The directory or name of file you want to upload to S3. Path from /codefresh/volume/."
             },
           "working_directory":
             {
@@ -88,8 +86,8 @@ spec:
     }
   stepsTemplate: |-
     uploadToS3:
-      name: upload-to-s3
-      title: uploading the directory to S3
+      name: aws-s3
+      title: Uploading to S3
       image: '[[.Arguments.AWS_IMAGE]]:[[.Arguments.AWS_IMAGE_VERSION]]'
       environment:
       [[ range $key, $val := .Arguments ]]

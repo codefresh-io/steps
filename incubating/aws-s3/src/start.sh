@@ -5,7 +5,11 @@ export AWS_PAGER=""
 cd $working_directory
 echo "Starting to upload files to S3"
 echo ""
-aws s3 cp $SOURCEDIR s3://$BUCKET/$S3_PREFIX --recursive
+if [ -d $SOURCEDIR ]; then
+  aws s3 cp $SOURCEDIR s3://$BUCKET/$S3_PREFIX --recursive
+else
+  aws s3 cp $SOURCEDIR s3://$BUCKET/$S3_PREFIX
+fi
 echo ""
 echo "Finished uplaoding files to S3"
 echo ""

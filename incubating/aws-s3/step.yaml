@@ -1,9 +1,9 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: luke-cf/aws-s3
+  name: aws-s3
   version: 1.0.0
-  isPublic: false
+  isPublic: true
   description: Integration that uploads files to S3
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/aws-s3
@@ -13,7 +13,7 @@ metadata:
     - email: luke.goodfellow@codefresh.io
   categories:
     - utilities
-  official: false
+  official: true
   tags: []
   icon:
     type: svg

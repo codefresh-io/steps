@@ -27,12 +27,11 @@ metadata:
           type: aws-s3
           stage: cleanup
           arguments:
-            working_directory: ${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}
             REGION: us-east-1
             BUCKET: my-s3-bucket
             S3_PREFIX: myDirectory/subdirectory
             S3_INTEGRATION: amazon
-            SOURCEDIR: .
+            SOURCEDIR: ${{CF_REPO_NAME}}/myDirectory
 
 spec:
   arguments: |-
@@ -42,7 +41,7 @@ spec:
       "type": "object",
       "additionalProperties": true,
       "patterns": [],
-      "required": ["BUCKET", "S3_PREFIX", "S3_INTEGRATION"],
+      "required": ["BUCKET", "S3_PREFIX", "S3_INTEGRATION", "SOURCEDIR"],
       "properties":
         {
           "S3_INTEGRATION": {

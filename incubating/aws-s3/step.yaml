@@ -17,7 +17,7 @@ metadata:
   tags: []
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/codefresh-io/steps/master/aws-s3/incubating/aws-cdk/images/s3-logo.svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/aws-s3/image/s3-logo.svg
     background: "#f4f4f4"
   examples:
     - description: aws-s3

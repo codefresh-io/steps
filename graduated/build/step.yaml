@@ -170,6 +170,7 @@ spec:
                                   "default": "all"
                               }
                             },
+                            "description": "Configure which QEMU static binaries will be installed.",
                             "additionalProperties": false
                         },
                         "builder": {
@@ -185,13 +186,14 @@ spec:
                                   "description": "List of additional driver-specific options (e.g. image=moby/buildkit:master)."
                               }
                             },
+                            "description": "Configure the builder instance that will be created and used to build the image.",
                             "additionalProperties": false
                         }
                       },
                       "additionalProperties": false
                   }
                 ],
-                "description": "Enable and configure buildx (set to `true` to enable buildx with default configuration or set to an object with custom configuration).",
+                "description": "Build and push Docker images with Buildx including multi-platform builds (set to `true` to enable with default configuration, or set to an object with custom configuration).",
                 "default": false
             },
         }

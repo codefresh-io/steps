@@ -8,7 +8,7 @@ metadata:
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
-  version: 1.1.3
+  version: 1.2.0
   categories:
     - featured
     - docker
@@ -143,6 +143,58 @@ spec:
             "provider": {
                 "type": "object",
                 "additionalProperties": true
-            }
+            },
+            "platform": {
+                "type": "string",
+                "description": "Set target platform/s (comma separated list) for build."
+            },
+            "buildx": {
+                "oneOf": [
+                  {
+                      "type": "boolean"
+                  },
+                  {
+                      "type": "object",
+                      "properties": {
+                        "qemu": {
+                            "type": "object",
+                            "properties": {
+                              "image": {
+                                  "type": "string",
+                                  "description": "QEMU static binaries Docker image.",
+                                  "default": "tonistiigi/binfmt:latest"
+                              },
+                              "platforms": {
+                                  "type": "string",
+                                  "description": "Platforms to install (e.g. arm64,riscv64,arm).",
+                                  "default": "all"
+                              }
+                            },
+                            "description": "Configure which QEMU static binaries will be installed.",
+                            "additionalProperties": false
+                        },
+                        "builder": {
+                            "type": "object",
+                            "properties": {
+                              "driver": {
+                                  "type": "string",
+                                  "description": "Sets the builder driver to be used.",
+                                  "default": "docker-container"
+                              },
+                              "driver_opts": {
+                                  "type": "string",
+                                  "description": "List of additional driver-specific options (e.g. image=moby/buildkit:master)."
+                              }
+                            },
+                            "description": "Configure the builder instance that will be created and used to build the image.",
+                            "additionalProperties": false
+                        }
+                      },
+                      "additionalProperties": false
+                  }
+                ],
+                "description": "Build and push Docker images with Buildx including multi-platform builds (set to `true` to enable with default configuration, or set to an object with custom configuration).",
+                "default": false
+            },
         }
     }

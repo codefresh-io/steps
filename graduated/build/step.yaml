@@ -8,7 +8,7 @@ metadata:
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
-  version: 1.2.1
+  version: 1.2.2
   categories:
     - featured
     - docker
@@ -195,6 +195,6 @@ spec:
                 ],
                 "description": "Build and push Docker images with <a href=\"https://github.com/docker/buildx\">Buildx</a> including multi-platform builds (set to `true` to enable with default configuration, or set to an object with custom configuration). <a href=\"https://codefresh.io/docs/docs/pipelines/steps/build/#multi-platform-images-with-platfrom-and-buildx\">more info</a>",
                 "default": false
-            },
+            }
         }
     }

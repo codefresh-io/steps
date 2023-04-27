@@ -56,7 +56,7 @@ spec:
         {
           "S3_INTEGRATION": {
             "type": "string",
-            "description": "The name of the S3 storage integration fi you do not use a Service Account. if a SA exists, it will be used instead"
+            "description": "The name of the S3 storage integration if you do not use a Service Account. if a SA exists, it will be used instead"
             },
           "AWS_IMAGE": {
             "type": "string",

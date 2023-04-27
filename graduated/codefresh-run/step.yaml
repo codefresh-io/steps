@@ -227,7 +227,7 @@ spec:
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
         [[ range .Arguments.ENCRYPTED ]]
-            [[- $cmd = (printf "%s --ENCRYPTED %s" $cmd .) -]]
+            [[- $cmd = (printf "%s --encrypted %s" $cmd .) -]]
         [[- end -]]    
         [[ if .Arguments.VARIABLE_FILE ]]
             [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]

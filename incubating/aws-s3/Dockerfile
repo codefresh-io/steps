@@ -6,4 +6,3 @@ RUN yum install -y tar gzip jq && \
     yum clean all && rm -rf /var/cache/yum
 
 COPY ./src/start.sh /
-

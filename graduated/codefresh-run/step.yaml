@@ -55,7 +55,7 @@ spec:
                 "type": "string",
                 "description": "Custom image of codefresh-run step",
                 "examples": ["latest-debian"],
-                "default": "0.81.4"
+                "default": "0.83.1"
             },
             "PIPELINE_ID": {
                 "type": "string",

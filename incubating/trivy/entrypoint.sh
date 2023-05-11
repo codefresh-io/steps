@@ -65,18 +65,18 @@ scan_template() {
   local object=$(trivy image -q -f json --cache-dir ${CACHE_DIR} --ignorefile ${TRIVY_IGNOREFILE} ${image} | sed 's|null|\[\]|')
   count=$( echo $object | jq '.Results | length')
   for ((i = 0 ; i < $count ; i++)); do
-    local vuln_length=$(echo $object | jq '.Results' | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities // [] | length')
+    local vuln_length=$(echo $object | jq -r --arg index "${i}" '.Results[($index|tonumber)].Vulnerabilities // [] | length')
     if [[ "$vuln_length" -eq "0" ]] && [[ "$SKIP_EMPTY" == "true" ]]; then
       continue
     fi
-    echo -E "\n"Target: $(echo $object | jq '.Results' |  jq -r --arg index "${i}" '.[($index|tonumber)].Target')
+    echo -E "\n"Target: $(echo $object |  jq -r --arg index "${i}" '.Results[($index|tonumber)].Target')
     echo "..."
     if [[ "$vuln_length" -eq "0" ]]; then
       # Return a non-empty default value
       echo "No vulnerabilities found."
       continue
     fi
-    echo $object | jq '.Results' | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities // [] | .[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
+    echo $object | jq -r --arg index "${i}" '.Results[($index|tonumber)].Vulnerabilities // [] | .[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
   done
 }
 
@@ -84,6 +84,9 @@ slack_image_section() {
   local image=$1
   local header="*${image}*"
   local body=$(scan_template $image | awk '{print}' ORS='\\n')
+  if [[ -z $body ]]; then
+    return
+  fi
   echo -E "{
   \"type\": \"section\",
   \"text\": {

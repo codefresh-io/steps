@@ -69,7 +69,7 @@ spec:
       image: quay.io/codefresh/cli
       commands:
         - |
-          cf_export annotation_CF_OUTPUT_URL="${{CF_URL}}/2.0/applications-dashboard/[[.Arguments.RUNTIME]]/[[.Arguments.RUNTIME]]/[[.Arguments.APPLICATION]]current-state/tree"
+          cf_export link_CF_OUTPUT_URL="${{CF_URL}}/2.0/applications-dashboard/[[.Arguments.RUNTIME]]/[[.Arguments.RUNTIME]]/[[.Arguments.APPLICATION]]/current-state/tree"
   delimiters:
     left: '[['
     right: ']]'

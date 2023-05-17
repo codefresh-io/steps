@@ -19,9 +19,9 @@ function echoSection {
 
 unset_empty_vars() {
   echoSection "Unsetting empty vars"
-  for var in $(env); do 
-    if [[ "${var##*=}" == "\${{${var%=*}}}" ]]; then 
-      echo "Unsetting ${var%=*}"; 
+  for var in $(env); do
+    if [[ "${var##*=}" == "\${{${var%=*}}}" ]]; then
+      echo "Unsetting ${var%=*}";
       unset ${var%=*};
     fi;
   done
@@ -34,8 +34,8 @@ set_trivy_ignore() {
   if [[ ! -z $TRIVY_IGNORE_FILE ]]; then
     stat -c "%n" "$TRIVY_IGNORE_FILE"
     cp $TRIVY_IGNORE_FILE $TRIVY_IGNOREFILE
-  fi 
-  local IFS=$',' 
+  fi
+  local IFS=$','
   for cve in $TRIVY_IGNORE_LIST; do
     echo $cve >> $TRIVY_IGNOREFILE
   done
@@ -62,16 +62,21 @@ generate_images_list() {
 
 scan_template() {
   local image=$1
-  local object=$(trivy -q -f json --cache-dir ${CACHE_DIR} --ignorefile ${TRIVY_IGNOREFILE} ${image} | sed 's|null|\[\]|')
-  count=$( echo $object | jq length)
+  local object=$(trivy image -q -f json --cache-dir ${CACHE_DIR} --ignorefile ${TRIVY_IGNOREFILE} ${image} | sed 's|null|\[\]|')
+  count=$( echo $object | jq '.Results | length')
   for ((i = 0 ; i < $count ; i++)); do
-    local vuln_length=$(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities | length')
+    local vuln_length=$(echo $object | jq -r --arg index "${i}" '.Results[($index|tonumber)].Vulnerabilities // [] | length')
     if [[ "$vuln_length" -eq "0" ]] && [[ "$SKIP_EMPTY" == "true" ]]; then
       continue
     fi
-    echo -E "\n"Target: $(echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Target')
+    echo -E "\n"Target: $(echo $object |  jq -r --arg index "${i}" '.Results[($index|tonumber)].Target')
     echo "..."
-    echo $object | jq -r --arg index "${i}" '.[($index|tonumber)].Vulnerabilities[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
+    if [[ "$vuln_length" -eq "0" ]]; then
+      # Return a non-empty default value
+      echo "No vulnerabilities found."
+      continue
+    fi
+    echo $object | jq -r --arg index "${i}" '.Results[($index|tonumber)].Vulnerabilities // [] | .[] | "\(.PkgName) \(.VulnerabilityID) \(.Severity)"' | column -t | sort -k3
   done
 }
 
@@ -79,7 +84,9 @@ slack_image_section() {
   local image=$1
   local header="*${image}*"
   local body=$(scan_template $image | awk '{print}' ORS='\\n')
-  if [[ -z $body ]]; then return; fi
+  if [[ -z $body ]]; then
+    return
+  fi
   echo -E "{
   \"type\": \"section\",
   \"text\": {
@@ -102,7 +109,7 @@ main() {
   fi
 
   echoSection "Update trivy DB"
-  trivy --download-db-only --cache-dir ${CACHE_DIR}
+  trivy image --download-db-only --cache-dir ${CACHE_DIR}
 
   SLACK_REPORT_MESSAGE='{"blocks":[]}'
 

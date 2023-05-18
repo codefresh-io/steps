@@ -1,0 +1,61 @@
+kind: step-type
+metadata:
+  name: argo-cd-sync
+  version: 0.1.0
+  isPublic: true
+  description: Syncs Argo CD apps managed by our GitOps Runtimes
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo-sync'
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza
+    - email: francisco@codefresh.io
+  categories:
+    - GitOps
+  official: false
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
+    background: "#f4f4f4"
+
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "RUNTIME",
+        "APPLICATION"
+      ],
+      "properties": {
+        "RUNTIME": {
+          "type": "string",
+          "description": "The name of the GitOps Runtime managing the Argo CD Application"
+        },
+        "APPLICATION": {
+          "type": "string",
+          "description": "The name of the Argo CD Application to be synced"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "default": "0.4.0",
+        }
+      }
+    }
+  stepsTemplate: |-
+    argo-cd-sync:
+      image: 'franciscocodefresh/argocd_sync:[[.Arguments.SYNC_IMAGE_VERSION]]'
+      working_directory: /app
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - python3 run.py
+  delimiters:
+    left: '[['
+    right: ']]'

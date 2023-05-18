@@ -18,6 +18,15 @@ metadata:
     type: svg
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
     background: "#f4f4f4"
+  examples:
+    - description: Sync an Argo CD app called "my-app" in a GitOps Runtime called "my-runtime"
+      workflow:
+        sync_argo_cd_app:
+          title: Sync Argo CD app
+          type: argo-cd-sync
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
 
 spec:
   arguments: |-

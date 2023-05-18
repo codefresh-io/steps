@@ -40,6 +40,10 @@ spec:
           "type": "string",
           "description": "The name of the Argo CD Application to be synced"
         },
+        "IMAGE_NAME": {
+          "type": "string",
+          "default": "quay.io/codefreshplugins/argo-cd-sync",
+        }
         "IMAGE_TAG": {
           "type": "string",
           "default": "0.4.0",
@@ -48,7 +52,7 @@ spec:
     }
   stepsTemplate: |-
     argo-cd-sync:
-      image: 'franciscocodefresh/argocd_sync:[[.Arguments.SYNC_IMAGE_VERSION]]'
+      image: '[[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_NAME]]'
       working_directory: /app
       environment:
       [[ range $key, $val := .Arguments ]]

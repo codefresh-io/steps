@@ -12,7 +12,7 @@ metadata:
     - email: francisco@codefresh.io
   categories:
     - GitOps
-  official: false
+  official: true
   tags: []
   icon:
     type: svg

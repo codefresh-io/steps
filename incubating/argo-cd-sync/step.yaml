@@ -1,11 +1,11 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 0.4.0
+  version: 0.4.1
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo-sync'
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo-cd-sync'
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
@@ -55,13 +55,13 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "0.4.0"
+          "default": "0.4.1"
         }
       }
     }
   stepsTemplate: |-
     argo-cd-sync:
-      image: '[[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_NAME]]'
+      image: '[[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_TAG]]'
       working_directory: /app
       environment:
       [[ range $key, $val := .Arguments ]]

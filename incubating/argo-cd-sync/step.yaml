@@ -51,11 +51,11 @@ spec:
         },
         "IMAGE_NAME": {
           "type": "string",
-          "default": "quay.io/codefreshplugins/argo-cd-sync",
-        }
+          "default": "quay.io/codefreshplugins/argo-cd-sync"
+        },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "0.4.0",
+          "default": "0.4.0"
         }
       }
     }

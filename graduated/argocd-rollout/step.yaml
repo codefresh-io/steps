@@ -2,7 +2,7 @@ version: '1.0'
 kind: step-type
 metadata:
   name: argocd-rollout
-  version: 1.7.1
+  version: 1.8.0
   isPublic: true
   description: This pipeline plugin trigger a rollout for ArgoCD app
   sources:

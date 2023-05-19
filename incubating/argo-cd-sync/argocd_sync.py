@@ -82,10 +82,11 @@ def execute_argocd_sync(ingress_host):
 
 
 def export_variable(var_name, var_value):
-    path = os.getenv('CF_VOLUME_PATH') if os.getenv('CF_VOLUME_PATH') != None else './'
+    #path = os.getenv('CF_VOLUME_PATH') if os.getenv('CF_VOLUME_PATH') != None else './'
+    path = "/meta";
     with open(path+'/env_vars_to_export', 'a') as a_writer:
         a_writer.write(var_name + "=" + var_value+'\n')
-    print("Exporting variable: "+var_name+"="+var_value)  
+    print("Exporting variable: "+var_name+"="+var_value)
 
 ##############################################################
 

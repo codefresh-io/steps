@@ -69,7 +69,6 @@ spec:
       commands:
         - cd /app
         - python3 run.py
-        - cf_export argo_cd_sync_CF_OUTPUT_URL=$(cat /codefresh/volume/env_vars_to_export | grep CF_OUTPUT_URL | cut -d= -f2)
   delimiters:
     left: '[['
     right: ']]'

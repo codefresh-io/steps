@@ -125,7 +125,7 @@ spec:
   stepsTemplate: |-
     main:
       name: prisma-cloud
-      image: quay.io/codefreshplugins/cfstep-prisma-cloud:1.0.0
+      image: quay.io/codefreshplugins/cfstep-prisma-cloud:1.0.1
       environment:
       [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

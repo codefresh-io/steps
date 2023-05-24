@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.8
+  version: 1.0.9
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -163,7 +163,7 @@ spec:
         },
         "CF_JIRA_PROJECT_PREFIX": {
           "type": "string",
-          "description": "Jira prefix for identifying the ticket number to use. Specify one or more prefixes as a comma-separated list or as a regex. (i.e. CR, /[A-Z]{2,}-\\d+/g)"
+          "description": "Jira prefix for identifying the ticket number to use. Specify one or more prefixes as a comma-separated list or as a regex. (i.e. CR, /[A-Z]{2,}-\d+/g)"
         },
         "CF_REGISTRY_DOMAIN": {
           "type": "string",

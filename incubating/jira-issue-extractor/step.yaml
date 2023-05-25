@@ -60,7 +60,7 @@ spec:
         "properties": {
             "JIRA_PROJECT_PREFIX": {
                 "type": "string",
-                "description": "Jira project prefix. Specify one or more prefixes as a comma-separated list or as a regex. (/[A-Z]{2,}-\d+/g,SAAS,CF, etc)"
+                "description": "Jira project prefix. Specify one or more prefixes as a comma-separated list or as a regex. (/[A-Z]{2,}-\\d+/g,SAAS,CF, etc)"
             },
             "MESSAGE": {
                 "type": "string",

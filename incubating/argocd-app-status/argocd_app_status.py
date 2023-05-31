@@ -52,6 +52,7 @@ def get_runtime():
 def get_runtime_ns():
     runtime = get_runtime()
     runtime_ns = runtime['runtime']['metadata']['namespace']
+    logging.debug("Runtime Namespace: %", runtime_ns)
     return runtime_ns
 
 def get_link_to_apps_dashboard():
@@ -91,7 +92,7 @@ def export_variable(var_name, var_value):
     with open('/meta/env_vars_to_export', 'a') as a_writer:
         a_writer.write(var_name + "=" + var_value+'\n')
 
-    print("Exporting variable: "+var_name+"="+var_value)
+    logging.info("Exporting variable: %s=%s", var_name, var_value)
 
 ##############################################################
 

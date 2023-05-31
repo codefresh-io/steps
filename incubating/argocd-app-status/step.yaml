@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argocd-app-status
-  version: 1.0.0
+  version: 1.0.1
   isPublic: true
   description: Get Argo CD App status and return SYNC_STATUS and HEALTH_STATUS
   sources:
@@ -56,7 +56,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.0.0",
+          "default": "1.0.1",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }

@@ -61,9 +61,9 @@ def get_link_to_apps_dashboard():
     return url_to_app
 
 def get_app_status():
-    runtime_api_endpoint = CF_URL + '/2.0/api/graphql'
+    gql_api_endpoint = CF_URL + '/2.0/api/graphql'
     transport = RequestsHTTPTransport(
-        url=runtime_api_endpoint,
+        url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
         verify=True,
         retries=3,

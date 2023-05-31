@@ -1,0 +1,10 @@
+query getRuntime(
+  $runtime:      String!) {
+  runtime(name: $runtime) {
+    metadata {
+      name
+      namespace
+    }
+    ingressHost
+  } 
+}

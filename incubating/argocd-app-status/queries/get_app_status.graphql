@@ -1,0 +1,161 @@
+fragment ApplicationShortOperationStateFragment on ApplicationOperationState {
+  message
+  phase
+  type
+  syncResult {
+    revision
+    source {
+      repoURL
+      targetRevision
+      path
+      chart
+      __typename
+    }
+    resources {
+      status
+      hookPhase
+      __typename
+    }
+    __typename
+  }
+  __typename
+}
+
+query ApplicationsStatusesQuery(
+  $runtime: String!
+  $name: String!
+  $namespace: String
+) {
+  application(runtime: $runtime, name: $name, namespace: $namespace) {
+    metadata {
+      runtime
+      name
+      runtime
+      namespace
+      created
+      uid
+      labels {
+        key
+        value
+        __typename
+      }
+      cluster
+      __typename
+    }
+    healthStatus
+    syncStatus
+    syncPolicy
+    isHelmApp
+    repoURL
+    revision
+    updatedAt
+    size
+    desiredManifest
+    appsRelations {
+      referencedBy {
+        kind
+        __typename
+      }
+      __typename
+    }
+    specSource {
+      repoURL
+      targetRevision
+      path
+      chart
+      __typename
+    }
+    destination {
+      name
+      server
+      namespace
+      __typename
+    }
+    status {
+      minHistoryId
+      __typename
+    }
+    source {
+      gitManifest
+      path
+      revision
+      gitSource {
+        metadata {
+          name
+          __typename
+        }
+        self {
+          repoURL
+          revision
+          path
+          __typename
+        }
+        permissions {
+          read
+          write
+          user {
+            id
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    errors {
+      __typename
+      object {
+        metadata {
+          kind
+          name
+          namespace
+          runtime
+          group
+          version
+          __typename
+        }
+        __typename
+      }
+      level
+      title
+      message
+      lastSeen
+      ... on SyncError {
+        code
+        context {
+          repoURL
+          revision
+          path
+          fileUrl
+          commitAuthor
+          commitUrl
+          commitMessage
+          commitDate
+          __typename
+        }
+        __typename
+      }
+    }
+    operationState {
+      ...ApplicationShortOperationStateFragment
+      __typename
+    }
+    sync {
+      status
+      revision
+      comparedTo {
+        source {
+          repoURL
+          targetRevision
+          path
+          chart
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}

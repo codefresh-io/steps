@@ -1,0 +1,76 @@
+kind: step-type
+metadata:
+  name: argocd-app-status
+  version: 1.0.0
+  isPublic: true
+  description: Get Argo CD App status and return SYNC_STATUS and HEALTH_STATUS
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argocd-app-status'
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - GitOps
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Get Argo CD app status
+      workflow:
+        argocd_app_status:
+          title: Get Argo CD app status
+          type: argocd-app-status
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
+
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "RUNTIME",
+        "APPLICATION"
+      ],
+      "properties": {
+        "RUNTIME": {
+          "type": "string",
+          "description": "The name of the GitOps Runtime managing the Argo CD Application"
+        },
+        "APPLICATION": {
+          "type": "string",
+          "description": "The name of the Argo CD Application to be checked"
+        },
+        "IMAGE_NAME": {
+          "type": "string",
+          "default": "quay.io/codefreshplugins/argocd-app-status",
+          "description": "OPTIONAL - To overwrite the image name to use"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "default": "1.0.0",
+          "description": "OPTIONAL - To overwrite the tag to use"
+        }
+      }
+    }
+  stepsTemplate: |-
+    argocd_app_status:
+      image: '[[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_TAG]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - cd /app
+        - python3 argocd_app_status.py
+  delimiters:
+    left: '[['
+    right: ']]'

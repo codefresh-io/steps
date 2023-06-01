@@ -84,7 +84,7 @@ spec:
             },
             "SYNC_STATUS": {
                 "type": "string",
-                "description": "The synchronization status of the application: SYNCED."
+                "description": "The synchronization status of the application: SYNCED, OUTOFSYNC, UNKNOWN."
             }
         }
     }

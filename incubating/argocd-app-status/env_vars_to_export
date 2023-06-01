@@ -1,6 +1,0 @@
-HEALTH_STATUS=HEALTHY
-SYNC_STATUS=SYNCED
-STEP_NAME_CF_OUTPUT_URL=https://g.codefresh.io/2.0/applications-dashboard/csdp/csdp/color-dev/timeline
-HEALTH_STATUS=HEALTHY
-SYNC_STATUS=SYNCED
-STEP_NAME_CF_OUTPUT_URL=https://g.codefresh.io/2.0/applications-dashboard/csdp/csdp/color-dev/timeline

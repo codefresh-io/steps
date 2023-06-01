@@ -57,7 +57,7 @@ def get_runtime_ns():
 
 def get_link_to_apps_dashboard():
     runtime_ns= get_runtime_ns()
-    url_to_app = CF_URL+'/2.0/applications-dashboard/'+RUNTIME+'/'+runtime_ns+'/'+APPLICATION+'/timeline'
+    url_to_app = CF_URL+'/2.0/applications-dashboard/'+ runtime_ns +'/'+ RUNTIME +'/'+APPLICATION+'/timeline'
     return url_to_app
 
 def get_app_status():

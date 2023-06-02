@@ -1,9 +1,9 @@
 kind: step-type
 metadata:
   name: argocd-app-status
-  version: 1.0.1
+  version: 1.1.1
   isPublic: true
-  description: Get Argo CD App status and return SYNC_STATUS and HEALTH_STATUS
+  description: Get Argo CD App status and return its sybc and health status
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/argocd-app-status'
   stage: incubating
@@ -49,6 +49,11 @@ spec:
           "type": "string",
           "description": "The name of the Argo CD Application to be checked"
         },
+        "LOG_LEVEL": {
+          "type": "string",
+          "description": "set the log level, e.g. 'debug', 'info', 'warn', 'error', 'critical' (default 'error')",
+          "default": "error"
+        },
         "IMAGE_NAME": {
           "type": "string",
           "default": "quay.io/codefreshplugins/argocd-app-status",
@@ -56,10 +61,32 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.0.1",
+          "default": "1.1.1",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "HEALTH_STATUS",
+          "SYNC_STATUS"
+        ],
+        "properties": {
+            "HEALTH_STATUS": {
+                "type": "string",
+                "description": "The heatlh status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
+            },
+            "SYNC_STATUS": {
+                "type": "string",
+                "description": "The synchronization status of the application: SYNCED, OUTOFSYNC, UNKNOWN."
+            }
+        }
     }
   stepsTemplate: |-
     argocd_app_status:

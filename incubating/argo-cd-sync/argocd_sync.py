@@ -23,9 +23,9 @@ def main():
 
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
+    namespace=get_runtime_ns()
     status = get_app_status(namespace)
     if WAIT_HEALTHY:
-        namespace=get_runtime_ns()
         time.sleep(INTERVAL)
         status = get_app_status(namespace)
         logging.info("App status is %s", status)
@@ -37,6 +37,7 @@ def main():
             loop += 1
 
     export_variable('HEALTH_STATUS', status)
+
     ## Generating link to the Apps Dashboard
     CF_OUTPUT_URL_VAR = CF_STEP_NAME + '_CF_OUTPUT_URL'
     link_to_app = get_link_to_apps_dashboard()

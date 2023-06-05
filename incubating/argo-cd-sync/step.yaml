@@ -59,9 +59,9 @@ spec:
           "description": "Interval in seconds to wait between checks",
           "default": 10
         },
-        "INTERVAL": {
-          "type": "MAX_CHECKS",
-          "description": "Maximum numbers of checks to do (to avoid forever wait). Default is 10. 0 means forever",
+        "MAX_CHECKS": {
+          "type": "integer",
+          "description": "Maximum numbers of checks to do (to avoid forever wait). Default is 10.",
           "default": 10
         },
         "LOG_LEVEL": {

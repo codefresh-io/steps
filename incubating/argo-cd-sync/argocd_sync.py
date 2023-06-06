@@ -6,9 +6,13 @@ import time
 
 RUNTIME     = os.getenv('RUNTIME')
 APPLICATION = os.getenv('APPLICATION')
+
+# Wait and Rollback options
 WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else False
-INTERVAL    = os.getenv('INTERVAL')
-MAX_CHECKS  = os.getenv('MAX_CHECKS')
+INTERVAL    = int(os.getenv('INTERVAL'))
+MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
+# 1.1.0 REVISION    = int(os.getenv('ROLLBACK_REVISION', 0))
+
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
 CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
@@ -36,6 +40,14 @@ def main():
             logging.info("App status is %s after %d checks", status, loop)
             loop += 1
 
+        # 1.1.0 # if Wait failed, it's time for rollback
+        # 1.1.0 if status != "HEALTHY" and REVISION !=0:
+        # 1.1.0     logging.info("Application '%s' did not sync properly. Inititating rollback to revision %s", APPLICATION, REVISION)
+        # 1.1.0     rollback(ingress_host, namespace)
+        # 1.1.0     logging.info("Waiting for rollback to happen")
+        # 1.1.0     time.sleep(INTERVAL)
+        # 1.1.0     status=get_app_status(namespace)
+
     export_variable('HEALTH_STATUS', status)
 
     ## Generating link to the Apps Dashboard
@@ -45,6 +57,27 @@ def main():
 
 
 #######################################################################
+def rollback(ingress_host, namespace):
+    runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
+    transport = RequestsHTTPTransport(
+        url=runtime_api_endpoint,
+        headers={'authorization': CF_API_KEY},
+        verify=True,
+        retries=3,
+    )
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    query = get_query('rollback') ## gets gql query
+    variables = {
+      "appName": APPLICATION,
+      "appNamespace": namespace,
+      "historyId": REVISION,
+      "dryRun": False,
+      "prune": True
+    }
+    logging.info("Rollback app: %s", variables)
+    result = client.execute(query, variable_values=variables)
+    logging.info(result)
+
 def get_app_status(namespace):
     ## Get the health status of the app
     gql_api_endpoint = CF_URL + '/2.0/api/graphql'

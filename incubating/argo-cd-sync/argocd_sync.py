@@ -34,6 +34,7 @@ def main():
     logging.debug("INTERVAL: %d", INTERVAL)
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
     logging.debug("ROLLBACK: %s", ROLLBACK)
+
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()
@@ -200,7 +201,7 @@ def get_link_to_apps_dashboard():
 def get_runtime_ns():
     runtime = get_runtime()
     runtime_ns = runtime['runtime']['metadata']['namespace']
-    logging.debug("Runtime Namespace: %", runtime_ns)
+    logging.debug("Runtime Namespace: %s", runtime_ns)
     return runtime_ns
 
 def execute_argocd_sync(ingress_host):

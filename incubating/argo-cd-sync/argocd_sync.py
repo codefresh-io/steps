@@ -11,6 +11,7 @@ APPLICATION = os.getenv('APPLICATION')
 WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else False
 INTERVAL    = int(os.getenv('INTERVAL'))
 MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
+ROLLBACK    = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
 REVISION    = int(os.getenv('ROLLBACK_REVISION', 0))
 
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
@@ -41,8 +42,8 @@ def main():
             loop += 1
 
         # if Wait failed, it's time for rollback
-        if status != "HEALTHY" and REVISION !=0:
-            logging.info("Application '%s' did not sync properly. Inititating rollback to revision %s", APPLICATION, REVISION)
+        if status != "HEALTHY" and ROLLBACK:
+            logging.info("Application '%s' did not sync properly. Inititating rollback ", APPLICATION)
             rollback(ingress_host, namespace)
             logging.info("Waiting for rollback to happen")
             time.sleep(INTERVAL)

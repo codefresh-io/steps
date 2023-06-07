@@ -113,6 +113,10 @@ spec:
             "HEALTH_STATUS": {
                 "type": "string",
                 "description": "The heatlh status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
+            },
+            "ROLLBACK_EXECUTED": {
+                "type": "boolean",
+                "description": "A flag to indicate if a rollback was executed or not"
             }
         }
     }

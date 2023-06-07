@@ -19,7 +19,7 @@ metadata:
     url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
     background: "#f4f4f4"
   examples:
-    - description: Sync an Argo CD app called "my-app" in a GitOps Runtime called "my-runtime"
+    - description: Sync an ArgoCD app in a GitOps Runtime
       workflow:
         sync_argo_cd_app:
           title: Sync Argo CD app
@@ -27,7 +27,7 @@ metadata:
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
-    - description: Sync an application and wait for it to heahlt. If after MAX_CHECKS * INTERVAL,the appplication is not healty, rollback to a specific revision
+    - description: Sync and wait for it to healthy.
       workflow:
         sync_argo_cd_app:
           title: Sync Argo CD app
@@ -38,9 +38,19 @@ metadata:
             WAIT_FOR_HEALTHY: true
             INTERVAL: 30
             MAX_CHECKS: 5
-            ROLLBACK_REVISION: 27
-            LOG_LEVEL: info
-
+    - description: Sync, wait and rollback.
+      workflow:
+        sync_argo_cd_app:
+          title: Sync Argo CD app
+          type: argo-cd-sync
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
+            WAIT_FOR_HEALTHY: true
+            INTERVAL: 60
+            MAX_CHECKS: 3
+            ROLLBACK: true
+            LOG_LEVEL: debug
 spec:
   arguments: |-
     {

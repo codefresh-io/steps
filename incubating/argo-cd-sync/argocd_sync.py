@@ -52,7 +52,7 @@ def main():
 
         # if Wait failed, it's time for rollback
         if status != "HEALTHY" and ROLLBACK:
-            logging.info("Application '%s' did not sync properly. Inititating rollback ", APPLICATION)
+            logging.info("Application '%s' did not sync properly. Initiating rollback ", APPLICATION)
             revision = getRevision(namespace)
             logging.info("latest healthy revision is %d", revision)
 

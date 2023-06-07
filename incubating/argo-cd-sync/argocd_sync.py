@@ -3,6 +3,9 @@ from gql.transport.requests import RequestsHTTPTransport
 import os
 import logging
 import time
+import sys
+
+PAGE_SIZE   = 10
 
 RUNTIME     = os.getenv('RUNTIME')
 APPLICATION = os.getenv('APPLICATION')
@@ -30,6 +33,7 @@ def main():
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()
     status = get_app_status(namespace)
+
     if WAIT_HEALTHY:
         time.sleep(INTERVAL)
         status = get_app_status(namespace)
@@ -44,10 +48,17 @@ def main():
         # if Wait failed, it's time for rollback
         if status != "HEALTHY" and ROLLBACK:
             logging.info("Application '%s' did not sync properly. Inititating rollback ", APPLICATION)
-            rollback(ingress_host, namespace)
+            revision = getRevision(namespace)
+            logging.info("latest healthy revision is %d", revision)
+
+            rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
             time.sleep(INTERVAL)
             status=get_app_status(namespace)
+        else:
+            export_variable('ROLLBACK_EXECUTED', "false")
+    else:
+        export_variable('ROLLBACK_EXECUTED', "false")
 
     export_variable('HEALTH_STATUS', status)
 
@@ -58,7 +69,48 @@ def main():
 
 
 #######################################################################
-def rollback(ingress_host, namespace):
+def getRevision(namespace):
+    ## Get the latest healthy release
+    gql_api_endpoint = CF_URL + '/2.0/api/graphql'
+    transport = RequestsHTTPTransport(
+        url=gql_api_endpoint,
+        headers={'authorization': CF_API_KEY},
+        verify=True,
+        retries=3,
+    )
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    query = get_query('getReleases') ## gets gql query
+    variables = {
+      "filters": {
+        "namespace": namespace,
+        "runtime": RUNTIME,
+        "name": APPLICATION
+      },
+      "pagination": {
+        "first": PAGE_SIZE
+      }
+    }
+    result = client.execute(query, variable_values=variables)
+    logging.info(result)
+
+    loop=0
+    revision = -1
+    for edge in result['gitopsReleases']['edges']:
+        revision=edge['node']['argoHistoryId']
+        health=edge['node']['application']['status']['healthStatus']
+
+        logging.debug("\nEdge %d\n  current:%s\n  revision: %d\n  health: %s",
+            loop, edge['node']['current'], revision, health)
+        if (health == "HEALTHY"):
+            logging.info("Revision %d is HEALTHY", revision)
+            return revision
+        loop += 1
+    # we did not find a HEALTHY one in our page
+    export_variable('ROLLBACK_EXECUTED', "false")
+    logging.error("Did not find a HEALTHY release among the lat %d", PAGE_SIZE)
+    sys.exit(1)
+
+def rollback(ingress_host, namespace, revision):
     runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,
@@ -71,13 +123,15 @@ def rollback(ingress_host, namespace):
     variables = {
       "appName": APPLICATION,
       "appNamespace": namespace,
-      "historyId": REVISION,
+      "historyId": revision,
       "dryRun": False,
       "prune": True
     }
     logging.info("Rollback app: %s", variables)
     result = client.execute(query, variable_values=variables)
     logging.info(result)
+    export_variable('ROLLBACK_EXECUTED', "true")
+
 
 def get_app_status(namespace):
     ## Get the health status of the app
@@ -168,9 +222,10 @@ def export_variable(var_name, var_value):
     with open(path+'/env_vars_to_export', 'a') as a_writer:
         a_writer.write(var_name + "=" + var_value+'\n')
 
-    if os.getenv('CF_VOLUME_PATH') == None: os.mkdir('/meta')
-    with open('/meta/env_vars_to_export', 'a') as a_writer:
-        a_writer.write(var_name + "=" + var_value+'\n')
+    if os.getenv('CF_BUILD_ID') != None:
+        if os.getenv('CF_VOLUME_PATH') == None: os.mkdir('/meta')
+        with open('/meta/env_vars_to_export', 'a') as a_writer:
+            a_writer.write(var_name + "=" + var_value+'\n')
 
     logging.info("Exporting variable: %s=%s", var_name, var_value)
 

@@ -75,6 +75,7 @@ def main():
 
 #######################################################################
 def getRevision(namespace):
+    logging.debug ("Entering getRevision(%s)", namespace)
     ## Get the latest healthy release
     gql_api_endpoint = CF_URL + '/2.0/api/graphql'
     transport = RequestsHTTPTransport(
@@ -116,6 +117,7 @@ def getRevision(namespace):
     sys.exit(1)
 
 def rollback(ingress_host, namespace, revision):
+    logging.debug ("Entering rollback(%s, %s, %s)", ingress_host, namespace, revision)
     runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,

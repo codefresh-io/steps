@@ -15,7 +15,6 @@ WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else
 INTERVAL    = int(os.getenv('INTERVAL'))
 MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
 ROLLBACK    = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
-REVISION    = int(os.getenv('ROLLBACK_REVISION', 0))
 
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
@@ -29,6 +28,12 @@ def main():
     log_format = "%(asctime)s:%(levelname)s:%(name)s.%(funcName)s: %(message)s"
     logging.basicConfig(format = log_format, level = LOG_LEVEL.upper())
 
+    logging.debug("RUNTIME: %s", RUNTIME)
+    logging.debug("APPLICATION: %s", APPLICATION)
+    logging.debug("WAIT: %s", WAIT_HEALTHY)
+    logging.debug("INTERVAL: %d", INTERVAL)
+    logging.debug("MAX CHECKS: %s", MAX_CHECKS)
+    logging.debug("ROLLBACK: %s", ROLLBACK)
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()

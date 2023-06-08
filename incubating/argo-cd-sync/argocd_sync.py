@@ -140,7 +140,7 @@ def rollback(ingress_host, namespace, revision):
     logging.info(result)
     export_variable('ROLLBACK_EXECUTED', "true")
 
-
+    
 def get_app_status(namespace):
     ## Get the health status of the app
     gql_api_endpoint = CF_URL + '/2.0/api/graphql'

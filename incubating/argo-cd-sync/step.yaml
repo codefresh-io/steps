@@ -10,6 +10,8 @@ metadata:
   maintainers:
     - name: Francisco Cocozza
     - email: francisco@codefresh.io
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
   categories:
     - GitOps
   official: true

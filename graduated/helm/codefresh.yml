@@ -164,291 +164,466 @@ steps:
     build_arguments:
     - HELM_VERSION=2.12.3
     tag: 2.12.3-${{CF_SHORT_REVISION}}
-  push_2_3_0:
+
+  PushingToRegistries_2_3_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_3_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_3_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  
+  PushingToRegistries_2_3_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_3_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_4_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_4_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_4_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_4_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+    PushingToRegistries_2_4_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_4_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_4_2:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+    PushingToRegistries_2_4_2:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_4_2}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_5_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+    PushingToRegistries_2_5_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_5_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_5_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_5_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_5_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_6_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+    PushingToRegistries_2_6_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_6_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_6_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_6_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_6_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_6_2:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+ 
+  PushingToRegistries_2_6_2:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_6_2}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_7_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+   PushingToRegistries_2_7_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_7_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_7_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+        
+  PushingToRegistries_2_7_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_7_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_7_2:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_7_2:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_7_2}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_8_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_8_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_8_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_8_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+  PushingToRegistries_2_8_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_8_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_8_2:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+
+  PushingToRegistries_2_8_2:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_8_2}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_9_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+
+
+  PushingToRegistries_2_9_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_9_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_9_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+ 
+  PushingToRegistries_2_9_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_9_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_10_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+ PushingToRegistries_2_10_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_10_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_11_0:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+PushingToRegistries_2_11_0:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_11_0}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_12_1:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+
+PushingToRegistries_2_12_1:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_12_1}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_12_2:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+PushingToRegistries_2_12_2:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_12_2}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_2_12_3:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+PushingToRegistries_2_12_3:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_12_3}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
-  push_latest:
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay
+
+
+  
+  PushingToRegistries_latest:
+    title: Pushing to Registry
     type: push
-    stage: push
     candidate: ${{build_2_12_3}}
-    registry: dockerhub
     tags:
-    - latest
-    - 0.1.0
+    - "0.1.0"
+    - "latest"
     when:
       branch:
         only:
         - master
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

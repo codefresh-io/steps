@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.5.0
+  version: 1.6.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -55,7 +55,7 @@ spec:
                 "type": "string",
                 "description": "Custom image of codefresh-run step",
                 "examples": ["latest-debian"],
-                "default": "0.81.4"
+                "default": "0.83.1"
             },
             "PIPELINE_ID": {
                 "type": "string",
@@ -137,6 +137,15 @@ spec:
                  "examples": ["key=val"],
                  "default": []
              },
+            "ENCRYPTED": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                 },
+                 "description": "Variable names to encrypt.",
+                 "examples": ["key"],
+                 "default": []
+             },    
             "VARIABLE_FILE": {
                   "type": "string",
                   "description": "Import build variables from a file.",
@@ -217,6 +226,9 @@ spec:
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
+        [[ range .Arguments.ENCRYPTED ]]
+            [[- $cmd = (printf "%s --encrypted %s" $cmd .) -]]
+        [[- end -]]    
         [[ if .Arguments.VARIABLE_FILE ]]
             [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
         [[- end -]]        

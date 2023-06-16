@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.1.0
+  version: 1.2.0
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -92,6 +92,11 @@ spec:
         "ROLLBACK": {
           "type": "boolean",
           "description": "OPTIONAL - Initiate a rollback to the latest Healdy revision if the Sync and Wait does not become healthy",
+          "default": false
+        },
+        "WAIT_ROLLBACK": {
+          "type": "boolean",
+          "description": "OPTIONAL - Wait for the app to be healthy after a rollback. Forces ROLLBACK to true",
           "default": false
         },
         "LOG_LEVEL": {

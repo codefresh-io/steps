@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: codefresh-report-image
-  version: 1.0.9
+  version: 1.0.10
   isPublic: true
   description: Report Docker Image Metadata to Codefresh CD
   sources:
@@ -62,7 +62,6 @@ spec:
       "required": [
         "CF_API_KEY",
         "CF_IMAGE",
-        "CF_GIT_BRANCH"
       ],
       "properties": {
         "CF_API_KEY": {
@@ -119,7 +118,7 @@ spec:
         },
         "CF_GIT_PROVIDER": {
           "type": "string",
-          "description": "The Git provider: Acceptable values are github, gitlab, bitbucket, or bitbucket-server. In case this not provided git credentials will be taken form your runtime git context"
+          "description": "The Git provider: Acceptable values are github, gitlab, bitbucket, gerrit or bitbucket-server. In case this not provided git credentials will be taken form your runtime git context"
         },
         "CF_GIT_REPO": {
           "type": "string",
@@ -136,6 +135,22 @@ spec:
         "CF_GITHUB_TOKEN": {
           "type": "string",
           "description": "Github personal access token. Scope: repo."
+        },
+        "CF_GERRIT_CHANGE_ID": {
+          "type": "string",
+          "description": "The change-id or a commit message that contain the change-id."
+        },
+        "CF_GERRIT_HOST_URL": {
+          "type": "string",
+          "description": "URL address of Gerrit instance."
+        },
+        "CF_GERRIT_USERNAME": {
+          "type": "string",
+          "description": "Gerrit username."
+        },
+        "CF_GERRIT_PASSWORD": {
+          "type": "string",
+          "description": "Gerrit password."
         },
         "CF_JIRA_API_TOKEN": {
           "type": "string",

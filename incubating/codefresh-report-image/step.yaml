@@ -61,7 +61,7 @@ spec:
       "patterns": [],
       "required": [
         "CF_API_KEY",
-        "CF_IMAGE",
+        "CF_IMAGE"
       ],
       "properties": {
         "CF_API_KEY": {

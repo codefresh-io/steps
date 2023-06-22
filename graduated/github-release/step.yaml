@@ -3,7 +3,7 @@ version: '1.0'
 metadata:
   name: github-release
   title: Create a GitHub release
-  version: 1.1.8
+  version: 1.2.0
   isPublic: true
   description: Create a GitHub release.
   sources:
@@ -157,7 +157,7 @@ spec:
   steps:
     main:
       name: github-release
-      image: quay.io/codefreshplugins/github-release:1.1.8
+      image: quay.io/codefreshplugins/github-release:1.2.0
       environment:
         - 'GIT_CONTEXT=${{git_context_name}}'
         - 'GIT_TOKEN=${{git_token}}'

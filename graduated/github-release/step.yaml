@@ -11,8 +11,8 @@ metadata:
       https://github.com/codefresh-io/steps/tree/master/incubating/github-release
   stage: incubating
   maintainers:
-    - name: Alex Cheshko
-      email: a.cheshko@codefresh.io
+    - name: Codefresh
+      email: dev@codefresh.io
   categories:
     - git
     - release
@@ -157,7 +157,7 @@ spec:
   steps:
     main:
       name: github-release
-      image: codefresh/github-release
+      image: quay.io/codefreshplugins/github-release:1.1.8
       environment:
         - 'GIT_CONTEXT=${{git_context_name}}'
         - 'GIT_TOKEN=${{git_token}}'

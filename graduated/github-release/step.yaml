@@ -8,8 +8,8 @@ metadata:
   description: Create a GitHub release.
   sources:
     - >-
-      https://github.com/codefresh-io/steps/tree/master/incubating/github-release
-  stage: incubating
+      https://github.com/codefresh-io/steps/tree/master/graduated/github-release
+  stage: graduated
   maintainers:
     - name: Codefresh
       email: dev@codefresh.io

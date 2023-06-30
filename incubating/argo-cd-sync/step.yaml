@@ -111,7 +111,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.1.0",
+          "default": "1.2.0",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }

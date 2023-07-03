@@ -14,7 +14,10 @@ APPLICATION = os.getenv('APPLICATION')
 WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else False
 INTERVAL    = int(os.getenv('INTERVAL'))
 MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
+
+WAIT_ROLLBACK = True if os.getenv('WAIT_ROLLBACK', "false").lower() == "true" else False
 ROLLBACK    = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
+if WAIT_ROLLBACK: ROLLBACK = True 
 
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
@@ -41,15 +44,7 @@ def main():
     status = get_app_status(namespace)
 
     if WAIT_HEALTHY:
-        time.sleep(INTERVAL)
-        status = get_app_status(namespace)
-        logging.info("App status is %s", status)
-        loop=0
-        while status != "HEALTHY" and loop < MAX_CHECKS:
-            status=get_app_status(namespace)
-            time.sleep(INTERVAL)
-            logging.info("App status is %s after %d checks", status, loop)
-            loop += 1
+        status=waitHealthy (namespace)
 
         # if Wait failed, it's time for rollback
         if status != "HEALTHY" and ROLLBACK:
@@ -59,8 +54,11 @@ def main():
 
             rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
-            time.sleep(INTERVAL)
-            status=get_app_status(namespace)
+            if WAIT_ROLLBACK:
+                status=waitHealthy (namespace)
+            else:
+                time.sleep(INTERVAL)
+                status=get_app_status(namespace)
         else:
             export_variable('ROLLBACK_EXECUTED', "false")
     else:
@@ -75,6 +73,7 @@ def main():
 
 
 #######################################################################
+
 def getRevision(namespace):
     logging.debug ("Entering getRevision(%s)", namespace)
     ## Get the latest healthy release
@@ -117,6 +116,21 @@ def getRevision(namespace):
     logging.error("Did not find a HEALTHY release among the lat %d", PAGE_SIZE)
     sys.exit(1)
 
+def waitHealthy (namespace):
+    logging.debug ("Entering waitHealthy (ns: %s)", namespace)
+
+    time.sleep(INTERVAL)
+    status = get_app_status(namespace)
+    logging.info("App status is %s", status)
+    loop=0
+    while status != "HEALTHY" and loop < MAX_CHECKS:
+        status=get_app_status(namespace)
+        time.sleep(INTERVAL)
+        logging.info("App status is %s after %d checks", status, loop)
+        loop += 1
+    logging.debug ("Returning waitHealthy with '%s'", status)
+    return status
+
 def rollback(ingress_host, namespace, revision):
     logging.debug ("Entering rollback(%s, %s, %s)", ingress_host, namespace, revision)
     runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
@@ -140,7 +154,7 @@ def rollback(ingress_host, namespace, revision):
     logging.info(result)
     export_variable('ROLLBACK_EXECUTED', "true")
 
-    
+
 def get_app_status(namespace):
     ## Get the health status of the app
     gql_api_endpoint = CF_URL + '/2.0/api/graphql'

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.5.0
+  version: 1.5.2
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:

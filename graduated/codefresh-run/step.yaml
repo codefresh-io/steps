@@ -218,7 +218,7 @@ spec:
             [[- $cmd = (printf "%s --variable \"%s\"" $cmd .) -]]
         [[- end -]]
         [[ if .Arguments.VARIABLE_FILE ]]
-            [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
+            [[- $cmd = (printf "%s --var-file \"%s\"" $cmd .Arguments.VARIABLE_FILE) -]]
         [[- end -]]        
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context \"%s\"" $cmd .) -]]

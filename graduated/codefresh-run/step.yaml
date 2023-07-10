@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.5.1
+  version: 1.5.0
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -188,13 +188,13 @@ spec:
         commands:
         [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
-            [[- $cmd = (printf "%s -t \"%s\"" $cmd .Arguments.TRIGGER_ID) -]]
+            [[- $cmd = (printf "%s -t %s" $cmd .Arguments.TRIGGER_ID) -]]
         [[- end -]]
         [[ if .Arguments.BRANCH ]]
-            [[- $cmd = (printf "%s -b \"%s\"" $cmd .Arguments.BRANCH) -]]
+            [[- $cmd = (printf "%s -b %s" $cmd .Arguments.BRANCH) -]]
         [[- end -]]
         [[ if .Arguments.SHA ]]
-            [[- $cmd = (printf "%s -s \"%s\"" $cmd .Arguments.SHA) -]]
+            [[- $cmd = (printf "%s -s %s" $cmd .Arguments.SHA) -]]
         [[- end -]]
         [[ if .Arguments.NO_CACHE ]]
             [[- $cmd = (printf "%s --no-cache" $cmd) -]]
@@ -209,28 +209,28 @@ spec:
             [[- $cmd = (printf "%s --reset-volume" $cmd) -]]
         [[- end -]]
         [[ if .Arguments.RUNTIME_NAME ]]
-            [[- $cmd = (printf "%s --runtime-name \"%s\"" $cmd .Arguments.RUNTIME_NAME) -]]
+            [[- $cmd = (printf "%s --runtime-name %s" $cmd .Arguments.RUNTIME_NAME) -]]
         [[- end -]]    
         [[ if .Arguments.PACK_NAME ]]
-            [[- $cmd = (printf "%s --pack-name \"%s\"" $cmd .Arguments.PACK_NAME) -]]
+            [[- $cmd = (printf "%s --pack-name %s" $cmd .Arguments.PACK_NAME) -]]
         [[- end -]]    
         [[ range .Arguments.VARIABLE ]]
-            [[- $cmd = (printf "%s --variable \"%s\"" $cmd .) -]]
+            [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
         [[ if .Arguments.VARIABLE_FILE ]]
-            [[- $cmd = (printf "%s --var-file \"%s\"" $cmd .Arguments.VARIABLE_FILE) -]]
+            [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
         [[- end -]]        
         [[ range .Arguments.CONTEXT ]]
-            [[- $cmd = (printf "%s --context \"%s\"" $cmd .) -]]
+            [[- $cmd = (printf "%s --context %s" $cmd .) -]]
         [[- end -]]
         [[ range .Arguments.ONLY ]]
-            [[- $cmd = (printf "%s --only \"%s\"" $cmd .) -]]
+            [[- $cmd = (printf "%s --only %s" $cmd .) -]]
         [[- end -]]
         [[ range .Arguments.SKIP ]]
-            [[- $cmd = (printf "%s --skip \"%s\"" $cmd .) -]]
+            [[- $cmd = (printf "%s --skip %s" $cmd .) -]]
         [[- end ]]
         [[ if .Arguments.YAML ]]
-            [[- $cmd = (printf "%s --yaml \"%s\"" $cmd .Arguments.YAML) -]]
+            [[- $cmd = (printf "%s --yaml %s" $cmd .Arguments.YAML) -]]
         [[- end -]]   
 
         [[/* Multiline string is required to support usage of 'colon' (:) character in the string. For example in the pipeline name. */]]

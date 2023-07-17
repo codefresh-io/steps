@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.1.1
+  version: 0.1.2
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -131,7 +131,12 @@ spec:
               "type": "boolean",
               "description": "Is use ssh or https (ssh key will be taken from git integration defined in git argument)",
               "default": false
-          }
+          },
+          "base_branch": {
+              "type": "string",
+              "description": "Changes the base branch git-commit interacts with",
+              "default": ""
+          },
       }
     }
   steps:
@@ -170,6 +175,7 @@ spec:
         - GPG_SECRET_KEY=${{gpg_secret_key}}
         - FORCE_PUSH=${{force_push}}
         - REBASE=${{rebase}}
+        - BASE_BRANCH=${{base_branch}}
         - USE_SSH=${{use_ssh}}
         - GIT_INTEGRATION_NAME=${{git}}
       commands:
@@ -180,7 +186,7 @@ spec:
             gpg --import /tmp/private.key
             git config --global user.signingkey ${GPG_KEY_ID}
             git config --global commit.gpgsign true
-          fi  
+          fi
         - cd ${WORKING_DIRECTORY}
         - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
         - echo GIT_USER_NAME=$GIT_USER_NAME GIT_USER_EMAIL=$GIT_USER_EMAIL
@@ -202,7 +208,7 @@ spec:
             REPO=${REPO#"ssh://"}
             SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
             echo "Adding "$SSH_HOST" to known_hosts"
-            
+
             # removes all keys belonging to hostname from a known_hosts file
             ssh-keygen -R $SSH_HOST 2>/dev/null
 
@@ -211,11 +217,11 @@ spec:
           fi
         - |-
           if [ "$REBASE" = true ]; then
-            git pull --rebase $REPO_URL
+            git pull --rebase $REPO_URL $BASE_BRANCH
           fi
         - |-
           if [ "$FORCE_PUSH" = true ]; then
-            git push --force $REPO_URL
+            git push --force $REPO_URL $BASE_BRANCH
           else
-            git push $REPO_URL
-          fi    
+            git push $REPO_URL $BASE_BRANCH
+          fi

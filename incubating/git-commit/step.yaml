@@ -33,6 +33,8 @@ metadata:
             git_user_name: 'git-user-name'
             git_user_email: 'git-user@email.com'
             allow_empty: false
+            rebase: true
+            base_branch: 'feature'
             add:
               - file1.txt
               - file2.txt

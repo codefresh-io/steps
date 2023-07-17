@@ -138,7 +138,7 @@ spec:
               "type": "string",
               "description": "Changes the base branch git-commit interacts with",
               "default": ""
-          },
+          }
       }
     }
   steps:

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.5.2
+  version: 1.5.3
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -55,7 +55,7 @@ spec:
                 "type": "string",
                 "description": "Custom image of codefresh-run step",
                 "examples": ["latest-debian"],
-                "default": "0.81.4"
+                "default": "0.84.7"
             },
             "PIPELINE_ID": {
                 "type": "string",

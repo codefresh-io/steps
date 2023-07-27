@@ -1,4 +1,4 @@
-FROM node:14.21.3-bullseye-slim
+FROM node:16.20.1-bullseye-slim
 
 
 #RUN apk add --no-cache bash git openssh-client

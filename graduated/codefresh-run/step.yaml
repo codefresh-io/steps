@@ -245,7 +245,7 @@ spec:
       name: step1
       image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
       commands:
-        - export BUILD_ID=${{steps.first.output.BUILD_ID}}
+        - export BUILD_ID=${{steps.first.output.BUILD_ID}}fghj
       [[- if eq .Arguments.FOLLOW_LOGS true ]]
         - echo "Retrieving logs for build $BUILD_ID"
         - codefresh logs -f --no-timestamps $BUILD_ID

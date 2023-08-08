@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.2.1
+  version: 1.2.2
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -111,7 +111,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.2.1",
+          "default": "1.2.2",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }
@@ -132,7 +132,7 @@ spec:
                 "description": "The heatlh status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
             },
             "ROLLBACK_EXECUTED": {
-                "type": "boolean",
+                "type": "string",
                 "description": "A flag to indicate if a rollback was executed or not"
             }
         }

@@ -17,7 +17,7 @@ MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
 
 WAIT_ROLLBACK = True if os.getenv('WAIT_ROLLBACK', "false").lower() == "true" else False
 ROLLBACK    = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
-if WAIT_ROLLBACK: ROLLBACK = True 
+if WAIT_ROLLBACK: ROLLBACK = True
 
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
@@ -70,7 +70,8 @@ def main():
     CF_OUTPUT_URL_VAR = CF_STEP_NAME + '_CF_OUTPUT_URL'
     link_to_app = get_link_to_apps_dashboard()
     export_variable(CF_OUTPUT_URL_VAR, link_to_app)
-
+    if status != "HEALTHY"
+        sys.exit(1)
 
 #######################################################################
 

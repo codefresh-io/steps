@@ -70,7 +70,8 @@ def main():
     CF_OUTPUT_URL_VAR = CF_STEP_NAME + '_CF_OUTPUT_URL'
     link_to_app = get_link_to_apps_dashboard()
     export_variable(CF_OUTPUT_URL_VAR, link_to_app)
-    if status != "HEALTHY"
+    if status != "HEALTHY":
+        logging.debug("Status is not HEALTHY. Exiting with error.")
         sys.exit(1)
 
 #######################################################################

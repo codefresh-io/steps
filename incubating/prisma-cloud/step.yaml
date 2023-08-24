@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: prisma-cloud
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
   description: Execute Prisma Clud image scan as build step
   sources:
@@ -125,7 +125,7 @@ spec:
   stepsTemplate: |-
     main:
       name: prisma-cloud
-      image: quay.io/codefreshplugins/cfstep-prisma-cloud:1.0.1
+      image: quay.io/codefreshplugins/cfstep-prisma-cloud:1.0.2
       environment:
       [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

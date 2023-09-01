@@ -1,0 +1,84 @@
+version: '1.0'
+kind: step-type
+metadata:
+  version: 1.0.0
+  name: obtain-oidc-id-token
+  description: >-
+    Obtain ID token from Codefresh OIDC Provider
+  isPublic: true
+  latest: true
+  official: true
+  stage: incubating
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/obtain-oidc-id-token'
+  maintainers:
+    - name: Daniel Soifer
+  categories:
+    - oidc
+  tags: [
+    'oidc',
+    'open id connect',
+    'id token'
+  ]
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/obtain-oidc-id-token/icon.svg
+    background: '#f4f4f4'
+  examples:
+    - description: example-with-print-output
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+          print_output:
+            title: Printing output from previous step
+            image: alpine
+            commands:
+              - echo $ID_TOKEN
+              - echo ${{steps.obtain_id_token.output.ID_TOKEN}}
+    - description: example-with-aws-sts-assume-role-step
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+          assume_role:
+            title: Assume Role
+            type: aws-sts-assume-role-with-web-identity
+            arguments:
+              ROLE_ARN: arn:aws:iam::123456789012:role/role-name
+              ROLE_SESSION_NAME: session-name
+          s3_list_objects:
+            title: List S3 Objects
+            image: amazon/aws-cli
+            commands:
+              - aws s3 ls "s3://bucket-name/"
+spec:
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "ID_TOKEN"
+        ],
+        "properties": {
+            "ID_TOKEN": {
+                "type": "string",
+                "description": "the ID token obtained from Codefresh OIDC Provider"
+            }
+        }
+    }
+  steps:
+    main:
+      name: obtain-oidc-id-token
+      image: dwdraju/alpine-curl-jq
+      commands:
+        - |
+          ID_TOKEN=$(curl -H "Authorization: $CF_OIDC_REQUEST_TOKEN" "$CF_OIDC_REQUEST_URL" | jq -r ".id_token")
+          cf_export ID_TOKEN=$ID_TOKEN --mask

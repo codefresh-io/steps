@@ -1,0 +1,151 @@
+version: '1.0'
+kind: step-type
+metadata:
+  version: 1.0.0
+  name: aws-sts-assume-role-with-web-identity
+  description: >-
+    Obtain AWS STS credentials using OIDC ID token and export them as environment variables
+  isPublic: true
+  latest: true
+  official: true
+  stage: incubating
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/aws-sts-assume-role-with-web-identity'
+  maintainers:
+    - name: Daniel Soifer
+  categories:
+    - oidc
+  tags: [
+    'aws',
+    'sts',
+    'oidc',
+    'open id connect',
+    'id token'
+  ]
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/aws-sts-assume-role-with-web-identity/icon.svg
+    background: '#f4f4f4'
+  examples:
+    - description: example-with-obtain-oidc-id-token-step
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+          assume_role:
+            title: Assume Role
+            type: aws-sts-assume-role-with-web-identity
+            arguments:
+              ROLE_ARN: arn:aws:iam::123456789012:role/role-name
+              ROLE_SESSION_NAME: session-name
+          s3_list_objects:
+            title: List S3 Objects
+            image: amazon/aws-cli
+            commands:
+              - aws s3 ls "s3://bucket-name/"
+    - description: example-with-id-token-from-environment-variable
+      workflow:
+        version: '1.0'
+        steps:
+          assume_role:
+            title: Assume Role
+            type: aws-sts-assume-role-with-web-identity
+            arguments:
+              ROLE_ARN: arn:aws:iam::123456789012:role/role-name
+              ROLE_SESSION_NAME: session-name
+              WEB_IDENTITY_TOKEN: ${{ID_TOKEN}}
+          s3_list_objects:
+            title: List S3 Objects
+            image: amazon/aws-cli
+            commands:
+              - aws s3 ls "s3://bucket-name/"
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+          "ROLE_ARN",
+          "ROLE_SESSION_NAME"
+        ],
+        "properties": {
+           "ROLE_ARN": {
+               "type": "string",
+               "description": "the ARN of the role to assume"
+           },
+            "ROLE_SESSION_NAME": {
+                 "type": "string",
+                 "description": "the name of the session"
+            },
+           "WEB_IDENTITY_TOKEN": {
+               "type": "string",
+               "description": "the OIDC ID token. If not provided, the step will try to read it from the environment variable ID_TOKEN (which is set by the obtain-oidc-id-token step)"
+           }
+        }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "AWS_ACCESS_KEY_ID",
+          "AWS_SECRET_ACCESS_KEY",
+          "AWS_SESSION_TOKEN"
+        ],
+        "properties": {
+            "AWS_ACCESS_KEY_ID": {
+                "type": "string",
+                "description": "the AWS access key id" 
+            },
+            "AWS_SECRET_ACCESS_KEY": {
+                "type": "string",
+                "description": "the AWS secret access key" 
+            },
+            "AWS_SESSION_TOKEN": {
+                "type": "string",
+                "description": "the AWS session token" 
+            }
+        }
+    }
+  delimiters:
+    left: '[['
+    right: ']]'
+  stepsTemplate: |-
+    main:
+      name: aws-sts-assume-role-with-web-identity
+      image: mikesir87/aws-cli
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+        - 'ID_TOKEN=${{ID_TOKEN}}'
+      commands:
+        - |
+        [[- if .Arguments.WEB_IDENTITY_TOKEN ]]
+          TOKEN=$WEB_IDENTITY_TOKEN
+        [[- else ]]
+          TOKEN=$ID_TOKEN
+        [[- end ]]
+
+          SESSION_CREDS=$(aws sts assume-role-with-web-identity \
+            --role-arn "$ROLE_ARN" \
+            --role-session-name "$ROLE_SESSION_NAME" \
+            --web-identity-token "$TOKEN" \
+            --output json \
+            --query Credentials)
+    
+          AWS_ACCESS_KEY_ID=$(echo "$SESSION_CREDS" | jq -r .AccessKeyId)
+          AWS_SECRET_ACCESS_KEY=$(echo "$SESSION_CREDS" | jq -r .SecretAccessKey)
+          AWS_SESSION_TOKEN=$(echo "$SESSION_CREDS" | jq -r .SessionToken)
+    
+          cf_export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --mask
+          cf_export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --mask
+          cf_export AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN --mask

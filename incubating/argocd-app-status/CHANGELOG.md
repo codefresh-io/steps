@@ -3,8 +3,8 @@
 ### Changed
 
 ### Fixed
-- PYSEC-2023-135 - upgrade certifi to 2023.7.22
-- CVE-2019-8457 - upgrade base image to python:3.11.5-slim-bullseye
+- PYSEC-2023-135 - upgrade Python module certifi to 2023.7.22
+- CVE-2019-8457 - upgrade base image to python:3.11.5-slim-bookworm
 
 ## [1.1.1] - 2023-06-03
 ### Changed

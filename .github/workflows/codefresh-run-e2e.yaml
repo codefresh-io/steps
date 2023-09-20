@@ -1,9 +1,6 @@
 name: codefresh-run-e2e
 
 on:
-  pull_request:
-    branches:
-      - feat-codefresh-run-action
   issue_comment:
     types:
       - created

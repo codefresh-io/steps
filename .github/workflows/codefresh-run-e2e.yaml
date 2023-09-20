@@ -5,6 +5,10 @@ on:
     types:
       - created
 
+  pull_request:
+    branches:
+      - '*'
+
 env:
   PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"
   TRIGGER_NAME: "codefresh_run_step_dev"

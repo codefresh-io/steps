@@ -35,5 +35,5 @@ jobs:
         env:
           PIPELINE_NAME: cli-v1-e2e/codefresh-run-step-e2e
           TRIGGER_NAME: codefresh_run_step_dev
-          CF_BRANCH : ${{ github.ref }}
+          CF_BRANCH : ${{ github.ref_name }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}

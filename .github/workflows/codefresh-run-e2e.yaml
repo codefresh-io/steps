@@ -29,11 +29,15 @@ jobs:
           files: |
             graduated/codefresh-run/**
 
+      - id: setup-node
+        if: steps.changed-files.outputs.any_changed  == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - id: codefresh-run
         if: steps.changed-files.outputs.any_changed  == 'true'
-        uses: codefresh-io/codefresh-pipeline-runner@v5
-        env:
-          PIPELINE_NAME: cli-v1-e2e/codefresh-run-step-e2e
-          TRIGGER_NAME: codefresh_run_step_dev
-          #CF_BRANCH : test-action #${{ github.ref_name }}
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+        run: |
+          npm install -g codefresh
+          codefresh auth create-context --api-key ${{ secrets.CF_API_KEY }}
+          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b ${{ github.ref_name }}

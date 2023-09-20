@@ -46,4 +46,4 @@ jobs:
         run: |
           npm install -g codefresh
           codefresh auth create-context --api-key ${{ secrets.CF_API_KEY }}
-          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b ${{ steps.git-branch-name.outputs.original_name }}"
+          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b ${{ steps.git-branch-name.outputs.original_name }}

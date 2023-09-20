@@ -20,6 +20,12 @@ jobs:
         run: |
           echo "result=$(git rev-parse --short origin/feat-codefresh-run-action)" >> $GITHUB_OUTPUT
 
+      - id: git-branch-name
+        uses: ohueter/normalize-git-branch-name@v1
+        with:
+          ref: ${{ github.ref }}
+          head-ref: ${{ github.head_ref }}
+
       - id: changed-files
         uses: tj-actions/changed-files@v39
         with:
@@ -40,4 +46,4 @@ jobs:
         run: |
           npm install -g codefresh
           codefresh auth create-context --api-key ${{ secrets.CF_API_KEY }}
-          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b test-action
+          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b ${{ steps.git-branch-name.outputs.original_name }}"

@@ -1,13 +1,22 @@
 name: codefresh-run-e2e
 
 on:
+  issue_comment:
+    types: [created, edited]
+
   pull_request:
     branches:
       - feat-codefresh-run-action
 
+env:
+  PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"
+  TRIGGER_NAME: "codefresh_run_step_dev"
+
 jobs:
   codefresh_run_e2e:
     runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }}
+    #if: ${{ github.event.comment.body == '/test'}}
     steps:
       - id: clone
         uses: actions/checkout@v4
@@ -46,4 +55,4 @@ jobs:
         run: |
           npm install -g codefresh
           codefresh auth create-context --api-key ${{ secrets.CF_API_KEY }}
-          codefresh run cli-v1-e2e/codefresh-run-step-e2e -t codefresh_run_step_dev -b ${{ steps.git-branch-name.outputs.original_name }}
+          codefresh run ${{ env.PIPELINE_NAME }} -t ${{ env.TRIGGER_NAME }} -b ${{ steps.git-branch-name.outputs.original_name }}

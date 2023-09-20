@@ -1,9 +1,6 @@
-name: codefresh-run-e2e
+name: Steps Test
 
 on:
-  issue_comment:
-    types: [created, edited]
-
   pull_request:
     branches:
       - feat-codefresh-run-action
@@ -13,10 +10,8 @@ env:
   TRIGGER_NAME: "codefresh_run_step_dev"
 
 jobs:
-  codefresh_run_e2e:
+  codefresh_run_test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request }}
-    #if: ${{ github.event.comment.body == '/test'}}
     steps:
       - id: clone
         uses: actions/checkout@v4

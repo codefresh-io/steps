@@ -2,11 +2,11 @@ name: codefresh-run-e2e
 
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited]
 
-  pull_request:
-    branches:
-      - '*'
+  # pull_request:
+  #   branches:
+  #     - '*'
 
 env:
   PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"
@@ -15,6 +15,7 @@ env:
 jobs:
   codefresh_run_e2e:
     runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }}
     #if: ${{ github.event.comment.body == '/test'}}
     steps:
       - id: clone

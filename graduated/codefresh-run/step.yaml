@@ -10,8 +10,8 @@ metadata:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/codefresh-run'
   stage: graduated
   maintainers:
-    - name: Itai Gendler
-      email: itai@codefresh.io
+    - name: codefresh
+      email: dev@codefresh.io
   categories:
     - featured
   official: true
@@ -142,7 +142,7 @@ spec:
                   "description": "Import build variables from a file.",
                   "examples": ["/codefresh/volume/my-repo/var_file_example.yml"],
                   "default": ""
-            },             
+            },
             "TIMEOUT_MINS": {
                 "type": "string",
                 "description": "Timeout in minutes after which to consider pipeline build as failed.",
@@ -210,16 +210,16 @@ spec:
         [[- end -]]
         [[ if .Arguments.RUNTIME_NAME ]]
             [[- $cmd = (printf "%s --runtime-name %s" $cmd .Arguments.RUNTIME_NAME) -]]
-        [[- end -]]    
+        [[- end -]]
         [[ if .Arguments.PACK_NAME ]]
             [[- $cmd = (printf "%s --pack-name %s" $cmd .Arguments.PACK_NAME) -]]
-        [[- end -]]    
+        [[- end -]]
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
         [[ if .Arguments.VARIABLE_FILE ]]
             [[- $cmd = (printf "%s --var-file %s" $cmd .Arguments.VARIABLE_FILE) -]]
-        [[- end -]]        
+        [[- end -]]
         [[ range .Arguments.CONTEXT ]]
             [[- $cmd = (printf "%s --context %s" $cmd .) -]]
         [[- end -]]
@@ -231,7 +231,7 @@ spec:
         [[- end ]]
         [[ if .Arguments.YAML ]]
             [[- $cmd = (printf "%s --yaml %s" $cmd .Arguments.YAML) -]]
-        [[- end -]]   
+        [[- end -]]
 
         [[/* Multiline string is required to support usage of 'colon' (:) character in the string. For example in the pipeline name. */]]
         [[/* Otherwise after template render there is a chance to have an object instead of a string. */]]

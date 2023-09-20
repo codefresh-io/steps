@@ -1,0 +1,39 @@
+name: codefresh-run-e2e
+
+on:
+  pull_request:
+    branches:
+      - feat-codefresh-run-action
+
+jobs:
+  codefresh_run_e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - id: clone
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - id: base-sha
+        run: |
+          echo "result=$(git rev-parse --short origin/feat-codefresh-run-action)" >> $GITHUB_OUTPUT
+
+      - id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          base_sha: ${{ steps.base-sha.outputs.result }}
+          json: true
+          escape_json: false
+          files: |
+            graduated/codefresh-run/**
+
+      - id: codefresh-run
+        if: steps.changed-files.outputs.any_changed  == 'true'
+        uses: codefresh-io/codefresh-pipeline-runner@v5
+        env:
+          PIPELINE_NAME: cli-v1-e2e/codefresh-run-step-e2e
+          TRIGGER_NAME: codefresh_run_step_dev
+          CF_BRANCH : ${{ github.ref }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}

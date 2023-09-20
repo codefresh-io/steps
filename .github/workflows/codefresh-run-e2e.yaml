@@ -4,9 +4,9 @@ on:
   issue_comment:
     types: [created, edited]
 
-  # pull_request:
-  #   branches:
-  #     - '*'
+  pull_request:
+    branches:
+      - feat-codefresh-run-action
 
 env:
   PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"

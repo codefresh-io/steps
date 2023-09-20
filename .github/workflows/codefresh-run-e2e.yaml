@@ -3,7 +3,7 @@ name: Steps Test
 on:
   pull_request:
     branches:
-      - feat-codefresh-run-action
+      - master
 
 env:
   PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"
@@ -22,7 +22,7 @@ jobs:
 
       - id: base-sha
         run: |
-          echo "result=$(git rev-parse --short origin/feat-codefresh-run-action)" >> $GITHUB_OUTPUT
+          echo "result=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
 
       - id: git-branch-name
         uses: ohueter/normalize-git-branch-name@v1

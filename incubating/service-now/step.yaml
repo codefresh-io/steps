@@ -143,7 +143,7 @@ spec:
           "type": "string",
           "description": "OPTIONAL - set the log level, e.g. 'debug', 'info', 'warn', 'error', 'critical' (default 'error')",
           "default": "error"
-        },
+        }
       }
     }
   returns: |-

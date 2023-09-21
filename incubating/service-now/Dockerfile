@@ -1,4 +1,4 @@
-FROM python:3.10.8-slim-bullseye
+FROM python:3.11.5-slim-bookworm
 RUN pip3 install requests
 
 COPY lib/snow.py /snow/snow.py

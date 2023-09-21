@@ -1,4 +1,13 @@
 # Changelog
+
+## [1.2.4] - 2023-09-20
+### Changed
+- Change logging mechanism
+- Added LOG_LEVEL parameter
+
+### Fixed
+- Always return CR_NUMBER and CR_SYSID
+
 ## [1.2.3] - 2023-09-20
 ### Changed
 

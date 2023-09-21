@@ -91,6 +91,9 @@ def processModifyChangeRequestResponse(response, action):
 
     logging.info("  %s Change Request successful" %(action))
     data=response.json() # json.loads(response.text)
+    CR_NUMBER=data["result"]["number"]
+    CR_SYSID=data["result"]["sys_id"]
+
     FULL_JSON=json.dumps(data, indent=2)
 
     if (action == "close" ):

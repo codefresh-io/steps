@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.4] - 2023-09-20
+## [1.2.4] - 2023-09-21
 ### Changed
 - Change logging mechanism
 - Added LOG_LEVEL parameter

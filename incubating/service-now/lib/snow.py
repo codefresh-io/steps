@@ -2,46 +2,44 @@ import os
 import sys
 import json
 import requests
+import logging
 
 API_NAMESPACE=409723
 env_file_path = "/meta/env_vars_to_export"
 
 def getBaseUrl(instance):
     baseUrl = "%s/api" %(instance);
-    if DEBUG:
-        print("baseUrl: " + baseUrl)
+    logging.debug("baseUrl: " + baseUrl)
     return baseUrl
 
 def processCallbackResponse(response):
-    print("Processing answer from CR creation REST call")
-    print("Callback returned code %s" % (response.status_code))
+    logging.info("Processing answer from CR creation REST call")
+    logging.debug("Callback returned code %s" % (response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
-        print("Callback creation failed with code %s" % (response.status_code))
-        print("Error: " + response.text)
+        logging.error("Callback creation failed with code %s" % (response.status_code))
+        logging.error("Error: " + response.text)
         sys.exit(response.status_code)
 
-    print("Callback creation successful")
+    logging.info("Callback creation successful")
 
 
 def processCreateChangeRequestResponse(response):
-    if DEBUG:
-        print("Processing answer from CR creation REST call")
-        print("  Change Request returned code %s" % (response.status_code))
+    logging.debug("Processing answer from CR creation REST call")
+    logging.debug("  Change Request returned code %s" % (response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
-        print("  Change Request creation failed with code %s" % (response.status_code))
-        print("  ERROR: " + response.text)
+        logging.error("  Change Request creation failed with code %s" % (response.status_code))
+        logging.error("  ERROR: " + response.text)
         sys.exit(response.status_code)
 
-    print("  Change Request creation successful")
+    logging.info("  Change Request creation successful")
     data=response.json() # json.loads(response.text)
     CR_NUMBER=data["result"]["number"]
     CR_SYSID=data["result"]["sys_id"]
     FULL_JSON=json.dumps(data, indent=2)
 
-    print(f"    Change Request Number: {CR_NUMBER}")
-    print(f"    Change Request sys_id: {CR_SYSID}")
-    if DEBUG:
-        print( "    Change Request full answer:\n" + FULL_JSON)
+    logging.info(f"    Change Request Number: {CR_NUMBER}")
+    logging.info(f"    Change Request sys_id: {CR_SYSID}")
+    logging.debug( "    Change Request full answer:\n" + FULL_JSON)
 
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
@@ -59,26 +57,22 @@ def processCreateChangeRequestResponse(response):
 # Fields required are pasted in the data
 def createChangeRequest(user, password, baseUrl, data):
 
-    if DEBUG:
-        print("Entering createChangeRequest:")
+    logging.debug("Entering createChangeRequest:")
 
     if (bool(data)):
         crBody=json.loads(data)
-        if DEBUG:
-            print("Data: " + data)
+        logging.debug("Data: " + data)
     else:
         crBody= {}
-        if DEBUG:
-            print("  Data: None")
+        logging.debug("  Data: None")
     crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
 
 
     url="%s/now/table/change_request" % (baseUrl)
 
-    if DEBUG:
-        print(f"  URL: {url}")
-        print(f"  User: {user}")
-        print(f"  Body: {crBody}")
+    logging.debug(f"  URL: {url}")
+    logging.debug(f"  User: {user}")
+    logging.debug(f"  Body: {crBody}")
 
     resp=requests.post(url,
         json = crBody,
@@ -88,16 +82,18 @@ def createChangeRequest(user, password, baseUrl, data):
 
 def processModifyChangeRequestResponse(response, action):
 
-    if DEBUG:
-        print("Processing answer from CR %s REST call" %(action))
-        print("  %s Change Request returned code %s" % (action,response.status_code))
+    logging.debug("Processing answer from CR %s REST call" %(action))
+    logging.debug("  %s Change Request returned code %s" % (action,response.status_code))
     if (response.status_code != 200 and response.status_code != 201):
-        print("  %s Change Request creation failed with code %s" % (action, response.status_code))
-        print("  ERROR: " + response.text)
+        logging.error("  %s Change Request creation failed with code %s" % (action, response.status_code))
+        logging.error("  ERROR: " + response.text)
         sys.exit(response.status_code)
 
-    print("  %s Change Request successful" %(action))
+    logging.info("  %s Change Request successful" %(action))
     data=response.json() # json.loads(response.text)
+    CR_NUMBER=data["result"]["number"]
+    CR_SYSID=data["result"]["sys_id"]
+
     FULL_JSON=json.dumps(data, indent=2)
 
     if (action == "close" ):
@@ -111,6 +107,9 @@ def processModifyChangeRequestResponse(response, action):
     if os.path.exists(env_file_path):
         env_file = open(env_file_path, "a")
         env_file.write(f"{jsonVar}=/codefresh/volume/servicenow-cr-close.json\n")
+        env_file.write(f"CR_NUMBER={CR_NUMBER}\n")
+        env_file.write(f"CR_SYSID={CR_SYSID}\n")
+
         env_file.close()
 
         json_file=open("/codefresh/volume/servicenow-cr-close.json", "w")
@@ -120,9 +119,8 @@ def processModifyChangeRequestResponse(response, action):
 # Call SNow REST API to close a CR
 # Fields required are pasted in the data
 def closeChangeRequest(user, password, baseUrl, sysid, code, notes, data):
-    if DEBUG:
-        print("Entering closeChangeRequest:")
-        print(f"DATA: {data}")
+    logging.debug("Entering closeChangeRequest:")
+    logging.debug(f"DATA: {data}")
     if (bool(data)):
         crBody=json.loads(data)
     else:
@@ -140,18 +138,16 @@ def closeChangeRequest(user, password, baseUrl, sysid, code, notes, data):
 # Call SNow REST API to update a CR
 # Fields required are pasted in the data
 def updateChangeRequest(user, password, baseUrl, sysid, data):
-    if DEBUG:
-        print("Entering updateChangeRequest:")
-        print(f"DATA: {data}")
+    logging.debug("Entering updateChangeRequest:")
+    logging.debug(f"DATA: {data}")
     if (bool(data)):
         crBody=json.loads(data)
     else:
         crBody= {}
-        print("WARNING: CR_DATA is empty. What are you updating exactly?")
+        logging.error("WARNING: CR_DATA is empty. What are you updating exactly?")
 
     url="%s/now/table/change_request/%s" % (baseUrl, sysid)
-    if DEBUG:
-        print(f"  update CR URL: {url}")
+    logging.debug(f"  update CR URL: {url}")
     resp=requests.patch(url,
         json = crBody,
         headers = {"content-type":"application/json"},
@@ -162,10 +158,9 @@ def updateChangeRequest(user, password, baseUrl, sysid, data):
 #
 def callback(user, password, baseUrl, number, cf_build_id, token, policy):
 
-    if DEBUG:
-        print("Entering callback:")
-        print("CR Number: " + number)
-        print("CF Build ID: " + cf_build_id)
+    logging.debug("Entering callback:")
+    logging.debug("CR Number: " + number)
+    logging.debug("CF Build ID: " + cf_build_id)
 
     url = "%s/%s/codefresh/callback" % (baseUrl, API_NAMESPACE)
 
@@ -176,9 +171,8 @@ def callback(user, password, baseUrl, number, cf_build_id, token, policy):
         "cf_url": os.getenv("CF_URL"),
         "cr_policy": policy
     }
-    if DEBUG:
-        print("Calling POST on " + url)
-        print("Data: " + json.dumps(body))
+    logging.debug("Calling POST on " + url)
+    logging.debug("Data: " + json.dumps(body))
 
     resp=requests.post(url,
         json = body,
@@ -187,32 +181,29 @@ def callback(user, password, baseUrl, number, cf_build_id, token, policy):
     processCallbackResponse(response=resp)
 
 def checkSysid(sysid):
-    if DEBUG:
-        print("Entering checkSysid: ")
-        print("  CR_SYSID: %s" % (sysid))
+    logging.debug("Entering checkSysid: ")
+    logging.debug("  CR_SYSID: %s" % (sysid))
 
     if ( sysid == None ):
         print("FATAL: CR_SYSID is not defined.")
         sys.exit(1)
 
 def checkToken(token):
-    if DEBUG:
-        print("Entering checkToken: ")
-        print("  TOKEN: %s" % (token))
+    logging.debug("Entering checkToken: ")
+    logging.debug("  TOKEN: %s" % (token))
 
     if ( token == None ):
-        print("FATAL: TOKEN is not defined.")
+        logging.error("FATAL: TOKEN is not defined.")
         sys.exit(1)
 
 def checkConflictPolicy(policy):
-    if DEBUG:
-        print("Entering checkConflictPolicy: ")
-        print("  CR_CONFLICT_POLICY: %s" % (policy))
+    logging.debug("Entering checkConflictPolicy: ")
+    logging.debug("  CR_CONFLICT_POLICY: %s" % (policy))
 
     if policy == "ignore" or policy == "reject" or policy == "wait":
             return
     else:
-        print("FATAL: CR_CONFLICT_POLICY invalid value. Accepted values are ignore, reject or wait.")
+        logging.error("FATAL: CR_CONFLICT_POLICY invalid value. Accepted values are ignore, reject or wait.")
         sys.exit(1)
 
 def main():
@@ -226,13 +217,19 @@ def main():
     DEBUG    = True if os.getenv('DEBUG', "false").lower() == "true" else False
     TOKEN    = os.getenv('TOKEN')
     POLICY   = os.getenv('CR_CONFLICT_POLICY')
-
     if DEBUG:
-        print("Starting ServiceNow plugin for Codefresh")
-        print(f"  ACTION: {ACTION}")
-        print(f"  DATA: {DATA}")
-        print("  SYSID: %s" % (os.getenv('CR_SYSID')))
-        print("---")
+        LOG_LEVEL   = "debug"
+    else:
+        LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
+
+    log_format = "%(asctime)s:%(levelname)s:%(name)s.%(funcName)s: %(message)s"
+    logging.basicConfig(format = log_format, level = LOG_LEVEL.upper())
+
+    logging.info("Starting ServiceNow plugin for Codefresh")
+    logging.debug(f"  ACTION: {ACTION}")
+    logging.debug(f"  DATA: {DATA}")
+    logging.debug("  SYSID: %s" % (os.getenv('CR_SYSID')))
+
 
     if ACTION == "createcr":
         # Used only later in the callback but eant to check for error early
@@ -280,7 +277,7 @@ def main():
             data=DATA
         )
     else:
-        printf("FATAL: Unknown action: {ACTION}. Allowed values are createCR, closeCR or updateCR.")
+        logging.error("FATAL: Unknown action: {ACTION}. Allowed values are createCR, closeCR or updateCR.")
         sys.exit(1)
 
 

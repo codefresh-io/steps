@@ -1,0 +1,102 @@
+kind: step-type
+version: '1.0'
+metadata:
+    name: ssh
+    version: 0.0.1
+    isPublic: true
+    description: a basic ssh plugin
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/ssh
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+           https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/ssh/images/ssh.png
+  examples:
+    - description: Run a ssh command
+      workflow:
+        ssh:
+          title: run ssh command
+          type: ssh
+          stage: build
+          arguments:
+            SSH_KEY: ${{KEY}}
+            SSH_USER: ${{ArgumentParser}}
+            SSH_HOST: computer.domain.com
+            SSH_COMMANDS:
+                - ls
+                - echo hello world
+
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "SSH_KEY",
+        "SSH_USER",
+        "SSH_HOST",
+        "SSH_COMMANDS"
+      ],
+      "properties": {
+        "SSH_IMAGE": {
+          "type": "string",
+          "default": "quay.io/wbitt/network-multitool",
+          "description": "The ssh container image registry/image for the step."
+        },
+        "SSH_IMAGE_VERSION": {
+          "type": "string",
+          "default": "latest",
+          "description": "Version of the ssh image to use, Docker image tag."
+        },
+        "SSH_KEY": {
+            "type": "string",
+            "description": "The ssh key to connect to a remote instance"
+        },
+        "SSH_USER": {
+            "type": "string",
+            "description": "The username to log into the instance"
+        },
+        "SSH_HOST": {
+            "type": "string",
+            "description": "The instance to connect to"
+        },
+        "SSH_COMMANDS": {
+                 "type": "array",
+                 "items": {
+                     "type": "string"
+                  },
+                  "description": "Commands to execute"
+        }
+      }
+    }
+  stepsTemplate: |-
+    ssh:
+      title: Execute commands over ssh
+      image: '[[.Arguments.SSH_IMAGE]]:[[.Arguments.SSH_IMAGE_VERSION]]'
+      commands:
+       - mkdir /root/.ssh
+       - echo ${{SSH_KEY}} | base64 -d > /root/.ssh/id_rsa ## Value of ${{SSH_KEY}} is base64 encoded
+       - chmod 600 ~/.ssh/id_rsa
+       - eval $(ssh-agent -s)
+       - ssh-add ~/.ssh/id_rsa
+       - ssh -o "StrictHostKeyChecking no"  ${{MY_USER}}@${{MY_HOST}}
+      [[ range $arg := .Arguments.commands ]]
+        - ssh ${{MY_USER}}@${{MY_HOST}} '[[ $arg ]]'
+      [[ end ]]
+      
+  delimiters:
+    left: '[['
+    right: ']]'

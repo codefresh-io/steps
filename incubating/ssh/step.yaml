@@ -86,6 +86,10 @@ spec:
     ssh:
       title: Execute commands over ssh
       image: '[[.Arguments.SSH_IMAGE]]:[[.Arguments.SSH_IMAGE_VERSION]]'
+      environment:
+        - SSK_KEY=[[ .Arguments.SSH_KEY ]]
+        - MY_USER=[[ .Arguments.SSH_USER ]]
+        - MY_HOST=[[ .Arguments.SSH_HOST ]]
       commands:
        - mkdir /root/.ssh
        - echo ${{SSH_KEY}} | base64 -d > /root/.ssh/id_rsa ## Value of ${{SSH_KEY}} is base64 encoded

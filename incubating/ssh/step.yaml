@@ -53,7 +53,7 @@ spec:
       "properties": {
         "SSH_IMAGE": {
           "type": "string",
-          "default": "quay.io/wbitt/network-multitool",
+          "default": "docker.io/wbitt/network-multitool",
           "description": "The ssh container image registry/image for the step."
         },
         "SSH_IMAGE_VERSION": {

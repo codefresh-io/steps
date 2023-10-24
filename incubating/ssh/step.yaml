@@ -91,6 +91,7 @@ spec:
         - MY_USER=[[ .Arguments.SSH_USER ]]
         - MY_HOST=[[ .Arguments.SSH_HOST ]]
       commands:
+       - env
        - mkdir /root/.ssh
        - echo ${{SSH_KEY}} | base64 -d > /root/.ssh/id_rsa ## Value of ${{SSH_KEY}} is base64 encoded
        - chmod 600 ~/.ssh/id_rsa

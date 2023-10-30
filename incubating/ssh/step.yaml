@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ssh
-  version: 0.0.1
+  version: 1.0.0
   isPublic: true
   description: Run commands over ssh
   sources:
@@ -58,12 +58,12 @@ spec:
         },
         "SSH_IMAGE_VERSION": {
           "type": "string",
-          "default": "latest",
+          "default": "extra",
           "description": "Version of the ssh image to use, Docker image tag."
         },
         "SSH_KEY": {
             "type": "string",
-            "description": "The ssh key to connect to a remote instance"
+            "description": "The ssh key to connect to a remote instance, base64 encoded"
         },
         "SSH_USER": {
             "type": "string",
@@ -72,6 +72,11 @@ spec:
         "SSH_HOST": {
             "type": "string",
             "description": "The instance to connect to"
+        },
+        "SSH_PORT": {
+            "type": "string",
+            "default": 22,
+            "description": "The port to use to connect. Default is 22"
         },
         "SSH_COMMANDS": {
                  "type": "array",
@@ -87,19 +92,18 @@ spec:
       title: Execute commands over ssh
       image: '[[.Arguments.SSH_IMAGE]]:[[.Arguments.SSH_IMAGE_VERSION]]'
       environment:
-        - SSK_KEY=[[ .Arguments.SSH_KEY ]]
-        - MY_USER=[[ .Arguments.SSH_USER ]]
-        - MY_HOST=[[ .Arguments.SSH_HOST ]]
+        - SSH_KEY=[[ .Arguments.SSH_KEY ]]
+        - SSH_USER=[[ .Arguments.SSH_USER ]]
+        - HOST=[[ .Arguments.SSH_HOST ]]
+        - PORT=[[ .Arguments.SSH_PORT ]]
       commands:
-       - env
-       - mkdir /root/.ssh
-       - echo ${{SSH_KEY}} | base64 -d > /root/.ssh/id_rsa ## Value of ${{SSH_KEY}} is base64 encoded
-       - chmod 600 ~/.ssh/id_rsa
-       - eval $(ssh-agent -s)
-       - ssh-add ~/.ssh/id_rsa
-       - ssh -o "StrictHostKeyChecking no"  ${{MY_USER}}@${{MY_HOST}}
-      [[ range $arg := .Arguments.commands ]]
-        - ssh ${{MY_USER}}@${{MY_HOST}} '[[ $arg ]]'
+      - mkdir /root/.ssh
+      - echo ${SSH_KEY} | base64 -d > /root/.ssh/id_rsa ## Value of ${SSH_KEY} is base64 encoded
+      - chmod 600 ~/.ssh/id_rsa
+      - eval $(ssh-agent -s)
+      - ssh-add ~/.ssh/id_rsa
+      [[ range $arg := .Arguments.SSH_COMMANDS ]]
+      - ssh -o "StrictHostKeyChecking no" -p ${PORT}  ${SSH_USER}@${HOST} '[[ $arg ]]'
       [[ end ]]
 
   delimiters:

@@ -1,4 +1,4 @@
-FROM    python:3.11.5-slim-bookworm
+FROM    python:3.13-rc-slim-bookworm
 WORKDIR /app
 COPY    requirements.txt requirements.txt
 RUN     pip3 install -r requirements.txt

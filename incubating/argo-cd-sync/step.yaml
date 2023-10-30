@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.3.1
+  version: 1.4.0
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -9,9 +9,9 @@ metadata:
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
-    - email: francisco@codefresh.io
+      email: francisco@codefresh.io
     - name: Laurent Rochette
-    - email: laurent.rochette@codefresh.io
+      email: laurent.rochette@codefresh.io
   categories:
     - GitOps
   official: true
@@ -97,6 +97,11 @@ spec:
         "WAIT_ROLLBACK": {
           "type": "boolean",
           "description": "OPTIONAL - Wait for the app to be healthy after a rollback. Forces ROLLBACK to true",
+          "default": false
+        },
+        "INSECURE": {
+          "type": "boolean",
+          "description": "OPTIONAL - to allow the usage of a self-signed certificate in the chain to reach the API endpoint",
           "default": false
         },
         "LOG_LEVEL": {

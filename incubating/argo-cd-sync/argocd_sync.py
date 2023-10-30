@@ -24,6 +24,9 @@ CF_API_KEY  = os.getenv('CF_API_KEY')
 CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
 LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
 
+# Check the certificate or not accessing the API endpoint
+VERIFY      = True if os.getenv('INSECURE', "False").lower() == "true" else False
+
 #######################################################################
 
 
@@ -83,7 +86,7 @@ def getRevision(namespace):
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -139,7 +142,7 @@ def rollback(ingress_host, namespace, revision):
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -163,7 +166,7 @@ def get_app_status(namespace):
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -189,7 +192,7 @@ def get_runtime():
     transport = RequestsHTTPTransport(
         url = CF_URL + '/2.0/api/graphql',
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -225,7 +228,7 @@ def execute_argocd_sync(ingress_host):
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)

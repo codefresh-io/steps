@@ -40,7 +40,8 @@ def main():
     logging.debug("INTERVAL: %d", INTERVAL)
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
     logging.debug("ROLLBACK: %s", ROLLBACK)
-
+    logging.debug("VERIFY: %s", VERIFY)
+    
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()

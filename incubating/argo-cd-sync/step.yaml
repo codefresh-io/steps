@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.4.0
+  version: 1.4.1
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -99,6 +99,10 @@ spec:
           "description": "OPTIONAL - Wait for the app to be healthy after a rollback. Forces ROLLBACK to true",
           "default": false
         },
+        "CA_BUNDLE": {
+          "type": "string",
+          "description": "OPTIONAL - a base64 encoded stringnthat contain the complete CA Certificate Bundle"
+        },
         "INSECURE": {
           "type": "boolean",
           "description": "OPTIONAL - to allow the usage of a self-signed certificate in the chain to reach the API endpoint",
@@ -150,8 +154,15 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
+      [[ if .Arguments.CA_BUNDLE ]]
+        - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
+      [[ end ]]
         - cd /app
         - python3 run.py
+      [[ if .Arguments.CA_BUNDLE ]]
+        - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
+      [[ end ]]
+
   delimiters:
     left: '[['
     right: ']]'

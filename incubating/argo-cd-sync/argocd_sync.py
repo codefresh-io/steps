@@ -26,6 +26,10 @@ LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
 
 # Check the certificate or not accessing the API endpoint
 VERIFY      = True if os.getenv('INSECURE', "False").lower() == "true" else False
+CA_BUNDLE   = os.getenv('CA_BUNDLE')
+
+if CA_BUNDLE != None:
+    VERIFY='/root/bundle.pem'
 
 #######################################################################
 
@@ -41,7 +45,8 @@ def main():
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
     logging.debug("ROLLBACK: %s", ROLLBACK)
     logging.debug("VERIFY: %s", VERIFY)
-    
+    logging.debug("BUNDLE: %s", CA_BUNDLE)
+
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()

@@ -25,13 +25,28 @@ metadata:
     url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/obtain-oidc-id-token/icon.svg
     background: '#f4f4f4'
   examples:
-    - description: example-with-print-output
+    - description: example-basic
       workflow:
         version: '1.0'
         steps:
           obtain_id_token:
             title: Obtain ID Token
             type: obtain-oidc-id-token
+          print_output:
+            title: Printing output from previous step
+            image: alpine
+            commands:
+              - echo $ID_TOKEN
+              - echo ${{steps.obtain_id_token.output.ID_TOKEN}}
+    - description: example-with-custom-audience
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+            arguments:
+              AUDIENCE: https://my-audience.com
           print_output:
             title: Printing output from previous step
             image: alpine
@@ -68,7 +83,7 @@ spec:
         "properties": {
            "AUDIENCE": {
                "type": "string",
-               "description": "the audience of the ID token. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
+               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
            }
         }
     }

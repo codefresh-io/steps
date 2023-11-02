@@ -83,7 +83,8 @@ spec:
         "properties": {
            "AUDIENCE": {
                "type": "string",
-               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
+               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)",
+               "default": "https://g.codefresh.io"
            }
         }
     }

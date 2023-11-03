@@ -25,7 +25,7 @@ CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
 LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
 
 # Check the certificate or not accessing the API endpoint
-VERIFY      = True if os.getenv('INSECURE', "False").lower() == "true" else False
+VERIFY      = True if os.getenv('INSECURE', "False").lower() == "false" else False
 CA_BUNDLE   = os.getenv('CA_BUNDLE')
 
 if CA_BUNDLE != None:

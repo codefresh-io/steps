@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 1.1.1
+  version: 1.1.2
   name: obtain-oidc-id-token
   description: >-
     Obtain ID token from Codefresh OIDC Provider
@@ -83,8 +83,7 @@ spec:
         "properties": {
            "AUDIENCE": {
                "type": "string",
-               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)",
-               "default": "https://g.codefresh.io"
+               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
            }
         }
     }
@@ -116,7 +115,9 @@ spec:
           apk add jq
           
           URL="$CF_OIDC_REQUEST_URL"
-          if [ -n "$AUDIENCE" ]; then
+          
+          # This means that audience was provided by the user
+          if [ -z "$(echo "$AUDIENCE" | grep '${{AUDIENCE')" ]; then
             ENCODED_AUDIENCE=$(echo -n "$AUDIENCE" | jq -s -R -r '@uri')
             URL="$URL?audience=$ENCODED_AUDIENCE"
           fi

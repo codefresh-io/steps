@@ -159,9 +159,6 @@ spec:
       [[ end ]]
         - cd /app
         - python3 run.py
-      [[ if .Arguments.CA_BUNDLE ]]
-        - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
-      [[ end ]]
 
   delimiters:
     left: '[['

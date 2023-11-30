@@ -18,7 +18,7 @@ metadata:
     - notifications
   icon:
     type: svg
-    url: https://newrelic.com/themes/custom/curio/assets/mediakit/NR_logo_Horizontal.svg
+    url: https://newrelic.com/themes/custom/erno/assets/mediakit/new_relic_logo_horizontal.svg
     background: '#f4f4f4'
   examples:
     - description: example-1

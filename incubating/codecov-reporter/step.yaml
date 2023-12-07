@@ -89,7 +89,7 @@ spec:
         - echo CODECOV_URL=$CODECOV_URL >> /meta/env_vars_to_export
     second:
       name: "send report"
-      image: node:15.2
+      image: codefresh/cli
       environment:
         - CODECOV_API_KEY=${{CODECOV_API_KEY}}
         - WORKING_DIRECTORY=${{working_directory}}

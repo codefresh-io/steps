@@ -42,7 +42,7 @@ metadata:
               ROLE_SESSION_NAME: session-name
           s3_list_objects:
             title: List S3 Objects
-            image: quay.io/jland/aws-cli:2.8.12
+            image: amazon/aws-cli
             commands:
               - aws s3 ls "s3://bucket-name/"
     - description: example-with-id-token-from-environment-variable
@@ -58,7 +58,7 @@ metadata:
               WEB_IDENTITY_TOKEN: ${{ID_TOKEN}}
           s3_list_objects:
             title: List S3 Objects
-            image: quay.io/jland/aws-cli:2.8.12
+            image: amazon/aws-cli
             commands:
               - aws s3 ls "s3://bucket-name/"
 spec:

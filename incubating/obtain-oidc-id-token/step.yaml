@@ -107,13 +107,12 @@ spec:
   steps:
     main:
       name: obtain-oidc-id-token
-      image: quay.io/curl/curl-base
+      image: quay.io/ferdi/ci-utils:latest
       environment:
         - 'AUDIENCE=${{AUDIENCE}}'
       commands:
         - |
-          apk add jq
-          
+
           URL="$CF_OIDC_REQUEST_URL"
           
           # This means that audience was provided by the user

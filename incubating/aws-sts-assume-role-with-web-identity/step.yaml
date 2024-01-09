@@ -121,7 +121,7 @@ spec:
   stepsTemplate: |-
     main:
       name: aws-sts-assume-role-with-web-identity
-      image: mikesir87/aws-cli
+      image: quay.io/codefresh/aws-cli
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

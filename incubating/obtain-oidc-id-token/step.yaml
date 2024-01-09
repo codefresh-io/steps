@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 1.2.1
+  version: 1.2.2
   name: obtain-oidc-id-token
   description: >-
     Obtain ID token from Codefresh OIDC Provider
@@ -107,12 +107,11 @@ spec:
   steps:
     main:
       name: obtain-oidc-id-token
-      image: quay.io/curl/curl-base
+      image: quay.io/codefresh/curl-jq
       environment:
         - 'AUDIENCE=${{AUDIENCE}}'
       commands:
         - |
-          apk add jq
           
           URL="$CF_OIDC_REQUEST_URL"
           

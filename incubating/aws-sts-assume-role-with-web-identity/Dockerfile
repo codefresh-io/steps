@@ -1,4 +1,3 @@
-ARG APP_VERSION=1.0.0
 FROM python:alpine
 
 ARG CLI_VERSION=1.16.284

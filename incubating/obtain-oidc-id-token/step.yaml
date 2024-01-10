@@ -107,20 +107,11 @@ spec:
   steps:
     main:
       name: obtain-oidc-id-token
-<<<<<<< HEAD
       image: quay.io/codefreshplugins/curl-jq
-=======
-      image: quay.io/ferdi/ci-utils:latest
->>>>>>> fe9c49d31dd0ff42ca0987bc7ea9f6ebd153910b
       environment:
         - 'AUDIENCE=${{AUDIENCE}}'
       commands:
         - |
-<<<<<<< HEAD
-          
-=======
-
->>>>>>> fe9c49d31dd0ff42ca0987bc7ea9f6ebd153910b
           URL="$CF_OIDC_REQUEST_URL"
           
           # This means that audience was provided by the user

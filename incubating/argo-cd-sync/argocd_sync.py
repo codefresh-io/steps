@@ -50,10 +50,10 @@ def main():
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()
-    status = get_app_status(namespace)
+    status = get_app_status(ingress_host)
 
     if WAIT_HEALTHY:
-        status=waitHealthy (namespace)
+        status=waitHealthy (ingress_host)
 
         # if Wait failed, it's time for rollback
         if status != "HEALTHY" and ROLLBACK:
@@ -64,10 +64,10 @@ def main():
             rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
             if WAIT_ROLLBACK:
-                status=waitHealthy (namespace)
+                status=waitHealthy (ingress_host)
             else:
                 time.sleep(INTERVAL)
-                status=get_app_status(namespace)
+                status=get_app_status(ingress_host)
         else:
             export_variable('ROLLBACK_EXECUTED', "false")
     else:
@@ -127,15 +127,15 @@ def getRevision(namespace):
     logging.error("Did not find a HEALTHY release among the lat %d", PAGE_SIZE)
     sys.exit(1)
 
-def waitHealthy (namespace):
-    logging.debug ("Entering waitHealthy (ns: %s)", namespace)
+def waitHealthy (ingress_host):
+    logging.debug ("Entering waitHealthy (ns: %s)", ingress_host)
 
     time.sleep(INTERVAL)
-    status = get_app_status(namespace)
+    status = get_app_status(ingress_host)
     logging.info("App status is %s", status)
     loop=0
     while status != "HEALTHY" and loop < MAX_CHECKS:
-        status=get_app_status(namespace)
+        status=get_app_status(ingress_host)
         time.sleep(INTERVAL)
         logging.info("App status is %s after %d checks", status, loop)
         loop += 1
@@ -166,9 +166,9 @@ def rollback(ingress_host, namespace, revision):
     export_variable('ROLLBACK_EXECUTED', "true")
 
 
-def get_app_status(namespace):
+def get_app_status(ingress_host):
     ## Get the health status of the app
-    gql_api_endpoint = CF_URL + '/2.0/api/graphql'
+    gql_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
@@ -178,13 +178,12 @@ def get_app_status(namespace):
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('get_app_status') ## gets gql query
     variables = {
-        "runtime":  RUNTIME,
-        "name": APPLICATION,
-        "namespace": namespace
+        "name": APPLICATION
     }
     result = client.execute(query, variable_values=variables)
 
-    health = result['application']['healthStatus']
+    logging.debug("App Status result: %s", result)
+    health = result['applicationProxyQuery']['status']['health']['status']
     return health
 
 def get_query(query_name):

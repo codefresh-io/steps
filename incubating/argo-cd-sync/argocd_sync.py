@@ -59,7 +59,7 @@ def main():
         if status != "HEALTHY" and ROLLBACK:
             logging.info("Application '%s' did not sync properly. Initiating rollback ", APPLICATION)
             revision = getRevision(namespace)
-            logging.info("latest healthy revision is %d", revision)
+            logging.info("Latest healthy revision is %d", revision)
 
             rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
@@ -108,7 +108,7 @@ def getRevision(namespace):
       }
     }
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("getRevision result: %s", result)
 
     loop=0
     revision = -1
@@ -124,7 +124,7 @@ def getRevision(namespace):
         loop += 1
     # we did not find a HEALTHY one in our page
     export_variable('ROLLBACK_EXECUTED', "false")
-    logging.error("Did not find a HEALTHY release among the lat %d", PAGE_SIZE)
+    logging.error("Did not find a HEALTHY release among the last %d", PAGE_SIZE)
     sys.exit(1)
 
 def waitHealthy (ingress_host):
@@ -160,9 +160,9 @@ def rollback(ingress_host, namespace, revision):
       "dryRun": False,
       "prune": True
     }
-    logging.info("Rollback app: %s", variables)
+    logging.debug("Rollback variables: %s", variables)
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("Rollback result: %s", result)
     export_variable('ROLLBACK_EXECUTED', "true")
 
 
@@ -244,9 +244,8 @@ def execute_argocd_sync(ingress_host):
             "prune": True
         }
     }
-    logging.info("Syncing app: %s", variables)
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("Syncing App result: %s", result)
 
 
 def export_variable(var_name, var_value):
@@ -259,7 +258,7 @@ def export_variable(var_name, var_value):
         with open('/meta/env_vars_to_export', 'a') as a_writer:
             a_writer.write(var_name + "=" + var_value+'\n')
 
-    logging.info("Exporting variable: %s=%s", var_name, var_value)
+    logging.debug("Exporting variable: %s=%s", var_name, var_value)
 
 ##############################################################
 

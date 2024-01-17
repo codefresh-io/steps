@@ -22,7 +22,7 @@ if WAIT_ROLLBACK: ROLLBACK = True
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
 CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
-LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
+LOG_LEVEL   = os.getenv('LOG_LEVEL', "error")
 
 # Check the certificate or not accessing the API endpoint
 VERIFY      = True if os.getenv('INSECURE', "False").lower() == "false" else False

@@ -117,7 +117,6 @@ spec:
     kubescan:
       image: '[[.Arguments.KS_IMAGE]]:[[.Arguments.KS_IMAGE_VERSION]]'
       title: kubescape scan
-      type: composition
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

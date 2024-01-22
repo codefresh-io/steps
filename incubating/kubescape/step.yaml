@@ -113,7 +113,7 @@ spec:
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     kubescan:
       image: '[[.Arguments.KS_IMAGE]]:[[.Arguments.KS_IMAGE_VERSION]]'
       title: kubescape scan

@@ -45,7 +45,7 @@ spec:
                 "type": "string",
                 "description": "YAML files or Helm charts to scan for misconfigurations. The files need to be provided with the complete path from the root of the repository. Default is '.' which scans the whole repository"
             },
-            "OUTPUT_FILE": {
+            "OUTPUTFILE": {
                 "type": "string",
                 "description": "Name of the output file where the scan result will be stored without the extension. Default is 'result'"
             },
@@ -61,7 +61,7 @@ spec:
                 "type": "string",
                 "description": "account ID for integrating with a third-party server"
             },
-            "ACCESS_KEY": {
+            "ACCESSKEY": {
                 "type": "string",
                 "description": "access-key for integrating with a third-party server"
             },
@@ -69,13 +69,17 @@ spec:
                 "type": "string",
                 "description": "URL for integrating with a third-party server"
             },
-            "FAILED_THRESHOLD": {
+            "FAILEDTHRESHOLD": {
                 "type": "string",
                 "description": "Failure threshold is the percent above which the command fails and returns exit code 1. Default is 0 i.e, action fails if any control fails"
             },
-            "SEVERITY_THRESHOLD": {
+            "SEVERITYTHRESHOLD": {
                 "type": "string",
                 "description": "Severity threshold is the severity of a failed control at or above which the command terminates with an exit code 1. Default is 'high', i.e. the action fails if any High severity control fails"
+            },
+            "COMPLIANCETHRESHOLD": {
+                "type": "string",
+                "description": "Compliance threshold is the percent bellow which the command fails and returns exit code 1 (example: if set to 100 the command will fail if any control fails)"
             },
             "VERBOSE": {
                 "type": "string",
@@ -85,19 +89,24 @@ spec:
                 "type": "string",
                 "description": "The JSON file containing at least one resource and one policy. Refer exceptions docs for more info. Objects with exceptions will be presented as exclude and not fail."
             },
-            "CONTROLS_CONFIG": {
+            "CONTROLSCONFIG": {
                 "type": "string",
                 "description": "The file containing controls configuration. Use 'kubescape download controls-inputs' to download the configured controls-inputs."
+            },
+            "FIXFILES": {
+              "type": "string",
+              "default": "false",
+              "description": "Whether Kubescape will automatically fix files or not. If enabled, Kubescape will make fixes to the input files. You can then use these fixes to open Pull Requests from your CI/CD pipeline."
             },
             "IMAGE": {
                 "type": "string",
                 "description": "The image you wish to scan. Launches an image scan, which cannot run together with configuration scans."
             },
-            "REGISTRY_USERNAME": {
+            "REGISTRYUSERNAME": {
                 "type": "string",
                 "description": "Username to a private registry that hosts the scanned image."
             },
-            "REGISTRY_PASSWORD": {
+            "REGISTRYPASSWORD": {
                 "type": "string",
                 "description": "Password to a private registry that hosts the scanned image."
             },

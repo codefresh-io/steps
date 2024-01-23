@@ -18,7 +18,6 @@ set -e
 
 # Kubescape uses the client name to make a request for checking for updates
 export KS_CLIENT="codefresh"
-env
 
 if [ -n "${FRAMEWORKS}" ] && [ -n "${CONTROLS}" ]; then
   echo "Framework and Control are specified. Please specify either one of them"

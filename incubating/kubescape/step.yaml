@@ -1,10 +1,10 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: laurent-cf/kubescape
-  version: 3.0.3
+  name: kubescape
+  version: 3.0.1
   title: Run a kubescape security scan
-  isPublic: false
+  isPublic: true
   description: Scan a cluster with the kubescape security service.
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/kubescape'
@@ -108,7 +108,7 @@ spec:
             },
             "KS_IMAGE_VERSION": {
                 "type": "string",
-                "default": "3.0.3",
+                "default": "3.0.1",
                 "description": "Version of the kubescape image to use"
             }
         }

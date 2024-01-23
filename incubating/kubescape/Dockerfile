@@ -1,6 +1,8 @@
-FROM quay.io/kubescape/kubescape:v3.0.3
-WORKDIR /
-RUN apk update && apk add bash
+FROM quay.io/kubescape/kubescape-cli:v3.0.1
 
-COPY entrypoint.sh .
+# Kubescape uses root privileges for writing the results to a file
+USER root
+
+COPY entrypoint.sh /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]

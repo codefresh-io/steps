@@ -89,6 +89,11 @@ spec:
                 "type": "string",
                 "description": "The JSON file containing at least one resource and one policy. Refer exceptions docs for more info. Objects with exceptions will be presented as exclude and not fail."
             },
+            "FORMAT": {
+                "type": "string",
+                "description": "Output format. Can take one or more formats, comma separated",
+                "default": "junit"
+            },
             "CONTROLSCONFIG": {
                 "type": "string",
                 "description": "The file containing controls configuration. Use 'kubescape download controls-inputs' to download the configured controls-inputs."

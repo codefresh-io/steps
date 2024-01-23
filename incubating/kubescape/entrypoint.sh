@@ -18,26 +18,27 @@ set -e
 
 # Kubescape uses the client name to make a request for checking for updates
 export KS_CLIENT="codefresh"
+env
 
-if [ -n "${INPUT_FRAMEWORKS}" ] && [ -n "${INPUT_CONTROLS}" ]; then
+if [ -n "${FRAMEWORKS}" ] && [ -n "${CONTROLS}" ]; then
   echo "Framework and Control are specified. Please specify either one of them"
   exit 1
 fi
 
-if [ -z "${INPUT_FRAMEWORKS}" ] && [ -z "${INPUT_CONTROLS}" ] && [ -z "${INPUT_IMAGE}" ]; then
+if [ -z "${FRAMEWORKS}" ] && [ -z "${CONTROLS}" ] && [ -z "${IMAGE}" ]; then
   echo "Neither Framework, Control nor image are specified. Please specify one of them"
   exit 1
 fi
 
 
-if [ -n "${INPUT_FRAMEWORKS}" ] && [ -n "${INPUT_IMAGE}" ] || [ -n "${INPUT_CONTROLS}" ] && [ -n "${INPUT_IMAGE}" ] ; then
+if [ -n "${FRAMEWORKS}" ] && [ -n "${IMAGE}" ] || [ -n "${CONTROLS}" ] && [ -n "${IMAGE}" ] ; then
   errmsg="Image and Framework / Control are specified. Kubescape does not support scanning both at the moment."
   errmsg="${errmsg} Please specify either one of them or neither."
   echo "${errmsg}"
   exit 1
 fi
 
-if [ -n "${INPUT_IMAGE}" ] && [ "${INPUT_FIXFILES}" = "true" ]; then
+if [ -n "${IMAGE}" ] && [ "${FIXFILES}" = "true" ]; then
   errmsg="The run requests both an image scan and file fix suggestions. Kubescape does not support fixing image scan results at the moment."
   errmsg="${errmsg} Please specify either one of them or neither."
   echo "${errmsg}"
@@ -45,11 +46,11 @@ if [ -n "${INPUT_IMAGE}" ] && [ "${INPUT_FIXFILES}" = "true" ]; then
 fi
 
 # Split the controls by comma and concatenate with quotes around each control
-if [ -n "${INPUT_CONTROLS}" ]; then
+if [ -n "${CONTROLS}" ]; then
   controls=""
   set -f
   IFS=','
-  set -- "${INPUT_CONTROLS}"
+  set -- "${CONTROLS}"
   set +f
   unset IFS
   for control in "$@"; do
@@ -59,34 +60,34 @@ if [ -n "${INPUT_CONTROLS}" ]; then
   controls=$(echo "${controls%?}")
 fi
 
-frameworks_cmd=$([ -n "${INPUT_FRAMEWORKS}" ] && echo "framework ${INPUT_FRAMEWORKS}" || echo "")
-controls_cmd=$([ -n "${INPUT_CONTROLS}" ] && echo control "${controls}" || echo "")
+frameworks_cmd=$([ -n "${FRAMEWORKS}" ] && echo "framework ${FRAMEWORKS}" || echo "")
+controls_cmd=$([ -n "${CONTROLS}" ] && echo control "${controls}" || echo "")
 
-scan_input=$([ -n "${INPUT_FILES}" ] && echo "${INPUT_FILES}" || echo .)
+scan_input=$([ -n "${FILES}" ] && echo "${FILES}" || echo .)
 
-output_formats="${INPUT_FORMAT}"
+output_formats="${FORMAT}"
 have_json_format="false"
 if [ -n "${output_formats}" ] && contains "${output_formats}" "json"; then
   have_json_format="true"
 fi
 
 verbose=""
-if [ -n "${INPUT_VERBOSE}" ] && [ "${INPUT_VERBOSE}" != "false" ]; then
+if [ -n "${VERBOSE}" ] && [ "${VERBOSE}" != "false" ]; then
   verbose="--verbose"
 fi
 
 exceptions=""
-if [ -n "$INPUT_EXCEPTIONS" ]; then
-  exceptions="--exceptions ${INPUT_EXCEPTIONS}"
+if [ -n "$EXCEPTIONS" ]; then
+  exceptions="--exceptions ${EXCEPTIONS}"
 fi
 
 controls_config=""
-if [ -n "$INPUT_CONTROLSCONFIG" ]; then
-  controls_config="--controls-config ${INPUT_CONTROLSCONFIG}"
+if [ -n "$CONTROLSCONFIG" ]; then
+  controls_config="--controls-config ${CONTROLSCONFIG}"
 fi
 
 should_fix_files="false"
-if [ "${INPUT_FIXFILES}" = "true" ]; then
+if [ "${FIXFILES}" = "true" ]; then
   should_fix_files="true"
 fi
 
@@ -96,52 +97,52 @@ if [ "${should_fix_files}" = "true" ] && [ "${have_json_format}" != "true" ]; th
   output_formats="${output_formats},json"
 fi
 
-output_file=$([ -n "${INPUT_OUTPUTFILE}" ] && echo "${INPUT_OUTPUTFILE}" || echo "results")
+output_file=$([ -n "${OUTPUTFILE}" ] && echo "${OUTPUTFILE}" || echo "results")
 
-account_opt=$([ -n "${INPUT_ACCOUNT}" ] && echo --account "${INPUT_ACCOUNT}" || echo "")
-access_key_opt=$([ -n "${INPUT_ACCESSKEY}" ] && echo --access-key "${INPUT_ACCESSKEY}" || echo "")
-server_opt=$([ -n "${INPUT_SERVER}" ] && echo --server "${INPUT_SERVER}" || echo "")
+account_opt=$([ -n "${ACCOUNT}" ] && echo --account "${ACCOUNT}" || echo "")
+access_key_opt=$([ -n "${ACCESSKEY}" ] && echo --access-key "${ACCESSKEY}" || echo "")
+server_opt=$([ -n "${SERVER}" ] && echo --server "${SERVER}" || echo "")
 
 # If account ID is empty, we load artifacts from the local path, otherwise we
 # load from the cloud (this will enable custom framework support)
 artifacts_path="/home/ks/.kubescape"
-artifacts_opt=$([ -n "${INPUT_ACCOUNT}" ] && echo "" || echo --use-artifacts-from "${artifacts_path}")
+artifacts_opt=$([ -n "${ACCOUNT}" ] && echo "" || echo --use-artifacts-from "${artifacts_path}")
 
-if [ -n "${INPUT_FAILEDTHRESHOLD}" ] && [ -n "${INPUT_COMPLIANCETHRESHOLD}" ]; then
+if [ -n "${FAILEDTHRESHOLD}" ] && [ -n "${COMPLIANCETHRESHOLD}" ]; then
   echo "Both failedThreshold and complianceThreshold are specified. Please specify either one of them or neither"
   exit 1
 fi
 
-fail_threshold_opt=$([ -n "${INPUT_FAILEDTHRESHOLD}" ] && echo --fail-threshold "${INPUT_FAILEDTHRESHOLD}" || echo "")
-compliance_threshold_opt=$([ -n "${INPUT_COMPLIANCETHRESHOLD}" ] && echo --compliance-threshold "${INPUT_COMPLIANCETHRESHOLD}" || echo "")
+fail_threshold_opt=$([ -n "${FAILEDTHRESHOLD}" ] && echo --fail-threshold "${FAILEDTHRESHOLD}" || echo "")
+compliance_threshold_opt=$([ -n "${COMPLIANCETHRESHOLD}" ] && echo --compliance-threshold "${COMPLIANCETHRESHOLD}" || echo "")
 
 # When a user requests to fix files, the action should not fail because the
 # results exceed severity. This is subject to change in the future.
 severity_threshold_opt=$(
-  [ -n "${INPUT_SEVERITYTHRESHOLD}" ] &&
+  [ -n "${SEVERITYTHRESHOLD}" ] &&
     [ "${should_fix_files}" = "false" ] &&
-    echo --severity-threshold "${INPUT_SEVERITYTHRESHOLD}" ||
+    echo --severity-threshold "${SEVERITYTHRESHOLD}" ||
     echo ""
 )
 
 # Handle image scanning request
 image_subcmd=""
-echo "image is <${INPUT_IMAGE}>"
-if [ -n "${INPUT_IMAGE}" ]; then
+echo "image is <${IMAGE}>"
+if [ -n "${IMAGE}" ]; then
 
   # By default, assume we are not authenticated. This means we can pull public
   # images from the container runtime daemon
-  image_arg="${INPUT_IMAGE}"
+  image_arg="${IMAGE}"
 
   severity_threshold_opt=$(
-    [ -n "${INPUT_SEVERITYTHRESHOLD}" ] &&
-      echo --severity-threshold "${INPUT_SEVERITYTHRESHOLD}" ||
+    [ -n "${SEVERITYTHRESHOLD}" ] &&
+      echo --severity-threshold "${SEVERITYTHRESHOLD}" ||
       echo ""
   )
 
   auth_opts=""
-  if [ -n "${INPUT_REGISTRYUSERNAME}" ] && [ -n "${INPUT_REGISTRYPASSWORD}" ]; then
-    auth_opts="--username=${INPUT_REGISTRYUSERNAME} --password=${INPUT_REGISTRYPASSWORD}"
+  if [ -n "${REGISTRYUSERNAME}" ] && [ -n "${REGISTRYPASSWORD}" ]; then
+    auth_opts="--username=${REGISTRYUSERNAME} --password=${REGISTRYPASSWORD}"
 
     # When trying to authenticate, we cannot assume that the runner has access
     # to an *authenticated* container runtime daemon, so we should always try

@@ -28,8 +28,14 @@ metadata:
     - description: example-1
       workflow:
         kubescape:
-          type: kubescape:1.0.0
+          type: kubescape:3.0.1
           arguments:
+            VERBOSE: on
+            OUTPUTFILE: results
+            FRAMEWORKS: MITRE
+            ACCESSKEY: ${{KEY}}
+            ACCOUNT: ${{ACCOUNT_ID}}
+            FORMAT: sarif
 
 spec:
   arguments: |-

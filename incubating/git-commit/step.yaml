@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.1.2
+  version: 0.1.3
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -144,7 +144,7 @@ spec:
   steps:
     export_access_token:
       title: "Export git access token"
-      image: quay.io/codefreshplugins/cli
+      image: quay.io/codefresh/cli:0.87.2
       environment:
         - GIT_INTEGRATION_NAME=${{git}}
         - ALLOW_EMPTY_BOOL=${{allow_empty}}
@@ -165,7 +165,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: codefreshplugins/git-commit:0.1.0
+      image: codefreshplugins/git-commit:0.1.3
       shell: bash
       environment:
         - REPO=${{repo}}

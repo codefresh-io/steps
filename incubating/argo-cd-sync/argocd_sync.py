@@ -22,7 +22,14 @@ if WAIT_ROLLBACK: ROLLBACK = True
 CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY  = os.getenv('CF_API_KEY')
 CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
-LOG_LEVEL   = os.getenv('LOG_LEVEL', "info")
+LOG_LEVEL   = os.getenv('LOG_LEVEL', "error")
+
+# Check the certificate or not accessing the API endpoint
+VERIFY      = True if os.getenv('INSECURE', "False").lower() == "false" else False
+CA_BUNDLE   = os.getenv('CA_BUNDLE')
+
+if CA_BUNDLE != None:
+    VERIFY='/root/bundle.pem'
 
 #######################################################################
 
@@ -37,28 +44,30 @@ def main():
     logging.debug("INTERVAL: %d", INTERVAL)
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
     logging.debug("ROLLBACK: %s", ROLLBACK)
+    logging.debug("VERIFY: %s", VERIFY)
+    logging.debug("BUNDLE: %s", CA_BUNDLE)
 
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()
-    status = get_app_status(namespace)
+    status = get_app_status(ingress_host)
 
     if WAIT_HEALTHY:
-        status=waitHealthy (namespace)
+        status=waitHealthy (ingress_host)
 
         # if Wait failed, it's time for rollback
         if status != "HEALTHY" and ROLLBACK:
             logging.info("Application '%s' did not sync properly. Initiating rollback ", APPLICATION)
             revision = getRevision(namespace)
-            logging.info("latest healthy revision is %d", revision)
+            logging.info("Latest healthy revision is %d", revision)
 
             rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
             if WAIT_ROLLBACK:
-                status=waitHealthy (namespace)
+                status=waitHealthy (ingress_host)
             else:
                 time.sleep(INTERVAL)
-                status=get_app_status(namespace)
+                status=get_app_status(ingress_host)
         else:
             export_variable('ROLLBACK_EXECUTED', "false")
     else:
@@ -83,7 +92,7 @@ def getRevision(namespace):
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -99,7 +108,7 @@ def getRevision(namespace):
       }
     }
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("getRevision result: %s", result)
 
     loop=0
     revision = -1
@@ -115,18 +124,18 @@ def getRevision(namespace):
         loop += 1
     # we did not find a HEALTHY one in our page
     export_variable('ROLLBACK_EXECUTED', "false")
-    logging.error("Did not find a HEALTHY release among the lat %d", PAGE_SIZE)
+    logging.error("Did not find a HEALTHY release among the last %d", PAGE_SIZE)
     sys.exit(1)
 
-def waitHealthy (namespace):
-    logging.debug ("Entering waitHealthy (ns: %s)", namespace)
+def waitHealthy (ingress_host):
+    logging.debug ("Entering waitHealthy (ns: %s)", ingress_host)
 
     time.sleep(INTERVAL)
-    status = get_app_status(namespace)
+    status = get_app_status(ingress_host)
     logging.info("App status is %s", status)
     loop=0
     while status != "HEALTHY" and loop < MAX_CHECKS:
-        status=get_app_status(namespace)
+        status=get_app_status(ingress_host)
         time.sleep(INTERVAL)
         logging.info("App status is %s after %d checks", status, loop)
         loop += 1
@@ -139,7 +148,7 @@ def rollback(ingress_host, namespace, revision):
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -151,31 +160,30 @@ def rollback(ingress_host, namespace, revision):
       "dryRun": False,
       "prune": True
     }
-    logging.info("Rollback app: %s", variables)
+    logging.debug("Rollback variables: %s", variables)
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("Rollback result: %s", result)
     export_variable('ROLLBACK_EXECUTED', "true")
 
 
-def get_app_status(namespace):
+def get_app_status(ingress_host):
     ## Get the health status of the app
-    gql_api_endpoint = CF_URL + '/2.0/api/graphql'
+    gql_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('get_app_status') ## gets gql query
     variables = {
-        "runtime":  RUNTIME,
-        "name": APPLICATION,
-        "namespace": namespace
+        "name": APPLICATION
     }
     result = client.execute(query, variable_values=variables)
 
-    health = result['application']['healthStatus']
+    logging.debug("App Status result: %s", result)
+    health = result['applicationProxyQuery']['status']['health']['status']
     return health
 
 def get_query(query_name):
@@ -189,7 +197,7 @@ def get_runtime():
     transport = RequestsHTTPTransport(
         url = CF_URL + '/2.0/api/graphql',
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -225,7 +233,7 @@ def execute_argocd_sync(ingress_host):
     transport = RequestsHTTPTransport(
         url=runtime_api_endpoint,
         headers={'authorization': CF_API_KEY},
-        verify=True,
+        verify=VERIFY,
         retries=3,
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
@@ -236,9 +244,8 @@ def execute_argocd_sync(ingress_host):
             "prune": True
         }
     }
-    logging.info("Syncing app: %s", variables)
     result = client.execute(query, variable_values=variables)
-    logging.info(result)
+    logging.debug("Syncing App result: %s", result)
 
 
 def export_variable(var_name, var_value):
@@ -251,7 +258,7 @@ def export_variable(var_name, var_value):
         with open('/meta/env_vars_to_export', 'a') as a_writer:
             a_writer.write(var_name + "=" + var_value+'\n')
 
-    logging.info("Exporting variable: %s=%s", var_name, var_value)
+    logging.debug("Exporting variable: %s=%s", var_name, var_value)
 
 ##############################################################
 

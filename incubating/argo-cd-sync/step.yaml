@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.3.1
+  version: 1.4.2
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -9,9 +9,9 @@ metadata:
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
-    - email: francisco@codefresh.io
+      email: francisco@codefresh.io
     - name: Laurent Rochette
-    - email: laurent.rochette@codefresh.io
+      email: laurent.rochette@codefresh.io
   categories:
     - GitOps
   official: true
@@ -99,6 +99,15 @@ spec:
           "description": "OPTIONAL - Wait for the app to be healthy after a rollback. Forces ROLLBACK to true",
           "default": false
         },
+        "CA_BUNDLE": {
+          "type": "string",
+          "description": "OPTIONAL - a base64 encoded stringnthat contain the complete CA Certificate Bundle"
+        },
+        "INSECURE": {
+          "type": "boolean",
+          "description": "OPTIONAL - to allow the usage of a self-signed certificate in the chain to reach the API endpoint",
+          "default": false
+        },
         "LOG_LEVEL": {
           "type": "string",
           "description": "OPTIONAL - set the log level, e.g. 'debug', 'info', 'warn', 'error', 'critical' (default 'error')",
@@ -111,7 +120,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.3.1",
+          "default": "1.4.2",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }
@@ -145,8 +154,12 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
+      [[ if .Arguments.CA_BUNDLE ]]
+        - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
+      [[ end ]]
         - cd /app
         - python3 run.py
+
   delimiters:
     left: '[['
     right: ']]'

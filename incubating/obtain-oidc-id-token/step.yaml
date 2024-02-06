@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 1.0.0
+  version: 1.2.1
   name: obtain-oidc-id-token
   description: >-
     Obtain ID token from Codefresh OIDC Provider
@@ -25,13 +25,28 @@ metadata:
     url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/obtain-oidc-id-token/icon.svg
     background: '#f4f4f4'
   examples:
-    - description: example-with-print-output
+    - description: example-basic
       workflow:
         version: '1.0'
         steps:
           obtain_id_token:
             title: Obtain ID Token
             type: obtain-oidc-id-token
+          print_output:
+            title: Printing output from previous step
+            image: alpine
+            commands:
+              - echo $ID_TOKEN
+              - echo ${{steps.obtain_id_token.output.ID_TOKEN}}
+    - description: example-with-custom-audience
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+            arguments:
+              AUDIENCE: https://my-audience.com
           print_output:
             title: Printing output from previous step
             image: alpine
@@ -57,6 +72,21 @@ metadata:
             commands:
               - aws s3 ls "s3://bucket-name/"
 spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+           "AUDIENCE": {
+               "type": "string",
+               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
+           }
+        }
+    }
   returns: |-
     {
         "definitions": {},
@@ -77,8 +107,28 @@ spec:
   steps:
     main:
       name: obtain-oidc-id-token
-      image: dwdraju/alpine-curl-jq
+      image: quay.io/curl/curl-base
+      environment:
+        - 'AUDIENCE=${{AUDIENCE}}'
       commands:
         - |
-          ID_TOKEN=$(curl -H "Authorization: $CF_OIDC_REQUEST_TOKEN" "$CF_OIDC_REQUEST_URL" | jq -r ".id_token")
+          apk add jq
+          
+          URL="$CF_OIDC_REQUEST_URL"
+          
+          # This means that audience was provided by the user
+          if [ -z "$(echo "$AUDIENCE" | grep '${{AUDIENCE')" ]; then
+            ENCODED_AUDIENCE=$(echo -n "$AUDIENCE" | jq -s -R -r '@uri')
+            URL="$URL?audience=$ENCODED_AUDIENCE"
+          fi
+          
+          RESPONSE=$(curl -H "Authorization: $CF_OIDC_REQUEST_TOKEN" "$URL")
+          ID_TOKEN=$(echo "$RESPONSE" | jq -r ".id_token")
+          
+          if [ -z "$ID_TOKEN" ] || [ "$ID_TOKEN" = "null" ]; then
+            echo "Failed to obtain ID token; API response:"
+            echo "$RESPONSE"
+            exit 1
+          fi
+          
           cf_export ID_TOKEN=$ID_TOKEN --mask

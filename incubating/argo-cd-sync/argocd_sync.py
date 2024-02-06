@@ -47,6 +47,11 @@ def main():
     logging.debug("VERIFY: %s", VERIFY)
     logging.debug("BUNDLE: %s", CA_BUNDLE)
 
+    ## Generating link to the Apps Dashboard
+    CF_OUTPUT_URL_VAR = CF_STEP_NAME + '_CF_OUTPUT_URL'
+    link_to_app = get_link_to_apps_dashboard()
+    export_variable(CF_OUTPUT_URL_VAR, link_to_app)
+
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace=get_runtime_ns()
@@ -75,10 +80,6 @@ def main():
 
     export_variable('HEALTH_STATUS', status)
 
-    ## Generating link to the Apps Dashboard
-    CF_OUTPUT_URL_VAR = CF_STEP_NAME + '_CF_OUTPUT_URL'
-    link_to_app = get_link_to_apps_dashboard()
-    export_variable(CF_OUTPUT_URL_VAR, link_to_app)
     if status != "HEALTHY":
         logging.debug("Status is not HEALTHY. Exiting with error.")
         sys.exit(1)

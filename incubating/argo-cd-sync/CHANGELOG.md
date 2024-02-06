@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.3] - 2024-02-06
+### Changed
+Move the creation of the link to the application earlier
+
 ## [1.4.2] - 2024-01-17
 ### Changed
 New graphql call to speed up query

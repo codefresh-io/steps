@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.4.2
+  version: 1.4.3
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -120,7 +120,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.4.2",
+          "default": "1.4.3",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }

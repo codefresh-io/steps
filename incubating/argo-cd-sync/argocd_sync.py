@@ -1,4 +1,4 @@
-from gql import Client, gql
+healthfrom gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
 import os
 import logging
@@ -55,14 +55,14 @@ def main():
     ingress_host = get_runtime_ingress_host()
     execute_argocd_sync(ingress_host)
     namespace = get_runtime_ns()
-    status, sync = get_app_status(ingress_host)
+    health, sync = get_app_status(ingress_host)
 
     if WAIT_HEALTHY:
-        status, sync = waitHealthy (ingress_host)
+        health, sync = waitHealthy (ingress_host)
 
         # if Wait failed, it's time for rollback
         Failed: Not healthy or our of sync
-        if ((status != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and ROLLBACK:
+        if ((health != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and ROLLBACK:
             logging.info("Application '%s' did not sync properly. Initiating rollback ", APPLICATION)
             revision = getRevision(namespace)
             logging.info("Latest healthy revision is %d", revision)
@@ -73,19 +73,19 @@ def main():
                 status, sync = waitHealthy (ingress_host)
             else:
                 time.sleep(INTERVAL)
-                status, sync = get_app_status(ingress_host)
+                health, sync = get_app_status(ingress_host)
         else:
             export_variable('ROLLBACK_EXECUTED', "false")
     else:
         export_variable('ROLLBACK_EXECUTED', "false")
 
-    export_variable('HEALTH_STATUS', status)
+    export_variable('HEALTH_STATUS', health)
 
-    if status != "HEALTHY":
-        logging.error("Heealth Status is not HEALTHY. Exiting with error.")
+    if health != "HEALTHY":
+        logging.error("Health Status is not HEALTHY. Exiting with error.")
         sys.exit(1)
-    if (tatus == 'OUT_OF_SYNC'
-        logging.error("Sync Status is not OUT OF SYNC. Exiting with error.")
+    if (sync == 'OUT_OF_SYNC'
+        logging.error("Sync Status is OUT OF SYNC. Exiting with error.")
         sys.exit(1)
 #######################################################################
 
@@ -173,6 +173,9 @@ def rollback(ingress_host, namespace, revision):
 
 def get_app_status(ingress_host):
     ## Get the health and sync status of the app
+    # Health: HEALTHY, PROGRESSING
+    # Sync: OUT_OF_SYNC, SYNCED
+
     gql_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
         url=gql_api_endpoint,

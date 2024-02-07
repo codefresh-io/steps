@@ -1,0 +1,260 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefresh-report-image
+  version: 1.0.10
+  isPublic: true
+  description: Report Docker Image Metadata to Codefresh CD
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-report-image
+  stage: incubating
+  maintainers:
+    - name: Dustin Van Buskirk
+      email: dustin@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/codefresh-report-image/Codefresh_Logo_Vertical_LightBkgd.svg
+    background: "#f4f4f4"
+  examples:
+    - description: report-image-metadata
+      workflow:
+        ReportImageMetadata:
+          title: Report image to Codefresh CD
+          type: codefresh-report-image
+          working_directory: /code
+          arguments:
+            CF_API_KEY: codefresh-cd-api-token
+            CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
+            CF_RUNTIME_NAME: codefresh-hosted
+    - description: report-image-metadata-all
+      workflow:
+        ReportImageMetadataAll:
+          title: Report image to Codefresh CD
+          type: codefresh-report-image
+          working_directory: /code
+          arguments:
+            CF_API_KEY: codefresh-cd-api-token
+            CF_IMAGE: docker.io/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}:${{CF_REVISION}}
+            CF_RUNTIME_NAME: codefresh-hosted
+            CF_CONTAINER_REGISTRY_INTEGRATION: docker-integration
+            CF_GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+            CF_GIT_PROVIDER: github
+            CF_GIT_REPO: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+            CF_GIT_BRANCH: ${{CF_BRANCH}}
+            CF_GIT_REVISION: ${{CF_REVISION}}
+            CF_JIRA_API_TOKEN: ${{JIRA_TOKEN}}
+            CF_JIRA_EMAIL: dustin@codefresh.io
+            CF_JIRA_HOST_URL: https://codefresh-io.atlassian.net
+            CF_JIRA_MESSAGE: ${{CF_COMMIT_MESSAGE}}
+            CF_JIRA_PROJECT_PREFIX: SA
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "CF_API_KEY",
+        "CF_IMAGE"
+      ],
+      "properties": {
+        "CF_API_KEY": {
+          "type": "string",
+          "description": "Codefresh API KEY"
+        },
+        "CF_HOST": {
+          "type": "string",
+          "description": "*deprecated* Codefresh Runtime Ingress URL. (ie. https://codefresh.mycompany.com)"
+        },
+        "CF_PLATFORM_URL": {
+            "type": "string",
+            "description": "Required for integrations in on-premises environments only. The root URL of the codefresh application. If not specified, uses the default value of https://g.codefresh.io."
+        },
+        "CF_RUNTIME_NAME": {
+            "type": "string",
+            "description": "Name of runtime to implement the enrichment"
+        },
+        "CF_IMAGE": {
+          "type": "string",
+          "description": "Fully qualified image name to be reported to Codefresh CD. (i.e. docker.io/codefresh/example-app:1.0.0)"
+        },
+        "CF_CONTAINER_REGISTRY_INTEGRATION": {
+          "type": "string",
+          "description": "Codefresh CD Gitops Registry integration name."
+        },
+        "CF_ISSUE_TRACKING_INTEGRATION": {
+          "type": "string",
+          "description": "The issue tracking integration name."
+        },
+        "CF_DOCKERHUB_PASSWORD": {
+          "type": "string",
+          "description": "When no registry integration is specified: dockerhub token as password."
+        },
+        "CF_DOCKERHUB_USERNAME": {
+          "type": "string",
+          "description": "When no registry integration is specified: dockerhub username."
+        },
+        "CF_GOOGLE_REGISTRY_HOST": {
+          "type": "string",
+          "description": "When no registry integration is specified: the host to Google GCR or Google ACR"
+        },
+        "CF_GOOGLE_JSON_KEY": {
+          "type": "string",
+          "description": "When no registry integration is specified: JSON key for authenticating to a Google GCR or Google ACR"
+        },
+        "CF_ENRICHERS": {
+          "type": "string",
+          "description": "*deprecated* list of integrations separated by commas: Acceptable values are git, jira. ex: 'jira, git'"
+        },
+        "CF_GIT_BRANCH": {
+          "type": "string",
+          "description": "The git branch which is related for the commit."
+        },
+        "CF_GIT_PROVIDER": {
+          "type": "string",
+          "description": "The Git provider: Acceptable values are github, gitlab, bitbucket, gerrit or bitbucket-server. In case this not provided git credentials will be taken form your runtime git context"
+        },
+        "CF_GIT_REPO": {
+          "type": "string",
+          "description": "The the git repository used for building the image."
+        },
+        "CF_GIT_REVISION": {
+          "type": "string",
+          "description": "The commit sha"
+        },
+        "CF_GITHUB_API_HOST_URL": {
+          "type": "string",
+          "description": "Specify github host api url."
+        },
+        "CF_GITHUB_TOKEN": {
+          "type": "string",
+          "description": "Github personal access token. Scope: repo."
+        },
+        "CF_GERRIT_CHANGE_ID": {
+          "type": "string",
+          "description": "The change-id or a commit message that contain the change-id."
+        },
+        "CF_GERRIT_HOST_URL": {
+          "type": "string",
+          "description": "URL address of Gerrit instance."
+        },
+        "CF_GERRIT_USERNAME": {
+          "type": "string",
+          "description": "Gerrit username."
+        },
+        "CF_GERRIT_PASSWORD": {
+          "type": "string",
+          "description": "Gerrit password."
+        },
+        "CF_JIRA_API_TOKEN": {
+          "type": "string",
+          "description": "When no jira integration is specified: Jira token for authenticating."
+        },
+        "CF_JIRA_EMAIL": {
+          "type": "string",
+          "description": "When no jira integration is specified: user email for authenticating with jira."
+        },
+        "CF_JIRA_FAIL_ON_NOT_FOUND": {
+          "type": "string",
+          "description": "Fail pipeline if 'issue' not found."
+        },
+        "CF_JIRA_INTEGRATION": {
+          "type": "string",
+          "description": "When Codefresh GitOps jira integration name is specified instead of providing explicit credentials."
+        },
+        "CF_JIRA_HOST_URL": {
+          "type": "string",
+          "description": "When no jira integration is specified: The jira server url. (i.e. https://codefresh-io.atlassian.net/)"
+        },
+        "CF_JIRA_MESSAGE": {
+          "type": "string",
+          "description": "The message to parse for JIRA ticket. (i.e. fix SA-45)"
+        },
+        "CF_JIRA_PROJECT_PREFIX": {
+          "type": "string",
+          "description": "Jira prefix for identifying the ticket number to use. Specify one or more prefixes as a comma-separated list or as a regex. (i.e. CR, /[A-Z]{2,}-\\d+/g)"
+        },
+        "CF_REGISTRY_DOMAIN": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry domain."
+        },
+        "CF_REGISTRY_INSECURE": {
+          "type": "boolean",
+          "description": "All insecure registry."
+        },
+        "CF_REGISTRY_PASSWORD": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry token/password."
+        },
+        "CF_REGISTRY_USERNAME": {
+          "type": "string",
+          "description": "When no registry integration is specified: registry username."
+        },
+        "CF_WORKFLOW_NAME": {
+          "type": "string",
+          "description": "Given workflow name parameter."
+        },
+        "REGISTRY": {
+          "type": "string",
+          "description": "Docker Registry for step's image.",
+          "default": "quay.io"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "Image name for step's image.",
+          "default": "codefresh/codefresh-report-image"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "description": "Image tag for step's image.",
+          "default": "latest"
+        },
+        "DOCKERFILE_PATH": {
+          "type": "string",
+          "description": "Path to the Dockerfile used for building image"
+        },
+        "CF_DOCKERFILE_CONTENT": {
+          "type": "string",
+          "description": "Content of the Dockerfile used for building image base64 encoded"
+        }
+      }
+    }
+  stepsTemplate: |-
+    [[- if and (not .Arguments.CF_DOCKERFILE_CONTENT) .Arguments.DOCKERFILE_PATH ]]
+    export-dockerfile:
+      name: export-dockerfile
+      image: alpine
+      commands: 
+        - |
+          echo "Exporting Dockerfile: [[.Arguments.DOCKERFILE_PATH]]"
+          if [ -f [[.Arguments.DOCKERFILE_PATH]] ]; then
+            export CF_DOCKERFILE_CONTENT=$(base64 -w 0 [[.Arguments.DOCKERFILE_PATH]])
+            cf_export CF_DOCKERFILE_CONTENT
+          else
+            cf_export CF_DOCKERFILE_CONTENT=""
+          fi
+    [[- end ]]
+
+    codefresh-report-image:
+      name: codefresh-report-image
+      image: '[[.Arguments.REGISTRY]]/[[.Arguments.IMAGE]]:[[.Arguments.IMAGE_TAG]]'
+      working_directory: /code
+      environment:
+        - CF_CI_TYPE=classic
+        - CF_WORKFLOW_URL=${{CF_BUILD_URL}}
+        - CF_WORKFLOW_NAME=${{CF_PIPELINE_NAME}}
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      [[- if and (not .Arguments.CF_DOCKERFILE_CONTENT) .Arguments.DOCKERFILE_PATH]]
+        - CF_DOCKERFILE_CONTENT=${{CF_DOCKERFILE_CONTENT}}
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

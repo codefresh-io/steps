@@ -27,6 +27,7 @@ spec:
     build:
       title: "Building Docker image"
       type: "build"
+      registry: docker
       image_name: "codefresh-io/cli"
       working_directory: "${{clone}}"
       tag: "latest"

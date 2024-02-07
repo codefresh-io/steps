@@ -1,0 +1,26 @@
+query ApplicationTimelineListQuery(
+  $filters: GitopsReleaseFilterArgs
+  $pagination: SlicePaginationArgs
+  $sort: GitopsReleaseSortArg
+) {
+  gitopsReleases(pagination: $pagination, filters: $filters, sort: $sort) {
+    edges {
+      node {
+        current
+        argoHistoryId
+        application {
+          status {
+            syncStatus
+            healthStatus
+          }
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPrevPage
+      startCursor
+      endCursor
+    }
+  }
+}

@@ -15,22 +15,57 @@ spec:
     ...
 ```
 
+Can also be run in a mode where changes from the last commit are applied.
+- SPEC: The filename of the pipeline spec
+- ONLY_CHANGED: Enabled this mode. Loop through changed files from git instead of applying a single spec.
+- TRIGGERS_SUBDIR: The subdirectory that holds a pipeline's triggers if looping. Defaults to 'triggers'.
+
+
 ## Example
 
-```
-create_pipeline:
+```yaml
+CreatePipeline:
   title: "Creating pipeline"
-  image: lrochette/ptm:pipeline_trigger_merge
-  working_directory: ${{clone}}
+  type: pipeline-trigger-merge
+  working_directory: ${{Clone}}
   stage: clone
-  commands:
-    - /merge.sh
-  environment:
-    - TRIGGERS=trig1.yml trig2.yml ./trigger_dir
-    - SPEC=spec.yml
+  arguments:
+    TRIGGERS: trig1.yml trig2.yml ./trigger_dir
+    SPEC: spec.yml
 ```
 
 There is a full example in the sample directory.
 
 The foobar trigger does not exist and should give a warning
 creator.yml is the main pipeline to create/merge the spec and the triggers.
+
+Example of "ONLY_CHANGED" mode:
+```yaml
+MergeTriggersIntoPipelines:
+  title: "Merge the triggers into the pipeline spec(s)"
+  type: pipeline-trigger-merge
+  working_directory: ${{Clone}}
+  arguments:
+    SPEC: spec.yml
+    ONLY_CHANGED: true
+    TRIGGERS_SUBDIR: "triggers"
+```
+
+## Testing and Debugging
+
+In order to speed up development (or debugging), we recommend to run the image
+locally and mounting the your local folder to your container.
+
+To do that,
+
+1. we will be running docker run (be sure the daemon is running on your local box)
+2. mount local folder there your spec and triggers are located
+3. mount the .cfconfig file (to be able to call the CLI)
+4. Pass variables as environment variables
+
+```sh
+docker run -v ~/.cfconfig:/root/.cfconfig -v $(pwd)/sample:/foo \
+  -e SPEC=/foo/spec.yml \
+  -e TRIGGERS='/foo/TRIGGERS /foo/trig1.yml' \
+  quay.io/codefreshplugins/pipeline-trigger-merge:1.1.0
+```

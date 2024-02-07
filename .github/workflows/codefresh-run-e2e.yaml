@@ -1,0 +1,53 @@
+name: Steps Test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+env:
+  PIPELINE_NAME: "cli-v1-e2e/codefresh-run-step-e2e"
+  TRIGGER_NAME: "codefresh_run_step_dev"
+
+jobs:
+  codefresh_run_test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: clone
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - id: base-sha
+        run: |
+          echo "result=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
+
+      - id: git-branch-name
+        uses: ohueter/normalize-git-branch-name@v1
+        with:
+          ref: ${{ github.ref }}
+          head-ref: ${{ github.head_ref }}
+
+      - id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          base_sha: ${{ steps.base-sha.outputs.result }}
+          json: true
+          escape_json: false
+          files: |
+            graduated/codefresh-run/**
+
+      - id: setup-node
+        if: steps.changed-files.outputs.any_changed  == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - id: codefresh-run
+        if: steps.changed-files.outputs.any_changed  == 'true'
+        run: |
+          npm install -g codefresh
+          codefresh auth create-context --api-key ${{ secrets.CF_API_KEY }}
+          codefresh run ${{ env.PIPELINE_NAME }} -t ${{ env.TRIGGER_NAME }} -b ${{ steps.git-branch-name.outputs.original_name }}

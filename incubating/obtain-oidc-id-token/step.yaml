@@ -1,0 +1,134 @@
+version: '1.0'
+kind: step-type
+metadata:
+  version: 1.2.1
+  name: obtain-oidc-id-token
+  description: >-
+    Obtain ID token from Codefresh OIDC Provider
+  isPublic: true
+  latest: true
+  official: true
+  stage: incubating
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/obtain-oidc-id-token'
+  maintainers:
+    - name: Daniel Soifer
+  categories:
+    - oidc
+  tags: [
+    'oidc',
+    'open id connect',
+    'id token'
+  ]
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/obtain-oidc-id-token/icon.svg
+    background: '#f4f4f4'
+  examples:
+    - description: example-basic
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+          print_output:
+            title: Printing output from previous step
+            image: alpine
+            commands:
+              - echo $ID_TOKEN
+              - echo ${{steps.obtain_id_token.output.ID_TOKEN}}
+    - description: example-with-custom-audience
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+            arguments:
+              AUDIENCE: https://my-audience.com
+          print_output:
+            title: Printing output from previous step
+            image: alpine
+            commands:
+              - echo $ID_TOKEN
+              - echo ${{steps.obtain_id_token.output.ID_TOKEN}}
+    - description: example-with-aws-sts-assume-role-step
+      workflow:
+        version: '1.0'
+        steps:
+          obtain_id_token:
+            title: Obtain ID Token
+            type: obtain-oidc-id-token
+          assume_role:
+            title: Assume Role
+            type: aws-sts-assume-role-with-web-identity
+            arguments:
+              ROLE_ARN: arn:aws:iam::123456789012:role/role-name
+              ROLE_SESSION_NAME: session-name
+          s3_list_objects:
+            title: List S3 Objects
+            image: amazon/aws-cli
+            commands:
+              - aws s3 ls "s3://bucket-name/"
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+           "AUDIENCE": {
+               "type": "string",
+               "description": "the audience of the ID token. For multiple audiences, use a comma-separated list. Defaults to the address of the Codefresh platform instance (For SaaS, https://g.codefresh.io)"
+           }
+        }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "ID_TOKEN"
+        ],
+        "properties": {
+            "ID_TOKEN": {
+                "type": "string",
+                "description": "the ID token obtained from Codefresh OIDC Provider"
+            }
+        }
+    }
+  steps:
+    main:
+      name: obtain-oidc-id-token
+      image: quay.io/curl/curl-base
+      environment:
+        - 'AUDIENCE=${{AUDIENCE}}'
+      commands:
+        - |
+          apk add jq
+          
+          URL="$CF_OIDC_REQUEST_URL"
+          
+          # This means that audience was provided by the user
+          if [ -z "$(echo "$AUDIENCE" | grep '${{AUDIENCE')" ]; then
+            ENCODED_AUDIENCE=$(echo -n "$AUDIENCE" | jq -s -R -r '@uri')
+            URL="$URL?audience=$ENCODED_AUDIENCE"
+          fi
+          
+          RESPONSE=$(curl -H "Authorization: $CF_OIDC_REQUEST_TOKEN" "$URL")
+          ID_TOKEN=$(echo "$RESPONSE" | jq -r ".id_token")
+          
+          if [ -z "$ID_TOKEN" ] || [ "$ID_TOKEN" = "null" ]; then
+            echo "Failed to obtain ID token; API response:"
+            echo "$RESPONSE"
+            exit 1
+          fi
+          
+          cf_export ID_TOKEN=$ID_TOKEN --mask

@@ -1,0 +1,9 @@
+query sync($applicationName: String!, $options: SyncOptions) {
+  sync(applicationName: $applicationName, options: $options) {
+    metadata {
+      name
+      __typename
+    }
+    __typename
+  }
+}

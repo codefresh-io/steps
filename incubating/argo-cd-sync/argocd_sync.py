@@ -61,7 +61,7 @@ def main():
         health, sync = waitHealthy (ingress_host)
 
         # if Wait failed, it's time for rollback
-        Failed: Not healthy or our of sync
+        # Failed: Not healthy or out of sync
         if ((health != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and ROLLBACK:
             logging.info("Application '%s' did not sync properly. Initiating rollback ", APPLICATION)
             revision = getRevision(namespace)
@@ -70,7 +70,7 @@ def main():
             rollback(ingress_host, namespace, revision)
             logging.info("Waiting for rollback to happen")
             if WAIT_ROLLBACK:
-                status, sync = waitHealthy (ingress_host)
+                health, sync = waitHealthy (ingress_host)
             else:
                 time.sleep(INTERVAL)
                 health, sync = get_app_status(ingress_host)
@@ -135,17 +135,17 @@ def waitHealthy (ingress_host):
     logging.debug ("Entering waitHealthy (ns: %s)", ingress_host)
 
     time.sleep(INTERVAL)
-    status, sync = get_app_status(ingress_host)
-    logging.info("App status is %s", status)
+    health, sync = get_app_status(ingress_host)
+    logging.info("App status is Health: %s and sync:%s", health, sync)
     loop=0
-    while ((status != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and loop < MAX_CHECKS:
-        logging.info("App status is %s after %d checks", status, loop)
+    while ((health != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and loop < MAX_CHECKS:
+        logging.info("App status: %s sync: %s after %d checks", health, sync, loop)
         time.sleep(INTERVAL)
-        status, sync=get_app_status(ingress_host)
+        health, sync=get_app_status(ingress_host)
         loop += 1
 
-    logging.debug ("Returning waitHealthy with health '%s' and sync '%s'", status, sync)
-    return status, sync
+    logging.debug ("Returning waitHealthy with health '%s' and sync '%s'", health, sync)
+    return health, sync
 
 def rollback(ingress_host, namespace, revision):
     logging.debug ("Entering rollback(%s, %s, %s)", ingress_host, namespace, revision)

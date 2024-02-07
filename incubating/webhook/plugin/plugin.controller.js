@@ -3,7 +3,6 @@ const pluginLogic = require('./plugin.logic');
 const Codefresh = require('../helpers/codefresh.api');
 
 class PluginController {
-
     constructor() {
         this.sendNotify = this.sendNotify.bind(this);
     }
@@ -20,7 +19,7 @@ class PluginController {
      * @private
      */
     async _getData() {
-        const buildFailureCauses = await Codefresh.buildFailureCauses(Codefresh.info.build.id, Codefresh.info.apiKey);
+        const buildFailureCauses = await Codefresh.buildFailureCauses(Codefresh.info.build.id, Codefresh.info.apiKey, Codefresh.info.cfUrl);
 
         const { apiKey, ...res } = {
             ...Codefresh.info,
@@ -46,7 +45,7 @@ class PluginController {
         this._validate();
         const isCorrectMethod = config.method && this._isAllowedMethod(config.method);
         const method = isCorrectMethod ? config.method : 'POST';
-        const body = config.body;
+        const { body } = config;
         const defaultHeaders = {
             'Content-Type': 'application/json',
         };
@@ -61,7 +60,6 @@ class PluginController {
             tplData,
             defaultHeaders,
         });
-
     }
 }
 

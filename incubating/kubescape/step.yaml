@@ -1,0 +1,146 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: kubescape
+  version: 3.0.1
+  title: Run a kubescape security scan
+  isPublic: true
+  description: Scan a cluster with the kubescape security service.
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/kubescape'
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+      email: laurent.rochette@codefresh.io
+    - name: Matthias Bertschy
+      email: matthiasb@armosec.io
+  categories:
+    - security
+  official: true
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+          https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/kubescape/icon.png
+  examples:
+    - description: example-1
+      workflow:
+        kubescape:
+          type: kubescape:3.0.1
+          arguments:
+            VERBOSE: on
+            OUTPUTFILE: results
+            FRAMEWORKS: MITRE
+            ACCESSKEY: ${{KEY}}
+            ACCOUNT: ${{ACCOUNT_ID}}
+            FORMAT: sarif
+
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [],
+        "properties": {
+            "FILES": {
+                "type": "string",
+                "description": "YAML files or Helm charts to scan for misconfigurations. The files need to be provided with the complete path from the root of the repository. Default is '.' which scans the whole repository"
+            },
+            "OUTPUTFILE": {
+                "type": "string",
+                "description": "Name of the output file where the scan result will be stored without the extension. Default is 'result'"
+            },
+            "FRAMEWORKS": {
+                "type": "string",
+                "description": "Security framework(s) to scan the files against. Multiple frameworks can be specified separated by a comma with no spaces. Example - nsa,devopsbest. Run kubescape list frameworks in the Kubescape CLI to get a list of all frameworks. Either frameworks have to be specified or controls."
+            },
+            "CONTROLS": {
+                "type": "string",
+                "description": "Security control(s) to scan the files against. Multiple controls can be specified separated by a comma with no spaces. Example - Configured liveness probe,Pods in default namespace. Run kubescape list controls in the Kubescape CLI to get a list of all controls. You can use either the complete control name or the control ID such as C-0001 to specify the control you want use. You must specify either the control(s) or the framework(s) you want used in the scan."
+            },
+            "ACCOUNT": {
+                "type": "string",
+                "description": "account ID for integrating with a third-party server"
+            },
+            "ACCESSKEY": {
+                "type": "string",
+                "description": "access-key for integrating with a third-party server"
+            },
+            "SERVER": {
+                "type": "string",
+                "description": "URL for integrating with a third-party server"
+            },
+            "FAILEDTHRESHOLD": {
+                "type": "string",
+                "description": "Failure threshold is the percent above which the command fails and returns exit code 1. Default is 0 i.e, action fails if any control fails"
+            },
+            "SEVERITYTHRESHOLD": {
+                "type": "string",
+                "description": "Severity threshold is the severity of a failed control at or above which the command terminates with an exit code 1. Default is 'high', i.e. the action fails if any High severity control fails"
+            },
+            "COMPLIANCETHRESHOLD": {
+                "type": "string",
+                "description": "Compliance threshold is the percent bellow which the command fails and returns exit code 1 (example: if set to 100 the command will fail if any control fails)"
+            },
+            "VERBOSE": {
+                "type": "string",
+                "description": "on|off - Display all of the input resources and not only failed resources. Default is 'off'"
+            },
+            "EXCEPTIONS": {
+                "type": "string",
+                "description": "The JSON file containing at least one resource and one policy. Refer exceptions docs for more info. Objects with exceptions will be presented as exclude and not fail."
+            },
+            "FORMAT": {
+                "type": "string",
+                "description": "Output format. Can take one or more formats, comma separated",
+                "default": "junit"
+            },
+            "CONTROLSCONFIG": {
+                "type": "string",
+                "description": "The file containing controls configuration. Use 'kubescape download controls-inputs' to download the configured controls-inputs."
+            },
+            "FIXFILES": {
+              "type": "string",
+              "default": "false",
+              "description": "Whether Kubescape will automatically fix files or not. If enabled, Kubescape will make fixes to the input files. You can then use these fixes to open Pull Requests from your CI/CD pipeline."
+            },
+            "IMAGE": {
+                "type": "string",
+                "description": "The image you wish to scan. Launches an image scan, which cannot run together with configuration scans."
+            },
+            "REGISTRYUSERNAME": {
+                "type": "string",
+                "description": "Username to a private registry that hosts the scanned image."
+            },
+            "REGISTRYPASSWORD": {
+                "type": "string",
+                "description": "Password to a private registry that hosts the scanned image."
+            },
+            "KS_IMAGE": {
+                "type": "string",
+                "default": "quay.io/codefreshplugins/kubescape",
+                "description": "Kubescape image to use"
+            },
+            "KS_IMAGE_VERSION": {
+                "type": "string",
+                "default": "3.0.1",
+                "description": "Version of the kubescape image to use"
+            }
+        }
+    }
+  stepsTemplate: |-
+    kubescan:
+      image: '[[.Arguments.KS_IMAGE]]:[[.Arguments.KS_IMAGE_VERSION]]'
+      title: kubescape scan
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

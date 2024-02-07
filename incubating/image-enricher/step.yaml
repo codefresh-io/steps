@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: image-enricher
   title: Enrich codefresh image with PRs and Issues info
-  version: 1.3.0
+  version: 1.3.3
   isPublic: true
   description: Enrich codefresh image with PRs and Issues info
   sources:
@@ -53,7 +53,6 @@ spec:
         "patterns": [],
         "required": [
             "IMAGE",
-            "BRANCH",
             "REPO",
             "GIT_PROVIDER_NAME"
         ],
@@ -72,9 +71,18 @@ spec:
                 "description": "repo-owner/repo-name",
                 "examples": ["codefresh-plugins/github-enricher"]
             },
+            "REVISION": {
+                "type": "string",
+                "description": "Commit sha",
+                "examples": ["ec8cdced58869a9cbd315a1297a702bbd744a9ed"]
+            },
             "GIT_PROVIDER_NAME": {
                 "type": "string",
                 "description": "Name of git provider to use from Codefresh integrations screen"
+            },
+            "GERRIT_CHANGE_ID": {
+                "type": "string",
+                "description": "The change-id or a commit message that contain the change-id"
             },
             "GITHUB_HOST": {
                 "type": "string",
@@ -87,11 +95,13 @@ spec:
   steps:
     main:
       name: enrich-image
-      image: codefresh/github-enricher
+      image: quay.io/codefreshplugins/github-enricher
       working_directory: /app/
       environment:
           - IMAGE_SHA=${{IMAGE}}
           - BRANCH=${{BRANCH}}
           - REPO=${{REPO}}
+          - REVISION=${{REVISION}}
           - GITHUB_HOST=${{GITHUB_HOST}}
+          - GERRIT_CHANGE_ID=${{GERRIT_CHANGE_ID}}
           - GIT_PROVIDER_NAME=${{GIT_PROVIDER_NAME}}

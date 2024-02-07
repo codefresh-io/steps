@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: semversioner
-  version: 0.1.3
+  version: 0.1.6
   isPublic: true
   description: Operates on semver versions
   sources:
@@ -17,7 +17,7 @@ metadata:
   official: true
   tags: []
   icon:
-    type: png
+    type: image
     url: https://avatars.githubusercontent.com/u/8051653?s=200&v=4
     background: "#000000"
   examples:
@@ -106,7 +106,7 @@ spec:
   stepsTemplate: |-
     semversioner:
       name: semversioner
-      image: codefreshplugins/semversioner:0.1.3
+      image: quay.io/codefreshplugins/semversioner:0.1.5
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

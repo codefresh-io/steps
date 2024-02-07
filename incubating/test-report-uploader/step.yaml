@@ -1,0 +1,136 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: test-report-uploader
+  title: Test reporting with tests
+  version: 1.0.1
+  isPublic: true
+  description: Run tests and send a test report to the bucket even when the test failed (main difference compared to test-reporting step).
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/test-report-uploader'
+  stage: incubating
+  maintainers:
+    - name: Pavlo Kostohrys
+      email: pavel@codefresh.io
+  categories:
+    - utilities
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/test-reporting/report.svg
+    background: "#f4f4f4"
+  examples:
+    - description: 'Run tests and sends a test report to bucket'
+      workflow:
+        test-report-uploader:
+          title: Run tests
+          type: test-report-uploader
+          working_directory: "${{clone}}"
+          arguments:
+            test_image: node
+            test_image_tag: latest
+            test_reporting_version: latest
+            commands:
+              - npm test
+            environment:
+              - REPORT_DIR=mochawesome-report
+              - REPORT_INDEX_FILE=mochawesome.html
+              - BUCKET_NAME=my-bucket-name
+              - CF_STORAGE_INTEGRATION=amazon
+    - description: 'Generate test reporting'
+      workflow:
+        test-report-uploader:
+          title: Run tests
+          type: test-report-uploader
+          working_directory: "${{clone}}"
+          arguments:
+            test_image: node
+            test_image_tag: latest
+            test_reporting_version: latest
+            commands:
+              - npm test
+            environment:
+              - ALLURE_DIR=my-own-allure-results-folder
+              - BUCKET_NAME=my-bucket-name
+              - CF_STORAGE_INTEGRATION=google
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "commands",
+            "test_image",
+            "environment"
+        ],
+        "properties": {
+            "test_image": {
+                "type": "string",
+                "description": "The Docker image registry/image for testing step."
+            },
+            "test_image_tag": {
+                "type": "string",
+                "description": "Docker image tag for testing step.",
+                "default": "latest"
+            },
+            "test_reporting_version": {
+                "type": "string",
+                "description": "The version of test reporting image.",
+                "default": "latest"
+            },
+            "commands": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Commands to run tests"
+            },
+            "environment": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Environment variables for test reporting step. For more information about environment variables see the <a href=\"https://codefresh.io/docs/docs/testing/test-reports/\">official documentation about test reporting</a>."
+            },
+            "working_directory": {
+                "type": "string",
+                "description": "The directory from which the commands are executed. It can be an explicit path in the container’s file system, or a variable that references another step. The default working_directory is the cloned repository directory and not the working directory specified by the image. If you need to use the default working directory of the image use IMAGE_WORK_DIR.",
+                "examples": ["/codefresh/volume"]
+            }
+        }
+    }
+  delimiters:
+    left: '[['
+    right: ']]'
+  stepsTemplate: |-
+    run_tests:
+      title: "get token"
+      image: '[[.Arguments.test_image]]:[[.Arguments.test_image_tag]]'
+      failFast: false
+      commands:
+      [[ range $commands := .Arguments.commands -]]
+        - '[[ $commands ]]'
+      [[ end ]]
+    test_reporting:
+      name: "send report"
+      image: 'codefresh/cf-docker-test-reporting:[[.Arguments.test_reporting_version]]'
+      environment:
+        - CF_STEP_NAME=test_reporting
+        - CF_VOLUME_PATH=/meta
+      [[ range $env := .Arguments.environment ]]
+        - '[[ $env ]]'
+      [[ end ]]
+    test_status:
+      title: "Mark pipeline status"
+      image: "alpine:latest"
+      commands:
+        - echo "Build failed"
+        - exit 1
+      when:
+        condition:
+          all:
+            build_or_tests_failed: run_tests.result == 'failure'

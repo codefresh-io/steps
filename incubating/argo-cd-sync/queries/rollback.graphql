@@ -1,0 +1,15 @@
+query appRollback(
+  $appName: String!
+  $appNamespace: String!
+  $historyId: Int!
+  $dryRun: Boolean
+  $prune: Boolean
+) {
+  appRollback(
+    appName: $appName
+    appNamespace: $appNamespace
+    historyId: $historyId
+    dryRun: $dryRun
+    prune: $prune
+  )
+}

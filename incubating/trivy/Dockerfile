@@ -1,4 +1,4 @@
-FROM aquasec/trivy:latest
+FROM aquasec/trivy:0.41.0
 
 ADD entrypoint.sh /usr/local/bin
 

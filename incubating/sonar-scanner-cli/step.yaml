@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sonar-scanner-cli
-  version: 0.0.8
+  version: 1.0.1
   isPublic: true
   description: Invokes scan using Sonarqube, step is not compatible with C/C++/Objective-C projects.  Requires sonar-project.properties file with Project Name and Key defined.  Documentation - https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
   sources:
@@ -23,7 +23,7 @@ metadata:
   examples:
     - description: Sonarqube Scan
       workflow:
-        SendEmail:
+        SimpleScan:
           type: sonar-scanner-cli
           arguments:
             SONAR_HOST_URL: http://foo.acme:9000
@@ -31,6 +31,19 @@ metadata:
             SONAR_PASSWORD: password if username is used
             SONAR_PROJECT_BASE_DIR: set working directory for analysis
             SONAR_SCANNER_CLI_VERSION: "latest"
+        PullRequestScan:
+          type: sonar-scanner-cli
+          arguments:
+            SONAR_HOST_URL: https://sonarcloud.io
+            SONAR_ANALYSIS_PARAMETERS:
+              - sonar.pullrequest.key=${{CF_PULL_REQUEST_NUMBER}}
+              - sonar.pullrequest.branch=${{CF_BRANCH}}
+              - sonar.pullrequest.base=${{CF_PULL_REQUEST_TARGET}}
+              - sonar.organization=${{CF_REPO_OWNER}}
+              - sonar.projectKey=${{CF_REPO_OWNER}}_${{CF_REPO_NAME}}
+              - sonar.projectBaseDir=/codefresh/volume/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+              - sonar.login=${{SONAR_LOGIN}}
+
 spec:
   arguments: |-
     {
@@ -73,6 +86,15 @@ spec:
           "type": "string",
           "default": "4.2",
           "description": "Version of Sonar Scanner CLI to use, Docker image tag."
+        },
+        "SONAR_ANALYSIS_PARAMETERS": {
+          "type": "array",
+          "description": "Array of additional Sonarqube Analysis Parameters Ex. - sonar.projectDescription='mycustomdescription'. List: https://docs.sonarqube.org/latest/analysis/analysis-parameters/"
+        },
+        "SONAR_SCANNER_OPTS": {
+          "type": "string",
+          "default": "-Xmx2048m",
+          "description": "Default jvm memory setting for the Sonar process."
         }
       }
     }
@@ -83,6 +105,14 @@ spec:
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+      [[- if .Arguments.SONAR_ANALYSIS_PARAMETERS ]]
+      [[- $begin_cmd := (printf "sonar-scanner") -]]
+      [[ range $arg := .Arguments.SONAR_ANALYSIS_PARAMETERS ]]
+        [[- $begin_cmd = (printf "%s -D%s" $begin_cmd $arg) -]]
+      [[- end ]]
+        - [[ $begin_cmd ]]
       [[- end ]]
   delimiters:
     left: '[['

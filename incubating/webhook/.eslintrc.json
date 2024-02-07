@@ -1,3 +1,17 @@
 {
-    "extends": "airbnb-base"
+    "extends": "airbnb-base",
+    "rules": {
+        "indent": [ "error", 4 ],
+        "class-methods-use-this": "off",
+        "max-len": "off",
+        "no-underscore-dangle": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"],
+                "moduleDirectory": ["node_modules", "src/"]
+            }
+        }
+    }
 }

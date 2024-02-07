@@ -19,12 +19,18 @@ steps:
     - 'export IMAGE_VERSION=$(cat ${{CF_REPO_NAME}}/incubating/trivy/step.yaml | yq -r .metadata.version)'
     - "echo Current step version: $IMAGE_VERSION"
     - "cf_export IMAGE_VERSION"
-  PushingToRegistry_master:
+
+PushingToRegistries:
+    title: Pushing to Registry
     type: push
-    registry: dockerhub
-    title: Pushing To Registry
     candidate: ${{BuildImage}}
     tags:
-      - latest
-      - ${{IMAGE_VERSION}}
-
+    - "latest"
+    - "${{IMAGE_VERSION}}"
+    scale:
+      PushingToDockerHubRegistry:
+        title: Pushing To DockerHub Registry
+        registry: dockerhub
+      PushingToQuayRegistry:
+        title: Pushing To Quay Registry
+        registry: cfpluginmgr-quay

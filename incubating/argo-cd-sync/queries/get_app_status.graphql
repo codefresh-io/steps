@@ -1,0 +1,17 @@
+query appstatus ($name: String!) {
+  applicationProxyQuery(
+		name: $name
+  ){
+    metadata {
+      name
+    }
+    status {
+      health {
+        status
+      }
+      sync {
+        status
+      }
+    }
+  }
+}

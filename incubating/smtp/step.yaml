@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: smtp
-  version: 1.0.0
+  version: 1.0.2
   isPublic: true
   description: Sends Email using SMTP Server
   sources:
@@ -34,6 +34,20 @@ metadata:
             SMTP_SERVER: smtp.domain.com
             SMTP_USERNAME: service_user@domain.com
             SMTP_PASSWORD: password
+    - description: Send Mail (Multiple Recipients)
+      workflow:
+        SendEmail:
+          type: smtp
+          arguments:
+            TO: "user1@gmail.com, user2@gmail.com, user3@gmail.com"
+            FROM: service_user@gmail.com
+            SUBJECT: Build for ${{CF_REPO_NAME}}
+            BODY: '<html><a href="${{CF_BUILD_URL}}">Codefresh Build</a></html>'
+            MIME_TYPE: html
+            SMTP_SERVER: smtp.gmail.com
+            SMTP_USERNAME: service_user@gmail.com
+            SMTP_PASSWORD: password
+            SMTP_PORT: "587"   
 spec:
   arguments: |-
     {
@@ -102,7 +116,7 @@ spec:
   stepsTemplate: |-
     main:
       name: smtp
-      image: codefreshplugins/cfstep-smtp:1.0.0
+      image: quay.io/codefreshplugins/cfstep-smtp:1.0.1
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

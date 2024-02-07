@@ -1,4 +1,4 @@
-#/bin/#!/usr/bin/env bash
+#!/bin/bash
 
 process_dir() {
   echo  "Processing trigger directory $1"
@@ -25,11 +25,40 @@ process_file() {
   fi
   echo "WARNING: Unknown trigger file $1"
 }
-export curdir=`pwd`
-export count=1
+
+# exit on error
+set -e
+echo "pipeline-trigger-merge v1.1.0"
+
+count=1
 echo "Merging pipeline spec $SPEC with triggers $TRIGGERS"
 for f in `echo $TRIGGERS` ; do
+    # is path absolute
+    if [[ "$f" = /* ]] ; then
+      curdir="/"
+    else
+      curdir=`pwd`
+    fi
     process_file $f
 done
+
 echo "Creating/Updating final pipeline"
-codefresh create pipeline -f $SPEC || codefresh replace -f $SPEC
+
+# Get pipeline name
+echo "Checking if pipeline already exists"
+name=$(yq '.metadata.name' $SPEC)
+codefresh get pip $name > pipeline.log 2>&1 || true
+
+#Check if pipeline exists
+if [ `grep -c PIPELINE_NOT_FOUND pipeline.log` -eq 0 ] ; then
+  echo "Updating final pipeline"
+  cmd="codefresh replace -f $SPEC"
+else
+  echo "Creating final pipeline"
+  cmd="codefresh create pipeline -f $SPEC"
+fi
+
+# Check for error when creating/updating the pipeline
+echo "Checking for errors"
+$cmd 2>&1 | tee pipeline.log
+exit `grep -c 'Yaml validation errors' pipeline.log`

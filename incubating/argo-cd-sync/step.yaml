@@ -1,0 +1,165 @@
+kind: step-type
+metadata:
+  name: argo-cd-sync
+  version: 1.4.2
+  isPublic: true
+  description: Syncs Argo CD apps managed by our GitOps Runtimes
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo-cd-sync'
+  stage: incubating
+  maintainers:
+    - name: Francisco Cocozza
+      email: francisco@codefresh.io
+    - name: Laurent Rochette
+      email: laurent.rochette@codefresh.io
+  categories:
+    - GitOps
+  official: true
+  tags: []
+  icon:
+    type: svg
+    url: https://cdn.jsdelivr.net/gh/codefresh-io/steps/graduated/argocd-sync/argo.svg
+    background: "#f4f4f4"
+  examples:
+    - description: Sync an ArgoCD app in a GitOps Runtime
+      workflow:
+        sync_argo_cd_app:
+          title: Sync Argo CD app
+          type: argo-cd-sync
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
+    - description: Sync and wait for it to healthy.
+      workflow:
+        sync_argo_cd_app:
+          title: Sync Argo CD app
+          type: argo-cd-sync
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
+            WAIT_HEALTHY: true
+            INTERVAL: 30
+            MAX_CHECKS: 5
+    - description: Sync, wait and rollback.
+      workflow:
+        sync_argo_cd_app:
+          title: Sync Argo CD app
+          type: argo-cd-sync
+          arguments:
+            RUNTIME: my-runtime
+            APPLICATION: my-app
+            WAIT_HEALTHY: true
+            INTERVAL: 60
+            MAX_CHECKS: 3
+            ROLLBACK: true
+            LOG_LEVEL: debug
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+        "RUNTIME",
+        "APPLICATION"
+      ],
+      "properties": {
+        "RUNTIME": {
+          "type": "string",
+          "description": "The name of the GitOps Runtime managing the Argo CD Application"
+        },
+        "APPLICATION": {
+          "type": "string",
+          "description": "The name of the Argo CD Application to be synced"
+        },
+        "WAIT_HEALTHY": {
+          "type": "boolean",
+          "description": "OPTIONAL - Wait for the app to be healthy",
+          "default": false
+        },
+        "INTERVAL": {
+          "type": "integer",
+          "description": "OPTIONAL - Interval in seconds to wait between checks",
+          "default": 10
+        },
+        "MAX_CHECKS": {
+          "type": "integer",
+          "description": "OPTIONAL - Maximum numbers of checks to do (to avoid forever wait). Default is 10.",
+          "default": 10
+        },
+        "ROLLBACK": {
+          "type": "boolean",
+          "description": "OPTIONAL - Initiate a rollback to the latest Healdy revision if the Sync and Wait does not become healthy",
+          "default": false
+        },
+        "WAIT_ROLLBACK": {
+          "type": "boolean",
+          "description": "OPTIONAL - Wait for the app to be healthy after a rollback. Forces ROLLBACK to true",
+          "default": false
+        },
+        "CA_BUNDLE": {
+          "type": "string",
+          "description": "OPTIONAL - a base64 encoded stringnthat contain the complete CA Certificate Bundle"
+        },
+        "INSECURE": {
+          "type": "boolean",
+          "description": "OPTIONAL - to allow the usage of a self-signed certificate in the chain to reach the API endpoint",
+          "default": false
+        },
+        "LOG_LEVEL": {
+          "type": "string",
+          "description": "OPTIONAL - set the log level, e.g. 'debug', 'info', 'warn', 'error', 'critical' (default 'error')",
+          "default": "error"
+        },
+        "IMAGE_NAME": {
+          "type": "string",
+          "default": "quay.io/codefreshplugins/argo-cd-sync",
+          "description": "OPTIONAL - To overwrite the image name to use"
+        },
+        "IMAGE_TAG": {
+          "type": "string",
+          "default": "1.4.2",
+          "description": "OPTIONAL - To overwrite the tag to use"
+        }
+      }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+          "HEALTH_STATUS"
+        ],
+        "properties": {
+            "HEALTH_STATUS": {
+                "type": "string",
+                "description": "The heatlh status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
+            },
+            "ROLLBACK_EXECUTED": {
+                "type": "string",
+                "description": "A flag to indicate if a rollback was executed or not"
+            }
+        }
+    }
+  stepsTemplate: |-
+    argo_cd_sync:
+      image: '[[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_TAG]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+      [[ if .Arguments.CA_BUNDLE ]]
+        - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
+      [[ end ]]
+        - cd /app
+        - python3 run.py
+
+  delimiters:
+    left: '[['
+    right: ']]'

@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: ecs-bluegreen-deploy
-  version: 0.0.3
+  version: 0.0.6
   isPublic: true
-  description: Updates an AWS ECS Service with a new image, and then deploys it with CodeDeploy. Works with all deployment configurations, including AllAtOnce, Linear, and Canary.
+  description: 'Updates an AWS ECS Service with a new image, and then deploys it with AWS CodeDeploy. Works with all deployment configurations, including AllAtOnce, Linear, and Canary. Authenticate with either an IAM role from your EKS cluster, or with a simple Access Key ID+Token.'
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/incubating/ecs-bluegreen-deploy'
     - 'https://aws.amazon.com/blogs/containers/aws-codedeploy-now-supports-linear-and-canary-deployments-for-amazon-ecs/'
@@ -23,14 +23,27 @@ metadata:
         url: >-
           https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/ecs-deploy/icon.jpg
   examples:
-    - description: example-1
+    - description: Deploy using an Access Key
       workflow:
-        deploy to ecs:
-          type: ecs-deploy
+        deploy_to_ecs:
+          type: ecs-bluegreen-deploy
           arguments:
             AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
             AWS_ACCESS_KEY_ID: ${{AWS_ACCESS_KEY_ID}}
             AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}
+            CLUSTER_NAME: MY_ECS_CLUSTER
+            SERVICE_NAME: MY_ECS_SERVICE
+            IMAGE: IMAGE:TAG
+            CODEDEPLOY_APPLICATION: AppECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            CODEDEPLOY_DEPLOYMENT_GROUP: DgpECS-${CLUSTER_NAME}-${SERVICE_NAME}
+            MAX_WAIT_TIME: 60
+    - description: Deploy using an IAM role from your EKS cluster
+      workflow:
+        deploy_to_ecs_with_role:
+          type: ecs-bluegreen-deploy
+          arguments:
+            AWS_DEFAULT_REGION: ${{AWS_DEFAULT_REGION}}
+            AWS_ASSUME_ROLE: ${{AWS_ACCESS_ROLE_ARN}}
             CLUSTER_NAME: MY_ECS_CLUSTER
             SERVICE_NAME: MY_ECS_SERVICE
             IMAGE: IMAGE:TAG
@@ -52,17 +65,21 @@ spec:
             "CODEDEPLOY_DEPLOYMENT_GROUP"
         ],
         "properties": {
+            "AWS_ASSUME_ROLE": {
+                "type": "string",
+                "description": "ARN of an IAM role from your EKS cluster to assume. The role must be associated with the EKS cluster where your Codefresh Runner is installed, either via the Runner's EKS nodegroup (see https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html), or via the Runner's Kubernetes service account (see https://codefresh.io/docs/docs/administration/codefresh-runner/#injecting-aws-arn-roles-into-the-cluster)."
+            },
             "AWS_ACCESS_KEY_ID": {
                 "type": "string",
                 "description": "Amazon access key ID"
             },
             "AWS_SECRET_ACCESS_KEY": {
                 "type": "string",
-                "description": "amazon secret key (make sure it's encrypted)"
+                "description": "Amazon secret access key"
             },
             "AWS_DEFAULT_REGION": {
                 "type": "string",
-                "description": "aws region"
+                "description": "AWS region"
             },
             "CLUSTER_NAME": {
                 "type": "string",
@@ -78,38 +95,42 @@ spec:
             },
             "CODEDEPLOY_APPLICATION": {
                 "type": "string",
-                "description": "Optinal. Default value - AppECS-[CLUSTER_NAME]-[SERVICE_NAME]"
+                "description": "Optional. Default value - AppECS-[CLUSTER_NAME]-[SERVICE_NAME]"
             },
             "CODEDEPLOY_DEPLOYMENT_GROUP": {
                 "type": "string",
-                "description": "Optinal. Default value - DgpECS-[CLUSTER_NAME]-[SERVICE_NAME]"
+                "description": "Optional. Default value - DgpECS-[CLUSTER_NAME]-[SERVICE_NAME]"
             },
             "MAX_WAIT_TIME": {
                 "type": "string",
-                "description": "Time in minutes to wait for deployment to succeed. Default value - 60 minutes"
+                "description": "Optional. Time in minutes to wait for deployment to succeed. Default value - 60 minutes"
             }
         }
     }
-  steps:
+  stepsTemplate: |-
     main:
       name: ecs-deploy
-      image: codefresh/ecs-bluegreen-deploy:0.0.1
+      image: codefreshplugins/ecs-bluegreen-deploy:0.0.4
       shell: bash
       commands:
         - |-
           entrypoint.sh \
-            --cluster ${{CLUSTER_NAME}} \
-            --service ${{SERVICE_NAME}} \
-            --image ${{IMAGE}} \
-            --codedeploy-application ${{CODEDEPLOY_APPLICATION}} \
-            --codedeploy-deployment-group ${{CODEDEPLOY_DEPLOYMENT_GROUP}} \
-            --max-wait-time ${{MAX_WAIT_TIME}}
+            [[- if .Arguments.AWS_ASSUME_ROLE ]]
+            --iam-role [[.Arguments.AWS_ASSUME_ROLE]] \
+            [[- end ]]
+            --cluster [[.Arguments.CLUSTER_NAME]] \
+            --service [[.Arguments.SERVICE_NAME]] \
+            --image [[.Arguments.IMAGE]] \
+            --codedeploy-application [[.Arguments.CODEDEPLOY_APPLICATION]] \
+            --codedeploy-deployment-group [[.Arguments.CODEDEPLOY_DEPLOYMENT_GROUP]] \
+            --max-wait-time [[.Arguments.MAX_WAIT_TIME]]
       environment:
-        - 'AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY_ID}}'
-        - 'AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_ACCESS_KEY}}'
-        - 'AWS_DEFAULT_REGION=${{AWS_DEFAULT_REGION}}'
-        - 'CLUSTER_NAME=${{CLUSTER_NAME}}'
-        - 'SERVICE_NAME=${{SERVICE_NAME}}'
-        - 'CODEDEPLOY_APPLICATION=${{CODEDEPLOY_APPLICATION}}'
-        - 'CODEDEPLOY_DEPLOYMENT_GROUP=${{CODEDEPLOY_DEPLOYMENT_GROUP}}'
-        - 'MAX_WAIT_TIME=${{MAX_WAIT_TIME}}'
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'
+metrics:
+  finished: 29
+

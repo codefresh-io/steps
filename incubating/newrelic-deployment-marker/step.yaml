@@ -1,0 +1,114 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: newrelic-deployment-marker
+  version: 1.0.1
+  isPublic: true
+  description: Createa a new deployment marker in New Relic.
+  sources:
+  - >-
+      https://github.com/codefresh-io/steps/tree/master/incubating/newrelic-deployment-marker
+  stage: incubating
+  maintainers:
+    - name: Jesse Antoszyk
+  categories:
+    - utility
+  official: true
+  tags:
+    - notifications
+  icon:
+    type: svg
+    url: https://newrelic.com/themes/custom/erno/assets/mediakit/new_relic_logo_horizontal.svg
+    background: '#f4f4f4'
+  examples:
+    - description: example-1
+      workflow:
+        version: '1.0'
+        steps:
+          MarkDeployment:
+            stage: deploy
+            type: newrelic-deployment-marker
+            arguments:
+              APPLICATION_ID: '${{NEWRELIC_APPLICATION_ID}}'
+              API_KEY: '${{NEWRELIC_API_KEY}}'
+              REVISION: '${{CF_SHORT_REVISION}}'
+              DESCRIPTION: '${{CF_BUILD_URL}}'
+              AUTHOR: '${{CF_COMMIT_AUTHOR}}'
+              CHANGELOG: '${{CF_COMMIT_MESSAGE}}'
+    - description: example-2
+      workflow:
+        version: '1.0'
+        steps:
+          MarkDeployment:
+            stage: deploy
+            type: newrelic-deployment-marker
+            arguments:
+              APPLICATION_ID: '${{NEWRELIC_APPLICATION_ID}}'
+              API_KEY: '${{NEWRELIC_API_KEY}}'
+              REVISION: '${{CF_SHORT_REVISION}}'
+              DESCRIPTION: '${{CF_BUILD_URL}}'
+              AUTHOR: '${{CF_COMMIT_AUTHOR}}'
+              CHANGELOG: '${{CF_COMMIT_MESSAGE}}'
+              ACCOUNT_ID: '${{NEWRELIC_ACCOUNT_ID}}'
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [
+            "APPLICATION_ID",
+            "API_KEY",
+            "REVISION"
+        ],
+        "properties": {
+            "APPLICATION_ID": {
+                "type": "string",
+                "description": "New Relic Application ID"
+            },
+            "API_KEY": {
+                "type": "string",
+                "description": "New Relic Admin API Key"
+            },
+            "REVISION": {
+                "type": "string",
+                "description": "Revision being deployed"
+            },
+            "AUTHOR": {
+                "type": "string",
+                "description": "Author of the deployment event"
+            },
+            "DESCRIPTION": {
+                "type": "string",
+                "description": "Description of the deployment event"
+            },
+            "CHANGELOG": {
+                "type": "string",
+                "description": "Changelog of the deployment event"
+            },
+            "ACCOUNT_ID": {
+                "type": "string",
+                "description": "Account ID to use if linking back to New Relic"
+            }
+        }
+    }
+  stepsTemplate: |-
+    markdeploy:
+      name: newrelic-deployment-marker
+      image: quay.io/codefreshplugins/newrelic-deployment-marker:1.0.0
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+      commands:
+        - node /app/DeploymentMarker.js
+        [[- if .Arguments.ACCOUNT_ID ]]
+        # No good way to link back to new relic one, this may be deprecated eventually: https://discuss.newrelic.com/t/link-to-new-relic-app-from-external-app/141098/16
+        # fmt: "https://rpm.newrelic.com/accounts/${ACCOUNT_ID}/applications/${APP_ID}"
+        - cf_export markdeploy_CF_OUTPUT_URL="https://rpm.newrelic.com/accounts/[[.Arguments.ACCOUNT_ID]]/applications/[[.Arguments.APPLICATION_ID]]"
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

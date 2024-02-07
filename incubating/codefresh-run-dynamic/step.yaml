@@ -1,0 +1,149 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: codefresh-run-dynamic
+  title: Dynamically run Codefresh pipelines
+  version: 1.0.0
+  isPublic: true
+  description: >-
+    Accepts a YAML file specifying a list of pipelines and options, and runs them concurrently. You can specify most
+    `codefresh run` options on a per-build basis within the YAML file, including: branch, sha, no_cache, no_cf_cache,
+    reset_volume, variables[], contexts[], skip[], only[], and enable_notifications. See example YAML file: 
+    https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic/example_run_list.yaml
+  sources:
+    - 'https://github.com/codefresh-io/steps/tree/master/incubating/codefresh-run-dynamic'
+  stage: incubating
+  maintainers:
+    - name: Ted Spinks
+      email: ted.spinks@codefresh.io
+  categories:
+    - featured
+  official: true
+  tags:
+    - yaml
+    - call
+    - child
+    - pipeline
+  icon:
+    type: svg
+    url: >-
+      https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/codefresh-run-dynamic/icon-1.svg
+    background: '#C7DCFF'
+  examples:
+    - description: Start pipelines but don't wait
+      workflow:
+        run_cf_pipelines:
+          title: Start pipelines but don't wait
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+    - description: Start pipelines and wait
+      workflow:
+        run_cf_pipelines:
+          title: Start pipelines and wait
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+            WAIT: true
+    - description: Start pipelines and wait - with extra options
+      workflow:
+        run_cf_pipelines:
+          title: Start pipelines and wait - with extra options
+          type: codefresh-run-dynamic
+          arguments:
+            RUN_LIST_YAML_FILE: /codefresh/volume/my-pipelines-to-run.yaml
+            WAIT: true
+            TIMEOUT_MINS: '90'
+            LOG_INTERVAL_MINS: '30'
+            LOG_DIRECTORY: /codefresh/volume/my-run-logs
+  latest: true
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "RUN_LIST_YAML_FILE"
+        ],
+        "properties": {
+            "RUN_LIST_YAML_FILE": {
+                "type": "string",
+                "description": "Path to the YAML file containing the list of pipelines and run options."
+            },
+            "DEBUG": {
+                "type": "boolean",
+                "description": "Set to 'true' to enable debug logging. Default is false."
+            },
+            "WAIT": {
+                "type": "boolean",
+                "description": "Wait for builds to finish and log the status of each build. Default is false."
+            },
+            "COLUMNS": {
+                "type": "string",
+                "description": "When WAIT is specified, choose which columns to log with build statuses. Default is 'id,pipeline-name,trigger,branch,status'. Available columns are 'id,pipeline-name,pipeline-id,status,created,started,finished,buildtime,totaltime,trigger,webhook,repository,branch,commit-id,pipeline-trigger-id'."
+            },
+            "TIMEOUT_MINS": {
+                "type": "string",
+                "description": "When WAIT is specified, wait up to this amount of minutes for builds to finish. Default is 60."
+            },
+            "CHECK_INTERVAL_MINS": {
+                   "type": "string",
+                   "description": "When WAIT is specified, check the build status at this interval. Default is every 1 min."
+               },
+            "LOG_INTERVAL_MINS": {
+                "type": "string",
+                "description": "When WAIT is specified, log the build statuses at this interval. Default is every 15 min."
+            },
+            "LOG_DIRECTORY": {
+                  "type": "string",
+                  "description": "Write build logs to files in this directory."
+            },
+            "FAIL_FAST": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "If a child build fails, the whole step should fail. Default is true."
+            }
+        }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+          "CF_BUILDS_STARTED"
+      ],
+      "properties": {
+          "CF_BUILDS_STARTED": {
+              "type": "string",
+              "description": "List of builds that were started, space-separated"
+          },
+          "CF_BUILDS_SUCCESS": {
+              "type": "string",
+              "description": "When WAIT is specified, this will be 'true' if all builds completed successfully and 'false' if not."
+          }
+      }
+    }    
+  stepsTemplate: |-
+    run_child_pipelines:
+      image: quay.io/codefreshplugins/codefresh-run-dynamic:1.0.0
+      commands:
+        - python3 /codefresh-run-dynamic.py
+        # The export command preserves spaces (cf_export by itself would not)
+        - export CF_BUILDS_STARTED=$(cat /tmp/cf_builds_started)
+        - cf_export CF_BUILDS_STARTED
+        - export CF_BUILDS_SUCCESS=$(cat /tmp/success)
+        - cf_export CF_BUILDS_SUCCESS
+        - if [ "$FAIL_FAST" == "true" ] && [ "$CF_BUILDS_SUCCESS" != "true" ]; then exit 1; fi
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

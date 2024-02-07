@@ -91,7 +91,10 @@ def kube_http_client(healthcheck_type, cluster, namespace, resource):
             print('All Replicas are reporting Healthy.')
             unavailable_replicas = 0
     elif healthcheck_type.strip() == 'kubernetes_statefulset':
-        ready_replicas = response_dict['status']['readyReplicas']
+        if 'readyReplicas' in response_dict['status']:
+          ready_replicas = response_dict['status']['readyReplicas']
+        else:
+          ready_replicas = 0
         unavailable_replicas = replicas - ready_replicas
     d = dict();  
     d['name'] = name

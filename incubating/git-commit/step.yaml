@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.0.11
+  version: 0.1.3
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -33,6 +33,26 @@ metadata:
             git_user_name: 'git-user-name'
             git_user_email: 'git-user@email.com'
             allow_empty: false
+            rebase: true
+            base_branch: 'feature'
+            add:
+              - file1.txt
+              - file2.txt
+              - ./dir3
+    - workflow:
+        gpg_signed_commit:
+          title: Sign commit with GPG and push
+          type: git-commit
+          arguments:
+            repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+            git: 'github'
+            working_directory: '/codefresh/volume/${{CF_REPO_NAME}}'
+            commit_message: 'Some commit message'
+            git_user_name: 'git-user-name'
+            git_user_email: 'git-user@email.com'
+            allow_empty: false
+            gpg_key_id: '${{GPG_KEY_ID}}'
+            gpg_secret_key: '${{GPG_SECRET_KEY}}'
             add:
               - file1.txt
               - file2.txt
@@ -88,21 +108,53 @@ spec:
               },
               "description": "Add file contents to the git index",
               "default": "."
+          },
+          "gpg_key_id": {
+              "type": "string",
+              "description": "GPG key ID (for example `3AA5C34371567BD2`)",
+              "default": ""
+          },
+          "gpg_secret_key": {
+              "type": "string",
+              "description": "GPG secret key (base64 encoded; for example `gpg -a --export-secret-keys 3AA5C34371567BD2 | base64 -w0`) ",
+              "default": ""
+          },
+          "force_push": {
+              "type": "boolean",
+              "description": "force git push (false by default)",
+              "default": false
+          },
+          "rebase": {
+              "type": "boolean",
+              "description": "pull remote changes with rebase flag before push",
+              "default": false
+          },
+          "use_ssh": {
+              "type": "boolean",
+              "description": "Is use ssh or https (ssh key will be taken from git integration defined in git argument)",
+              "default": false
+          },
+          "base_branch": {
+              "type": "string",
+              "description": "Changes the base branch git-commit interacts with",
+              "default": ""
           }
       }
     }
   steps:
     export_access_token:
       title: "Export git access token"
-      image: codefresh/cli
+      image: quay.io/codefresh/cli:0.87.2
       environment:
         - GIT_INTEGRATION_NAME=${{git}}
         - ALLOW_EMPTY_BOOL=${{allow_empty}}
         - GIT_USER_NAME=${{git_user_name}}
       commands:
-        - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.password)
+        - export GIT_ACCESS_TOKEN=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.password)
         - echo GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN >> /meta/env_vars_to_export
-        - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt -o yaml | yq -r -c .spec.data.auth.username)
+        - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.username)
+        - export PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq .spec.data.auth.sshPrivateKey)
+        - echo PRIVATE_KEY=$PRIVATE_KEY >> /meta/env_vars_to_export
         # If the git integration does not include the auth username, then default to the git_user_name argument
         - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
         - echo GIT_ACCESS_TOKEN_USER=$GIT_ACCESS_TOKEN_USER >> /meta/env_vars_to_export
@@ -113,22 +165,65 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: alpine/git:latest
+      image: codefreshplugins/git-commit:0.1.3
+      shell: bash
       environment:
         - REPO=${{repo}}
         - COMMIT_MESSAGE=${{commit_message}}
         - WORKING_DIRECTORY=${{working_directory}}
         - GIT_USER_NAME=${{git_user_name}}
         - GIT_USER_EMAIL=${{git_user_email}}
-
+        - GPG_KEY_ID=${{gpg_key_id}}
+        - GPG_SECRET_KEY=${{gpg_secret_key}}
+        - FORCE_PUSH=${{force_push}}
+        - REBASE=${{rebase}}
+        - BASE_BRANCH=${{base_branch}}
+        - USE_SSH=${{use_ssh}}
+        - GIT_INTEGRATION_NAME=${{git}}
       commands:
+        - |-
+          if [[ -n ${GPG_KEY_ID} && -n ${GPG_SECRET_KEY} ]]; then
+            apt-get update && apt install -y gnupg
+            echo ${GPG_SECRET_KEY} | base64 -d > /tmp/private.key
+            gpg --import /tmp/private.key
+            git config --global user.signingkey ${GPG_KEY_ID}
+            git config --global commit.gpgsign true
+          fi
         - cd ${WORKING_DIRECTORY}
         - export GIT_FQDN=$(git remote get-url --push origin | awk -F[/:] '{print $4}')
         - echo GIT_USER_NAME=$GIT_USER_NAME GIT_USER_EMAIL=$GIT_USER_EMAIL
-        - git config --global user.name ${GIT_USER_NAME}
+        - git config --global user.name "${GIT_USER_NAME}"
         - git config --global user.email ${GIT_USER_EMAIL}
         - git add ${ADD_FILES}
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
-        - echo git push "https://$GIT_ACCESS_TOKEN_USER:REDACTED@$GIT_FQDN/$REPO.git"
-        - git push "https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+        - |-
+          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          if [ "$USE_SSH" = "true" ]; then
+            [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
+            echo ${PRIVATE_KEY:1:-1} | sed 's/\\n/\n/g' > ~/.ssh/codefresh
+            chmod 0600 ~/.ssh/*
+            chmod 0700 ~/.ssh/
+
+            # ssh://git@github.com:username/repo.git
+            # match "github.com" from ssh uri
+            REPO=${REPO#"ssh://"}
+            SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+            echo "Adding "$SSH_HOST" to known_hosts"
+
+            # removes all keys belonging to hostname from a known_hosts file
+            ssh-keygen -R $SSH_HOST 2>/dev/null
+
+            ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+            REPO_URL=$REPO
+          fi
+        - |-
+          if [ "$REBASE" = true ]; then
+            git pull --rebase $REPO_URL $BASE_BRANCH
+          fi
+        - |-
+          if [ "$FORCE_PUSH" = true ]; then
+            git push --force $REPO_URL $BASE_BRANCH
+          else
+            git push $REPO_URL $BASE_BRANCH
+          fi

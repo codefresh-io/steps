@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.2
+  version: 1.1.12
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -86,6 +86,18 @@ spec:
             "kube_context": {
                 "type": "string",
                 "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
+            },
+            "helm_repository_context": {
+                "type": "string",
+                "description": "Helm context to use (the name of the helm repository as configured in Codefresh)"
+            },
+            "primary_helm_context": {
+                "type": "string",
+                "description": "When multiple contexts are attached to the pipeline this argument lets to select one of them for using in helm command. When omit the last added repo is used"
+            },
+            "use_repos_for_auth_action": {
+                "type": "string",
+                "description": "Add helm repositories from contexts for auth action"
             },
             "chart_name": {
                 "type": "string",
@@ -182,13 +194,26 @@ spec:
             "credentials_in_arguments": {
                 "type": "boolean",
                 "description": "Add credentials to helm command as arguments (username, password). Otherwise its will be added to url http(s)://username:password@url. Should be enabled for JFrog Artifactory helm repository."
+            },
+            "chart_subdir": {
+                "type": "string",
+                "description": "optional subfolder (inside JFrog Artifactory helm repository)"
+            },
+            "use_debian_image": {
+                "type": "boolean",
+                "description": "Use debian based cfstep-helm image",
+                "default": false
             }
         }
     }
   stepsTemplate: |-
     main:
       name: helm
-      image: codefresh/cfstep-helm:[[ .Arguments.helm_version ]]
+      [[ if .Arguments.use_debian_image ]]
+      image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
+      [[ else ]]
+      image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
+      [[ end ]]
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if and (not (hasPrefix $key "custom_value_files")) (not (hasPrefix $key "custom_values")) ]]
@@ -206,7 +231,11 @@ spec:
       [[- end -]]
       [[ if .Arguments.commands ]]
       commands:
+      [[ if .Arguments.use_debian_image ]]
+        - bash -c 'source /opt/bin/release_chart'
+      [[ else ]]
         - source /opt/bin/release_chart
+      [[ end ]]
       [[ range $arg := .Arguments.commands ]]
         - '[[ $arg ]]'
       [[ end ]]

@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: sendgrid
-  version: 0.0.5
+  version: 0.0.7
   title: Send an email via Sendgrid
   isPublic: true
   description: Send an email using Sendgrid.
@@ -82,7 +82,7 @@ spec:
   steps:
     main:
       name: sendgrid
-      image: codefresh/sendgrid:0.0.3
+      image: quay.io/codefreshplugins/sendgrid:0.0.3
       environment:
         - 'SENDGRID_APIKEY=${{SENDGRID_APIKEY}}'
         - 'SENDGRID_MAIL=${{SENDGRID_MAIL}}'

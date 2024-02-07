@@ -2,18 +2,22 @@ import json
 import sys
 import os
 import ast
+import re
+import requests
 
 from jira import JIRA
 from step_utility import StepUtility
+from requests.auth import HTTPBasicAuth
 
 class Environment:
-    def __init__(self, jira_base_url, jira_username, jira_api_key, action, 
-        issue, issue_project, issue_summary, issue_description, issue_type, issue_components, 
-        existing_comment_id, comment_body, status, jql_query, jql_query_max_results, 
+    def __init__(self, jira_base_url, jira_username, jira_api_key, jira_server_pat, action,
+        issue, issue_project, issue_summary, issue_description, issue_type, issue_components, issue_customfields,
+        existing_comment_id, comment_body, status, jql_query, jql_query_max_results,
         verbose):
         self.jira_base_url = jira_base_url
         self.jira_username = jira_username
         self.jira_api_key = jira_api_key
+        self.jira_server_pat = jira_server_pat
         self.action = action
         self.issue = issue
         self.issue_project = issue_project
@@ -21,6 +25,7 @@ class Environment:
         self.issue_description = issue_description
         self.issue_type = issue_type
         self.issue_components = issue_components
+        self.issue_customfields = issue_customfields
         self.existing_comment_id = existing_comment_id
         self.comment_body = comment_body
         self.status = status
@@ -28,9 +33,23 @@ class Environment:
         self.jql_query_max_results = jql_query_max_results
         self.verbose = verbose
 
+def valudate_input(current_environment):
+    if not current_environment.jira_api_key and current_environment.jira_username:
+        raise Exception('JIRA_API_KEY required for basic authentication')
+
+    if current_environment.jira_api_key and not current_environment.jira_username:
+        raise Exception('JIRA_USERNAME required for basic authentication')
+
+    if not current_environment.jira_api_key and not current_environment.jira_server_pat:
+        raise Exception('Credentials not provided')
+
+    if current_environment.jira_api_key and current_environment.jira_server_pat:
+        raise Exception('Only one of JIRA_API_KEY and JIRA_SERVER_PAT allowed')
+
 
 def main():
     current_environment = environment_setup()
+    valudate_input(current_environment)
     authenticated_jira = authentication(current_environment)
     step_action(current_environment.action, authenticated_jira, current_environment)
 
@@ -41,6 +60,7 @@ def environment_setup():
     jira_base_url = StepUtility.getEnvironmentVariable('JIRA_BASE_URL', env)
     jira_username = StepUtility.getEnvironmentVariable('JIRA_USERNAME', env)
     jira_api_key = StepUtility.getEnvironmentVariable('JIRA_API_KEY', env)
+    jira_server_pat = StepUtility.getEnvironmentVariable('JIRA_SERVER_PAT', env)
     action = StepUtility.getEnvironmentVariable('ACTION', env)
 
     # Logic here to use the regex to grab the jira issue key and assign it to issue
@@ -75,6 +95,9 @@ def environment_setup():
             component_string = "{'name': '" + component + "'}"
             issue_components.append(ast.literal_eval(component_string))
 
+    # Retrieve customfields
+    issue_customfields = StepUtility.getEnvironmentVariable('ISSUE_CUSTOMFIELDS', env)
+
     # Retrieve the comment information
     existing_comment_id = StepUtility.getEnvironmentVariable('JIRA_COMMENT_ID', env)
     comment_body = StepUtility.getEnvironmentVariable('COMMENT_BODY', env)
@@ -93,6 +116,7 @@ def environment_setup():
         jira_base_url,
         jira_username,
         jira_api_key,
+        jira_server_pat,
         action,
         issue,
         issue_project,
@@ -100,19 +124,28 @@ def environment_setup():
         issue_description,
         issue_type,
         issue_components,
+        issue_customfields,
         existing_comment_id,
         comment_body,
         status,
         jql_query,
         jql_query_max_results,
-        verbose)    
+        verbose)
     return current_environment
 
 
 def authentication(current_environment):
+    if current_environment.jira_server_pat:
+        # Jira Server authentication with a PAT
+        jira = JIRA(
+            current_environment.jira_base_url,
+            token_auth=current_environment.jira_server_pat
+        )
+        return jira
+
     # Basic authentication with an API Token
     jira = JIRA(
-        current_environment.jira_base_url, 
+        current_environment.jira_base_url,
         basic_auth=(current_environment.jira_username, current_environment.jira_api_key)
     )
     return jira
@@ -128,7 +161,7 @@ def step_action(action, authenticated_jira, current_environment):
         'comment_create': create_comment,
         'comment_update': update_comment,
         'verify_status': verify_issue_status,
-        'update_all_from_jql_query': update_multiple_issues,     
+        'update_all_from_jql_query': update_multiple_issues,
     }
     action_func = actions.get(action, action_required)
     if action_func:
@@ -169,11 +202,39 @@ def create_issue(jira, current_environment):
     new_issue_dict.update(summary = current_environment.issue_summary)
     new_issue_dict.update(description = current_environment.issue_description)
     new_issue_dict.update(issuetype = ast.literal_eval(current_environment.issue_type))
-    new_issue_dict.update(components = current_environment.issue_components)
+    if (current_environment.issue_components):
+        new_issue_dict.update(components = current_environment.issue_components)
+
+    # print(current_environment.issue_customfields)
+    # sys.exit(1)
+
+    if current_environment.issue_customfields:
+
+        url = '{}/rest/api/3/field'.format(current_environment.jira_base_url)
+
+        response = requests.request('GET', url, auth=HTTPBasicAuth(current_environment.jira_username, current_environment.jira_api_key))
+
+        data = response.json()
+
+        customfields = current_environment.issue_customfields.lstrip('[').rstrip(']')
+
+        kv_pairs = re.findall(r'(\w+.*?)\s*=\s*(.*?)(?=(?:\s[^\s=]+|$))', customfields)
+
+        for k, v in kv_pairs:
+
+            if 'customfield' not in k:
+                for item in data:
+                    if k in item['name']:
+                        customfield_id = item['id']
+                new_issue_dict[customfield_id] = v
+            else:
+                new_issue_dict[k] = v
 
     try:
         created_issue = jira.create_issue(new_issue_dict)
         print("Jira issue " + str(created_issue) + " created")
+        StepUtility.export_variable("JIRA_ISSUE_ID", created_issue)
+        StepUtility.export_variable("main_CF_OUTPUT_URL", str(current_environment.jira_base_url) + "/browse/" + str(created_issue))
     except Exception as exc:
         StepUtility.printCleanException(exc)
         StepUtility.printFail("Exiting Step - Failed to create issue")
@@ -181,7 +242,7 @@ def create_issue(jira, current_environment):
 
 
 def transition_issue(jira, current_environment):
-    print("\nTransition issue status")    
+    print("\nTransition issue status")
     issue = retrieve_jira_issue(jira, current_environment.issue)
     print("Current issue status: " + str(issue.fields.status))
     print("Desired issue status: " + current_environment.status)
@@ -190,7 +251,7 @@ def transition_issue(jira, current_environment):
         print("Skipping transition as desired state is already met")
     else:
         # Verbose: Print the list of viable transitions before the transition takes place
-        if current_environment.verbose == "true":          
+        if current_environment.verbose == "true":
             transition_list = jira.transitions(current_environment.issue)
             print("Viable transition statuses before:")
             for transition in transition_list:
@@ -210,7 +271,7 @@ def transition_issue(jira, current_environment):
             sys.exit(1)
 
         # Verbose: Print the list of viable transitions after the transition takes place
-        if current_environment.verbose == "true":      
+        if current_environment.verbose == "true":
             print()
             transition_list = jira.transitions(current_environment.issue)
             print("Viable transition statuses after:")
@@ -226,12 +287,12 @@ def transition_issue(jira, current_environment):
 def update_issue(jira, current_environment):
     print("\nUpdate issue")
     issue = retrieve_jira_issue(jira, current_environment.issue)
-    perform_jira_update(jira, current_environment, issue)   
+    perform_jira_update(jira, current_environment, issue)
 
 
 def update_multiple_issues(jira, current_environment):
     print("\nUpdate multiple issues from JQL query")
-    issues_found = jql_query(jira, current_environment)    
+    issues_found = jql_query(jira, current_environment)
     for issue in issues_found:
         perform_jira_update(jira, current_environment, issue)
 
@@ -265,18 +326,18 @@ def verify_issue_status(jira, current_environment):
         # If they have a jql query specified, retrieve the list of issues to be verified
         if current_environment.jql_query:
             issues_to_verify.extend(jql_query(jira, current_environment))
-        
+
         print("\nVerify issue transition status")
         print("Desired Status: " + str(current_environment.status))
-        for current_issue in issues_to_verify:    
+        for current_issue in issues_to_verify:
             if str(current_issue.fields.status) == current_environment.status:
                 print(str(current_issue) + ": " + str(current_issue.fields.status))
             else:
-                StepUtility.printFail("Exiting Step - Jira Issue " 
-                    + str(current_issue) 
-                    + "\n Current Status: " 
+                StepUtility.printFail("Exiting Step - Jira Issue "
+                    + str(current_issue)
+                    + "\n Current Status: "
                     + str(current_issue.fields.status)
-                    + "\n Desired status: " 
+                    + "\n Desired status: "
                     + str(current_environment.status))
                 sys.exit(1)
         print("Successfully verified status")

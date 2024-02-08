@@ -1,4 +1,4 @@
-healthfrom gql import Client, gql
+from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
 import os
 import logging
@@ -84,7 +84,7 @@ def main():
     if health != "HEALTHY":
         logging.error("Health Status is not HEALTHY. Exiting with error.")
         sys.exit(1)
-    if (sync == 'OUT_OF_SYNC'
+    if sync == 'OUT_OF_SYNC':
         logging.error("Sync Status is OUT OF SYNC. Exiting with error.")
         sys.exit(1)
 #######################################################################

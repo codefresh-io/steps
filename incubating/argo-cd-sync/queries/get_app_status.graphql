@@ -1,18 +1,17 @@
-query ApplicationsStatusesQuery(
-  $runtime: String!
-  $name: String!
-  $namespace: String
-) {
-  application(runtime: $runtime, name: $name, namespace: $namespace) {
+query appstatus ($name: String!) {
+  applicationProxyQuery(
+		name: $name
+  ){
     metadata {
-      runtime
       name
-      namespace
-      cluster
-      __typename
     }
-    healthStatus
-    syncStatus
-    syncPolicy
+    status {
+      health {
+        status
+      }
+      sync {
+        status
+      }
+    }
   }
 }

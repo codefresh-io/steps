@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.2] - 2024-01-17
+### Changed
+New graphql call to speed up query
+
 ## [1.4.1] - 2023-10-31
 ### Changed
 Add CA_BUNDLE option

@@ -1,0 +1,18 @@
+query ApplicationsStatusesQuery(
+  $runtime: String!
+  $name: String!
+  $namespace: String
+) {
+  application(runtime: $runtime, name: $name, namespace: $namespace) {
+    metadata {
+      runtime
+      name
+      namespace
+      cluster
+      __typename
+    }
+    healthStatus
+    syncStatus
+    syncPolicy
+  }
+}

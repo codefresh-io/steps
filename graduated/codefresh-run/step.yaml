@@ -1,7 +1,6 @@
 version: '1.0'
 kind: step-type
 metadata:
-dd
   name: codefresh-run
   title: Run a Codefresh pipeline
   version: 1.5.3

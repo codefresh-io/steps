@@ -76,7 +76,7 @@ spec:
           },
           "exclude_blobs": {
               "type": "boolean",
-              "description": "Filter out all blobs (file contents)."
+              "description": "(boolean) Filter out all blobs (file contents). The default value is False."
           }
       }
     }

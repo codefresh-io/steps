@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:3.8-alpine
 
 # using same aws-cli that was used before moving to quay images to prevent regressions
 ARG CLI_VERSION=1.16.284

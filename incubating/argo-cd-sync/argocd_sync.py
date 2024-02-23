@@ -1,5 +1,6 @@
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
+from gql.transport.exceptions import TransportQueryError
 import os
 import logging
 import time
@@ -12,17 +13,17 @@ APPLICATION = os.getenv('APPLICATION')
 
 # Wait and Rollback options
 WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else False
-INTERVAL    = int(os.getenv('INTERVAL'))
-MAX_CHECKS  = int(os.getenv('MAX_CHECKS'))
+INTERVAL     = int(os.getenv('INTERVAL'))
+MAX_CHECKS   = int(os.getenv('MAX_CHECKS'))
 
 WAIT_ROLLBACK = True if os.getenv('WAIT_ROLLBACK', "false").lower() == "true" else False
-ROLLBACK    = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
+ROLLBACK      = True if os.getenv('ROLLBACK', "false").lower() == "true" else False
 if WAIT_ROLLBACK: ROLLBACK = True
 
-CF_URL      = os.getenv('CF_URL', 'https://g.codefresh.io')
-CF_API_KEY  = os.getenv('CF_API_KEY')
-CF_STEP_NAME= os.getenv('CF_STEP_NAME', 'STEP_NAME')
-LOG_LEVEL   = os.getenv('LOG_LEVEL', "error")
+CF_URL       = os.getenv('CF_URL', 'https://g.codefresh.io')
+CF_API_KEY   = os.getenv('CF_API_KEY')
+CF_STEP_NAME = os.getenv('CF_STEP_NAME', 'STEP_NAME')
+LOG_LEVEL    = os.getenv('LOG_LEVEL', "error")
 
 # Check the certificate or not accessing the API endpoint
 VERIFY      = True if os.getenv('INSECURE', "False").lower() == "false" else False
@@ -68,8 +69,9 @@ def main():
             logging.info("Latest healthy revision is %d", revision)
 
             rollback(ingress_host, namespace, revision)
-            logging.info("Waiting for rollback to happen")
+
             if WAIT_ROLLBACK:
+                logging.info("Waiting for rollback to happen")
                 health, sync = waitHealthy (ingress_host)
             else:
                 time.sleep(INTERVAL)
@@ -136,15 +138,15 @@ def waitHealthy (ingress_host):
 
     time.sleep(INTERVAL)
     health, sync = get_app_status(ingress_host)
-    logging.info("App status is Health: %s and sync:%s", health, sync)
+    logging.info("App health: %s and sync: %s", health, sync)
     loop=0
     while ((health != "HEALTHY") or (sync == 'OUT_OF_SYNC')) and loop < MAX_CHECKS:
-        logging.info("App status: %s sync: %s after %d checks", health, sync, loop)
+        logging.info("App health: %s and sync: %s after %d checks", health, sync, loop)
         time.sleep(INTERVAL)
         health, sync=get_app_status(ingress_host)
         loop += 1
 
-    logging.debug ("Returning waitHealthy with health '%s' and sync '%s'", health, sync)
+    logging.debug ("Returning waitHealthy with health: '%s' and sync: '%s'", health, sync)
     return health, sync
 
 def rollback(ingress_host, namespace, revision):
@@ -253,8 +255,24 @@ def execute_argocd_sync(ingress_host):
             "prune": True
         }
     }
-    result = client.execute(query, variable_values=variables)
-    logging.debug("Syncing App result: %s", result)
+    try:
+        result = client.execute(query, variable_values=variables)
+    except TransportQueryError:
+        print(f"ERROR: Application {APPLICATION} does not exit")
+        sys.exit(2)
+    except:
+        print(f"ERROR: cannot sync Application {APPLICATION}")
+        logging.debug("Syncing App result: %s", result)
+        sys.exit(1)
+    # finally:
+    #     print("finally block")
+    #     logging.debug("Syncing App result: %s", result)
+        # if result.errors[0].message.contains("NOT_FOUND_ERROR"):
+        #     printf("Application %s does not exit")
+        #
+        # else:
+        #     # Application sync'ed properly
+        #     logging.debug("Syncing App result: %s", result)
 
 
 def export_variable(var_name, var_value):

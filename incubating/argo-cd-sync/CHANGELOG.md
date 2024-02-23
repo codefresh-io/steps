@@ -1,6 +1,9 @@
 # Changelog
 
-## [1.4.3] - 2024-02-06
+## [1.4.3] - 2024-02-22
+### Fixed
+namespace is missing to find the Application
+
 ### Changed
 Move the creation of the link to the application earlier
 Exit with error when app is in OUT_OF_SYNC state

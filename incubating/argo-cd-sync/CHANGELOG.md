@@ -2,7 +2,7 @@
 
 ## [1.4.3] - 2024-02-22
 ### Fixed
-namespace is missing to find the Application
+intercepting application not found for better error message
 
 ### Changed
 Move the creation of the link to the application earlier

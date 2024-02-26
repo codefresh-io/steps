@@ -78,17 +78,22 @@ def main():
                 health, sync = get_app_status(ingress_host)
         else:
             export_variable('ROLLBACK_EXECUTED', "false")
+
+        #
+        # We care about those only if we want a HEALTH app
+        #
+        if health != "HEALTHY":
+            logging.error("Health Status is not HEALTHY. Exiting with error.")
+            sys.exit(1)
+        if sync == 'OUT_OF_SYNC':
+            logging.error("Sync Status is OUT OF SYNC. Exiting with error.")
+            sys.exit(1)
     else:
         export_variable('ROLLBACK_EXECUTED', "false")
 
     export_variable('HEALTH_STATUS', health)
 
-    if health != "HEALTHY":
-        logging.error("Health Status is not HEALTHY. Exiting with error.")
-        sys.exit(1)
-    if sync == 'OUT_OF_SYNC':
-        logging.error("Sync Status is OUT OF SYNC. Exiting with error.")
-        sys.exit(1)
+
 #######################################################################
 
 def getRevision(namespace):
@@ -257,12 +262,16 @@ def execute_argocd_sync(ingress_host):
     }
     try:
         result = client.execute(query, variable_values=variables)
-    except TransportQueryError:
-        print(f"ERROR: Application {APPLICATION} does not exit")
+    except TransportQueryError as err:
+        if "NOT_FOUND_ERROR" in str(err):
+            print(f"ERROR: Application {APPLICATION} does not exist")
+        else:
+            print(f"ERROR: cannot sync Application {APPLICATION}")
+            logging.debug("Syncing App result: %s", err)
         sys.exit(2)
-    except:
+    except Exception as err:
         print(f"ERROR: cannot sync Application {APPLICATION}")
-        logging.debug("Syncing App result: %s", result)
+        logging.debug("Syncing App result: %s", err)
         sys.exit(1)
     # finally:
     #     print("finally block")

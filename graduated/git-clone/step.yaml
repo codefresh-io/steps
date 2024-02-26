@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: git-clone
   title: Clone a Git repository
-  version: 1.0.3
+  version: 1.0.5
   isPublic: true
   description: Clone a Git repository with Codefresh's built in Git provider integration.
   sources:
@@ -73,6 +73,10 @@ spec:
           "depth": {
               "type": "integer",
               "description": "Create a shallow clone with a history truncated to the specified number of commits."
+          },
+          "exclude_blobs": {
+              "type": "boolean",
+              "description": "(boolean) Filter out all blobs (file contents). The default value is False."
           }
       }
     }

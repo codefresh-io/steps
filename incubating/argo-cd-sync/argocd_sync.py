@@ -139,7 +139,7 @@ def getRevision(namespace):
     sys.exit(1)
 
 def waitHealthy (ingress_host):
-    logging.debug ("Entering waitHealthy (ns: %s)", ingress_host)
+    logging.debug ("Entering waitHealthy (host: %s)", ingress_host)
 
     time.sleep(INTERVAL)
     health, sync = get_app_status(ingress_host)

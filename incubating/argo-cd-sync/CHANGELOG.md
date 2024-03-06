@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.4] - 2024-03-06
+### Fixed
+Do not sync an application in auto-sync mode
+
 ## [1.4.3] - 2024-02-22
 ### Fixed
 intercepting application not found for better error message

@@ -5,6 +5,8 @@ import os
 import logging
 import time
 import sys
+import json
+import re
 
 PAGE_SIZE   = 10
 
@@ -54,6 +56,22 @@ def main():
     export_variable(CF_OUTPUT_URL_VAR, link_to_app)
 
     ingress_host = get_runtime_ingress_host()
+
+    # Does the app exist
+    # if not let's wait it has been recorded
+    # but not too long in case of simple misspelling
+    is_app_real=application_exist(ingress_host)
+    count=1
+    while count <3 and is_app_real == False:
+        logging.debug("App does not exist yet %d", count)
+        time.sleep(INTERVAL)
+        count += 1
+        is_app_real=application_exist(ingress_host)
+
+    if application_exist(ingress_host) == False:
+        print(f"ERROR application {APPLICATION} does not seem to exist")
+        sys.exit(3)
+
     if application_autosync(ingress_host) == False:
         execute_argocd_sync(ingress_host)
     else:
@@ -278,6 +296,46 @@ def execute_argocd_sync(ingress_host):
         logging.debug("Syncing App result: %s", err)
         sys.exit(1)
 
+#
+# Check for application existence
+# if it does not exist, it will return 403 error
+#
+# Return True or False
+#
+def application_exist(ingress_host):
+    runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
+    transport = RequestsHTTPTransport(
+        url=runtime_api_endpoint,
+        headers={'authorization': CF_API_KEY},
+        verify=VERIFY,
+        retries=3,
+    )
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    query = get_query('get_app_existence')           ## gets gql query
+    variables = {
+        "applicationName": APPLICATION
+    }
+    try:
+        result = client.execute(query, variable_values=variables)
+    except TransportQueryError as err:
+        data = json.loads(re.sub('\'','\"', str(err)))
+        if (data["message"] == "Forbidden") and (data["extensions"] == 403):
+            return False
+        else:
+            print(f"ERROR: cannot test Application {APPLICATION}")
+            logging.error("Existence App result: %s", err)
+            sys.exit(1)
+    except Exception as err:
+        print(f"ERROR: cannot test Application {APPLICATION}")
+        logging.error("Existence App result: %s", err)
+        sys.exit(1)
+    return True
+
+#
+# Check if app is in auto-sync mode
+#
+# Return True or False
+#
 def application_autosync(ingress_host):
     runtime_api_endpoint = ingress_host + '/app-proxy/api/graphql'
     transport = RequestsHTTPTransport(
@@ -303,6 +361,8 @@ def application_autosync(ingress_host):
         return False
     else:
         return True
+
+
 
 def export_variable(var_name, var_value):
     path = os.getenv('CF_VOLUME_PATH') if os.getenv('CF_VOLUME_PATH') != None else './'

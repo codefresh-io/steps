@@ -8,7 +8,7 @@ metadata:
   sources:
     - 'https://github.com/codefresh-io/steps/tree/master/graduated/build'
   stage: graduated
-  version: 1.2.2
+  version: 1.2.3
   categories:
     - featured
     - docker
@@ -97,7 +97,8 @@ spec:
                 "description": "Disable Codefresh build optimization for the build. <a href=\"https://codefresh.io/docs/docs/troubleshooting/common-issues/disabling-codefresh-caching-mechanisms/\">more info</a>"
             },
             "squash": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Squash newly built layers into a single new layer."
             },
             "image_name": {
                 "type": "string",
@@ -113,6 +114,10 @@ spec:
             "tag": {
                 "type": "string",
                 "description": "The tag that is assigned to the image you build. The default is the name of the branch or revision that is built."
+            },
+            "tag_policy": {
+                "type": "string",
+                "description": "The case-transformation policy for the tag name. One of original to keep tag name as is, or lowercase, the default, to convert to lowercase. For lowercase, tags in mixed case are pushed as image_name:<tagname> ."
             },
             "target": {
                 "type": "string",
@@ -142,7 +147,8 @@ spec:
             },
             "provider": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "description": "Define if to build image with Codefresh, the default, or with an external provider such as Google Cloud Build (gcb). If not used, the pipeline builds the image locally on the pipeline pod. gcb  requires additional arguments: google_app_creds, cache - both repo and ttl, timeout, machineType, logsBucket, and diskSizeGb . See example for details."
             },
             "platform": {
                 "type": "string",

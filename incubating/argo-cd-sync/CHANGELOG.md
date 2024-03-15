@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.4] - 2024-03-07
+### Fixed
+Do not sync an application in auto-sync mode
+Check for application existence before anything is done
+
 ## [1.4.3] - 2024-02-22
 ### Fixed
 intercepting application not found for better error message

@@ -1,8 +1,9 @@
 # Changelog
 
-## [1.4.5] - 2024-03-15
+## [1.4.5] - 2024-04-02
 ### Fixed
 - fixing CVEs
+- upgrade requirements.txt
 
 ## [1.4.4] - 2024-03-07
 ### Fixed

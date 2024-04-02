@@ -1,4 +1,4 @@
-FROM    python:3.12.2-bookworm
+FROM    python:3.13.0a5-bookworm
 WORKDIR /app
 COPY    requirements.txt requirements.txt
 RUN     pip3 install --upgrade pip

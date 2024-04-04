@@ -4,6 +4,7 @@
 ### Fixed
 - fixing CVEs
 - upgrade requirements.txt
+- install Python modules locally
 
 ## [1.4.4] - 2024-03-07
 ### Fixed

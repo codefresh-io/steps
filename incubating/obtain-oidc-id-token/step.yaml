@@ -108,6 +108,7 @@ spec:
     main:
       name: obtain-oidc-id-token
       image: quay.io/codefreshplugins/curl-jq
+      shell: bash
       environment:
         - 'AUDIENCE=${{AUDIENCE}}'
       commands:

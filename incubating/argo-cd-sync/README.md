@@ -1,5 +1,7 @@
 # gitops-argocd-sync
 
+# The step is deprecated. Use gitops-argocd-sync instead.
+
 Syncs Argo CD apps managed by our GitOps Runtimes using Codefresh API
 
 ##  Installation 

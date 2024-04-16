@@ -1,7 +1,7 @@
 # gitops-argocd-sync
 
 > [!WARNING]
-> The step is deprecated. Use gitops-argocd-sync instead.
+> The step is deprecated. Use [gitops-argocd-sync](https://github.com/codefresh-io/steps/blob/master/graduated/gitops-argocd-sync) instead.
 
 Syncs Argo CD apps managed by our GitOps Runtimes using Codefresh API
 

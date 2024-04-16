@@ -356,8 +356,8 @@ def application_autosync(ingress_host):
         logging.debug("Application Sync policy result: %s", err)
         sys.exit(1)
 
-    logging.debug("App sync Policy: ", result['applicationProxyQuery']['spec']['syncPolicy']['automated'])
-    if result['applicationProxyQuery']['spec']['syncPolicy']['automated'] == None:
+    #logging.debug("App sync Policy: ", result['applicationProxyQuery']['spec']['syncPolicy']['automated'])
+    if result['applicationProxyQuery']['spec']['syncPolicy'] == None or result['applicationProxyQuery']['spec']['syncPolicy']['automated'] == None:
         return False
     else:
         return True

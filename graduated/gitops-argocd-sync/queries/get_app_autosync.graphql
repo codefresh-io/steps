@@ -1,0 +1,17 @@
+query appsyncstatus ($applicationName: String!) {
+
+applicationProxyQuery(
+		name: $applicationName
+  ){
+    metadata {
+      name
+    }
+    spec {
+      syncPolicy {
+        automated {
+          prune
+        }
+      }
+    }
+  }
+}

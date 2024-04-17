@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: argo-cd-sync
-  version: 1.4.4
+  version: 1.4.5
   isPublic: true
   description: The step is deprecated. Use gitops-argocd-sync instead. Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -120,7 +120,7 @@ spec:
         },
         "IMAGE_TAG": {
           "type": "string",
-          "default": "1.4.4",
+          "default": "1.4.5",
           "description": "OPTIONAL - To overwrite the tag to use"
         }
       }
@@ -157,7 +157,7 @@ spec:
       [[ if .Arguments.CA_BUNDLE ]]
         - echo [[ .Arguments.CA_BUNDLE ]] | base64 -d >/root/bundle.pem
       [[ end ]]
-        - cd /app
+        - cd /home/codefresh
         - python3 run.py
 
   delimiters:

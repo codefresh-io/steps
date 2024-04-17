@@ -1,0 +1,11 @@
+backoff==2.2.1
+certifi==2024.2.2
+charset-normalizer==3.3.2
+gql==3.5.0
+graphql-core==3.2.3
+idna==3.6
+multidict==6.0.5
+requests==2.31.0
+requests-toolbelt==1.0.0
+urllib3==2.2.1
+yarl==1.9.4

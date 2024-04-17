@@ -1,11 +1,11 @@
 kind: step-type
 metadata:
-  name: argo-cd-sync
+  name: gitops-argocd-sync
   version: 1.4.5
   isPublic: true
-  description: The step is deprecated. Use gitops-argocd-sync instead. Syncs Argo CD apps managed by our GitOps Runtimes
+  description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
-    - 'https://github.com/codefresh-io/steps/tree/master/incubating/argo-cd-sync'
+    - 'https://github.com/codefresh-io/steps/tree/master/graduated/gitops-argocd-sync'
   stage: incubating
   maintainers:
     - name: Francisco Cocozza
@@ -25,7 +25,7 @@ metadata:
       workflow:
         sync_argo_cd_app:
           title: Sync Argo CD app
-          type: argo-cd-sync
+          type: gitops-argocd-sync
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
@@ -33,7 +33,7 @@ metadata:
       workflow:
         sync_argo_cd_app:
           title: Sync Argo CD app
-          type: argo-cd-sync
+          type: gitops-argocd-sync
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
@@ -44,7 +44,7 @@ metadata:
       workflow:
         sync_argo_cd_app:
           title: Sync Argo CD app
-          type: argo-cd-sync
+          type: gitops-argocd-sync
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
@@ -91,7 +91,7 @@ spec:
         },
         "ROLLBACK": {
           "type": "boolean",
-          "description": "OPTIONAL - Initiate a rollback to the latest Healdy revision if the Sync and Wait does not become healthy",
+          "description": "OPTIONAL - Initiate a rollback to the previous revision if the Sync and Wait does not become healthy",
           "default": false
         },
         "WAIT_ROLLBACK": {
@@ -101,7 +101,7 @@ spec:
         },
         "CA_BUNDLE": {
           "type": "string",
-          "description": "OPTIONAL - a base64 encoded stringnthat contain the complete CA Certificate Bundle"
+          "description": "OPTIONAL - a base64 encoded string that contain the complete CA Certificate Bundle"
         },
         "INSECURE": {
           "type": "boolean",
@@ -115,7 +115,7 @@ spec:
         },
         "IMAGE_NAME": {
           "type": "string",
-          "default": "quay.io/codefreshplugins/argo-cd-sync",
+          "default": "quay.io/codefreshplugins/gitops-argocd-sync",
           "description": "OPTIONAL - To overwrite the image name to use"
         },
         "IMAGE_TAG": {
@@ -138,7 +138,7 @@ spec:
         "properties": {
             "HEALTH_STATUS": {
                 "type": "string",
-                "description": "The heatlh status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
+                "description": "The health status of the application: HEALTHY, PROGRESSING, DEGRADED or SUSPENDED"
             },
             "ROLLBACK_EXECUTED": {
                 "type": "string",

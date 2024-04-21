@@ -165,7 +165,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: codefreshplugins/git-commit:0.1.3
+      image: codefreshplugins/git-commit:0.1.4
       shell: bash
       environment:
         - REPO=${{repo}}

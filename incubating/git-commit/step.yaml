@@ -198,7 +198,8 @@ spec:
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
         - |-
-          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          ENCODED_GIT_ACCESS_TOKEN=$(echo -n "${GIT_ACCESS_TOKEN}" | jq -sRr @uri)
+          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$ENCODED_GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
             echo ${PRIVATE_KEY:1:-1} | sed 's/\\n/\n/g' > ~/.ssh/codefresh

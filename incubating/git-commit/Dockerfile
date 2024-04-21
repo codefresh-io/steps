@@ -1,5 +1,5 @@
 # Moving to ubuntu instead of debian to solve high vulnerabilities
-FROM ubuntu:jammy-20221101
+FROM ubuntu:jammy
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \

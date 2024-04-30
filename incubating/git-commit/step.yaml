@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.1.3
+  version: 0.1.4
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -165,7 +165,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: codefreshplugins/git-commit:0.1.3
+      image: codefreshplugins/git-commit:0.1.4
       shell: bash
       environment:
         - REPO=${{repo}}
@@ -198,7 +198,8 @@ spec:
         - git commit ${ALLOW_EMPTY} -m "${COMMIT_MESSAGE}"
         - git status
         - |-
-          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
+          ENCODED_GIT_ACCESS_TOKEN=$(echo -n "${GIT_ACCESS_TOKEN}" | jq -sRr @uri)
+          REPO_URL="https://$GIT_ACCESS_TOKEN_USER:$ENCODED_GIT_ACCESS_TOKEN@$GIT_FQDN/$REPO.git"
           if [ "$USE_SSH" = "true" ]; then
             [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
             echo ${PRIVATE_KEY:1:-1} | sed 's/\\n/\n/g' > ~/.ssh/codefresh

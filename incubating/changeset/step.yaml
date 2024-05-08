@@ -1,0 +1,95 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: changeset
+  version: 3.0.0
+  isPublic: true
+  description: Automate adding a changeset for simple pull requests
+  sources:
+    - https://github.com/codefresh-io/steps/tree/master/incubating/changeset
+  stage: incubating
+  maintainers:
+    - name: Laurent Rochette
+    - email: laurent.rochette@codefresh.io
+  categories:
+    - git
+  official: true
+  tags: []
+  icon:
+    type: image
+    size:
+      large:
+        url: >-
+           https://raw.githubusercontent.com/codefresh-io/steps/master/incubating/changeset/images/icon-2.svg
+  examples:
+    - description: Create a new Changeset
+      workflow:
+        createChange:
+          title: Create a Changeset
+          type: changeset
+          stage: clone
+          arguments:
+            TYPE: major
+            NAME: foo
+            SUMMARY: "my changeset for demo"
+            GH_TOKEN: ${{GH_TOKEN}}
+
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "GH_TOKEN"
+      ],
+      "properties": {
+        "CHANGESET_IMAGE": {
+          "type": "string",
+          "default": "quay.io/codefreshplugins/changeset",
+          "description": "The Changeset container registry/image for the step."
+        },
+        "CHANGESET_VERSION": {
+          "type": "string",
+          "default": "3.0.0",
+          "description": "Version of the Changeset image to use, Docker image tag."
+        },
+        "TYPE": {
+            "type": "string",
+            "description": "The SemVer type <major|minor|patch> to use when running manually and so the 'changeset:<type>' pull request label won't be used."
+        },
+        "NAME": {
+            "type": "string",
+            "description": "The changeset summary to use when running manually. If not specified, the pull request title will be used"
+        },
+        "GH_TOKEN": {
+            "type": "string",
+            "description": "GitHub token to use when getting changed files"
+        }
+      }
+    }
+  returns: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "patterns": [],
+        "required": [],
+        "properties": {}
+    }
+  stepsTemplate: |-
+    changeset:
+      name: Create a Changeset
+      title: Use REST API to close the CR
+      image: '[[.Arguments.CHANGESET_IMAGE]]:[[.Arguments.CHANGESET_VERSION]]'
+      environment:
+      [[ range $key, $val := .Arguments ]]
+        - '[[ $key ]]=[[ $val ]]'
+      [[- end ]]
+    [[ end ]]
+  delimiters:
+    left: '[['
+    right: ']]'

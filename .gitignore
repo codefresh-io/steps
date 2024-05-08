@@ -6,3 +6,4 @@ steps.iml
 .idea/
 .vscode
 .DS_Store
+.changeset

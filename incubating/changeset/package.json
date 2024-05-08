@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "name": "changeset-action",
+  "version": "3.0.0",
+  "description": "Automate adding a changeset for simple pull requests",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/generates/changeset-action.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/generates/changeset-action/issues"
+  },
+  "homepage": "https://github.com/generates/changeset-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
+    "@changesets/write": "^0.1.5",
+    "@generates/logger": "^2.0.0",
+    "@ianwalter/dot": "^1.0.5",
+    "execa": "^5.1.1",
+    "read-pkg-up": "^8.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@ianwalter/eslint-config": "^6.2.0",
+    "@ianwalter/renovate-config": "^1.4.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@ianwalter"
+    ]
+  },
+  "renovate": {
+    "extends": [
+      "@ianwalter"
+    ]
+  }
+}

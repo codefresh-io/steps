@@ -222,6 +222,11 @@ spec:
         "CF_DOCKERFILE_CONTENT": {
           "type": "string",
           "description": "Content of the Dockerfile used for building image base64 encoded"
+        },
+        "CF_VERBOSE": {
+          "type": "string",
+          "description": "Enables verbose logging",
+          "default: "false",
         }
       }
     }

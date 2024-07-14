@@ -123,7 +123,7 @@ spec:
   stepsTemplate: |-
     pagerduty-alert:
       name: pagerduty-alert
-      image: quay.io/codefreshplugins/pagerduty-alert:1.0.2
+      image: quay.io/codefreshplugins/pagerduty-alert:1.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

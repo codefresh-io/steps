@@ -36,6 +36,16 @@ metadata:
             FROM_EMAIL: dustin@codefresh.io
             TITLE: "Codefresh Build Failed: ${{CF_BUILD_URL}}"
             SERVICE_ID: 87hsd2fh38gh7g
+    - description: submit-event
+      workflow:
+        SubmitEvent:
+          type: pagerduty-alert
+          arguments:
+            API_TOKEN: x2392fhhgdys867gt3fd
+            PAGERDUTY_ALERT_TYPE: event
+            PAGERDUTY_SEVERITY: error
+            EVENT_SOURCE: Codefresh
+            EVENT_SUMMARY: "Codefresh Build Failed: ${{CF_BUILD_URL}}"
     - description: submit-change-event
       workflow:
         SubmitChangeEvent:

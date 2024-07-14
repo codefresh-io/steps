@@ -78,6 +78,7 @@ spec:
           "default": "change_event",
           "enum": [
             "incident",
+            "event",
             "change_event"
           ]
         },

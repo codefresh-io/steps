@@ -13,6 +13,7 @@ def main():
     service_id = os.getenv('SERVICE_ID')
     title = os.getenv('TITLE')
     pagerduty_type = os.getenv('PAGERDUTY_ALERT_TYPE')
+    pagerduty_severity = os.getenv('PAGERDUTY_SEVERITY')
 
     if pagerduty_type == 'incident':
         session = APISession(api_token, default_from=from_email)

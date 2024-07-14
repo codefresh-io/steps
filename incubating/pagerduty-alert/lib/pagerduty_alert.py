@@ -38,6 +38,17 @@ def main():
 
         pd_incident = session.rpost('incidents', json=payload)
 
+    elif pagerduty_type == 'event':
+        session = EventsAPISession(api_token)
+
+        pd_event = session.trigger(
+            summary='{}'.format(event_summary),
+            source='{}'.format(event_source),
+            severity='{}'.format(pagerduty_severity),
+            custom_details={"Build ID":'{}'.format(cf_build_id)},
+            links=[{'href':'{}'.format(cf_build_url)}]
+        )
+
     elif pagerduty_type == 'change_event':
 
         session = ChangeEventsAPISession(api_token)

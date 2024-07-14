@@ -1,6 +1,5 @@
 import os
-from pdpyras import APISession
-from pdpyras import ChangeEventsAPISession
+from pdpyras import APISession, EventsAPISession, ChangeEventsAPISession
 
 def main():
 

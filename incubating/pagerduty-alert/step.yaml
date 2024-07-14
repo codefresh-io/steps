@@ -4,7 +4,7 @@ metadata:
   name: pagerduty-alert
   version: 1.1.0
   isPublic: true
-  description: Sends Alerts (Incidents or Change Events) to PagerDuty API
+  description: Sends events to PagerDuty via the Events or REST APIs (v2)
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/pagerduty-alert
   stage: incubating

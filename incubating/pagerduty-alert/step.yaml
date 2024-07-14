@@ -81,6 +81,17 @@ spec:
             "change_event"
           ]
         },
+        "PAGERDUTY_SEVERITY": {
+          "type": "string",
+          "description": "Optional for event type, PagerDuty Severity",
+          "default": "error",
+          "enum": [
+            "critical",
+            "error",
+            "warning",
+            "info"
+          ]
+        },
         "ASSIGNEE_USER_ID": {
           "type": "string",
           "description": "Optional for incident type when an escalation policy is in place, PagerDuty User ID"

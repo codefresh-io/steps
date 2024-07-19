@@ -152,6 +152,11 @@ spec:
           "type": "string",
           "description": "Gerrit password."
         },
+        "CF_INSECURE": {
+          "type": "string",
+          "description": "Disable TLS with workflow steps.",
+          "default: "false"
+        },
         "CF_JIRA_API_TOKEN": {
           "type": "string",
           "description": "When no jira integration is specified: Jira token for authenticating."
@@ -223,6 +228,11 @@ spec:
           "type": "string",
           "description": "Content of the Dockerfile used for building image base64 encoded"
         },
+        "NODE_TLS_REJECT_UNAUTHORIZED": {
+          "type": "string",
+          "description": "Disable client TlS.",
+          "default: "1"
+        },
         "CF_VERBOSE": {
           "type": "string",
           "description": "Enables verbose logging",
@@ -252,8 +262,10 @@ spec:
       working_directory: /code
       environment:
         - CF_CI_TYPE=classic
+        - CF_INSECURE==${{CF_INSECURE}}
         - CF_WORKFLOW_URL=${{CF_BUILD_URL}}
         - CF_WORKFLOW_NAME=${{CF_PIPELINE_NAME}}
+        - NODE_TLS_REJECT_UNAUTHORIZED=${{NODE_TLS_REJECT_UNAUTHORIZED}}
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]

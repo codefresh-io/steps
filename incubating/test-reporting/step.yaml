@@ -45,6 +45,7 @@ metadata:
               branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
+              max_upload_size_mb: 1000
 
 spec:
   arguments: |-
@@ -113,6 +114,9 @@ spec:
         [[ end ]]
         [[ if .Arguments.storage_integration ]]
           - CF_STORAGE_INTEGRATION=[[ .Arguments.storage_integration ]]
+        [[ end ]]
+        [[ if .Arguments.max_upload_size_mb ]]
+          - MAX_UPLOAD_SIZE_MB=[[ .Arguments.max_upload_size_mb ]]
         [[ end ]]
           - CF_STEP_NAME=first
           - CF_VOLUME_PATH=/meta

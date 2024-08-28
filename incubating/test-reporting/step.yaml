@@ -94,7 +94,7 @@ spec:
   stepsTemplate: |-
     first:
       title: Generate test reporting
-      image: codefresh/cf-docker-test-reporting:test-report-link
+      image: codefresh/cf-docker-test-reporting:scmecr-19339add-max-file-upload-argument
       environment:
         [[ if .Arguments.allure_dir ]]
           - ALLURE_DIR=[[ .Arguments.allure_dir ]]

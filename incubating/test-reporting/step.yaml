@@ -45,7 +45,6 @@ metadata:
               branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
-              max_upload_size_mb: 1000
 
 spec:
   arguments: |-
@@ -85,8 +84,11 @@ spec:
             "branch" : {
                 "type": "string",
                 "description": "Normalized branch name"
+            },
+            "max_upload_size_mb": {
+                "type": "integer",
+                "description": "Max upload size in MB. The default is 1000MB"
             }
-
         }
     }
   stepsTemplate: |-

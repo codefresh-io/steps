@@ -77,6 +77,10 @@ spec:
                 "type": "string",
                 "description": "Directory with test report files"
             },
+            "report_path": {
+                "type": "string",
+                "description": "Path where the report files are saved in the bucket"
+            },
             "report_index_file": {
                 "type": "string",
                 "description": "Root file that will be open in report"
@@ -88,6 +92,10 @@ spec:
             "max_upload_size_mb": {
                 "type": "integer",
                 "description": "Max upload size in MB. The default is 1000MB"
+            },
+            "cf_api_retries": {
+                "type": "integer",
+                "description": "The number of times to retry if a Codefresh API call fails. The default is 0"
             }
         }
     }
@@ -108,6 +116,9 @@ spec:
         [[ if .Arguments.report_dir ]]
           - REPORT_DIR=[[ .Arguments.report_dir ]]
         [[ end ]]
+        [[ if .Arguments.report_path ]]
+          - REPORT_PATH=[[ .Arguments.report_path ]]
+        [[ end ]]
         [[ if .Arguments.report_index_file ]]
           - REPORT_INDEX_FILE=[[ .Arguments.report_index_file ]]
         [[ end ]]
@@ -119,6 +130,9 @@ spec:
         [[ end ]]
         [[ if .Arguments.max_upload_size_mb ]]
           - MAX_UPLOAD_SIZE_MB=[[ .Arguments.max_upload_size_mb ]]
+        [[ end ]]
+        [[ if .Arguments.cf_api_retries ]]
+          - CF_API_RETRIES=[[ .Arguments.cf_api_retries ]]
         [[ end ]]
           - CF_STEP_NAME=first
           - CF_VOLUME_PATH=/meta

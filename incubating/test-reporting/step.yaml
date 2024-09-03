@@ -45,6 +45,7 @@ metadata:
               branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
+              image_tag: 1.2.0-scmecr-19339add-max-file-upload-argument
 
 spec:
   arguments: |-
@@ -96,13 +97,17 @@ spec:
             "cf_api_retries": {
                 "type": "integer",
                 "description": "The number of times to retry if a Codefresh API call fails. The default is 0"
+            },
+            "image_tag": {
+                "type": "string",
+                "description": "The version of test reporting image. The default is 1.2.0"
             }
         }
     }
   stepsTemplate: |-
     first:
       title: Generate test reporting
-      image: codefresh/cf-docker-test-reporting:1.2.0-scmecr-19339add-max-file-upload-argument
+      image: codefresh/cf-docker-test-reporting:[[ .Arguments.image_tag ]]
       environment:
         [[ if .Arguments.allure_dir ]]
           - ALLURE_DIR=[[ .Arguments.allure_dir ]]

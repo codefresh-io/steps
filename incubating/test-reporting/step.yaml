@@ -5,7 +5,7 @@ metadata:
   version: 1.2.0
   title: Test reporting
   isPublic: true
-  description: Upload test report to some your storage integration.
+  description: Upload test report data to your storage integration.
   sources:
     - 'https://github.com/codefresh-io/cf-docker-test-reporting'
   stage: incubating
@@ -45,8 +45,6 @@ metadata:
               branch: ${{CF_BRANCH_TAG_NORMALIZED}}
               report_dir: mochawesome-report
               report_index_file: mochawesome.html
-              image_tag: 1.2.0-scmecr-19339add-max-file-upload-argument
-
 spec:
   arguments: |-
     {
@@ -92,15 +90,18 @@ spec:
             },
             "max_upload_size_mb": {
                 "type": "integer",
-                "description": "Max upload size in MB. The default is 1000MB"
+                "description": "Max upload size in MB",
+                "default": 1000
             },
             "cf_api_retries": {
                 "type": "integer",
-                "description": "The number of times to retry if a Codefresh API call fails. The default is 0"
+                "description": "The number of times to retry if a Codefresh API call fails",
+                "default": 0
             },
             "image_tag": {
                 "type": "string",
-                "description": "The version of test reporting image. The default is 1.2.0"
+                "description": "The version of test reporting image",
+                "default": "1.2.0-scmecr-19339add-max-file-upload-argument"
             }
         }
     }

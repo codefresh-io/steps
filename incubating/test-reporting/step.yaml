@@ -101,7 +101,7 @@ spec:
             "image_tag": {
                 "type": "string",
                 "description": "The version of test reporting image",
-                "default": "1.2.0-scmecr-19339add-max-file-upload-argument"
+                "default": "1.2.0"
             }
         }
     }

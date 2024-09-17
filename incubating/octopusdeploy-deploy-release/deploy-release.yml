@@ -9,7 +9,7 @@ metadata:
   sources:
     - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-deploy-release"
   stage: incubating
-  official: false
+  official: true
   categories:
     - deployment
   icon:
@@ -21,7 +21,7 @@ metadata:
   examples:
     - workflow:
         deploy-release:
-          type: octopusdeploy/deploy-release
+          type: octopusdeploy-deploy-release
           arguments:
             OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
             OCTOPUS_URL: "${{OCTOPUS_URL}}"

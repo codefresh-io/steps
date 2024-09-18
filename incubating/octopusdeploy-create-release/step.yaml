@@ -1,0 +1,169 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-create-release
+  version: 1.0.0
+  title: Create a release in Octopus Deploy
+  isPublic: true
+  description: Create a release in Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-create-release"
+  stage: incubating
+  official: true
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-create-release/create_release.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - description: Basic usage of the create release step
+      workflow:
+        create-release:
+          type: octopusdeploy-create-release
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PROJECT: "Project Name"
+    - description: Complex usage of the create release step
+      workflow:
+        create-release:
+          type: octopusdeploy-create-release
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PROJECT: "Project Name"
+            RELEASE_NUMBER: "1.0.0"
+            CHANNEL: "Channel Name"
+            GIT_REF: "refs/heads/main"
+            GIT_COMMIT: "Commit ID"
+            PACKAGE_VERSION: "1.0.0"
+            PACKAGES: 
+              - "Package:1.0.0"
+            RELEASE_NOTES: "This is a release note"
+            RELEASE_NOTES_FILE: "/release-notes.txt"
+            IGNORE_EXISTING: false
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-create-release",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT"],
+      "properties": {
+        "OCTOPUS_API_KEY": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"
+        },
+        "OCTOPUS_URL": {
+          "type": "string",
+          "description": "URL of the octopus deploy server (required)"
+        },
+        "OCTOPUS_SPACE": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"  
+        },
+        "PROJECT": {
+          "type": "string",
+          "description": "The name of the project associated with this release (required)"
+        },
+        "RELEASE_NUMBER": {
+          "type": "string",
+          "description": "The release number to create (optional)"
+        },
+        "CHANNEL": {
+          "type": "string",
+          "description": "Name or ID of the channel to use"
+        },
+        "GIT_REF": {
+          "type": "string",
+          "description": "Git Reference e.g. refs/heads/main. Only relevant for config-as-code projects"
+        },
+        "GIT_COMMIT": {
+          "type": "string",
+          "description": "Git Commit Hash; Specify this in addition to Git Reference if you want to reference a commit other than the latest for that branch/tag."
+        },
+        "PACKAGE_VERSION": {
+          "type": "string",
+          "description": "Default version to use for all Packages"
+        },
+        "PACKAGES": {
+          "type": "array",
+          "description": "Version specification a specific packages. Format as {package}:{version}, {step}:{version} or {package-ref-name}:{packageOrStep}:{version}"
+        },
+        "RELEASE_NOTES": {
+          "type": "string",
+          "description": "Release notes to attach"
+        },
+        "RELEASE_NOTES_FILE": {
+          "type": "string",
+          "description": " Release notes to attach (from file)"
+        },
+        "IGNORE_EXISTING": {
+          "type": "boolean",
+          "description": "If a release with the same version exists, do nothing instead of failing."
+        }
+      }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "RELEASE"
+      ],
+      "properties": {
+        "RELEASE": {
+          "additionalProperties": true,
+          "type": "object",
+          "description": "The release that was created",
+          "properties": {
+            "Channel": {
+              "type": "string",
+              "description": "The channel for this release"
+            },
+            "Version": {
+              "type": "string",
+              "description": "The version of this release"
+            }
+          }
+        }
+      }
+    }
+  stepsTemplate: |-
+    create-release:
+      name: octopusdeploy-create-release
+      image: octopuslabs/octopus-cli
+      tag: latest
+      commands:
+        - OUTPUT=$(octopus release create 
+          --project "[[.Arguments.PROJECT]]" 
+          --version "[[.Arguments.RELEASE_NUMBER]]" 
+          --no-prompt 
+          --output-format json 
+          [[- if .Arguments.PACKAGE_VERSION ]] --package-version "[[ .Arguments.PACKAGE_VERSION ]]" [[ end ]]
+          [[- range $val := .Arguments.PACKAGES ]] --package "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.CHANNEL ]] --channel "[[ .Arguments.CHANNEL ]]" [[ end ]]
+          [[- if .Arguments.GIT_REF ]] --git-ref "[[ .Arguments.GIT_REF ]]" [[ end ]]
+          [[- if .Arguments.GIT_COMMIT ]] --git-commit "[[ .Arguments.GIT_COMMIT ]]" [[ end ]]
+          [[- if .Arguments.RELEASE_NOTES ]] --release-notes "[[ .Arguments.RELEASE_NOTES ]]" [[ end ]]
+          [[- if .Arguments.RELEASE_NOTES_FILE ]] --release-notes-file "[[ .Arguments.RELEASE_NOTES_FILE ]]" [[ end ]]
+          [[- if .Arguments.IGNORE_EXISTING ]] --ignore-existing [[ end ]])
+        - cf_export RELEASE=$OUTPUT
+      environment:
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+        - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+        - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
+  delimiters:
+    left: "[["
+    right: "]]"

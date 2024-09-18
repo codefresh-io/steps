@@ -15,7 +15,7 @@ metadata:
   icon:
     type: svg
     url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-deploy-release/deploy-release-tenanted.svg"
-    background: "#0A375A"
+    background: "#F4F6F8"
   maintainers:
     - name: OctopusDeploy
   examples:

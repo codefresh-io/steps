@@ -14,7 +14,7 @@ metadata:
     - deployment
   icon:
     type: svg
-    url: "https://a.storyblok.com/f/92909/x/084296103a/logo-blue_140px_rgb.svg" # change later
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-deploy-release/deploy-release-tenanted.svg"
     background: "#0A375A"
   maintainers:
     - name: OctopusDeploy

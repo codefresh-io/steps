@@ -2,7 +2,7 @@ version: "1.0"
 kind: step-type
 metadata:
   name: octopusdeploy-deploy-release-tenanted
-  version: 1.0.0
+  version: 1.0.1
   title: Deploy a tenanted release in Octopus Deploy
   isPublic: true
   description: Deploy a tenanted release in Octopus Deploy

@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: octopusdeploy-create-package
   version: 1.0.1
-  title: Create a package in Octopus Deploy
+  title: Create Octopus Deploy package
   isPublic: true
   description: Creates a zip package in the format expected by Octopus Deploy
   sources:

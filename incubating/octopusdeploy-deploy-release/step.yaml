@@ -1,0 +1,145 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-deploy-release
+  version: 1.0.0
+  title: Deploy a release in Octopus Deploy
+  isPublic: true
+  description: Deploy a release in Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-deploy-release"
+  stage: incubating
+  official: true
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-deploy-release/deploy_release.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - workflow:
+        deploy-release:
+          type: octopusdeploy-deploy-release
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces-1"
+            PROJECT: "Project Name"
+            RELEASE_NUMBER: "1.0.0"
+            ENVIRONMENTS:
+              - "Development"
+              - "Production"
+            VARIABLES:
+              - "prompted-variable1:prompted-value1"
+              - "prompted-variable2:prompted-value2"
+            USE_GUIDED_FAILURE: "false"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-deploy-release",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "RELEASE_NUMBER", "ENVIRONMENTS"],
+      "properties": {
+        "OCTOPUS_API_KEY": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"
+        },
+        "OCTOPUS_URL": {
+          "type": "string",
+          "description": "URL of the octopus deploy server (required)"
+        },
+        "OCTOPUS_SPACE": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"  
+        },
+        "PROJECT": {
+          "type": "string",
+          "description": "The name of the project associated with this release (required)"
+        },
+        "RELEASE_NUMBER": {
+          "type": "string",
+          "description": "The release number to deploy (required)"
+        },
+        "ENVIRONMENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of environment names to deploy to (required)"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Set the value for a prompted variable in the format Label:Value (optional)"
+        },     
+        "USE_GUIDED_FAILURE": {
+          "type": "string",
+          "description": "A multi-line list of prompted variable values. Format: name:value (optional)"
+        }
+      }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "DEPLOYMENTS"
+      ],
+      "properties": {
+        "DEPLOYMENTS": {
+          "type": "array",
+          "description": "The list of deployments",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "patterns": [],
+            "required": [
+              "DeploymentId",
+              "ServerTaskId"
+            ],
+            "properties": {
+              "DeploymentId": {
+                "type": "string",
+                "description": "The deployment Id"
+              },
+              "ServerTaskId": {
+                "type": "string",
+                "description": "The server task Id"
+              }
+            }
+          }
+        }
+      }
+    }
+  stepsTemplate: |-
+    deploy-release:
+      name: octopusdeploy-deploy-release
+      image: octopuslabs/octopus-cli
+      environment:
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+        - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+        - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
+      commands:
+        - OUTPUT=$(octopus release deploy 
+          --project "[[.Arguments.PROJECT]]" 
+          --version "[[.Arguments.RELEASE_NUMBER]]" 
+          --no-prompt
+          --output-format json
+          [[- range $val := .Arguments.ENVIRONMENTS ]] --environment "[[ $val ]]" [[ end ]]
+          [[- range $val := .Arguments.VARIABLES ]] --variable "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.USE_GUIDED_FAILURE ]] --guided-failure "[[ .Arguments.USE_GUIDED_FAILURE ]]" [[ end ]])
+        - cf_export DEPLOYMENTS=$OUTPUT
+  delimiters:
+    left: "[["
+    right: "]]"

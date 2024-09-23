@@ -83,22 +83,14 @@ spec:
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": true,
       "patterns": [],
       "required": [
-        "FILE"
+        "PATH"
       ],
       "properties": {
-        "FILE": {
-          "additionalProperties": true,
-          "type": "object",
-          "description": "The zip file that was created",
-          "properties": {
-            "Path": {
-              "type": "string",
-              "description": "The path to the zip file"
-            }
-          }
+        "PATH": {
+          "type": "string",
+          "description": "The zip file path that was created"
         }
       }
     }
@@ -115,9 +107,9 @@ spec:
           [[- if .Arguments.OUT_FOLDER ]] --out-folder "[[ .Arguments.OUT_FOLDER ]]" [[ end ]]
           [[- range $val := .Arguments.INCLUDE ]] --include "[[ $val ]]" [[ end ]]
           [[- if .Arguments.OVERWRITE ]] --overwrite [[ end ]]
-          --output-format json 
+          --output-format basic 
           --no-prompt)
-        - cf_export FILE=$OUTPUT
+        - cf_export PATH="$OUTPUT"
   delimiters:
     left: "[["
     right: "]]"

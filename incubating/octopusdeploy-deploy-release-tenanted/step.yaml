@@ -1,0 +1,174 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-deploy-release-tenanted
+  version: 1.0.0
+  title: Deploy a tenanted release in Octopus Deploy
+  isPublic: true
+  description: Deploy a tenanted release in Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-deploy-release-tenanted"
+  stage: incubating
+  official: true
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-deploy-release/deploy-release-tenanted.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - description: "Deploy using tenant name"
+      workflow:
+        deploy-release-tenanted:
+          type: octopusdeploy-deploy-release-tenanted
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces-1"
+            PROJECT: "Project Name"
+            RELEASE_NUMBER: "1.0.0"
+            ENVIRONMENT: "Production"
+            TENANTS:
+              - "Tenant1"
+              - "Tenant2"
+            VARIABLES:
+              - "prompted-variable1:prompted-value1"
+              - "prompted-variable2:prompted-value2"
+            USE_GUIDED_FAILURE: "false"
+    - description: "Deploy using tenant tags"
+      workflow:
+        deploy-release-tenanted:
+          type: octopusdeploy-deploy-release-tenanted
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces-1"
+            PROJECT: "Another Project Name"
+            RELEASE_NUMBER: "2.0.0"
+            ENVIRONMENT: "Development"
+            TENANT_TAGS:
+              - "tagSetA/someTagB"
+              - "tagSetC/someTagD"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-deploy-release-tenanted",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "RELEASE_NUMBER", "ENVIRONMENT"],
+      "properties": {
+        "OCTOPUS_API_KEY": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"
+        },
+        "OCTOPUS_URL": {
+          "type": "string",
+          "description": "URL of the octopus deploy server (required)"
+        },
+        "OCTOPUS_SPACE": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"  
+        },
+        "PROJECT": {
+          "type": "string",
+          "description": "The name of the project associated with this release (required)"
+        },
+        "RELEASE_NUMBER": {
+          "type": "string",
+          "description": "The release number to deploy (required)"
+        },
+        "ENVIRONMENT": {
+          "type": "string",
+          "description": "An environment name to deploy to (required)"
+        },
+        "TENANTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of tenant names to deploy to (optional)"
+        },
+        "TENANT_TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of tenant tag canonical names to locate tenants to deploy to. Format: Tag/Label (optional)"
+        },
+        "VARIABLES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Set the value for a prompted variable. Format: Label:Value (optional)"
+        },
+        "USE_GUIDED_FAILURE": {
+          "type": "string",
+          "description": "Whether to use guided failure mode if errors occur during the deployment. (optional)"
+        }
+      }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": true,
+      "patterns": [],
+      "required": [
+        "DEPLOYMENTS"
+      ],
+      "properties": {
+        "DEPLOYMENTS": {
+          "type": "array",
+          "description": "The list of deployments",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "patterns": [],
+            "required": [
+              "DeploymentId",
+              "ServerTaskId"
+            ],
+            "properties": {
+              "DeploymentId": {
+                "type": "string",
+                "description": "The deployment Id"
+              },
+              "ServerTaskId": {
+                "type": "string",
+                "description": "The server task Id"
+              }
+            }
+          }
+        }
+      }
+    }
+  stepsTemplate: |-
+    deploy-release-tenanted:
+      name: octopusdeploy-deploy-release-tenanted
+      image: octopuslabs/octopus-cli
+      environment:
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+        - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+        - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
+      commands:
+        - OUTPUT=$(octopus release deploy 
+          --project "[[.Arguments.PROJECT]]" 
+          --version "[[.Arguments.RELEASE_NUMBER]]" 
+          --environment "[[.Arguments.ENVIRONMENT]]" 
+          --no-prompt
+          --output-format json
+          [[- range $val := .Arguments.TENANTS ]] --tenant "[[ $val ]]" [[ end ]]
+          [[- range $val := .Arguments.TENANT_TAGS ]] --tenant-tag "[[ $val ]]" [[ end ]]
+          [[- range $val := .Arguments.VARIABLES ]] --variable "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.USE_GUIDED_FAILURE ]] --guided-failure "[[ .Arguments.USE_GUIDED_FAILURE ]]" [[ end ]])
+        - cf_export DEPLOYMENTS=$OUTPUT
+  delimiters:
+    left: "[["
+    right: "]]"

@@ -1,0 +1,98 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-push-build-information
+  version: 1.0.0
+  title: Push build information to Octopus Deploy
+  isPublic: true
+  description: Push build information to Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-push-build-information"
+  stage: incubating
+  official: true
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-push-build-information/push_build_information.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - description: Basic usage of the push build information step
+      workflow:
+        push-build-information:
+          type: octopusdeploy-push-build-information
+          arguments:
+            OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PACKAGE_IDS:
+              - "SomePackage"
+              - "SomeOtherPackage"
+            FILE: "SomeFile.json"
+            VERSION: "1.0.0"
+            OVERWRITE_MODE: "fail"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-push-build-information",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PACKAGE_IDS", "FILE", "VERSION"],
+      "properties": {
+        "OCTOPUS_API_KEY": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"
+        },
+        "OCTOPUS_URL": {
+          "type": "string",
+          "description": "URL of the octopus deploy server (required)"
+        },
+        "OCTOPUS_SPACE": {
+          "type": "string",
+          "description": "API key for octopus deploy (required)"  
+        },
+        "PACKAGE_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ID of the package, may be specified multiple times. Any arguments without flags will be treated as package IDs (required)"
+        },
+        "FILE": {
+          "type": "string",
+          "description": "Path to Octopus Build Information Json file (required)"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "The version of the package (required)"
+        },
+        "OVERWRITE_MODE": {
+          "type": "string",
+          "description": "Action when a build information already exists. Valid values are 'fail', 'overwrite', 'ignore'. Default is 'fail' (optional)"
+        }
+      }
+    }
+  stepsTemplate: |-
+    push-build-information:
+      name: octopusdeploy-push-build-information
+      image: octopuslabs/octopus-cli
+      tag: latest
+      commands:
+        - octopus build-information upload 
+          [[- range $val := .Arguments.PACKAGE_IDS ]] --package-id "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.VERSION ]] --version "[[ .Arguments.VERSION ]]" [[ end ]]
+          [[- if .Arguments.FILE ]] --file "[[ .Arguments.FILE ]]" [[ end ]]
+          [[- if .Arguments.OVERWRITE_MODE ]] --overwrite-mode "[[ .Arguments.OVERWRITE_MODE ]]" [[ end ]]
+          --no-prompt 
+      environment:
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+        - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+        - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
+  delimiters:
+    left: "[["
+    right: "]]"

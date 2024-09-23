@@ -1,0 +1,115 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-create-package
+  version: 1.0.0
+  title: Create a package
+  isPublic: true
+  description: Creates a zip package in the format expected by Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-create-package"
+  stage: incubating
+  official: true
+  categories:
+    - utility
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-create-package/create_package.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - description: Package the current working directory
+      workflow:
+        create-package:
+          type: octopusdeploy-create-package
+          arguments:
+            ID: "SomePackage"
+            VERSION: "1.0.0"
+    - description: Complex usage
+      workflow:
+        create-package:
+          type: octopusdeploy-create-package
+          arguments:
+            ID: "SomePackage"
+            VERSION: "1.0.0"
+            BASE_PATH: "/codefresh/volume"
+            OUT_FOLDER: "/codefresh/volume"
+            INCLUDE:
+              - "*.html"
+              - "*.css"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-create-package",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["ID", "VERSION"],
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "The ID of the package. (required)"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "The version of the package, must be a valid SemVer. (required)"
+        },
+        "BASE_PATH": {
+          "type": "string",
+          "description": "Root folder containing the contents to zip. (optional)"
+        },
+        "OUT_FOLDER": {
+          "type": "string",
+          "description": "Folder into which the zip file will be written. (optional)"
+        },
+        "INCLUDE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Add a file pattern to include, relative to the base path e.g. /bin/*.dll; defaults to '**'. (optional)"
+        },
+        "OVERWRITE": {
+          "type": "boolean",
+          "description": "Allow an existing package file of the same ID/version to be overwritten. (optional)"
+        }
+      }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "patterns": [],
+      "required": [
+        "PATH"
+      ],
+      "properties": {
+        "PATH": {
+          "type": "string",
+          "description": "The zip file path that was created"
+        }
+      }
+    }
+  stepsTemplate: |-
+    create-package:
+      name: octopusdeploy-create-package
+      image: octopuslabs/octopus-cli
+      tag: latest
+      commands:
+        - OUTPUT=$(octopus package zip create 
+          --id "[[ .Arguments.ID ]]"
+          --version "[[ .Arguments.VERSION ]]"
+          [[- if .Arguments.BASE_PATH ]] --base-path "[[ .Arguments.BASE_PATH ]]" [[ end ]]
+          [[- if .Arguments.OUT_FOLDER ]] --out-folder "[[ .Arguments.OUT_FOLDER ]]" [[ end ]]
+          [[- range $val := .Arguments.INCLUDE ]] --include "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.OVERWRITE ]] --overwrite [[ end ]]
+          --output-format basic 
+          --no-prompt)
+        - cf_export PATH="$OUTPUT"
+  delimiters:
+    left: "[["
+    right: "]]"

@@ -117,26 +117,14 @@ spec:
       "definitions": {},
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
-      "additionalProperties": true,
       "patterns": [],
       "required": [
         "RELEASE"
       ],
       "properties": {
         "RELEASE": {
-          "additionalProperties": true,
-          "type": "object",
-          "description": "The release that was created",
-          "properties": {
-            "Channel": {
-              "type": "string",
-              "description": "The channel for this release"
-            },
-            "Version": {
-              "type": "string",
-              "description": "The version of this release"
-            }
-          }
+          "type": "string",
+          "description": "The release version that was created"
         }
       }
     }
@@ -148,11 +136,11 @@ spec:
       commands:
         - OUTPUT=$(octopus release create 
           --project "[[.Arguments.PROJECT]]" 
-          --version "[[.Arguments.RELEASE_NUMBER]]" 
           --no-prompt 
-          --output-format json 
+          --output-format basic 
           [[- if .Arguments.PACKAGE_VERSION ]] --package-version "[[ .Arguments.PACKAGE_VERSION ]]" [[ end ]]
           [[- range $val := .Arguments.PACKAGES ]] --package "[[ $val ]]" [[ end ]]
+          [[- if .Arguments.RELEASE_NUMBER ]] --version "[[ .Arguments.RELEASE_NUMBER ]]" [[ end ]]
           [[- if .Arguments.CHANNEL ]] --channel "[[ .Arguments.CHANNEL ]]" [[ end ]]
           [[- if .Arguments.GIT_REF ]] --git-ref "[[ .Arguments.GIT_REF ]]" [[ end ]]
           [[- if .Arguments.GIT_COMMIT ]] --git-commit "[[ .Arguments.GIT_COMMIT ]]" [[ end ]]

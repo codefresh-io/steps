@@ -203,6 +203,16 @@ spec:
                 "type": "boolean",
                 "description": "Use debian based cfstep-helm image",
                 "default": false
+            },
+            "image": {
+                "type": "string",
+                "description": "Override the default image used for the step"
+                "default": "quay.io/codefreshplugins/cfstep-helm"
+            },
+            "debian_image": {
+                "type": "string",
+                "description": "Override the default debian image used for the step"
+                "default": "quay.io/codefreshplugins/cfstep-helm-debian"
             }
         }
     }
@@ -210,9 +220,9 @@ spec:
     main:
       name: helm
       [[ if .Arguments.use_debian_image ]]
-      image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
+      image: [[ .Arguments.debian_image ]]:[[ .Arguments.helm_version ]]
       [[ else ]]
-      image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
+      image: [[ .Arguments.image ]]:[[ .Arguments.helm_version ]]
       [[ end ]]
       environment:
       [[- range $key, $val := .Arguments -]]

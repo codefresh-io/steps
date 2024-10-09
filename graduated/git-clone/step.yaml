@@ -3,7 +3,7 @@ version: "1.0"
 metadata:
   name: git-clone
   title: Clone a Git repository
-  version: 1.0.5
+  version: 1.0.6
   isPublic: true
   description: Clone a Git repository with Codefresh's built in Git provider integration.
   sources:
@@ -77,6 +77,10 @@ spec:
           "exclude_blobs": {
               "type": "boolean",
               "description": "(boolean) Filter out all blobs (file contents). The default value is False."
+          },
+          "skip_tags_on_update": {
+              "type": "boolean",
+              "description": "When set, fetch updates without tags to minimize data transfer. If unset, tags are included in the fetch operation. The default value is False."
           }
       }
     }

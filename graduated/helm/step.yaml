@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.12
+  version: 1.1.13
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -207,22 +207,18 @@ spec:
             "image": {
                 "type": "string",
                 "description": "Override the default image used for the step"
-                "default": "quay.io/codefreshplugins/cfstep-helm"
-            },
-            "debian_image": {
-                "type": "string",
-                "description": "Override the default debian image used for the step"
-                "default": "quay.io/codefreshplugins/cfstep-helm-debian"
             }
         }
     }
   stepsTemplate: |-
     main:
       name: helm
-      [[ if .Arguments.use_debian_image ]]
-      image: [[ .Arguments.debian_image ]]:[[ .Arguments.helm_version ]]
+      [[ if .Arguments.image ]]
+        image: [[ .Arguments.image ]]:[[ .Arguments.helm_version ]]
+      [[ else if .Arguments.use_debian_image ]]
+        image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
       [[ else ]]
-      image: [[ .Arguments.image ]]:[[ .Arguments.helm_version ]]
+        image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
       [[ end ]]
       environment:
       [[- range $key, $val := .Arguments -]]

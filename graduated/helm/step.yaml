@@ -214,11 +214,11 @@ spec:
     main:
       name: helm
       [[ if .Arguments.image ]]
-        image: [[ .Arguments.image ]]:[[ .Arguments.helm_version ]]
+      image: [[ .Arguments.image ]]:[[ .Arguments.helm_version ]]
       [[ else if .Arguments.use_debian_image ]]
-        image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
+      image: quay.io/codefreshplugins/cfstep-helm-debian:[[ .Arguments.helm_version ]]
       [[ else ]]
-        image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
+      image: quay.io/codefreshplugins/cfstep-helm:[[ .Arguments.helm_version ]]
       [[ end ]]
       environment:
       [[- range $key, $val := .Arguments -]]

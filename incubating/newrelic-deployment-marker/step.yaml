@@ -2,9 +2,9 @@ version: '1.0'
 kind: step-type
 metadata:
   name: newrelic-deployment-marker
-  version: 1.0.1
+  version: 1.0.2
   isPublic: true
-  description: Createa a new deployment marker in New Relic.
+  description: Create a new deployment marker in New Relic.
   sources:
   - >-
       https://github.com/codefresh-io/steps/tree/master/incubating/newrelic-deployment-marker

@@ -2,7 +2,7 @@ version: "1.0"
 kind: step-type
 metadata:
   name: octopusdeploy-run-runbook
-  version: 1.0.0
+  version: 1.0.1
   title: Run a runbook in Octopus Deploy
   isPublic: true
   description: Run a runbook in Octopus Deploy
@@ -19,7 +19,7 @@ metadata:
   maintainers:
     - name: OctopusDeploy
   examples:
-    - description: Basic usage of the run a runbook step
+    - description: Basic usage of the run a runbook step with API key
       workflow:
         run-runbook:
           type: octopusdeploy-run-runbook
@@ -32,12 +32,45 @@ metadata:
             ENVIRONMENTS:
               - "Development"
               - "Production"
-    - description: Complex usage of the run a runbook step
+    - description: Complex usage of the run a runbook step with API key
       workflow:
         run-runbook:
           type: octopusdeploy-run-runbook
           arguments:
             OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PROJECT: "Project Name"
+            NAME: "Runbook Name"
+            ENVIRONMENTS:
+              - "Development"
+              - "Production"
+            VARIABLES:
+              - "Label:Value"
+            TENANTS:
+              - "Tenant 1"
+            TENANT_TAGS:
+              - "Tenant tag 1"
+            USE_GUIDED_FAILURE: "false"
+    - description: Basic usage of the run a runbook step with Octopus access token
+      workflow:
+        run-runbook:
+          type: octopusdeploy-run-runbook
+          arguments:
+            OCTOPUS_ACCESS_TOKEN: "${{OCTOPUS_ACCESS_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PROJECT: "Project Name"
+            NAME: "Runbook Name"
+            ENVIRONMENTS:
+              - "Development"
+              - "Production"
+    - description: Complex usage of the run a runbook step with Octopus access token
+      workflow:
+        run-runbook:
+          type: octopusdeploy-run-runbook
+          arguments:
+            OCTOPUS_ACCESS_TOKEN: "${{OCTOPUS_ACCESS_TOKEN}}"
             OCTOPUS_URL: "${{OCTOPUS_URL}}"
             OCTOPUS_SPACE: "Spaces 1"
             PROJECT: "Project Name"
@@ -61,11 +94,19 @@ spec:
       "name": "octopusdeploy-run-runbook",
       "additionalProperties": false,
       "patterns": [],
-      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "NAME", "ENVIRONMENTS"],
+      "required": ["OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "NAME", "ENVIRONMENTS"],
+      "oneOf": [
+        {"required": ["OCTOPUS_API_KEY"]},
+        {"required": ["OCTOPUS_ACCESS_TOKEN"]}
+      ],
       "properties": {
         "OCTOPUS_API_KEY": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"
+          "description": "API key for octopus deploy (required when OCTOPUS_ACCESS_TOKEN is not provided)"
+        },
+        "OCTOPUS_ACCESS_TOKEN": {
+          "type": "string",
+          "description": "Access token for octopus deploy (required when OCTOPUS_API_KEY is not provided)"
         },
         "OCTOPUS_URL": {
           "type": "string",
@@ -73,7 +114,7 @@ spec:
         },
         "OCTOPUS_SPACE": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"  
+          "description": "Workspace for octopus deploy (required)"  
         },
         "PROJECT": {
           "type": "string",
@@ -171,8 +212,13 @@ spec:
           --no-prompt)
         - cf_export RUNBOOK_RUNS=$OUTPUT
       environment:
-        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+      [[ if .Arguments.OCTOPUS_API_KEY ]]
         - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+      [[- end ]]
+      [[ if .Arguments.OCTOPUS_ACCESS_TOKEN ]]
+        - 'OCTOPUS_ACCESS_TOKEN=[[.Arguments.OCTOPUS_ACCESS_TOKEN]]'
+      [[- end ]]
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
         - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
   delimiters:
     left: "[["

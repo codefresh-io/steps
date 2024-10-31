@@ -2,7 +2,7 @@ version: "1.0"
 kind: step-type
 metadata:
   name: octopusdeploy-deploy-release-tenanted
-  version: 1.0.1
+  version: 1.0.2
   title: Deploy a tenanted release in Octopus Deploy
   isPublic: true
   description: Deploy a tenanted release in Octopus Deploy
@@ -19,7 +19,7 @@ metadata:
   maintainers:
     - name: OctopusDeploy
   examples:
-    - description: "Deploy using tenant name"
+    - description: "Deploy using tenant name and API key"
       workflow:
         deploy-release-tenanted:
           type: octopusdeploy-deploy-release-tenanted
@@ -37,12 +37,44 @@ metadata:
               - "prompted-variable1:prompted-value1"
               - "prompted-variable2:prompted-value2"
             USE_GUIDED_FAILURE: "false"
-    - description: "Deploy using tenant tags"
+    - description: "Deploy using tenant tags and API key"
       workflow:
         deploy-release-tenanted:
           type: octopusdeploy-deploy-release-tenanted
           arguments:
             OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces-1"
+            PROJECT: "Another Project Name"
+            RELEASE_NUMBER: "2.0.0"
+            ENVIRONMENT: "Development"
+            TENANT_TAGS:
+              - "tagSetA/someTagB"
+              - "tagSetC/someTagD"
+    - description: "Deploy using tenant name and Octopus access token"
+      workflow:
+        deploy-release-tenanted:
+          type: octopusdeploy-deploy-release-tenanted
+          arguments:
+            OCTOPUS_ACCESS_TOKEN: "${{OCTOPUS_ACCESS_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces-1"
+            PROJECT: "Project Name"
+            RELEASE_NUMBER: "1.0.0"
+            ENVIRONMENT: "Production"
+            TENANTS:
+              - "Tenant1"
+              - "Tenant2"
+            VARIABLES:
+              - "prompted-variable1:prompted-value1"
+              - "prompted-variable2:prompted-value2"
+            USE_GUIDED_FAILURE: "false"
+    - description: "Deploy using tenant tags and Octopus access token"
+      workflow:
+        deploy-release-tenanted:
+          type: octopusdeploy-deploy-release-tenanted
+          arguments:
+            OCTOPUS_ACCESS_TOKEN: "${{OCTOPUS_ACCESS_TOKEN}}"
             OCTOPUS_URL: "${{OCTOPUS_URL}}"
             OCTOPUS_SPACE: "Spaces-1"
             PROJECT: "Another Project Name"
@@ -60,11 +92,19 @@ spec:
       "name": "octopusdeploy-deploy-release-tenanted",
       "additionalProperties": false,
       "patterns": [],
-      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "RELEASE_NUMBER", "ENVIRONMENT"],
+      "required": ["OCTOPUS_URL", "OCTOPUS_SPACE", "PROJECT", "RELEASE_NUMBER", "ENVIRONMENT"],
+      "oneOf": [
+        {"required": ["OCTOPUS_API_KEY"]},
+        {"required": ["OCTOPUS_ACCESS_TOKEN"]}
+      ],
       "properties": {
         "OCTOPUS_API_KEY": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"
+          "description": "API key for octopus deploy (required when OCTOPUS_ACCESS_TOKEN is not provided)"
+        },
+        "OCTOPUS_ACCESS_TOKEN": {
+          "type": "string",
+          "description": "Access token for octopus deploy (required when OCTOPUS_API_KEY is not provided)"
         },
         "OCTOPUS_URL": {
           "type": "string",
@@ -72,7 +112,7 @@ spec:
         },
         "OCTOPUS_SPACE": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"  
+          "description": "Workspace for octopus deploy (required)"  
         },
         "PROJECT": {
           "type": "string",
@@ -154,8 +194,13 @@ spec:
       name: octopusdeploy-deploy-release-tenanted
       image: octopuslabs/octopus-cli
       environment:
-        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+      [[ if .Arguments.OCTOPUS_API_KEY ]]
         - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+      [[- end ]]
+      [[ if .Arguments.OCTOPUS_ACCESS_TOKEN ]]
+        - 'OCTOPUS_ACCESS_TOKEN=[[.Arguments.OCTOPUS_ACCESS_TOKEN]]'
+      [[- end ]]
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
         - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
       commands:
         - OUTPUT=$(octopus release deploy 

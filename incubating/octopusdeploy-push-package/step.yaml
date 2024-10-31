@@ -2,7 +2,7 @@ version: "1.0"
 kind: step-type
 metadata:
   name: octopusdeploy-push-package
-  version: 1.0.0
+  version: 1.0.1
   title: Push a package in Octopus Deploy
   isPublic: true
   description: Push a package in Octopus Deploy
@@ -19,12 +19,24 @@ metadata:
   maintainers:
     - name: OctopusDeploy
   examples:
-    - description: Basic usage of the push a package step
+    - description: Basic usage of the push a package step with API key
       workflow:
         push-package:
           type: octopusdeploy-push-package
           arguments:
             OCTOPUS_API_KEY: "${{OCTOPUS_API_KEY}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SPACE: "Spaces 1"
+            PACKAGES:
+              - "SomePackage.1.0.0.zip"
+              - "SomeOtherPackage.1.0.0.zip"
+            OVERWRITE_MODE: "fail"
+    - description: Basic usage of the push a package step with Octopus access token
+      workflow:
+        push-package:
+          type: octopusdeploy-push-package
+          arguments:
+            OCTOPUS_ACCESS_TOKEN: "${{OCTOPUS_ACCESS_TOKEN}}"
             OCTOPUS_URL: "${{OCTOPUS_URL}}"
             OCTOPUS_SPACE: "Spaces 1"
             PACKAGES:
@@ -40,11 +52,19 @@ spec:
       "name": "octopusdeploy-push-package",
       "additionalProperties": false,
       "patterns": [],
-      "required": ["OCTOPUS_API_KEY", "OCTOPUS_URL", "OCTOPUS_SPACE", "PACKAGES"],
+      "required": ["OCTOPUS_URL", "OCTOPUS_SPACE", "PACKAGES"],
+      "oneOf": [
+        {"required": ["OCTOPUS_API_KEY"]},
+        {"required": ["OCTOPUS_ACCESS_TOKEN"]}
+      ],
       "properties": {
         "OCTOPUS_API_KEY": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"
+          "description": "API key for octopus deploy (required when OCTOPUS_ACCESS_TOKEN is not provided)"
+        },
+        "OCTOPUS_ACCESS_TOKEN": {
+          "type": "string",
+          "description": "Access token for octopus deploy (required when OCTOPUS_API_KEY is not provided)"
         },
         "OCTOPUS_URL": {
           "type": "string",
@@ -52,7 +72,7 @@ spec:
         },
         "OCTOPUS_SPACE": {
           "type": "string",
-          "description": "API key for octopus deploy (required)"  
+          "description": "Workspace for octopus deploy (required)"  
         },
         "PACKAGES": {
           "type": "array",
@@ -78,8 +98,13 @@ spec:
           [[- if .Arguments.OVERWRITE_MODE ]] --overwrite-mode "[[ .Arguments.OVERWRITE_MODE ]]" [[ end ]]
           --no-prompt 
       environment:
-        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
+      [[ if .Arguments.OCTOPUS_API_KEY ]]
         - 'OCTOPUS_API_KEY=[[.Arguments.OCTOPUS_API_KEY]]'
+      [[- end ]]
+      [[ if .Arguments.OCTOPUS_ACCESS_TOKEN ]]
+        - 'OCTOPUS_ACCESS_TOKEN=[[.Arguments.OCTOPUS_ACCESS_TOKEN]]'
+      [[- end ]]
+        - 'OCTOPUS_URL=[[.Arguments.OCTOPUS_URL]]'
         - 'OCTOPUS_SPACE=[[.Arguments.OCTOPUS_SPACE]]'
   delimiters:
     left: "[["

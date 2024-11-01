@@ -49,6 +49,12 @@ metadata:
             IGNORE_EXISTING: false
     - description: Basic usage of the create release step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         create-release:
           type: octopusdeploy-create-release
           arguments:
@@ -58,6 +64,12 @@ metadata:
             PROJECT: "Project Name"
     - description: Complex usage of the create release step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         create-release:
           type: octopusdeploy-create-release
           arguments:

@@ -38,6 +38,12 @@ metadata:
             USE_GUIDED_FAILURE: "false"
     - description: Usage of the deploy release with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         deploy-release:
           type: octopusdeploy-deploy-release
           arguments:

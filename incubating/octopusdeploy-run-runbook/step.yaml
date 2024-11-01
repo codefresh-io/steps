@@ -54,6 +54,12 @@ metadata:
             USE_GUIDED_FAILURE: "false"
     - description: Basic usage of the run a runbook step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         run-runbook:
           type: octopusdeploy-run-runbook
           arguments:
@@ -67,6 +73,12 @@ metadata:
               - "Production"
     - description: Complex usage of the run a runbook step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         run-runbook:
           type: octopusdeploy-run-runbook
           arguments:

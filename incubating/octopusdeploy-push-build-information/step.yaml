@@ -35,6 +35,12 @@ metadata:
             OVERWRITE_MODE: "fail"
     - description: Basic usage of the push build information step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         push-build-information:
           type: octopusdeploy-push-build-information
           arguments:

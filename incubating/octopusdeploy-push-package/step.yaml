@@ -33,6 +33,12 @@ metadata:
             OVERWRITE_MODE: "fail"
     - description: Basic usage of the push a package step with Octopus access token
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         push-package:
           type: octopusdeploy-push-package
           arguments:

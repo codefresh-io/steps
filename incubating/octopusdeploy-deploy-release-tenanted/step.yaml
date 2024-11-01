@@ -53,6 +53,12 @@ metadata:
               - "tagSetC/someTagD"
     - description: "Deploy using tenant name and Octopus access token"
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         deploy-release-tenanted:
           type: octopusdeploy-deploy-release-tenanted
           arguments:
@@ -71,6 +77,12 @@ metadata:
             USE_GUIDED_FAILURE: "false"
     - description: "Deploy using tenant tags and Octopus access token"
       workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
         deploy-release-tenanted:
           type: octopusdeploy-deploy-release-tenanted
           arguments:

@@ -7,7 +7,7 @@ COPY    queries queries/
 COPY    argocd_app_status.py argocd_app_status.py
 
 RUN pip3 install pyinstaller
-RUN pyinstaller --onefile argocd app_status.py
+RUN pyinstaller --onefile argocd_app_status.py
 
 # stage 2 : Prod
 FROM    scratch

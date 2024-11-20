@@ -13,7 +13,7 @@ RUN     pyinstaller --onefile argocd_app_status.py
 FROM    alpine:3.20.3
 
 # USER codefresh
-RUN useradd -d /home/codefresh -m -s /usr/bin/bash codefresh
+RUN adduser -h /home/codefresh -D -s /usr/bin/bash codefresh
 USER codefresh
 
 WORKDIR /app

@@ -1,4 +1,12 @@
 # Changelog
+## [1.1.3] - 2024-11-20
+
+### Fixed
+* CVE-2024-45491 - upgrade libexpat1
+* CVE-2024-45492 - upgrade libexpat1
+* CVE-2024-37371 - upgrade libkrb5
+* CVE-2023-45853 - upgrade zlib1g
+
 ## [1.1.2] - 2023-09-18
 ### Changed
 
@@ -8,7 +16,7 @@
 
 ## [1.1.1] - 2023-06-03
 ### Changed
-- Upgrade pythpn version to 3.11.3
+- Upgrade python version to 3.11.3
 
 ### Fixed
 - Link for application

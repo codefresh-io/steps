@@ -1,5 +1,7 @@
 # Changelog
 ## [1.1.3] - 2024-11-20
+### Changed
+* upgrade yarl to 1.17.2
 
 ### Fixed
 * CVE-2024-45491 - upgrade libexpat1
@@ -8,7 +10,7 @@
 * CVE-2023-45853 - upgrade zlib1g
 
 ## [1.1.2] - 2023-09-18
-### Changed
+
 
 ### Fixed
 - PYSEC-2023-135 - upgrade Python module certifi to 2023.7.22

@@ -10,7 +10,7 @@ RUN     pip3 install pyinstaller
 RUN     pyinstaller --onefile argocd_app_status.py
 
 # stage 2 : Prod
-FROM    scratch
+FROM    alpine:3.20.3
 
 # USER codefresh
 RUN useradd -d /home/codefresh -m -s /usr/bin/bash codefresh

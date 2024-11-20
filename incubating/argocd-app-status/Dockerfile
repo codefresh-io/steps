@@ -7,10 +7,15 @@ COPY    queries queries/
 COPY    argocd_app_status.py argocd_app_status.py
 
 RUN pip3 install pyinstaller
-RUN pyinstaller --onefile app_status.py
+RUN pyinstaller --onefile argocd app_status.py
 
 # stage 2 : Prod
 FROM    scratch
+
+# USER codefresh
+RUN useradd -d /home/codefresh -m -s /usr/bin/bash codefresh
+USER codefresh
+
 WORKDIR /app
 COPY    queries queries/
 COPY    dist/argocd_app_status argocd_app_status

@@ -20,4 +20,4 @@ USER codefresh
 WORKDIR /app
 COPY    queries queries/
 COPY    --from=builder /app/dist/argocd_app_status argocd_app_status
-ENTRYPOINT ["/app/argocd_app_status"]
+CMD ["/app/argocd_app_status"]

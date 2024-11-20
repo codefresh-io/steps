@@ -96,7 +96,8 @@ spec:
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
       commands:
-
+        - cd /app
+        - python3 argocd_app_status
   delimiters:
     left: '[['
     right: ']]'

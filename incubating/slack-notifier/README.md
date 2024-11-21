@@ -48,3 +48,9 @@ SLACK_USER_NAME - optional
 SLACK_ICON_EMOJI - optional
 
 ```
+
+User and group reference
+
+If you want to reference a user or a group (the @syntax in Slack), you have to follow the syntax below in your SLACK_TEXT:
+ - for a user: <@USER_ID>
+ - for a group: <!subteam^GROUP_ID>

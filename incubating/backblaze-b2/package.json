@@ -7,7 +7,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "bluebird": "^3.5.4",
+    "bluebird": "^3.7.2",
     "lodash": "^4.17.11",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"

@@ -95,7 +95,9 @@ spec:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'
       [[- end ]]
-      
+      commands:
+        - cd /app
+        - /app/argocd_app_status
   delimiters:
     left: '[['
     right: ']]'

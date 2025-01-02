@@ -1,6 +1,6 @@
 # stage 1 Build
 # Bookworm is debian based
-FROM    python:3.13.0-slim-bookworm AS builder
+FROM    python:3.13.1-slim-bookworm AS builder
 WORKDIR /app
 COPY    requirements.txt requirements.txt
 COPY    queries queries/

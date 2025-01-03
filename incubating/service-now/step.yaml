@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.2.4
+  version: 1.2.5
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -86,7 +86,7 @@ spec:
         },
         "SN_IMAGE_VERSION": {
           "type": "string",
-          "default": "1.2.4",
+          "default": "1.2.5",
           "description": "Version of the ServiceNow image to use, Docker image tag."
         },
         "SN_INSTANCE": {

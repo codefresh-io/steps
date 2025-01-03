@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.2.5] - 2025-01-02
-### Changed
+
 ### Fixed
 - CVE-2023-4911 - upgrade glibc
 - CVE-2023-6246 - upgrade glibc

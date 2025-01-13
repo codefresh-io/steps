@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.5] - 2025-01-02
+
+### Fixed
+- CVE-2023-4911 - upgrade glibc
+- CVE-2023-6246 - upgrade glibc
+- CVE-2024-45492 - Upgrade expat/libexpat1
+- CVE-2024-45491 - Upgrade expat/libexpat1
+- CVE-2024-37371 - Upgrade krb5
+
 ## [1.2.4] - 2023-09-21
 ### Changed
 - Change logging mechanism

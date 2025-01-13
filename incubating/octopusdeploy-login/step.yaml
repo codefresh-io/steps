@@ -1,0 +1,83 @@
+version: "1.0"
+kind: step-type
+metadata:
+  name: octopusdeploy-login
+  version: 1.0.0
+  title: Log into Octopus Deploy
+  isPublic: true
+  description: Log into Octopus Deploy
+  sources:
+    - "https://github.com/codefresh-io/steps/tree/master/incubating/octopusdeploy-login"
+  stage: incubating
+  official: true
+  categories:
+    - utility
+  icon:
+    type: svg
+    url: "https://cdn.jsdelivr.net/gh/codefresh-io/steps/incubating/octopusdeploy-login/login.svg"
+    background: "#F4F6F8"
+  maintainers:
+    - name: OctopusDeploy
+  examples:
+    - description: Basic usage of the login step
+      workflow:
+        login:
+          type: octopusdeploy-login
+          arguments:
+            ID_TOKEN: "${{ID_TOKEN}}"
+            OCTOPUS_URL: "${{OCTOPUS_URL}}"
+            OCTOPUS_SERVICE_ACCOUNT_ID: "${{OCTOPUS_SERVICE_ACCOUNT_ID}}"
+spec:
+  arguments: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "name": "octopusdeploy-login",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": ["ID_TOKEN", "OCTOPUS_URL", "OCTOPUS_SERVICE_ACCOUNT_ID"],
+      "properties": {
+        "ID_TOKEN": {
+          "type": "string",
+          "description": "The Codefresh OIDC token (required)"
+        },
+        "OCTOPUS_URL": {
+          "type": "string",
+          "description": "URL of the octopus deploy server (required)"
+        },
+        "OCTOPUS_SERVICE_ACCOUNT_ID": {
+          "type": "string",
+          "description": "The ID (audience) of the Octopus Service Account to log into (required)"  
+        }
+      }
+    }
+  returns: |-
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "patterns": [],
+      "required": [
+        "OCTOPUS_ACCESS_TOKEN"
+      ],
+      "properties": {
+        "OCTOPUS_ACCESS_TOKEN": {
+          "type": "string",
+          "description": "Access token for octopus deploy (required)"
+        }
+      }
+    }
+  stepsTemplate: |-
+    login:
+      name: octopusdeploy-login
+      image: octopuslabs/octopus-cli
+      tag: latest
+      environment:
+        - ID_TOKEN_SECRET=[[ .Arguments.ID_TOKEN ]]
+      commands:
+        - octopus login --server "[[ .Arguments.OCTOPUS_URL ]]" --service-account-id "[[ .Arguments.OCTOPUS_SERVICE_ACCOUNT_ID ]]" --id-token "${ID_TOKEN_SECRET}" --no-prompt
+        - cf_export OCTOPUS_ACCESS_TOKEN=$(octopus config get "AccessToken") --mask
+  delimiters:
+    left: "[["
+    right: "]]"

@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: gitops-argocd-sync
-  version: 1.4.5
+  version: 1.4.6
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:
@@ -48,6 +48,7 @@ metadata:
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
+            APP_NAMESPACE: my-app-sync
             WAIT_HEALTHY: true
             INTERVAL: 60
             MAX_CHECKS: 3
@@ -73,6 +74,10 @@ spec:
         "APPLICATION": {
           "type": "string",
           "description": "The name of the Argo CD Application to be synced"
+        },
+        "APP_NAMESPACE": {
+          "type": "string",
+          "description": "The namespace of the Argo CD Application to be synced"
         },
         "WAIT_HEALTHY": {
           "type": "boolean",

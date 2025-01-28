@@ -1,9 +1,9 @@
 query ApplicationsStatusesQuery(
   $runtime: String!
   $name: String!
-  $namespace: String
+  $applicationNamespace: String
 ) {
-  application(runtime: $runtime, name: $name, namespace: $namespace) {
+  application(runtime: $runtime, name: $name, namespace: $applicationNamespace) {
     metadata {
       runtime
       name

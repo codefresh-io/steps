@@ -1,7 +1,7 @@
 kind: step-type
 metadata:
   name: gitops-argocd-sync
-  version: 1.4.6
+  version: 1.5.0
   isPublic: true
   description: Syncs Argo CD apps managed by our GitOps Runtimes
   sources:

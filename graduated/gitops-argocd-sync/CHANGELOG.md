@@ -1,5 +1,5 @@
 # Changelog
-## [1.4.6] - 2025-01-28
+## [1.5.0] - 2025-01-29
 ### Changed
 - Add APP_NAMESPACE option
 

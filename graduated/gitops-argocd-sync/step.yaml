@@ -48,7 +48,7 @@ metadata:
           arguments:
             RUNTIME: my-runtime
             APPLICATION: my-app
-            APP_NAMESPACE: my-app-sync
+            APP_NAMESPACE: my-app-ns
             WAIT_HEALTHY: true
             INTERVAL: 60
             MAX_CHECKS: 3

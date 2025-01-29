@@ -1,6 +1,7 @@
-query appstatus ($name: String!) {
+query appstatus ($name: String!, $applicationNamespace: String) {
   applicationProxyQuery(
-		name: $name
+		name: $name,
+    appNamespace: $applicationNamespace
   ){
     metadata {
       name

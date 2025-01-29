@@ -12,6 +12,14 @@ PAGE_SIZE   = 10
 
 RUNTIME     = os.getenv('RUNTIME')
 APPLICATION = os.getenv('APPLICATION')
+APP_NAMESPACE   = os.getenv('APP_NAMESPACE')
+
+APP_DICTIONARY = {
+    "applicationName": APPLICATION,
+}
+if APP_NAMESPACE is not None:  
+    APP_DICTIONARY["applicationNamespace"] = APP_NAMESPACE
+
 
 # Wait and Rollback options
 WAIT_HEALTHY = True if os.getenv('WAIT_HEALTHY', "false").lower() == "true" else False
@@ -43,6 +51,7 @@ def main():
 
     logging.debug("RUNTIME: %s", RUNTIME)
     logging.debug("APPLICATION: %s", APPLICATION)
+    logging.debug("NAMESPACE: %s", NAMESPACE)
     logging.debug("WAIT: %s", WAIT_HEALTHY)
     logging.debug("INTERVAL: %d", INTERVAL)
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
@@ -214,9 +223,7 @@ def get_app_status(ingress_host):
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('get_app_status') ## gets gql query
-    variables = {
-        "name": APPLICATION
-    }
+    variables = {**APP_DICTIONARY}
     result = client.execute(query, variable_values=variables)
 
     logging.debug("App Status result: %s", result)
@@ -276,12 +283,14 @@ def execute_argocd_sync(ingress_host):
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('argocd_sync')                ## gets gql query
+
     variables = {
-        "applicationName": APPLICATION,
+        **APP_DICTIONARY, 
         "options": {
             "prune": True
         }
     }
+
     try:
         result = client.execute(query, variable_values=variables)
     except TransportQueryError as err:
@@ -312,9 +321,7 @@ def application_exist(ingress_host):
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('get_app_existence')           ## gets gql query
-    variables = {
-        "applicationName": APPLICATION
-    }
+    variables = {**APP_DICTIONARY}
     try:
         result = client.execute(query, variable_values=variables)
     except TransportQueryError as err:
@@ -346,9 +353,7 @@ def application_autosync(ingress_host):
     )
     client = Client(transport=transport, fetch_schema_from_transport=False)
     query = get_query('get_app_autosync')           ## gets gql query
-    variables = {
-        "applicationName": APPLICATION
-    }
+    variables = {**APP_DICTIONARY}
     try:
         result = client.execute(query, variable_values=variables)
     except Exception as err:

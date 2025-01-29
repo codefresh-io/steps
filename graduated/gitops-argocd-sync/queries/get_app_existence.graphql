@@ -1,6 +1,7 @@
-query appexistence ($applicationName: String!) {
+query appexistence ($applicationName: String!, $applicationNamespace: String) {
   applicationProxyQuery(
-		name: $applicationName
+		name: $applicationName,
+    appNamespace: $applicationNamespace
   ){
     metadata {
       name

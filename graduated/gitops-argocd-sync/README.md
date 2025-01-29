@@ -15,7 +15,7 @@ Syncs Argo CD apps managed by our GitOps Runtimes using Codefresh API
 |:---------------|:------------------------------------------------------------------------------------------|:---------|:--------------------------------------------|
 | RUNTIME        | The name of the GitOps Runtime managing the Argo CD Application                           | false    |                                             |
 | APPLICATION    | The name of the Argo CD Application to be synced                                          | false    |                                             |
-| APP_NAMESPACE  | The namespace of the Argo CD Application to be synced                                     | true     |                                             |
+| APP_NAMESPACE  | The namespace of the Argo CD Application to be synced, supported from app-proxy v1.2600.1 | true     |                                             |
 | ROLLBACK       | Initiate a rollback to the previous revision if the Sync and Wait does not become healthy | true     |                                             |
 | WAIT_ROLLBACK  | Wait for the app to be healthy after a rollback. Forces ROLLBACK to true                  | true     |                                             |
 | CA_BUNDLE      | A base64 encoded string that contain the complete CA Certificate Bundle                   | true     |                                             |

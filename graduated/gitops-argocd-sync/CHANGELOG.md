@@ -1,7 +1,7 @@
 # Changelog
 ## [1.5.0] - 2025-01-29
 ### Changed
-- Add APP_NAMESPACE option
+- Add APP_NAMESPACE option (supported from app-proxy v1.2600.1)
 
 ## [1.4.5] - 2024-04-04
 ### Fixed

@@ -1,7 +1,8 @@
-query appsyncstatus ($applicationName: String!) {
+query appsyncstatus ($applicationName: String!, $applicationNamespace: String) {
 
 applicationProxyQuery(
-		name: $applicationName
+		name: $applicationName,
+    appNamespace: $applicationNamespace
   ){
     metadata {
       name

@@ -1,4 +1,4 @@
-FROM python:3.8.0-alpine3.10
+FROM python:3.8.3-alpine3.10
 
 ENV AWSCLI_VERSION "1.16.266"
 ENV JQ_VERSION "1.6-r0"

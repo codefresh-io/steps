@@ -23,17 +23,17 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME /usr/local/openjdk-16
-ENV PATH $JAVA_HOME/bin:$PATH
+ENV JAVA_HOME=/usr/local/openjdk-16
+ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Default to UTF-8 file.encoding
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 
 # https://jdk.java.net/
 # >
 # > Java Development Kit builds, from Oracle
 # >
-ENV JAVA_VERSION 16
+ENV JAVA_VERSION=16
 
 RUN set -eux; \
 	\
@@ -88,6 +88,6 @@ RUN set -eux; \
 	javac --version; \
 	java --version
 
-RUN dotnet tool install --global dotnet-sonarscanner --version 4.8.0
+RUN dotnet tool install --global dotnet-sonarscanner --version 9.8.0
 
 ENV PATH="$PATH:/root/.dotnet/tools"

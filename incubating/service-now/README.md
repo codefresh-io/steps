@@ -22,12 +22,13 @@ Example `codefresh.yml` build is below with required Arguments in place.
 | CR_ACTION | createCR | string | no | createCR, closeCR, updateCR | the operation to execute |
 | CR_CONFLICT_POLICY | ignore | string | no | ignore, wait, reject | What do when a schedule conflict arises |
 | CR_DATA | N/A | JSON string | no | JSON block | the JSON block to pass when opening, updating or closing a CR |
+| STD_CR_TEMPLATE | | string | no | | the name of a Standard template |
 | CR_SYSID | N/A | string | no | uuid | the sysid of the CR record as returned by the createCR action. USed to update or close a CR |
 | CR_CLOSE_CODE | successful | string | no | sucessful or any value accepted by the close_code field |
 | CR_CLOSE_NOTES | N/A | string | no | Any string accepted for the close_notes field |
 
 
-### codefresh.yml
+### codefresh.yaml
 
 Codefresh build step to execute AWS CDK commands
 
@@ -62,7 +63,7 @@ steps:
         echo  END_DATE=\"$END_DATE\" >> ${{CF_VOLUME_PATH}}/env_vars_to_export
 
   createCR:
-    type: service-now
+    type: service-now:1.4.0
     title: Create Service Now Change Request
     stage: deploy
     arguments:
@@ -73,7 +74,7 @@ steps:
       TOKEN: ${{CF_TOKEN}}
       CR_CONFLICT_POLICY: reject
       CR_DATA: >-
-        {"short_description": "Globex deployment to QA", 
+        {"short_description": "Globex deployment to QA",
         "description": "Change for build ${{CF_BUILD_ID}}.\nThis change was created by the Codefresh plugin",
         "justification": "I do not need a justification\nMy app is awesome",
         "cmdb_ci":"tomcat",
@@ -91,7 +92,7 @@ steps:
   modifyCR:
     stage: deploy
     title: "Modify the implementation plan"
-    type: service-now
+    type: service-now:1.4.0
     fail_fast: false
     arguments:
       CR_ACTION: updateCR
@@ -120,7 +121,7 @@ steps:
   modifyTestPlan:
     stage: test
     title: "Modify the test plan"
-    type: service-now
+    type: service-now:1.4.0
     fail_fast: false
     arguments:
       CR_ACTION: updateCR
@@ -131,7 +132,7 @@ steps:
       CR_DATA: '{"test_plan":"The testing suit has passed."}'
 
   closeCR:
-    type: service-now
+    type: service-now:1.4.0
     title: Close Service Now Change Request
     stage: post
     arguments:

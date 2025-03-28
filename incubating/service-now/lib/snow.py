@@ -7,6 +7,16 @@ import logging
 API_NAMESPACE=409723
 env_file_path = "/meta/env_vars_to_export"
 
+def exportVariable(name, value):
+    def file
+    if os.path.exists(env_file_path):
+        file=open(env_file_path, "a")
+    else:
+        file=open("/tmp/env_vars_to_export", "a")
+    file.write(f"{name}={value}")
+    file.close()
+
+
 def getBaseUrl(instance):
     baseUrl = "%s/api" %(instance);
     logging.debug("baseUrl: " + baseUrl)
@@ -41,16 +51,9 @@ def processCreateChangeRequestResponse(response):
     logging.info(f"    Change Request sys_id: {CR_SYSID}")
     logging.debug( "    Change Request full answer:\n" + FULL_JSON)
 
-    if os.path.exists(env_file_path):
-        env_file = open(env_file_path, "a")
-        env_file.write(f"CR_NUMBER={CR_NUMBER}\n")
-        env_file.write(f"CR_SYSID={CR_SYSID}\n")
-        env_file.write("CR_FULL_JSON=/codefresh/volume/servicenow-cr.json\n")
-        env_file.close()
-
-        json_file=open("/codefresh/volume/servicenow-cr.json", "w")
-        json_file.write(FULL_JSON)
-        json_file.close()
+    exportVariable("CR_NUMBER", CR_NUMBER)
+    exportVariable("CR_SYSID", CR_SYSID)
+    exportVariable("CR_CREATE_JSON", FULL_JSON)
 
 #
 # Call SNow REST API to create a new Change Request
@@ -79,6 +82,79 @@ def createChangeRequest(user, password, baseUrl, data):
         headers = {"content-type":"application/json"},
         auth=(user, password))
     processCreateChangeRequestResponse(response=resp)
+
+def processSearchStandardTemplateResponse(name, response):
+    logging.info("Processing answer from Standard Template search")
+    logging.debug("Template search returned code %s" % (response.status_code))
+    if (response.status_code != 200 and response.status_code != 201):
+        logging.critical("Standard Change Template for '%s' errored out with code %s", name, response.status_code)
+        logging.critical("%s" + response.text)
+        sys.exit(response.status_code)
+    data=response.json()
+    logging.debug("Full JSON answer: %s", data)
+
+    if len(data["result"]) ==0 :
+        logging.critical("Standard Change Template '%s' was not found", name)
+        sys.exit(1)
+
+    logging.info("Standard template search successful")
+    STD_SYSID=data["result"][0]["sys_id"]
+    return STD_SYSID
+
+def processCreateStandardChangeRequestResponse(response):
+    logging.info("Processing answer from standard CR creation REST call")
+    logging.debug("Change Request returned code %s" % (response.status_code))
+    if (response.status_code != 200 and response.status_code != 201):
+        logging.critical("Change Request creation failed with code %s", response.status_code)
+        logging.critical("%s", response.text)
+        sys.exit(response.status_code)
+
+    logging.info("Change Request creation successful")
+    data=response.json()
+    FULL_JSON=json.dumps(data, indent=2)
+    CR_NUMBER=data["result"]["number"]["value"]
+    CR_SYSID=data["result"]["sys_id"]["value"]
+    exportVariable("CR_NUMBER", CR_NUMBER)
+    exportVariable("CR_SYSID", CR_SYSID)
+    exportVariable("CR_CREATE_JSON", FULL_JSON)
+    return CR_NUMBER
+
+# Call SNow REST API to create a new Standard Change Request
+# Fields required are pasted in the data
+def createStandardChangeRequest(user, password, baseUrl, data, standardName):
+    logging.info("Creating a new Standard Change Request using '%s' template", standardName)
+    encodedName=urllib.parse.quote_plus(standardName)
+
+    url="%s/now/table/std_change_record_producer?sysparm_query=sys_name=%s" % (baseUrl, encodedName)
+
+    logging.debug("Standard Change URL %s:",url)
+    resp=requests.get(url,
+        headers = {"content-type":"application/json"},
+        auth=(user, password))
+    sysid=processSearchStandardTemplateResponse(name=standardName, response=resp)
+    logging.info("Template found: %s", sysid)
+
+    if (bool(data)):
+        crBody=json.loads(data)
+        logging.debug("Data: %s", data)
+    else:
+        crBody= {}
+        logging.debug("  Data: None")
+    crBody["cf_build_id"] = os.getenv('CF_BUILD_ID')
+
+
+    url="%s/sn_chg_rest/change/standard/%s" % (baseUrl, sysid)
+
+    logging.debug("URL %s:",url)
+    logging.debug("User: %s", user)
+    logging.debug("Body: %s", crBody)
+
+    resp=requests.post(url,
+        json = crBody,
+        headers = {"content-type":"application/json"},
+        auth=(user, password))
+    return processCreateStandardChangeRequestResponse(response=resp)
+
 
 def processModifyChangeRequestResponse(response, action):
 
@@ -196,6 +272,14 @@ def checkToken(token):
         logging.error("FATAL: TOKEN is not defined.")
         sys.exit(1)
 
+def checkUser(username):
+    logging.debug("Entering checkUser: ")
+    logging.debug("  CR_USER: %s" % (username))
+
+    if ( username == None ):
+        logging.error("FATAL: CR_USER is not defined.")
+        sys.exit(1)
+
 def checkConflictPolicy(policy):
     logging.debug("Entering checkConflictPolicy: ")
     logging.debug("  CR_CONFLICT_POLICY: %s" % (policy))
@@ -214,6 +298,7 @@ def main():
     PASSWORD = os.getenv('SN_PASSWORD')
     INSTANCE = os.getenv('SN_INSTANCE')
     DATA     = os.getenv('CR_DATA')
+    STD_NAME = os.getenv('STD_CR_TEMPLATE')
     DEBUG    = True if os.getenv('DEBUG', "false").lower() == "true" else False
     TOKEN    = os.getenv('TOKEN')
     POLICY   = os.getenv('CR_CONFLICT_POLICY')
@@ -230,17 +315,26 @@ def main():
     logging.debug(f"  DATA: {DATA}")
     logging.debug("  SYSID: %s" % (os.getenv('CR_SYSID')))
 
+    checkUser(USER)
 
     if ACTION == "createcr":
         # Used only later in the callback but eant to check for error early
         checkToken(TOKEN)
         checkConflictPolicy(POLICY)
 
-        createChangeRequest(user=USER,
-            password=PASSWORD,
-            baseUrl=getBaseUrl(instance=INSTANCE),
-            data=DATA
-        )
+        if STD_NAME:
+            cr_number=createStandardChangeRequest(user=USER,
+                standardName=STD_NAME,
+                password=PASSWORD,
+                baseUrl=getBaseUrl(instance=INSTANCE),
+                data=DATA
+            )
+        else:
+            createChangeRequest(user=USER,
+                password=PASSWORD,
+                baseUrl=getBaseUrl(instance=INSTANCE),
+                data=DATA
+            )
     elif ACTION == "callback":
         callback(user=USER,
             password=PASSWORD,

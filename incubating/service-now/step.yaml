@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.2.5
+  version: 1.4.0
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -113,6 +113,10 @@ spec:
         "CR_DATA": {
             "type": "string",
             "description": "The body to create the CR. Need to include all the fields required for your Change Management implementation."
+        },
+        "STD_CR_TEMPLATE": {
+          "type": "string"
+          "description": "name of a Standard Change template. Using this parameter will open a Standard Change (pre-approved) instead of a normal one.",
         },
         "CR_CONFLICT_POLICY": {
             "type": "string",

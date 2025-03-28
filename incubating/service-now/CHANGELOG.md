@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.4.0 (Mar 28, 2025)
+### Added
+* ability to create a Standard Change passing the template name
+ in the `STD_CR_TEMPLATE` variable.
+
 ## [1.2.5] - 2025-01-02
 
 ### Fixed

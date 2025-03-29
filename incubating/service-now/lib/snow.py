@@ -3,19 +3,26 @@ import sys
 import json
 import requests
 import logging
+import urllib.parse
 
 API_NAMESPACE=409723
 env_file_path = "/meta/env_vars_to_export"
 
 def exportVariable(name, value):
-    def file
     if os.path.exists(env_file_path):
         file=open(env_file_path, "a")
     else:
         file=open("/tmp/env_vars_to_export", "a")
-    file.write(f"{name}={value}")
+    file.write(f"{name}={value}\n")
     file.close()
 
+def exportJson(name, json):
+    if os.path.exists(env_file_path):
+        json_file = open("/codefresh/volume/%s" %(name), "a")
+    else:
+        json_file = open("/tmp/%s" % (name), "a")
+        json_file.write(json)
+        json_file.close()
 
 def getBaseUrl(instance):
     baseUrl = "%s/api" %(instance);
@@ -173,24 +180,17 @@ def processModifyChangeRequestResponse(response, action):
     FULL_JSON=json.dumps(data, indent=2)
 
     if (action == "close" ):
-        jsonVar="CR_CLOSE_FULL_JSON"
-        jsonFileName="/codefresh/volume/servicenow-cr-close.json"
+        exportVariable("CR_CLOSE_FULL_JSON", "/codefresh/volume/servicenow-cr-close.json")
+        exportJson("servicenow-cr-close.json", FULL_JSON)
     elif (action == "update" ):
-        jsonVar="CR_UPDATE_FULL_JSON"
-        jsonFileName="/codefresh/volume/servicenow-cr-update.json"
+        exportVariable("CR_UPDATE_FULL_JSON", "/codefresh/volume/servicenow-cr-update.json")
+        exportJson("servicenow-cr-update.json", FULL_JSON)
     else:
         print("ERROR: action unknown. Should not be here. Error should have been caught earlier")
-    if os.path.exists(env_file_path):
-        env_file = open(env_file_path, "a")
-        env_file.write(f"{jsonVar}=/codefresh/volume/servicenow-cr-close.json\n")
-        env_file.write(f"CR_NUMBER={CR_NUMBER}\n")
-        env_file.write(f"CR_SYSID={CR_SYSID}\n")
 
-        env_file.close()
+    exportVariable("CR_NUMBER", CR_NUMBER)
+    exportVariable("CR_SYSID", CR_SYSID)
 
-        json_file=open("/codefresh/volume/servicenow-cr-close.json", "w")
-        json_file.write(FULL_JSON)
-        json_file.close()
 
 # Call SNow REST API to close a CR
 # Fields required are pasted in the data

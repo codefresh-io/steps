@@ -214,7 +214,7 @@ spec:
           codefresh create annotation workflow ${{CF_BUILD_ID}} CR_SYSID=${{CR_SYSID}}
           cf_export annotation_CF_OUTPUT_URL="[[.Arguments.SN_INSTANCE]]/nav_to.do?uri=%2Fchange_request.do%3Fsys_id%3D$CR_SYSID"
 
-      [[ if empty .Argument.STD_CR_TEMPLATE ]]
+      [[ if empty .Arguments.STD_CR_TEMPLATE ]]
     callback:
       name: invoke scripted REST API to have ServiceNow callback Codefresh when CR is approved/rejected
       title: ServiceNow callback setup

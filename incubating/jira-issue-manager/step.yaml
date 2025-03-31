@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: jira-issue-manager
-  version: 1.0.11
+  version: 1.0.13
   title: Jira Issue Manager
   isPublic: true
   description: Create, Update, & Validate Jira Issues
@@ -12,6 +12,7 @@ metadata:
   stage: incubating
   maintainers:
     - name: Brandon Phillips
+    - name: Dustin Van Buskirk
   categories:
     - build
   official: true
@@ -245,7 +246,7 @@ spec:
   stepsTemplate: |-
     main:
         name: jira-issue-manager
-        image: quay.io/codefreshplugins/jira-issue-manager:1.0.11
+        image: quay.io/codefreshplugins/jira-issue-manager:1.0.13
         environment:
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'

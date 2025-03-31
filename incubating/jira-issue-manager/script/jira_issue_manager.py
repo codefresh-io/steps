@@ -66,8 +66,11 @@ def environment_setup():
     # Logic here to use the regex to grab the jira issue key and assign it to issue
     jira_issue_source_field = StepUtility.getEnvironmentVariable('JIRA_ISSUE_SOURCE_FIELD', env)
     jira_issue_source_field_regex = StepUtility.getEnvironmentVariable('JIRA_ISSUE_SOURCE_FIELD_REGEX', env)
-    ## TODO - Brandon - need to do regex work here
-    issue = jira_issue_source_field
+
+    if jira_issue_source_field_regex:
+        issue = re.match(jira_issue_source_field_regex, jira_issue_source_field).group(0)
+    else:
+        issue = jira_issue_source_field
 
     # Issue fields below
     # Retrieve the project environment variable and add the project to a dict representation

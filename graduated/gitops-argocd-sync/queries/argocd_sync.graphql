@@ -1,5 +1,5 @@
-query sync($applicationName: String!, $options: SyncOptions) {
-  sync(applicationName: $applicationName, options: $options) {
+query sync($applicationName: String!, $options: SyncOptions, $applicationNamespace: String) {
+  sync(applicationName: $applicationName, options: $options, appNamespace: $applicationNamespace) {
     metadata {
       name
       __typename

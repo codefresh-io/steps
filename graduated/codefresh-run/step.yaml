@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.5.3
+  version: 1.5.4
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -35,6 +35,18 @@ metadata:
             VARIABLE:
               - key1=val1
               - key2=val2
+    - description: custom image
+      workflow:
+        codefresh-run:
+          title: Run a codefresh pipeline
+          type: codefresh-run
+          arguments:
+            IMAGE_NAME: quay.io/codefresh/cli
+            IMAGE_TAG: 1.2.3
+            PIPELINE_ID: project-name/pip_name
+            TRIGGER_ID: trigger_id
+            BRANCH: '${{CF_BRANCH}}'
+            SHA: '${{CF_REVISION}}'
   created_at: '2019-12-24T15:42:47.178Z'
   updated_at: '2019-12-24T15:42:47.178Z'
   latest: true
@@ -51,9 +63,15 @@ spec:
             "PIPELINE_ID"
         ],
         "properties": {
-            "IMAGE_TAG": {
+            "IMAGE_NAME": {
                 "type": "string",
                 "description": "Custom image of codefresh-run step",
+                "examples": ["quay.io/codefresh/cli"],
+                "default": "quay.io/codefresh/cli"
+            },
+            "IMAGE_TAG": {
+                "type": "string",
+                "description": "Custom tag of codefresh-run step",
                 "examples": ["latest-debian"],
                 "default": "0.84.7"
             },
@@ -184,7 +202,7 @@ spec:
     right: ']]'
   stepsTemplate: |-
     first:
-        image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
+        image: [[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_TAG]]
         commands:
         [[- $cmd := (printf "codefresh run \"%s\" -d" .Arguments.PIPELINE_ID ) -]]
         [[ if .Arguments.TRIGGER_ID ]]
@@ -243,7 +261,7 @@ spec:
       [[- if eq .Arguments.DETACH false ]]
     second:
       name: step1
-      image: quay.io/codefresh/cli:[[.Arguments.IMAGE_TAG]]
+      image: [[.Arguments.IMAGE_NAME]]:[[.Arguments.IMAGE_TAG]]
       commands:
         - export BUILD_ID=${{steps.first.output.BUILD_ID}}
       [[- if eq .Arguments.FOLLOW_LOGS true ]]

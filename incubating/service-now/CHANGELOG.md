@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.1 (Apr 29, 2025)
+### Fixed
+- Force variable STD_CR_TEMPLATE to empty by default
+  
 ## v1.4.0 (Mar 28, 2025)
 ### Added
 * ability to create a Standard Change passing the template name

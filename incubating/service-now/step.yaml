@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: service-now
-  version: 1.4.0
+  version: 1.4.1
   isPublic: true
   description: Integration with ServiceNow Change Management
   sources:
@@ -86,7 +86,7 @@ spec:
         },
         "SN_IMAGE_VERSION": {
           "type": "string",
-          "default": "1.4.0",
+          "default": "1.4.1",
           "description": "Version of the ServiceNow image to use, Docker image tag."
         },
         "SN_INSTANCE": {
@@ -116,7 +116,8 @@ spec:
         },
         "STD_CR_TEMPLATE": {
           "type": "string",
-          "description": "name of a Standard Change template. Using this parameter will open a Standard Change (pre-approved) instead of a normal one."
+          "description": "name of a Standard Change template. Using this parameter will open a Standard Change (pre-approved) instead of a normal one.",
+          "default": ""
         },
         "CR_CONFLICT_POLICY": {
             "type": "string",

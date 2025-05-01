@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: vault
-  version: 0.0.7
+  version: 0.0.8
   title: Fetch secrets from Hashicorp Vault
   isPublic: true
   description: >-

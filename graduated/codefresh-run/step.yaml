@@ -137,7 +137,7 @@ spec:
                  "examples": ["key=val"],
                  "default": []
              },
-            "SECRET": {
+            "SECRETS": {
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -226,7 +226,7 @@ spec:
         [[ range .Arguments.VARIABLE ]]
             [[- $cmd = (printf "%s --variable %s" $cmd .) -]]
         [[- end -]]
-        [[ range .Arguments.SECRET ]]
+        [[ range .Arguments.SECRETS ]]
             [[- $cmd = (printf "%s --secret %s" $cmd .) -]]
         [[- end -]]
         [[ if .Arguments.VARIABLE_FILE ]]

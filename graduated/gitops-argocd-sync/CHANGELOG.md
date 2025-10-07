@@ -1,4 +1,8 @@
 # Changelog
+## [1.5.1] - 2025-10-02
+### Changed
+- Change default step image to 1.5.0
+
 ## [1.5.0] - 2025-01-29
 ### Changed
 - Add APP_NAMESPACE option (supported from app-proxy v1.2600.1)

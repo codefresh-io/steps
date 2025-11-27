@@ -1,4 +1,4 @@
-# Codefresh Bump Build Number
+I77O# Codefresh Bump Build Number
 
 This step will help you maintain a build number [annotation](https://codefresh.io/docs/docs/codefresh-yaml/annotations/) at the pipeline level. The build number will be updated every time that the step is executed using the codefresh CLI. It is strongly recommended that you add a conditional expression to only increment the build number on a certain branch.
 
@@ -30,3 +30,28 @@ steps:
     arguments:
       ANNOTATION_NAME: '${{CF_BRANCH}}'
 ```
+BumpBuildNumber:
+  title: Bump default build_number annotation
+  type: bump-build-number
+  arguments:
+    RETRIEVE_CURRENT_VALUE_ONLY: true
+BumpBuildNumber:
+  title: Bump default build_number annotation
+  type: bump-build-number
+datree-policy-check:
+  title: Run Datree policy check
+  type: datree/datree-policy-check
+  arguments:
+    DATREE_TOKEN: '${{DATREE_TOKEN}}'
+    INPUT_PATH: fileName.yaml
+https://support.microsoft.com/en-us/topic/what-is-multifactor-authentication-e5e39437-121c-be60-d123-eda06bddf661datree-policy-check:
+  title: Run Datree policy check
+  type: datree/datree-policy-check
+  arguments:
+    DATREE_TOKEN: '${{DATREE_TOKEN}}'
+    INPUT_PATH: fileName.yaml
+BumpBuildNumber:
+  title: Bump custom annotation name
+  type: bump-build-number
+  arguments:
+    ANNOTATION_NAME: '${{CF_BRANCH}}_build_number'

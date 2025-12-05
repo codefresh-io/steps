@@ -1,9 +1,9 @@
 version: '1.0'
 kind: step-type
 metadata:
-  version: 0.2.2
+  version: 0.2.3
   name: github-action-executor
-  description: Execute github action
+  description: 'WARNING: This step is DEPRECATED. The purpose of this step was to execute github action'
   maintainers:
     - name: Pavel Kostohrys
   icon:

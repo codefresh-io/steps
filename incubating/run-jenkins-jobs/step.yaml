@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: run-jenkins-jobs
-  version: 0.1.7
+  version: 0.1.8
   title: Run a Jenkins job
   isPublic: true
   description: Run a Jenkins job from your Codefresh pipeline.
@@ -100,7 +100,7 @@ spec:
   stepsTemplate: |-
     main:
       name: run-jenkins-jobs
-      image: quay.io/codefreshplugins/run-jenkins-jobs:0.1.4
+      image: quay.io/codefresh/run-jenkins-jobs:0.1.6
       environment:
       [[- range $key, $val := .Arguments -]]
       [[ if hasPrefix $key "jenkins_" ]]

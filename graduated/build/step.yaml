@@ -154,6 +154,10 @@ spec:
                 "type": "string",
                 "description": "Set target platform/s (comma separated list) for build."
             },
+            "buildkit": {
+              "type": "boolean"
+              "description": "When set to true, enables Buildkit and all of its enhancements. <a href=\"https://codefresh.io/docs/docs/pipelines/steps/build/#buildkit-support\">more info</a>"
+            },
             "buildx": {
                 "oneOf": [
                   {

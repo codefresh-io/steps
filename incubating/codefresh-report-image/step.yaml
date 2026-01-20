@@ -226,7 +226,7 @@ spec:
         "CF_VERBOSE": {
           "type": "string",
           "description": "Enables verbose logging",
-          "default: "false",
+          "default": "false"
         }
       }
     }

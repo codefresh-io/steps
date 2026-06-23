@@ -4,6 +4,35 @@ Codefresh Pipeline Step to Send Notification to Microsoft Teams
 EXAMPLE CARD
 ![Microsoft Teams Example Card](/incubating/msteams-notifier/images/msteams_example_card.png)
 
+> **⚠️ Office 365 Connectors are being retired by Microsoft.**
+> The legacy Incoming Webhook (`MSTEAMS_WEBHOOK_URL`) relies on Office 365 connectors, which Microsoft is
+> retiring within Microsoft Teams. New connector webhooks can no longer be created and existing ones will
+> stop working. See the official announcement for timelines and details:
+> https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/
+>
+> Use **Power Automate Workflows** instead (see the section below).
+
+## Power Automate Workflows (recommended)
+
+Microsoft's replacement for retired Office 365 connectors is a Power Automate Workflow with the
+**"Post to a channel when a webhook request is received"** trigger. To use this mode you must:
+
+1. Set `USE_POWER_AUTOMATE_WORKFLOWS=true` to switch the step from the legacy webhook to the Workflow client.
+2. Provide the Workflow trigger URL via `MSTEAMS_WORKFLOW_URL` (this replaces `MSTEAMS_WEBHOOK_URL`).
+
+``` yaml
+  MSTeamsNotification:
+    image: codefreshplugins/cfstep-msteams-notifier:latest
+    environment:
+      - USE_POWER_AUTOMATE_WORKFLOWS=true
+      - MSTEAMS_WORKFLOW_URL=https://prod-XX.westus.logic.azure.com:443/workflows/...
+```
+
+`USE_POWER_AUTOMATE_WORKFLOWS` defaults to `false`; when it is not `true` the step falls back to the legacy
+webhook behaviour described below.
+
+## Legacy Incoming Webhook (deprecated)
+
 YAML Step
 ``` yaml
   MSTeamsNotification:
@@ -22,6 +51,10 @@ https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/connectors/con
 Replace the MSTEAMS_WEBHOOK_URL value in the Basic YAML example with the URL provided after configuring the connection
 
 This is the only required variable for the notification to send out on a pipeline execution.
+
+> **Note:** This mode is deprecated. Because Office 365 connectors are being retired
+> ([announcement](https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/)),
+> prefer the Power Automate Workflows mode above for new pipelines.
 
 TODO: Add links to Codefresh imagery for connector or card usage.
 

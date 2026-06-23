@@ -121,7 +121,7 @@ def msteamsWorkflows():
        myTeamsMessage.addLinkButton(msteams_link_text_2, msteams_link_url_2)
 
     # create the section
-    myMessageSection = pymsteams.cardsection()
+    myMessageSection = pymsteams_workflow.cardsection()
 
     # Activity Elements
     myMessageSection.activitySubtitle(mstreams_activity_subtitle)
@@ -147,10 +147,6 @@ def msteamsWorkflows():
     # Add your section to the connector card object before sending
     myTeamsMessage.addSection(myMessageSection)
 
-    # Send to additional room
-    #if msteams_new_workflow_url:
-    #   myTeamsMessage.newhookurl(msteams_new_workflow_url)
-
     myTeamsMessage.printme()
 
     # send the message.
@@ -163,7 +159,7 @@ def main():
     if useWorkflows == "true":
         msteamsWorkflows()
     else:
-        msteams_notifier()
+        msteamsNotifier()
 
 
 if __name__ == "__main__":

@@ -92,8 +92,23 @@ class cardsection:
 
 class connectorcard:
     def __init__(self, url):
+        # Tolerate surrounding whitespace and quotes that commonly leak in from
+        # mis-quoted CI environment variables (e.g. MSTEAMS_WORKFLOW_URL="...").
+        url = (url or "").strip().strip('"').strip("'").strip()
+        if not url:
+            raise TeamsWebhookException(
+                "Workflow URL is empty. Set the MSTEAMS_WORKFLOW_URL environment "
+                "variable to the Power Automate trigger URL (without surrounding quotes)."
+            )
+
         # Parse the URL to extract the base URL and query parameters.
         parsed_url = urlparse(url)
+        if not parsed_url.scheme or not parsed_url.netloc:
+            raise TeamsWebhookException(
+                f"Invalid workflow URL {url!r}: expected an https:// URL. Check that "
+                "MSTEAMS_WORKFLOW_URL is set correctly and is not wrapped in quotes."
+            )
+
         self.hookurl = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
         query_params = parse_qs(parsed_url.query)
 

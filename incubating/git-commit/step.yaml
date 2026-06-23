@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: git-commit
-  version: 0.1.4
+  version: 0.2.0
   isPublic: true
   description: Commit and push changes to repository
   icon:
@@ -155,6 +155,9 @@ spec:
         - export GIT_ACCESS_TOKEN_USER=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq -r -c .spec.data.auth.username)
         - export PRIVATE_KEY=$(codefresh get context $GIT_INTEGRATION_NAME --decrypt --prepare -o yaml | yq .spec.data.auth.sshPrivateKey)
         - echo PRIVATE_KEY=$PRIVATE_KEY >> /meta/env_vars_to_export
+        # For Bitbucket Cloud integration with API Token, replace username by 'x-bitbucket-api-token-auth'
+        - export GIT_INTEGRATION_TYPE=$(codefresh get context "$GIT_INTEGRATION_NAME" --decrypt --prepare -o yaml | yq -r -c .spec.type)
+        - if [ "$GIT_INTEGRATION_TYPE" = "git.bitbucket" ] && [ "${GIT_ACCESS_TOKEN#ATAT}" != "$GIT_ACCESS_TOKEN" ]; then export GIT_ACCESS_TOKEN_USER="x-bitbucket-api-token-auth"; fi
         # If the git integration does not include the auth username, then default to the git_user_name argument
         - if [ "$GIT_ACCESS_TOKEN_USER" = "null" ]; then export GIT_ACCESS_TOKEN_USER=$GIT_USER_NAME; fi
         - echo GIT_ACCESS_TOKEN_USER=$GIT_ACCESS_TOKEN_USER >> /meta/env_vars_to_export

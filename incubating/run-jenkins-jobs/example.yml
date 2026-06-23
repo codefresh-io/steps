@@ -2,7 +2,7 @@ version: '1.0'
 steps:
   RunJenkins:
     title: Triggering Jenkins Job
-    image: codefreshplugins/cf-run-jenkins-job
+    image: quay.io/codefresh/run-jenkins-jobs
     environment:
     - JENKINS_URL=http://<jenkins host>:<jenkins port>
     - JENKINS_USER=<jenkins user name>

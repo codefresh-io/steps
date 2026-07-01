@@ -49,5 +49,11 @@ envs:
   type: optional
   description: Custom Title, Default [Codefresh Build Notification]
 - name: MSTEAMS_WEBHOOK_URL
-  type: required
+  type: optional
   description: Microsoft Teams Webhook (connector) URL
+- name: USE_POWER_AUTOMATE_WORKFLOWS
+  type: optional
+  description: To use Power Automate Workflow, Default [false]
+- name: MSTEAMS_WORKFLOW_URL
+  type: optional
+  description: Microsoft Teams Workflow URL

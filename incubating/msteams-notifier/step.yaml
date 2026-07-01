@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 1.0.0
+  version: 1.1.0
   title: Send message to Microsoft teams
   isPublic: true
   description: Send a notification to a Microsoft Teams channel.
@@ -51,6 +51,16 @@ spec:
             "MSTEAMS_WEBHOOK_URL"
         ],
         "properties": {
+            "USE_POWER_AUTOMATE_WORKFLOWS": {
+                "type": "string",
+                "description": "To use Power Automate Workflow, Default [false]",
+                "default": "false"
+            },
+            "MSTEAMS_WORKFLOW_URL": {
+                "type": "string",
+                "description": "URL of Power Automation should be triggered",
+                "default": ""
+            },
             "CF_STATUS_MESSAGE": {
                 "type": "string",
                 "description": "Custom Status Message, Default [EXECUTED]"

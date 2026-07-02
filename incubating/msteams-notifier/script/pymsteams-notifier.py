@@ -26,7 +26,7 @@ def msteamsNotifier():
     msteams_new_webhook_url = os.getenv('MSTEAMS_NEW_WEBHOOK_URL')
     msteams_text = os.getenv('MSTEAMS_TEXT', 'Codefresh Account: {}'.format(cf_account))
     msteams_title = os.getenv('MSTEAMS_TITLE', 'Codefresh Build Notification')
-    msteams_webhook_url = os.getenv('MSTEAMS_WEBHOOK_URL')
+    msteams_webhook_url = os.getenv('MSTEAMS_WEBHOOK_URL', '')
 
     if msteams_webhook_url == "":
         raise Exception("MSTEAMS_WEBHOOK_URL is not set")

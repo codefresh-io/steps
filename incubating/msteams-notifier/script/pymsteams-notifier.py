@@ -29,7 +29,8 @@ def msteamsNotifier():
     msteams_webhook_url = os.getenv('MSTEAMS_WEBHOOK_URL', '')
 
     if msteams_webhook_url == "":
-        raise Exception("MSTEAMS_WEBHOOK_URL is not set")
+        print("ERROR: MSTEAMS_WEBHOOK_URL is not set")
+        exit(1)
 
     # You must create the connectorcard object with the Microsoft Webhook URL
     myTeamsMessage = pymsteams.connectorcard(msteams_webhook_url)

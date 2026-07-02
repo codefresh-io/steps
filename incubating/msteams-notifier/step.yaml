@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 1.0.0
+  version: 1.1.0
   title: Send message to Microsoft teams
   isPublic: true
   description: Send a notification to a Microsoft Teams channel.
@@ -47,10 +47,18 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [
-            "MSTEAMS_WEBHOOK_URL"
-        ],
+        "required": [],
         "properties": {
+            "USE_POWER_AUTOMATE_WORKFLOWS": {
+                "type": "string",
+                "description": "To use Power Automate Workflow, Default [false]",
+                "default": "false"
+            },
+            "MSTEAMS_WORKFLOW_URL": {
+                "type": "string",
+                "description": "URL of Power Automation should be triggered",
+                "default": ""
+            },
             "CF_STATUS_MESSAGE": {
                 "type": "string",
                 "description": "Custom Status Message, Default [EXECUTED]"
@@ -97,14 +105,15 @@ spec:
             },
             "MSTEAMS_WEBHOOK_URL": {
                 "type": "string",
-                "description": "Microsoft Teams Webhook (connector) URL"
+                "description": "Microsoft Teams Webhook (connector) URL",
+                "default": ""
             }
         }
     }
   stepsTemplate: |-
     main:
         name: msteams-notifier
-        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.0.0
+        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.1.0
         environment:
         [[ range $key, $val := .Arguments ]]
             - '[[ $key ]]=[[ $val ]]'

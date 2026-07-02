@@ -3,4 +3,5 @@ steps:
   MSTeamsNotification:
     image: codefreshplugins/cfstep-msteams-notifier:latest
     environment:
+      - USE_POWER_AUTOMATE_WORKFLOWS=true
       - MSTEAMS_WEBHOOK_URL=https://outlook.office.com/webhook/37a4ea3d...

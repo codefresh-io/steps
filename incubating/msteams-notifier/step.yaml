@@ -47,9 +47,7 @@ spec:
         "type": "object",
         "additionalProperties": false,
         "patterns": [],
-        "required": [
-            "MSTEAMS_WEBHOOK_URL"
-        ],
+        "required": [],
         "properties": {
             "USE_POWER_AUTOMATE_WORKFLOWS": {
                 "type": "string",
@@ -107,14 +105,15 @@ spec:
             },
             "MSTEAMS_WEBHOOK_URL": {
                 "type": "string",
-                "description": "Microsoft Teams Webhook (connector) URL"
+                "description": "Microsoft Teams Webhook (connector) URL",
+                "default": ""
             }
         }
     }
   stepsTemplate: |-
     main:
         name: msteams-notifier
-        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.0.0
+        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.1.0
         environment:
         [[ range $key, $val := .Arguments ]]
             - '[[ $key ]]=[[ $val ]]'

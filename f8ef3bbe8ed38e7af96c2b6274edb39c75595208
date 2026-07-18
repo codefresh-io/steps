@@ -1,0 +1,14 @@
+incubating/msteams-notifier/step.yaml
+  h_51acfbafc7319b 5,54-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "f8ef3bbe8ed38e7af96c2b6274edb39c75595208",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

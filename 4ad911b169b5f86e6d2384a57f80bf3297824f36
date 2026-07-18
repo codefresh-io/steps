@@ -1,0 +1,32 @@
+incubating/msteams-notifier/script/pymsteams-notifier.py
+  s_8cbc086088d91e::t_3d5c8d7478aa25 124
+  s_7ae972a65329e0::t_47d182ecc0a961 162
+incubating/msteams-notifier/Dockerfile
+  s_8cbc086088d91e::t_b823fe344b9b6e 12,14-16,18
+incubating/msteams-notifier/script/pymsteams_workflow.py
+  s_8cbc086088d91e::t_3584b99219b322 1-188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "4ad911b169b5f86e6d2384a57f80bf3297824f36",
+  "prompts": {},
+  "sessions": {
+    "s_7ae972a65329e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b20cce02-5de3-41b8-9f38-56d33d6e0b88",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    },
+    "s_8cbc086088d91e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34a65cc9-6da7-46e3-bca5-47010a605cbe",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

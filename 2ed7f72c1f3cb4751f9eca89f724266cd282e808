@@ -1,0 +1,24 @@
+incubating/msteams-notifier/script/pymsteams_workflow.py
+  s_8cbc086088d91e::t_3fa6e8df0557f7 95-103,106-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "2ed7f72c1f3cb4751f9eca89f724266cd282e808",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  },
+  "sessions": {
+    "s_8cbc086088d91e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34a65cc9-6da7-46e3-bca5-47010a605cbe",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

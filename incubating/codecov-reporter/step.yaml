@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codecov-reporter
   title: Sends a code scan report to codecov
-  version: 2.1.0
+  version: 2.1.1
   isPublic: true
   description: Sends a code scan report to codecov
   sources:
@@ -96,7 +96,7 @@ spec:
         - os=${{os}}
       commands:
         - cd ${WORKING_DIRECTORY}
-        - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
+        - curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
         - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov"
         - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM"
         - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM.sig"

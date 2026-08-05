@@ -32,6 +32,7 @@ metadata:
           title: Wait for approval
           timeout:
             duration: 1
+            timeUnit: minutes
             finalState: denied
 spec:
   arguments: |
@@ -45,8 +46,17 @@ spec:
               "description": "Define timeout behavior",
               "properties": {
                 "duration": {
-                  "description": "Duration of the timeout in hours",
+                  "description": "Duration of the timeout in hours by default",
                   "type": "number"
+                },
+                "timeUnit": {
+                  "description": "Duration unit. Can be hours or minutes",
+                  "default": "hours",
+                  "enum": [
+                    "hours",
+                    "minutes"
+                  ],
+                  "type": "string"
                 },
                 "finalState": {
                   "description": "The final state of the step once the timeout is reached",

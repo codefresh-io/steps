@@ -792,8 +792,8 @@ lodash.toarray@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
 
 lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.3.0:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
 
 lru-cache@^4.0.1:
   version "4.1.5"
@@ -862,9 +862,9 @@ node-emoji@^1.8.1:
   dependencies:
     lodash.toarray "^4.4.0"
 
-node-telegram-bot-api@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/node-telegram-bot-api/-/node-telegram-bot-api-0.30.0.tgz#17541935f2a56382d8ef7f91d9e544b530be717c"
+node-telegram-bot-api@^0.40.0:
+  version "0.40.0"
+  resolved "https://registry.yarnpkg.com/node-telegram-bot-api/-/node-telegram-bot-api-0.40.0.tgz#7e6acf631e868b8000025808daf566181c7673d5"
   dependencies:
     array.prototype.findindex "^2.0.2"
     bl "^1.2.1"

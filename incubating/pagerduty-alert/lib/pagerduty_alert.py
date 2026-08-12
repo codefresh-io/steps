@@ -1,6 +1,5 @@
 import os
-from pdpyras import APISession
-from pdpyras import ChangeEventsAPISession
+from pdpyras import APISession, EventsAPISession, ChangeEventsAPISession
 
 def main():
 
@@ -14,6 +13,7 @@ def main():
     service_id = os.getenv('SERVICE_ID')
     title = os.getenv('TITLE')
     pagerduty_type = os.getenv('PAGERDUTY_ALERT_TYPE')
+    pagerduty_severity = os.getenv('PAGERDUTY_SEVERITY')
 
     if pagerduty_type == 'incident':
         session = APISession(api_token, default_from=from_email)
@@ -37,6 +37,17 @@ def main():
             ]
 
         pd_incident = session.rpost('incidents', json=payload)
+
+    elif pagerduty_type == 'event':
+        session = EventsAPISession(api_token)
+
+        pd_event = session.trigger(
+            summary='{}'.format(event_summary),
+            source='{}'.format(event_source),
+            severity='{}'.format(pagerduty_severity),
+            custom_details={"Build ID":'{}'.format(cf_build_id)},
+            links=[{'href':'{}'.format(cf_build_url)}]
+        )
 
     elif pagerduty_type == 'change_event':
 

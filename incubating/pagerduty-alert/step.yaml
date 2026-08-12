@@ -2,9 +2,9 @@ kind: step-type
 version: '1.0'
 metadata:
   name: pagerduty-alert
-  version: 1.0.2
+  version: 1.1.0
   isPublic: true
-  description: Sends Alerts (Incidents or Change Events) to PagerDuty API
+  description: Sends events to PagerDuty via the Events or REST APIs (v2)
   sources:
     - https://github.com/codefresh-io/steps/tree/master/incubating/pagerduty-alert
   stage: incubating
@@ -36,6 +36,16 @@ metadata:
             FROM_EMAIL: dustin@codefresh.io
             TITLE: "Codefresh Build Failed: ${{CF_BUILD_URL}}"
             SERVICE_ID: 87hsd2fh38gh7g
+    - description: submit-event
+      workflow:
+        SubmitEvent:
+          type: pagerduty-alert
+          arguments:
+            API_TOKEN: x2392fhhgdys867gt3fd
+            PAGERDUTY_ALERT_TYPE: event
+            PAGERDUTY_SEVERITY: error
+            EVENT_SOURCE: Codefresh
+            EVENT_SUMMARY: "Codefresh Build Failed: ${{CF_BUILD_URL}}"
     - description: submit-change-event
       workflow:
         SubmitChangeEvent:
@@ -68,7 +78,19 @@ spec:
           "default": "change_event",
           "enum": [
             "incident",
+            "event",
             "change_event"
+          ]
+        },
+        "PAGERDUTY_SEVERITY": {
+          "type": "string",
+          "description": "Optional for event type, PagerDuty Severity",
+          "default": "error",
+          "enum": [
+            "critical",
+            "error",
+            "warning",
+            "info"
           ]
         },
         "ASSIGNEE_USER_ID": {
@@ -102,7 +124,7 @@ spec:
   stepsTemplate: |-
     pagerduty-alert:
       name: pagerduty-alert
-      image: quay.io/codefreshplugins/pagerduty-alert:1.0.2
+      image: quay.io/codefreshplugins/pagerduty-alert:1.1.0
       environment:
       [[ range $key, $val := .Arguments ]]
         - '[[ $key ]]=[[ $val ]]'

@@ -14,7 +14,7 @@ REQUIRED_VARS=(
     VAULT_PATH
     VAULT_PATH_DELIMITER
     VAULT_FIELD_NAME
-    VAULT_VARIABLE_EXPORT_PREFIX    
+    VAULT_VARIABLE_EXPORT_PREFIX
     VAULT_CLIENT_CERT_BASE64
     VAULT_CLIENT_KEY_BASE64
 )
@@ -77,19 +77,31 @@ else
         IFS=$VAULT_PATH_DELIMITER read -ra SPLIT_VAULT_PATHS <<< "$VAULT_PATH"
         for i in "${SPLIT_VAULT_PATHS[@]}"; do
             msg "Exporting variables from path $i"
+            # checking if info available by path .data.data
+            dataPath='.data.data'
+            kvdata=$(vault kv get $i | jq -c $dataPath)
+            if [[ -z "$kvdata" ]] || [ $kvdata='null' ]; then
+              dataPath='.data'
+            fi
             # Grab the json values from this path and add any prefix specified
-            for s in $(vault kv get $i | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do                
+            for s in $(vault kv get $i | jq -c $dataPath | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do
                 echo $s >> /meta/env_vars_to_export
             done
         done
     # Export values from a single path
     else
         msg "Exporting variables from path $VAULT_PATH"
+        # checking if info available by path .data.data
+        dataPath='.data.data'
+        kvdata=$(vault kv get $i | jq -c $dataPath)
+        if [[ -z "$kvdata" ]] || [ $kvdata='null' ]; then
+          dataPath='.data'
+        fi
         # Grab the json values from this path and add any prefix specified
-        for s in $(vault kv get $VAULT_PATH | jq -c '.data.data' | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do            
+        for s in $(vault kv get $VAULT_PATH | jq -c $dataPath | jq -r "to_entries|map(\"$VAULT_VARIABLE_EXPORT_PREFIX\(.key)=\(.value|tostring)\")|.[]" ); do
             echo $s >> /meta/env_vars_to_export
         done
-    fi    
+    fi
 fi
 
 

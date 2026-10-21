@@ -1,0 +1,31 @@
+graduated/helm/step.yaml
+  s_83ff087b125ad6::t_5ff010e5789f1f 210
+  s_83ff087b125ad6::t_91a8a69bfe7b84 214,216,221,225,228,231
+  s_83ff087b125ad6::t_a150dd1e971e71 169
+  s_83ff087b125ad6::t_ab108e7fc21565 5
+graduated/helm/README.md
+  s_83ff087b125ad6::t_4d1580dc9375a7 28
+graduated/codefresh-run/step.yaml
+  s_83ff087b125ad6::t_0ddfa9910e2853 247
+  s_83ff087b125ad6::t_f43e1956b0483c 195-196,198-222,224,226,229,232
+  s_83ff087b125ad6::t_94277918fef9d4 250-253,255-256,259,261-262,264-268,271-272
+  s_83ff087b125ad6::t_1b1941c0c0f4a3 294
+  s_83ff087b125ad6::t_c3c904283c8b8b 6
+  s_83ff087b125ad6::t_65a8819a1fe5e8 284-286
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "80fce6289457e38d1f6028f8616b64f38029f711",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "unknown"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

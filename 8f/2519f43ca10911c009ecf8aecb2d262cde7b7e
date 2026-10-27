@@ -1,0 +1,23 @@
+graduated/helm/step.yaml
+  s_83ff087b125ad6::t_1fee307339bbac 220
+  s_83ff087b125ad6::t_638affe4828f57 215
+graduated/codefresh-run/step.yaml
+  s_83ff087b125ad6::t_39e7ca90d943c2 205
+  s_83ff087b125ad6::t_6a07137835907c 200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8f2519f43ca10911c009ecf8aecb2d262cde7b7e",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "unknown"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

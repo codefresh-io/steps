@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.12
+  version: 1.1.13
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -73,6 +73,12 @@ metadata:
               commands:
                 - helm list
 spec:
+  # "x-shell-evaluated" marks the arguments that end up in a shell command, and where: "unquoted", or "double-quoted"
+  # when the command has the argument inside double quotes. The entrypoint script of the image builds the command
+  # from the environment variables that stepsTemplate creates from the arguments.
+  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
+  # so that the shell doesn't run commands from a branch name or a commit message.
+  # Update the marks when you change how an argument is used (see ShellArguments.js in the engine).
   arguments: |-
     {
         "definitions": {},
@@ -84,6 +90,7 @@ spec:
         ],
         "properties": {
             "kube_context": {
+                "x-shell-evaluated": "double-quoted",
                 "type": "string",
                 "description": "Kubernetes context to use (the name of the cluster as configured in Codefresh) (required)"
             },
@@ -100,10 +107,12 @@ spec:
                 "description": "Add helm repositories from contexts for auth action"
             },
             "chart_name": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Helm chart name to release (path to chart folder, or name of packaged chart)"
             },
             "release_name": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Helm release name"
             },
@@ -112,19 +121,23 @@ spec:
                 "description": "The helm operation mode is set by the ACTION variable, where the value is install/auth/push"
             },
             "namespace": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
 
                 "description": "Target Kubernetes namespace"
             },
             "tiller_namespace": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Kubernetes namespace where tiller is at"
             },
             "chart_version": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Application chart version to install"
             },
             "app_version": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Version of the application. This field is informational, and has no impact on chart version calculations."
             },
@@ -147,10 +160,12 @@ spec:
                 "description": "Version of cfstep-helm image"
             },
             "chart_repo_url": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Helm chart repository URL (overriden by injected Helm repository context)"
             },
             "custom_value_files": {
+                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -158,6 +173,7 @@ spec:
                   "description": "Values file to provide to Helm (as --values or -f). see usage information below"
             },
             "custom_values": {
+                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -165,10 +181,12 @@ spec:
                   "description": "Variables to provide to Helm (as --set). see usage information below"
             },
             "cmd_ps": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Variable to provide other Helm cli flags. For example: '--wait --timeout', etc"
             },
             "set_file": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)"
             },
@@ -177,10 +195,12 @@ spec:
                 "description": "Waits until all Pods are in a ready state, PVCs are bound, Deployments have minimum Pods in ready state and Services have an IP address  before marking the release as successful"
             },
             "timeout": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "A value in seconds to wait for Kubernetes commands to complete"
             },
             "commands": {
+                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -196,6 +216,7 @@ spec:
                 "description": "Add credentials to helm command as arguments (username, password). Otherwise its will be added to url http(s)://username:password@url. Should be enabled for JFrog Artifactory helm repository."
             },
             "chart_subdir": {
+                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "optional subfolder (inside JFrog Artifactory helm repository)"
             },

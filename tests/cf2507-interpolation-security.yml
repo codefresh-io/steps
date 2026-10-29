@@ -1,0 +1,566 @@
+# CF-2507: Remote Code Execution via Codefresh Steps - verification pipeline
+#
+# Verifies the fixes in:
+#   - steps:       graduated/codefresh-run (1.7.0), graduated/helm (1.1.13)
+#   - cfstep-helm: CF-2507-fix-interpolation-security (alpine) / CF-2507-fix-interpolation-security-debian (debian) images
+#
+# Every malicious payload tries to create its own marker file in /codefresh/volume/cf2507-markers.
+# The shared volume is visible to all steps of the build, so a marker means that the payload was executed.
+# Benign values check that existing pipelines keep working (quotes, spaces, colons, helm list syntax).
+#
+# The pipeline calls itself through codefresh-run: the child build (CF2507_MODE=child) verifies that
+# the variables arrived unchanged. Do not define CF2507_MODE as a pipeline variable.
+#
+# Setup
+#   1. Build the cfstep-helm images from both CF-2507 branches and note the image tags.
+#   2. Publish private copies of the step types from this branch (replace ACCOUNT with your account name):
+#        yq '.metadata.name = "ACCOUNT/codefresh-run-cf2507" | .metadata.isPublic = false' graduated/codefresh-run/step.yaml > /tmp/codefresh-run-cf2507.yaml
+#        yq '.metadata.name = "ACCOUNT/helm-cf2507" | .metadata.isPublic = false' graduated/helm/step.yaml > /tmp/helm-cf2507.yaml
+#        codefresh create step-type -f /tmp/codefresh-run-cf2507.yaml
+#        codefresh create step-type -f /tmp/helm-cf2507.yaml
+#   3. Replace __ACCOUNT__ in this file with your account name and create a pipeline with this YAML (no Git trigger is needed).
+#   4. Pipeline variables:
+#        CF2507_HELM_VERSION         (required) tag of quay.io/codefreshplugins/cfstep-helm to test, e.g. 3.14.0-<branch>-<sha>
+#        CF2507_HELM_DEBIAN_VERSION  (required) tag of quay.io/codefreshplugins/cfstep-helm-debian to test
+#        CF2507_KUBE_CONTEXT         (optional) name of a connected cluster; enables real `helm upgrade --install --dry-run` checks.
+#                                    Nothing is installed: the release is rendered with --dry-run only.
+#   5. Run the pipeline. Expected result: all steps green.
+#
+# Negative check (proves the tests catch the vulnerability): switch the step types to the released vulnerable
+# versions (codefresh-run:1.6.0, helm:1.1.12) and the helm image tags to the current released images.
+# The "verify_*" steps must then fail and list the created markers.
+#
+# Manual check: in the log of run_child_with_values the "Executing command" line must show "$CFRUN_SECRET_0"
+# and must not show the secret value.
+#
+# Legacy mode: the *_legacy steps enable the temporary legacy_shell_expansion option and check that it restores the
+# previous behaviour for benign values ($VAR and $(...) are evaluated) and prints the migration warning.
+# The default steps check that the option is disabled by default.
+
+version: '1.0'
+
+indicators:
+  - parentOnly: &parentOnly
+      condition:
+        all:
+          parentMode: 'includes("${{CF2507_MODE}}", "{{CF2507_MODE}}") == true'
+  - childOnly: &childOnly
+      condition:
+        all:
+          childMode: '"${{CF2507_MODE}}" == "child"'
+  - childLegacyOnly: &childLegacyOnly
+      condition:
+        all:
+          childMode: '"${{CF2507_MODE}}" == "child-legacy"'
+  - clusterOnly: &clusterOnly
+      condition:
+        all:
+          parentMode: 'includes("${{CF2507_MODE}}", "{{CF2507_MODE}}") == true'
+          hasCluster: 'includes("${{CF2507_KUBE_CONTEXT}}", "{{CF2507_KUBE_CONTEXT}}") == false'
+
+  # Values passed to cfstep-helm in DRY_RUN mode. With DRY_RUN every helm/kubectl command is printed with echo,
+  # so the output shows exactly which arguments Helm would receive.
+  - environment: &helmDryRunEnv
+      - DRY_RUN=true
+      - ACTION=install
+      - SKIP_CF_STABLE_HELM_REPO=true
+      - CHART_REF=./chart
+      - KUBE_CONTEXT=$(touch /codefresh/volume/cf2507-markers/helm-kube-context)
+      - RELEASE_NAME=r;touch /codefresh/volume/cf2507-markers/helm-release
+      - NAMESPACE=`touch /codefresh/volume/cf2507-markers/helm-namespace`
+      - CHART_VERSION=1.0.0|touch /codefresh/volume/cf2507-markers/helm-chart-version
+      - CHART_REPO_URL=https://charts.example.com/$(touch /codefresh/volume/cf2507-markers/helm-repo-url)
+      - TIMEOUT=5m && touch /codefresh/volume/cf2507-markers/helm-timeout
+      - SET_FILE=cfg=$(touch /codefresh/volume/cf2507-markers/helm-set-file)
+      - 'CMD_PS=--atomic --description "$(touch /codefresh/volume/cf2507-markers/helm-cmd-ps)" ; touch /codefresh/volume/cf2507-markers/helm-cmd-ps-2'
+      - CUSTOM_image_tag=$(touch /codefresh/volume/cf2507-markers/helm-set)
+      - "VALUESTRING_image_name=x' && touch /codefresh/volume/cf2507-markers/helm-set-string && echo '"
+      - CUSTOMFILE_0=values.yaml;touch /codefresh/volume/cf2507-markers/helm-values-file
+      - CF_CTX_cf2507_URL=https://repo.example.com/$(touch /codefresh/volume/cf2507-markers/helm-ctx-repo)
+      - 'COMMIT_MESSAGE=x/e;touch /codefresh/volume/cf2507-markers/helm-commit-sed $(touch /codefresh/volume/cf2507-markers/helm-commit)'
+      # Backward compatibility: quote and backslash removal must keep working as before
+      - 'CUSTOM_pat_arr="{one,two,three}"'
+      - 'CUSTOM_STR__WITH__COMAS="one\,two\,three"'
+      - VALUESTRING_spaced=a b
+
+  - commands: &helmDryRunCommands
+      - |
+        cd /codefresh/volume/cf2507
+        printf 'Release notes\ncommit_message:previous\n' > chart/templates/NOTES.txt
+        rc=0
+        bash /opt/bin/release_chart > helm-out.txt 2>&1 || rc=$?
+        cat helm-out.txt
+        if [ "$rc" != 0 ]; then echo "FAIL: release_chart exited with $rc"; exit 1; fi
+        if grep -q 'legacy_shell_expansion is enabled' helm-out.txt; then echo "FAIL: legacy mode must be disabled by default"; exit 1; fi
+        sh ./assert-helm-dry-run.sh helm-out.txt
+
+  # Real Helm against a cluster, without installing anything (--dry-run)
+  - environment: &helmClusterEnv
+      - ACTION=install
+      - KUBE_CONTEXT=${{CF2507_KUBE_CONTEXT}}
+      - KUBECONFIG=${{CF_KUBECONFIG_PATH}}
+      - SKIP_CF_STABLE_HELM_REPO=true
+      - CHART_REF=./chart
+      - RELEASE_NAME=cf2507-test
+      - NAMESPACE=default
+      - CMD_PS=--dry-run --output json --description "cf2507 test"
+      - CUSTOM_image_tag=$(touch /codefresh/volume/cf2507-markers/helm-cluster-set)
+      - 'CUSTOM_pat_arr="{one,two,three}"'
+      - 'CUSTOM_STR__WITH__COMAS="one\,two\,three"'
+      - VALUESTRING_spaced=a b
+      - VALUESTRING_version=1.10
+
+  - commands: &helmClusterCommands
+      - |
+        cd /codefresh/volume/cf2507
+        rc=0
+        bash /opt/bin/release_chart > helm-cluster-out.txt 2>&1 || rc=$?
+        cat helm-cluster-out.txt
+        if [ "$rc" != 0 ]; then echo "FAIL: release_chart exited with $rc"; exit 1; fi
+        python3 ./verify-helm-cluster.py helm-cluster-out.txt
+
+  # Legacy mode with benign values: the shell must evaluate $VAR and $(...) like before the fix
+  - environment: &helmLegacyEnv
+      - DRY_RUN=true
+      - ACTION=install
+      - LEGACY_SHELL_EXPANSION=true
+      - SKIP_CF_STABLE_HELM_REPO=true
+      - CHART_REF=./chart
+      - KUBE_CONTEXT=local
+      - RELEASE_NAME=cf2507-legacy
+      - MY_TAG=1.2.3
+      - CUSTOM_image_tag=$MY_TAG
+      - CMD_PS=--description $(echo legacy-ok)
+
+  - commands: &helmLegacyCommands
+      - |
+        cd /codefresh/volume/cf2507
+        rc=0
+        bash /opt/bin/release_chart > helm-legacy-out.txt 2>&1 || rc=$?
+        cat helm-legacy-out.txt
+        if [ "$rc" != 0 ]; then echo "FAIL: release_chart exited with $rc"; exit 1; fi
+        grep -qxF 'helm upgrade cf2507-legacy ./chart --install --reset-values --set image.tag=1.2.3 --description legacy-ok' helm-legacy-out.txt || { echo "FAIL: legacy mode didn't evaluate the values"; exit 1; }
+        grep -qF 'WARNING: legacy_shell_expansion is enabled' helm-legacy-out.txt || { echo "FAIL: legacy mode warning is missing"; exit 1; }
+        grep -qF 'behave differently once legacy_shell_expansion is disabled: CMD_PS, CUSTOM_image_tag' helm-legacy-out.txt || { echo "FAIL: legacy mode warning doesn't list the values"; exit 1; }
+        echo "OK: legacy mode evaluates values like before and prints the warning"
+
+  - commands: &verifyMarkersCommands
+      - |
+        if [ -n "$(ls -A /codefresh/volume/cf2507-markers 2>/dev/null)" ]; then
+          echo "FAIL: injected commands were executed, markers:"
+          ls -1 /codefresh/volume/cf2507-markers
+          exit 1
+        fi
+        echo "OK: no injected command was executed"
+
+stages:
+  - prepare
+  - codefresh-run
+  - helm-image
+  - helm-step
+  - helm-cluster
+  - child
+
+steps:
+
+  # ---------------------------------------------------------------- prepare
+  prepare:
+    title: Prepare test chart and helper scripts
+    stage: prepare
+    image: alpine:3.20
+    when: *parentOnly
+    commands:
+      - |
+        rm -rf /codefresh/volume/cf2507 /codefresh/volume/cf2507-markers
+        mkdir -p /codefresh/volume/cf2507/chart/templates /codefresh/volume/cf2507-markers
+        cd /codefresh/volume/cf2507
+
+        cat > chart/Chart.yaml <<'EOF'
+        apiVersion: v2
+        name: cf2507
+        version: 1.0.0
+        EOF
+
+        cat > chart/values.yaml <<'EOF'
+        {}
+        EOF
+
+        cat > chart/templates/configmap.yaml <<'EOF'
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: {{ .Release.Name }}
+        data:
+          values.json: {{ toJson .Values | quote }}
+        EOF
+
+        # Arguments Helm must receive in DRY_RUN mode (printed by echo, one command per line)
+        cat > expected-helm-dry-run.txt <<'EOF'
+        kubectl config use-context $(touch /codefresh/volume/cf2507-markers/helm-kube-context)
+        helm repo add cf2507 https://repo.example.com/$(touch /codefresh/volume/cf2507-markers/helm-ctx-repo)/
+        helm upgrade r;touch /codefresh/volume/cf2507-markers/helm-release ./chart --install --reset-values --repo https://charts.example.com/$(touch /codefresh/volume/cf2507-markers/helm-repo-url)/ --version 1.0.0|touch /codefresh/volume/cf2507-markers/helm-chart-version --namespace `touch /codefresh/volume/cf2507-markers/helm-namespace` --values values.yaml;touch /codefresh/volume/cf2507-markers/helm-values-file --set STR_WITH_COMAS=one\,two\,three --set image.tag=$(touch /codefresh/volume/cf2507-markers/helm-set) --set pat.arr={one,two,three} --set-string image.name=x && touch /codefresh/volume/cf2507-markers/helm-set-string && echo  --set-string spaced=a b --timeout 5m && touch /codefresh/volume/cf2507-markers/helm-timeout --atomic --description $(touch /codefresh/volume/cf2507-markers/helm-cmd-ps) ; touch /codefresh/volume/cf2507-markers/helm-cmd-ps-2 --set-file cfg=$(touch /codefresh/volume/cf2507-markers/helm-set-file)
+        EOF
+
+        cat > expected-notes.txt <<'EOF'
+        Release notes
+        commit_message:x/e;touch /codefresh/volume/cf2507-markers/helm-commit-sed $(touch /codefresh/volume/cf2507-markers/helm-commit)
+        EOF
+
+        cat > assert-helm-dry-run.sh <<'EOF'
+        failed=0
+        while IFS= read -r line; do
+          if grep -qxF -- "$line" "$1"; then
+            echo "OK: $line"
+          else
+            echo "FAIL: expected line not found: $line"
+            failed=1
+          fi
+        done < /codefresh/volume/cf2507/expected-helm-dry-run.txt
+        if cmp -s /codefresh/volume/cf2507/expected-notes.txt /codefresh/volume/cf2507/chart/templates/NOTES.txt; then
+          echo "OK: commit message written literally to NOTES.txt"
+        else
+          echo "FAIL: unexpected NOTES.txt content:"
+          cat /codefresh/volume/cf2507/chart/templates/NOTES.txt
+          failed=1
+        fi
+        exit $failed
+        EOF
+
+        cat > dump-env.py <<'EOF'
+        import json, os, sys
+        with open(sys.argv[1], 'w') as f:
+            json.dump(dict(os.environ), f, indent=2, sort_keys=True)
+        EOF
+
+        cat > verify-helm-step-env.py <<'EOF'
+        # Checks the environment the helm step template passed to the container
+        # Known issue (not related to CF-2507): in the debian image /bin/sh is dash, which drops environment
+        # variables with dots in the name (CUSTOM_pat.arr), so custom_values never reach the step there.
+        # With --allow-missing-dotted such variables are reported as SKIP when missing (they must still match when present).
+        import json, sys
+        env = json.load(open(sys.argv[1]))
+        allow_missing_dotted = '--allow-missing-dotted' in sys.argv[2:]
+        expected = {
+            'NAMESPACE': "ns'\nprivileged: true",
+            'RELEASE_NAME': 'r";$(touch /codefresh/volume/cf2507-markers/helm-step-release)',
+            'CHART_VERSION': "1.0.0'\n  - INJECTED_CHART_VERSION=1",
+            'CUSTOM_pat.arr': '"{one,two,three}"',
+            'CUSTOM_image.tag': "a'\n  - INJECTED_CUSTOM=1",
+            'CUSTOMFILE_0': "f'\n  - INJECTED_FILE=1",
+            'CF_CTX_cf2507_URL': "https://repo.example.com/x'\n  - INJECTED_REPO=1",
+            'SKIP_CF_STABLE_HELM_REPO': 'true',
+            'ACTION': 'auth',
+            'LEGACY_SHELL_EXPANSION': 'false',
+        }
+        failed = False
+        for key, value in expected.items():
+            if env.get(key) == value:
+                print('OK: %s' % key)
+            elif allow_missing_dotted and '.' in key and key not in env:
+                print('SKIP: %s is missing (known dash issue, see above)' % key)
+            else:
+                print('FAIL: %s: got %r, expected %r' % (key, env.get(key), value))
+                failed = True
+        injected = sorted(k for k in env if k.startswith('INJECTED'))
+        if injected:
+            print('FAIL: YAML injection created environment variables: %s' % injected)
+            failed = True
+        sys.exit(1 if failed else 0)
+        EOF
+
+        cat > verify-helm-cluster.py <<'EOF'
+        # Parses `helm upgrade --output json` and checks the values Helm received
+        import json, sys
+        release = None
+        for line in open(sys.argv[1]):
+            if line.startswith('{') and '"manifest"' in line:
+                release = json.loads(line)
+        if release is None:
+            print('FAIL: helm release JSON not found in the output')
+            sys.exit(1)
+        expected = {
+            'STR_WITH_COMAS': 'one,two,three',
+            'image': {'tag': '$(touch /codefresh/volume/cf2507-markers/helm-cluster-set)'},
+            'pat': {'arr': ['one', 'two', 'three']},
+            'spaced': 'a b',
+            'version': '1.10',
+        }
+        if release.get('config') != expected:
+            print('FAIL: unexpected values: %s' % json.dumps(release.get('config'), sort_keys=True))
+            print('expected: %s' % json.dumps(expected, sort_keys=True))
+            sys.exit(1)
+        if release.get('info', {}).get('description') != 'cf2507 test':
+            print('FAIL: unexpected description: %r' % release.get('info', {}).get('description'))
+            sys.exit(1)
+        print('OK: Helm received the expected values')
+        EOF
+
+        ls -la /codefresh/volume/cf2507
+
+  # ---------------------------------------------------------------- codefresh-run
+  run_child_with_values:
+    title: codefresh-run - values reach the child pipeline literally
+    stage: codefresh-run
+    type: __ACCOUNT__/codefresh-run-cf2507
+    when: *parentOnly
+    arguments:
+      PIPELINE_ID: '${{CF_PIPELINE_NAME}}'
+      DETACH: false
+      FOLLOW_LOGS: true
+      TIMEOUT_MINS: '15'
+      VARIABLE:
+        - 'CF2507_MODE=child'
+        - 'V_SPACES=value with spaces'
+        - 'V_COLON=key: value'
+        - 'V_QUOTES=it''s "quoted"'
+        - 'V_DOLLAR=$HOME'
+        - 'V_SUBST=$(touch /codefresh/volume/cf2507-markers/run-variable)'
+        - 'V_BACKTICK=`touch /codefresh/volume/cf2507-markers/run-backtick`'
+        - 'V_SEMI=x;touch /codefresh/volume/cf2507-markers/run-semicolon'
+      SECRETS:
+        - 'S_TOKEN=s3cr3t$(touch /codefresh/volume/cf2507-markers/run-secret)'
+
+  run_injection_arguments:
+    title: codefresh-run - payloads in every string argument
+    stage: codefresh-run
+    type: __ACCOUNT__/codefresh-run-cf2507
+    when: *parentOnly
+    # The CLI call itself is expected to fail (the trigger, branch and runtime don't exist)
+    fail_fast: false
+    arguments:
+      PIPELINE_ID: '${{CF_PIPELINE_NAME}}" ; touch /codefresh/volume/cf2507-markers/run-pipeline-id ; echo "'
+      TRIGGER_ID: 'trigger;touch /codefresh/volume/cf2507-markers/run-trigger'
+      BRANCH: '$(touch${IFS}/codefresh/volume/cf2507-markers/run-branch)'
+      SHA: '`touch /codefresh/volume/cf2507-markers/run-sha`'
+      RUNTIME_NAME: 'runtime && touch /codefresh/volume/cf2507-markers/run-runtime'
+      PACK_NAME: 'small|touch /codefresh/volume/cf2507-markers/run-pack'
+      VARIABLE_FILE: 'vars.yml;touch /codefresh/volume/cf2507-markers/run-var-file'
+      YAML: 'codefresh.yml;touch /codefresh/volume/cf2507-markers/run-yaml'
+      CONTEXT:
+        - 'ctx;touch /codefresh/volume/cf2507-markers/run-context'
+      ONLY:
+        - 'step;touch /codefresh/volume/cf2507-markers/run-only'
+      SKIP:
+        - 'step;touch /codefresh/volume/cf2507-markers/run-skip'
+      DETACH: true
+
+  run_injection_timeout:
+    title: codefresh-run - payload in TIMEOUT_MINS
+    stage: codefresh-run
+    type: __ACCOUNT__/codefresh-run-cf2507
+    when: *parentOnly
+    # `codefresh wait` is expected to reject the invalid timeout
+    fail_fast: false
+    arguments:
+      PIPELINE_ID: '${{CF_PIPELINE_NAME}}'
+      FOLLOW_LOGS: false
+      TIMEOUT_MINS: '10;touch /codefresh/volume/cf2507-markers/run-timeout'
+      VARIABLE:
+        - 'CF2507_MODE=noop'
+
+  run_child_legacy:
+    title: codefresh-run - LEGACY_SHELL_EXPANSION evaluates values like before
+    stage: codefresh-run
+    type: __ACCOUNT__/codefresh-run-cf2507
+    when: *parentOnly
+    arguments:
+      PIPELINE_ID: '${{CF_PIPELINE_NAME}}'
+      LEGACY_SHELL_EXPANSION: true
+      DETACH: false
+      FOLLOW_LOGS: true
+      TIMEOUT_MINS: '15'
+      VARIABLE:
+        - 'CF2507_MODE=child-legacy'
+        - 'V_LEGACY=$(echo legacy-ok)'
+
+  verify_codefresh_run:
+    title: codefresh-run - no injected command was executed
+    stage: codefresh-run
+    image: alpine:3.20
+    when: *parentOnly
+    commands: *verifyMarkersCommands
+
+  # ---------------------------------------------------------------- cfstep-helm image
+  helm_image_alpine:
+    title: cfstep-helm image - generated script (alpine)
+    stage: helm-image
+    image: quay.io/codefreshplugins/cfstep-helm:${{CF2507_HELM_VERSION}}
+    when: *parentOnly
+    environment: *helmDryRunEnv
+    commands: *helmDryRunCommands
+
+  verify_helm_image_alpine:
+    title: cfstep-helm image - no injected command was executed (alpine)
+    stage: helm-image
+    image: alpine:3.20
+    when: *parentOnly
+    commands: *verifyMarkersCommands
+
+  helm_image_debian:
+    title: cfstep-helm image - generated script (debian)
+    stage: helm-image
+    image: quay.io/codefreshplugins/cfstep-helm-debian:${{CF2507_HELM_DEBIAN_VERSION}}
+    when: *parentOnly
+    environment: *helmDryRunEnv
+    commands: *helmDryRunCommands
+
+  verify_helm_image_debian:
+    title: cfstep-helm image - no injected command was executed (debian)
+    stage: helm-image
+    image: alpine:3.20
+    when: *parentOnly
+    commands: *verifyMarkersCommands
+
+  helm_image_legacy_alpine:
+    title: cfstep-helm image - legacy_shell_expansion evaluates values like before (alpine)
+    stage: helm-image
+    image: quay.io/codefreshplugins/cfstep-helm:${{CF2507_HELM_VERSION}}
+    when: *parentOnly
+    environment: *helmLegacyEnv
+    commands: *helmLegacyCommands
+
+  helm_image_legacy_debian:
+    title: cfstep-helm image - legacy_shell_expansion evaluates values like before (debian)
+    stage: helm-image
+    image: quay.io/codefreshplugins/cfstep-helm-debian:${{CF2507_HELM_DEBIAN_VERSION}}
+    when: *parentOnly
+    environment: *helmLegacyEnv
+    commands: *helmLegacyCommands
+
+  # ---------------------------------------------------------------- helm step template
+  # The auth action without kube_context doesn't need a cluster; the commands dump the container environment
+  helm_step_alpine:
+    title: helm step - argument values stay inside YAML strings (alpine)
+    stage: helm-step
+    type: __ACCOUNT__/helm-cf2507
+    when: *parentOnly
+    arguments:
+      action: auth
+      helm_version: '${{CF2507_HELM_VERSION}}'
+      skip_cf_stable_helm_repo: true
+      namespace: "ns'\nprivileged: true"
+      release_name: 'r";$(touch /codefresh/volume/cf2507-markers/helm-step-release)'
+      chart_version: "1.0.0'\n  - INJECTED_CHART_VERSION=1"
+      custom_values:
+        - 'pat.arr="{one,two,three}"'
+        - "image.tag=a'\n  - INJECTED_CUSTOM=1"
+      custom_value_files:
+        - "f'\n  - INJECTED_FILE=1"
+      repos:
+        - name: cf2507
+          url: "https://repo.example.com/x'\n  - INJECTED_REPO=1"
+      commands:
+        - python3 /codefresh/volume/cf2507/dump-env.py /codefresh/volume/cf2507/helm-step-alpine.json
+
+  verify_helm_step_alpine:
+    title: helm step - verify container environment (alpine)
+    stage: helm-step
+    image: quay.io/codefreshplugins/cfstep-helm:${{CF2507_HELM_VERSION}}
+    when: *parentOnly
+    commands:
+      - python3 /codefresh/volume/cf2507/verify-helm-step-env.py /codefresh/volume/cf2507/helm-step-alpine.json
+
+  helm_step_debian:
+    title: helm step - argument values stay inside YAML strings (debian)
+    stage: helm-step
+    type: __ACCOUNT__/helm-cf2507
+    when: *parentOnly
+    arguments:
+      action: auth
+      use_debian_image: true
+      helm_version: '${{CF2507_HELM_DEBIAN_VERSION}}'
+      skip_cf_stable_helm_repo: true
+      namespace: "ns'\nprivileged: true"
+      release_name: 'r";$(touch /codefresh/volume/cf2507-markers/helm-step-release)'
+      chart_version: "1.0.0'\n  - INJECTED_CHART_VERSION=1"
+      custom_values:
+        - 'pat.arr="{one,two,three}"'
+        - "image.tag=a'\n  - INJECTED_CUSTOM=1"
+      custom_value_files:
+        - "f'\n  - INJECTED_FILE=1"
+      repos:
+        - name: cf2507
+          url: "https://repo.example.com/x'\n  - INJECTED_REPO=1"
+      commands:
+        - python3 /codefresh/volume/cf2507/dump-env.py /codefresh/volume/cf2507/helm-step-debian.json
+
+  verify_helm_step_debian:
+    title: helm step - verify container environment (debian)
+    stage: helm-step
+    image: quay.io/codefreshplugins/cfstep-helm:${{CF2507_HELM_VERSION}}
+    when: *parentOnly
+    commands:
+      - python3 /codefresh/volume/cf2507/verify-helm-step-env.py /codefresh/volume/cf2507/helm-step-debian.json --allow-missing-dotted
+
+  verify_helm_step_markers:
+    title: helm step - no injected command was executed
+    stage: helm-step
+    image: alpine:3.20
+    when: *parentOnly
+    commands: *verifyMarkersCommands
+
+  # ---------------------------------------------------------------- real Helm (optional)
+  helm_cluster_alpine:
+    title: Real Helm receives the expected values (alpine)
+    stage: helm-cluster
+    image: quay.io/codefreshplugins/cfstep-helm:${{CF2507_HELM_VERSION}}
+    when: *clusterOnly
+    environment: *helmClusterEnv
+    commands: *helmClusterCommands
+
+  helm_cluster_debian:
+    title: Real Helm receives the expected values (debian)
+    stage: helm-cluster
+    image: quay.io/codefreshplugins/cfstep-helm-debian:${{CF2507_HELM_DEBIAN_VERSION}}
+    when: *clusterOnly
+    environment: *helmClusterEnv
+    commands: *helmClusterCommands
+
+  verify_helm_cluster:
+    title: Real Helm - no injected command was executed
+    stage: helm-cluster
+    image: alpine:3.20
+    when: *clusterOnly
+    commands: *verifyMarkersCommands
+
+  # ---------------------------------------------------------------- child mode (started by run_child_with_values)
+  child_verify_variables:
+    title: Child - variables from codefresh-run arrived unchanged
+    stage: child
+    image: alpine:3.20
+    when: *childOnly
+    environment:
+      - GOT_SPACES=${{V_SPACES}}
+      - GOT_COLON=${{V_COLON}}
+      - GOT_QUOTES=${{V_QUOTES}}
+      - GOT_DOLLAR=${{V_DOLLAR}}
+      - GOT_SUBST=${{V_SUBST}}
+      - GOT_BACKTICK=${{V_BACKTICK}}
+      - GOT_SEMI=${{V_SEMI}}
+      - GOT_SECRET=${{S_TOKEN}}
+    commands:
+      - |
+        failed=0
+        check() {
+          if [ "$1" = "$2" ]; then echo "OK: $3"; else echo "FAIL: $3: got [$1], expected [$2]"; failed=1; fi
+        }
+        check "$GOT_SPACES" 'value with spaces' V_SPACES
+        check "$GOT_COLON" 'key: value' V_COLON
+        check "$GOT_QUOTES" 'it'\''s "quoted"' V_QUOTES
+        check "$GOT_DOLLAR" '$HOME' V_DOLLAR
+        check "$GOT_SUBST" '$(touch /codefresh/volume/cf2507-markers/run-variable)' V_SUBST
+        check "$GOT_BACKTICK" '`touch /codefresh/volume/cf2507-markers/run-backtick`' V_BACKTICK
+        check "$GOT_SEMI" 'x;touch /codefresh/volume/cf2507-markers/run-semicolon' V_SEMI
+        check "$GOT_SECRET" 's3cr3t$(touch /codefresh/volume/cf2507-markers/run-secret)' S_TOKEN
+        exit $failed
+
+  child_verify_legacy:
+    title: Child - LEGACY_SHELL_EXPANSION evaluated the value in the parent
+    stage: child
+    image: alpine:3.20
+    when: *childLegacyOnly
+    environment:
+      - GOT_LEGACY=${{V_LEGACY}}
+    commands:
+      - |
+        if [ "$GOT_LEGACY" = 'legacy-ok' ]; then echo "OK: V_LEGACY"; else echo "FAIL: V_LEGACY: got [$GOT_LEGACY], expected [legacy-ok]"; exit 1; fi

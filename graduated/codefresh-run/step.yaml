@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.6.0
+  version: 1.6.1
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -188,6 +188,26 @@ spec:
             }
         }
     }
+  # shellEvaluatedArguments lists the arguments that stepsTemplate puts into the shell command, and where:
+  # "unquoted", or "double-quoted" when the template puts the argument inside double quotes.
+  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
+  # so that the shell doesn't run commands from a branch name or a commit message.
+  # Update the list when you change how stepsTemplate uses an argument (see ShellArguments in the planner).
+  shellEvaluatedArguments:
+    PIPELINE_ID: double-quoted
+    TRIGGER_ID: unquoted
+    BRANCH: unquoted
+    SHA: unquoted
+    RUNTIME_NAME: unquoted
+    PACK_NAME: unquoted
+    CONTEXT: unquoted
+    VARIABLE: unquoted
+    SECRETS: unquoted
+    VARIABLE_FILE: unquoted
+    TIMEOUT_MINS: unquoted
+    ONLY: unquoted
+    SKIP: unquoted
+    YAML: unquoted
   delimiters:
     left: '[['
     right: ']]'

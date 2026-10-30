@@ -40,11 +40,6 @@ metadata:
   latest: true
   id: 5e0231f76e1ebe58d5d37a37
 spec:
-  # "x-shell-evaluated" marks the arguments that stepsTemplate puts into the shell command, and where:
-  # "unquoted", or "double-quoted" when the template puts the argument inside double quotes.
-  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
-  # so that the shell doesn't run commands from a branch name or a commit message.
-  # Update the marks when you change how stepsTemplate uses an argument (see ShellArguments.js in the engine).
   arguments: |-
     {
         "definitions": {},
@@ -63,25 +58,21 @@ spec:
                 "default": "0.89.1"
             },
             "PIPELINE_ID": {
-                "x-shell-evaluated": "double-quoted",
                 "type": "string",
                 "description": "Name or ID of pipeline to run. In the UI, select Pipelines. Click pipeline name, then select Settings, and get the Name and ID."
             },
             "TRIGGER_ID": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Name or ID of trigger for specified pipeline. Mandatory when BRANCH or SHA are defined. In the UI, select Pipelines. Click pipeline name, then select Workflows > Triggers. Click Edit and get the Name. ",
                 "default": ""
             },
             "BRANCH": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Branch for which to run the pipeline. When defined, TRIGGER_ID must also be defined.",
                 "examples": ["master"],
                 "default": ""
             },
             "SHA": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Git commit hash. When defined, TRIGGER_ID must also be defined.",
                 "examples": ["c777d850ff67969cb4eb9e041d7edeb367705e12"],
@@ -108,14 +99,12 @@ spec:
                   "default": false
             },
             "RUNTIME_NAME": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Runtime environment to run the pipeline.",
                 "examples": ["my-runtime-name"],
                 "default": ""
             },
             "PACK_NAME": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Resources size (small, medium or large).",
                 "default": ""
@@ -131,7 +120,6 @@ spec:
                  "default": true
              },
             "CONTEXT": {
-                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -141,7 +129,6 @@ spec:
                  "default": []
              },
             "VARIABLE": {
-                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -151,7 +138,6 @@ spec:
                  "default": []
              },
             "SECRETS": {
-                 "x-shell-evaluated": "unquoted",
                  "type": "array",
                  "items": {
                      "type": "string"
@@ -161,14 +147,12 @@ spec:
                  "default": []
              },
             "VARIABLE_FILE": {
-                  "x-shell-evaluated": "unquoted",
                   "type": "string",
                   "description": "Import build variables from a file.",
                   "examples": ["/codefresh/volume/my-repo/var_file_example.yml"],
                   "default": ""
             },             
             "TIMEOUT_MINS": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Timeout in minutes after which to consider pipeline build as failed.",
                 "examples": ["33.3", "45"],
@@ -180,7 +164,6 @@ spec:
                 "default": false
             },
             "ONLY": {
-                  "x-shell-evaluated": "unquoted",
                   "type": "array",
                   "items": {
                       "type": "string"
@@ -190,7 +173,6 @@ spec:
                   "default": []
               },
             "SKIP": {
-                  "x-shell-evaluated": "unquoted",
                   "type": "array",
                   "items": {
                       "type": "string"
@@ -200,13 +182,32 @@ spec:
                   "default": []
             },
             "YAML": {
-                "x-shell-evaluated": "unquoted",
                 "type": "string",
                 "description": "Path to pipeline's yaml to be used as override for this execution.",
                 "default": ""
             }
         }
     }
+  # shellEvaluatedArguments lists the arguments that stepsTemplate puts into the shell command, and where:
+  # "unquoted", or "double-quoted" when the template puts the argument inside double quotes.
+  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
+  # so that the shell doesn't run commands from a branch name or a commit message.
+  # Update the list when you change how stepsTemplate uses an argument (see ShellArguments in the planner).
+  shellEvaluatedArguments:
+    PIPELINE_ID: double-quoted
+    TRIGGER_ID: unquoted
+    BRANCH: unquoted
+    SHA: unquoted
+    RUNTIME_NAME: unquoted
+    PACK_NAME: unquoted
+    CONTEXT: unquoted
+    VARIABLE: unquoted
+    SECRETS: unquoted
+    VARIABLE_FILE: unquoted
+    TIMEOUT_MINS: unquoted
+    ONLY: unquoted
+    SKIP: unquoted
+    YAML: unquoted
   delimiters:
     left: '[['
     right: ']]'

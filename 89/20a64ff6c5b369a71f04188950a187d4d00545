@@ -1,0 +1,27 @@
+incubating/jira-issue-manager/Dockerfile
+  s_9d7daa527fb743::t_ede71146585153 3,5,10
+  s_9d7daa527fb743::t_7391ec8baac21f 1
+incubating/jira-issue-manager/step.yaml
+  s_9d7daa527fb743::t_ede71146585153 5,249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8920a64ff6c5b369a71f04188950a187d4d00545",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  },
+  "sessions": {
+    "s_9d7daa527fb743": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974456fa-54dd-41ec-8546-f1bac0aab860",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

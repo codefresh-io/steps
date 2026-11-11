@@ -4,27 +4,27 @@ import json
 import requests
 
 
-def exportResults(status): 
+def exportResults(status):
     print("\nExporting Results")
 
-    qualitygates_status_json = json.dumps(status) 
+    qualitygates_status_json = json.dumps(status)
     qualitygates_status= status['projectStatus']['status']
 
     env_file_path = "/meta/env_vars_to_export"
 
     if not os.path.exists(env_file_path):
-        print(f"Quality Gates status is \n'{qualitygates_status}'")     
-        print(f"Quality Gates status JSON is \n'{qualitygates_status_json}'")        
+        print(f"Quality Gates status is \n'{qualitygates_status}'")
+        print(f"Quality Gates status JSON is \n'{qualitygates_status_json}'")
     else:
         env_file = open(env_file_path, "a")
-        qualitygates_status_json_file_path = f"/codefresh/volume/sonarqualitygates-{os.getenv('CF_SHORT_REVISION')}.json"          
+        qualitygates_status_json_file_path = f"/codefresh/volume/sonarqualitygates-{os.getenv('CF_SHORT_REVISION')}.json"
         env_file.write("SONAR_QUALITYGATES_STATUS=" + qualitygates_status + "\n")
         env_file.write("SONAR_QUALITYGATES_STATUS_JSON_PATH=" + qualitygates_status_json_file_path + "\n")
         env_file.close()
 
-        qualitygates_status_json_file = open(qualitygates_status_json_file_path, "w") 
-        json.dump(status, qualitygates_status_json_file, indent = 4) 
-        qualitygates_status_json_file.close() 
+        qualitygates_status_json_file = open(qualitygates_status_json_file_path, "w")
+        json.dump(status, qualitygates_status_json_file, indent = 4)
+        qualitygates_status_json_file.close()
 
 def actBasedOnStatus(status):
     qualitygates_status = status['projectStatus']['status']
@@ -49,8 +49,6 @@ def main():
     sonarqube_username = os.getenv('SONAR_USERNAME')
     sonar_url = os.getenv('SONAR_HOST_URL', 'https://sonarcloud.io')
 
-    # Same request and auth as python-sonarqube-api 1.2.1, which this step used before:
-    # a token goes as the basic-auth login with an empty password; otherwise username/password.
     if sonarcloud_token:
         auth = (sonarcloud_token, "")
     elif sonarqube_username and sonarqube_password:

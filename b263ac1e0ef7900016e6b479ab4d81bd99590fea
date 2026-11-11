@@ -1,0 +1,27 @@
+graduated/codefresh-run/step.yaml
+  s_83ff087b125ad6::t_ec24fe0a4c44a5 241-242
+  s_83ff087b125ad6::t_5cbd6715a870fe 86,156
+  s_83ff087b125ad6::t_e4fea300dcbb08 6,33-34,38-49,73,78,84,91,118,125,141,151,161,171,178,190,200,210
+  s_83ff087b125ad6::t_9b156f4c2a03d7 221-240,243-244,246,272,275,284,296,298-299,305,312,314,316,318
+graduated/helm/README.md
+  s_83ff087b125ad6::t_8c2a67a72c4826 28
+  s_83ff087b125ad6::t_b80bb70b58d1fa 64-81
+graduated/helm/step.yaml
+  s_83ff087b125ad6::t_c57a16bc9364db 5,58-68,98,119,128,134,139,144,171,179,187,189,192,201,206,234,237,239,244,248,251,254,264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b263ac1e0ef7900016e6b479ab4d81bd99590fea",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

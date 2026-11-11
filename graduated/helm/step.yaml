@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: helm
-  version: 1.1.12
+  version: 1.1.13
   title: Release a Helm chart
   isPublic: true
   description: Update or install a Helm chart.
@@ -206,6 +206,28 @@ spec:
             }
         }
     }
+  # shellEvaluatedArguments lists the arguments that end up in a shell command, and where: "unquoted", or "double-quoted"
+  # when the command has the argument inside double quotes. The entrypoint script of the image builds the command
+  # from the environment variables that stepsTemplate creates from the arguments.
+  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
+  # so that the shell doesn't run commands from a branch name or a commit message.
+  # Update the list when you change how an argument is used (see ShellArguments in the planner).
+  shellEvaluatedArguments:
+    kube_context: double-quoted
+    chart_name: unquoted
+    release_name: unquoted
+    namespace: unquoted
+    tiller_namespace: unquoted
+    chart_version: unquoted
+    app_version: unquoted
+    chart_repo_url: unquoted
+    custom_value_files: unquoted
+    custom_values: unquoted
+    cmd_ps: unquoted
+    set_file: unquoted
+    timeout: unquoted
+    commands: unquoted
+    chart_subdir: unquoted
   stepsTemplate: |-
     main:
       name: helm

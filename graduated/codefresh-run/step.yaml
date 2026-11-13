@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codefresh-run
   title: Run a Codefresh pipeline
-  version: 1.6.1
+  version: 1.6.3
   isPublic: true
   description: Run a Codefresh pipeline by ID or name and attach the created build logs.
   sources:
@@ -188,6 +188,26 @@ spec:
             }
         }
     }
+  # shellEvaluatedArguments lists the arguments that stepsTemplate puts into the shell command, and where:
+  # "unquoted", or "double-quoted" when the template puts the argument inside double quotes.
+  # In these arguments the engine passes the Git variables, such as CF_BRANCH, to the shell as environment variables,
+  # so that the shell doesn't run commands from a branch name or a commit message.
+  # Update the list when you change how stepsTemplate uses an argument (see ShellArguments in the planner).
+  shellEvaluatedArguments:
+    PIPELINE_ID: double-quoted
+    TRIGGER_ID: unquoted
+    BRANCH: unquoted
+    SHA: unquoted
+    RUNTIME_NAME: unquoted
+    PACK_NAME: unquoted
+    CONTEXT: unquoted
+    VARIABLE: unquoted
+    SECRETS: unquoted
+    VARIABLE_FILE: unquoted
+    TIMEOUT_MINS: unquoted
+    ONLY: unquoted
+    SKIP: unquoted
+    YAML: unquoted
   delimiters:
     left: '[['
     right: ']]'
@@ -268,15 +288,16 @@ spec:
       [[- else ]]
       [[/* Terminate the child build only when the timeout is reached, not on other errors (e.g. API errors). */]]
       [[/* The timeout is detected by exit code 124 (CLI >= 1.3.0) or by the error message (older CLI versions exit with 1). */]]
+      [[/* Commands run with "set -e", so every failure that must not abort the script is caught with "||". */]]
         - >-
-          { codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]] 2>&1;
-          echo $? > /tmp/codefresh-wait.rc; } | tee /tmp/codefresh-wait.log;
-          WAIT_RC=$(cat /tmp/codefresh-wait.rc 2>/dev/null);
+          { WAIT_RC=0;
+          codefresh wait --verbose $BUILD_ID --timeout [[(printf "%s"  .Arguments.TIMEOUT_MINS)]] 2>&1 || WAIT_RC=$?;
+          echo $WAIT_RC > /tmp/codefresh-wait.rc; } | tee /tmp/codefresh-wait.log;
+          WAIT_RC=$(cat /tmp/codefresh-wait.rc 2>/dev/null || echo 1);
           if [ "$WAIT_RC" != "0" ]; then
-          WAIT_RC=${WAIT_RC:-1};
           if [ "$WAIT_RC" -eq 124 ] || grep -q "Operation has timed out" /tmp/codefresh-wait.log; then
           echo "TERMINATE_ON_TIMEOUT was set to true, sending termination request";
-          codefresh terminate $BUILD_ID;
+          codefresh terminate $BUILD_ID || echo "Failed to terminate build $BUILD_ID";
           fi;
           exit $WAIT_RC;
           fi

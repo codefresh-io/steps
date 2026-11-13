@@ -1,4 +1,12 @@
 # Changelog
+## [1.5.1] - 2026-11-13
+### Fixed
+- Rebase the image on Python 3.14.10 (GA). The previous base, 3.13.0a5, was an alpha build
+- Pin all Python dependencies, including anyio. Unpinned anyio 4.11+ crashed on import under 3.13.0a5
+- Update certifi to 2026.10.23 and refresh requests, urllib3, idna and the other pins
+- Fix NameError on start (undefined NAMESPACE) and the get_app_status query variable, both from 1.5.0
+- Default IMAGE_TAG to 1.5.1, so APP_NAMESPACE is no longer ignored by the 1.4.5 image
+
 ## [1.5.0] - 2025-01-29
 ### Changed
 - Add APP_NAMESPACE option (supported from app-proxy v1.2600.1)

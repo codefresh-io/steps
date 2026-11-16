@@ -1,0 +1,24 @@
+incubating/git-commit/Dockerfile
+  s_0717e5b1b5800f::t_9d6e57c62da06d 2
+incubating/git-commit/step.yaml
+  s_0717e5b1b5800f::t_bc624aa01ee4cd 171
+  s_0717e5b1b5800f::t_69d65d64b4f858 156
+  s_0717e5b1b5800f::t_bb9db13920a386 147
+  s_0717e5b1b5800f::t_daded01ae566ac 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c029b0ee5a2433e389e5ef74f0ac28129b790c79",
+  "prompts": {},
+  "sessions": {
+    "s_0717e5b1b5800f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38c7d379-eecb-4298-b0e1-55dfefc8352d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Alina <alina.shportiuk@codefresh.io>"
+    }
+  }
+}

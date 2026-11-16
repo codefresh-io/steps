@@ -51,7 +51,7 @@ def main():
 
     logging.debug("RUNTIME: %s", RUNTIME)
     logging.debug("APPLICATION: %s", APPLICATION)
-    logging.debug("NAMESPACE: %s", NAMESPACE)
+    logging.debug("APP_NAMESPACE: %s", APP_NAMESPACE)
     logging.debug("WAIT: %s", WAIT_HEALTHY)
     logging.debug("INTERVAL: %d", INTERVAL)
     logging.debug("MAX CHECKS: %s", MAX_CHECKS)
@@ -361,7 +361,7 @@ def application_autosync(ingress_host):
         logging.debug("Application Sync policy result: %s", err)
         sys.exit(1)
 
-    logging.debug("App sync Policy: ", result['applicationProxyQuery']['spec']['syncPolicy']['automated'])
+    logging.debug("App sync Policy: %s", result['applicationProxyQuery']['spec']['syncPolicy']['automated'])
     if result['applicationProxyQuery']['spec']['syncPolicy']['automated'] == None:
         return False
     else:

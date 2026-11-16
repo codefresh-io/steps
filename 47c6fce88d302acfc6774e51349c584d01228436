@@ -1,0 +1,28 @@
+incubating/msteams-notifier/Dockerfile
+  h_51acfbafc7319b 1
+incubating/msteams-notifier/example.yml
+  h_51acfbafc7319b 6
+incubating/msteams-notifier/README.md
+  s_8cbc086088d91e::t_83dc26065c3f0b 7-35,55-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "47c6fce88d302acfc6774e51349c584d01228436",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  },
+  "sessions": {
+    "s_8cbc086088d91e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34a65cc9-6da7-46e3-bca5-47010a605cbe",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

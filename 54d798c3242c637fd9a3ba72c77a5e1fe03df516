@@ -1,0 +1,14 @@
+graduated/codefresh-run/step.yaml
+  h_86ffe77adf8985 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "54d798c3242c637fd9a3ba72c77a5e1fe03df516",
+  "prompts": {},
+  "humans": {
+    "h_86ffe77adf8985": {
+      "author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

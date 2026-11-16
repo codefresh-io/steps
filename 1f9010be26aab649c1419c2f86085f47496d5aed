@@ -1,0 +1,17 @@
+incubating/sonar-quality-gates-checker/step.yaml
+  h_51acfbafc7319b 5
+  h_51acfbafc7319b 87
+incubating/sonar-quality-gates-checker/lib/sonarqube-api.py
+  h_51acfbafc7319b 7,10,16-17,20,25-27,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f9010be26aab649c1419c2f86085f47496d5aed",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+graduated/codefresh-run/step.yaml
+  s_83ff087b125ad6::t_b2f25d2d408532 195
+  s_83ff087b125ad6::t_19b8a83fb51a52 225
+  s_83ff087b125ad6::t_806de3baf93ba5 312
+  s_83ff087b125ad6::t_38e6c1d5ec2379 6
+  s_83ff087b125ad6::t_1b83c586cf9cd4 297
+  s_83ff087b125ad6::t_5d82fccf3ef9ec 196-224,226-240
+graduated/helm/step.yaml
+  s_83ff087b125ad6::t_f25a4b1a8f2872 5,210-255,266-271,275,278,281,291
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a037f87dcc20762941dda504912da1274a8521e3",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

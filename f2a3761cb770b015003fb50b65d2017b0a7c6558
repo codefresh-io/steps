@@ -1,0 +1,34 @@
+.github/step-tests/helm.json
+  s_83ff087b125ad6::t_8cb63421ddbe76 71,74
+  s_83ff087b125ad6::t_7156ef951a5862 1-70,72-73,75-89
+.github/workflows/step-template-tests.yaml
+  s_83ff087b125ad6::t_0ea03f046a837e 1-26
+.github/step-tests/run.py
+  s_83ff087b125ad6::t_64e61ad66128da 101-105,108,110,115-120,124
+  s_83ff087b125ad6::t_9bfa80fda4d6fa 218
+  s_83ff087b125ad6::t_62872db0654388 145
+  s_83ff087b125ad6::t_8a493282ab4e6d 51-52
+  s_83ff087b125ad6::t_582826bb1ad74e 166
+  s_83ff087b125ad6::t_831af4f854e5b8 203-204
+  s_83ff087b125ad6::t_6d3dfcfdab3b32 1-50,53-100,106-107,109,111-114,121-123,125-144,146-165,167-202,205-217,219-221,223-234
+  s_83ff087b125ad6::t_7fc5ad8a2f9394 222
+.github/step-tests/codefresh-run.json
+  s_83ff087b125ad6::t_448ed8c553dbc5 1-50,53-99
+  s_83ff087b125ad6::t_3109410297dd44 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2a3761cb770b015003fb50b65d2017b0a7c6558",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+incubating/msteams-notifier/plugin.yml
+  h_51acfbafc7319b 52,54-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "a12f96d57c3a8c6532ba9ce1fcbb2d1215eb403d",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}

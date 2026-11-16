@@ -1,0 +1,24 @@
+graduated/codefresh-run/step.yaml
+  s_ab546efc68a525::t_e3b40660ebf8ed 6,291,293-296,300
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf2e68b555d8cf3d6acaa223d08c521e75b1a67b",
+  "prompts": {},
+  "humans": {
+    "h_e5037b46dfdc11": {
+      "author": "Zhenya Tikhonov <zhenya.tikhonov@octopus.com>"
+    }
+  },
+  "sessions": {
+    "s_ab546efc68a525": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a2fdfbf2-ad45-4d63-94cd-e0c208738851",
+        "model": "claude-fable-5-2"
+      },
+      "human_author": "Zhenya Tikhonov <zhenya.tikhonov@octopus.com>"
+    }
+  }
+}

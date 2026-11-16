@@ -1,0 +1,58 @@
+tests/cf2507-security-advisory.md
+  s_83ff087b125ad6::t_f2cf5109d8ea1f 125
+  s_83ff087b125ad6::t_54b405755420df 36
+  s_83ff087b125ad6::t_1574495fbd881b 62,67-82
+  s_83ff087b125ad6::t_232b1d5605ba30 99
+  s_83ff087b125ad6::t_2c21135b73a84f 113
+  s_83ff087b125ad6::t_1e8bcb2d572de0 1-35,37-61,63-66,83-98,100-112,114-124,126-133
+tests/cf2507-breaking-change-notice.md
+  s_83ff087b125ad6::t_eee18d9be6a55c 94
+  s_83ff087b125ad6::t_7e8cc0457f54fe 66
+  s_83ff087b125ad6::t_d5156607b7ea69 31
+  s_83ff087b125ad6::t_e651105ab61f9b 1-30,32-65,67-93,95-116
+tests/cf2507-interpolation-security.yml
+  s_83ff087b125ad6::t_7da10fa785b50e 94
+  s_83ff087b125ad6::t_ba93586072d6b4 361-375
+  s_83ff087b125ad6::t_75ad742e359a69 259-260
+  s_83ff087b125ad6::t_36d8492bd271c2 555-566
+  s_83ff087b125ad6::t_25efda15398ea8 122-146
+  s_83ff087b125ad6::t_8ebdb62371b40d 253
+  s_83ff087b125ad6::t_03b983a2690831 35-38
+  s_83ff087b125ad6::t_f7dc168ccf7d32 51-54
+  s_83ff087b125ad6::t_82fba96f8c717c 1-34,39-50,55-93,95-121,147-236,240-241,243-252,254-258,261-360,376-413,430-492,494-554
+  s_83ff087b125ad6::t_622649ff16429c 237-239,242
+  s_83ff087b125ad6::t_b28fa356df3fa1 493
+  s_83ff087b125ad6::t_7ca9011ecc96e0 414-429
+tests/cf2507-pr-descriptions.md
+  s_83ff087b125ad6::t_a8852c8a826801 182-183
+  s_83ff087b125ad6::t_ef64ae483c580d 130-131
+  s_83ff087b125ad6::t_a27bdae3531bd2 168
+  s_83ff087b125ad6::t_4132ee8eb01112 1-36,45-52,59-68,72-106,111-116,119-126,129,132-167,169-176,179-181,184,186-199
+  s_83ff087b125ad6::t_cef6c6c6c3b648 127-128
+  s_83ff087b125ad6::t_5091c568991867 53-58
+  s_83ff087b125ad6::t_23d840b447961a 177-178,185
+  s_83ff087b125ad6::t_8cd815a8187df0 107-110,117-118
+  s_83ff087b125ad6::t_eecb68bee6bf4e 69-71
+  s_83ff087b125ad6::t_a452adf3882a4c 37-44
+tests/cf2507-support-runbook.md
+  s_83ff087b125ad6::t_98646041b44e22 94
+  s_83ff087b125ad6::t_9c94f1601add31 1-49,51-93,95-103,105-134
+  s_83ff087b125ad6::t_89530237121c35 50
+  s_83ff087b125ad6::t_9aa034d520e620 104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "49f4542971d34e18eaf76b38c64244be2e0da0d1",
+  "prompts": {},
+  "sessions": {
+    "s_83ff087b125ad6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7535c504-2c76-4690-afd1-ae225814055b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "andrii-codefresh <andrii@codefresh.io>"
+    }
+  }
+}

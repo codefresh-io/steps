@@ -1,0 +1,16 @@
+incubating/bump-build-number/Dockerfile
+  h_9fd7d1a18c4091 1,4
+incubating/bump-build-number/step.yaml
+  h_9fd7d1a18c4091 5,29,41,70,73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2daf730510e57a561427ad69298c24996deddb1e",
+  "prompts": {},
+  "humans": {
+    "h_9fd7d1a18c4091": {
+      "author": "Alina <alina.shportiuk@codefresh.io>"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+incubating/run-jenkins-jobs/Dockerfile
+  s_0717e5b1b5800f::t_387b61e7b54cb0 3,5-9,12,14,19,21,24-26
+incubating/run-jenkins-jobs/go.mod
+  s_0717e5b1b5800f::t_41e04623c8c2d7 1-7
+incubating/run-jenkins-jobs/step.yaml
+  s_0717e5b1b5800f::t_780d84b85a56a5 103
+  s_0717e5b1b5800f::t_cae24919e74312 5
+incubating/run-jenkins-jobs/codefresh.yml
+  s_0717e5b1b5800f::t_ed53716b5f0837 11
+  s_0717e5b1b5800f::t_58606f1b56f8f0 23,40
+incubating/run-jenkins-jobs/go.sum
+  s_0717e5b1b5800f::t_3c5b25fe26f1cf 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3cbe76510351ca41f0f74547cdc4c2ce8f0a3815",
+  "prompts": {},
+  "sessions": {
+    "s_0717e5b1b5800f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38c7d379-eecb-4298-b0e1-55dfefc8352d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Alina <alina.shportiuk@codefresh.io>"
+    }
+  }
+}

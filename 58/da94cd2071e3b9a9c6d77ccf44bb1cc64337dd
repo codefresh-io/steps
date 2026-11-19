@@ -1,0 +1,14 @@
+incubating/run-jenkins-jobs/Dockerfile
+  h_9fd7d1a18c4091 3,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58da94cd2071e3b9a9c6d77ccf44bb1cc64337dd",
+  "prompts": {},
+  "humans": {
+    "h_9fd7d1a18c4091": {
+      "author": "Alina <alina.shportiuk@codefresh.io>"
+    }
+  }
+}

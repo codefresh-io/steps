@@ -1,15 +1,14 @@
-FROM python:3.14.6-alpine3.23
+FROM python:3.14.10-alpine3.24
 
 ENV LANG C.UTF-8
 
 ARG PYMSTEAMS_VERSION=0.1.9
 
 RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache \
-        git \
-        nodejs && \
-    pip install --no-cache-dir pymsteams==$PYMSTEAMS_VERSION
+    apk upgrade --no-cache && \
+    pip install --no-cache-dir \
+        pymsteams==$PYMSTEAMS_VERSION \
+        "certifi>=2026.10.19"
 
 # pymsteams-workflow is vendored locally (see script/pymsteams_workflow.py) because
 # the PyPI package installs under the module name "pymsteams" and collides with the

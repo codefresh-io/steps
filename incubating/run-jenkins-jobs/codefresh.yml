@@ -8,7 +8,7 @@ steps:
       revision: '${{CF_REVISION}}'
   GetImageVersion:
     title: "Export package version"
-    image: codefresh/cli
+    image: quay.io/codefresh/cli:1.3.5
     working_directory: steps/incubating/run-jenkins-jobs
     commands:
     - 'export IMAGE_VERSION=$(cat step.yaml | yq -r .metadata.version)'
@@ -20,8 +20,7 @@ steps:
     working_directory: steps/incubating/run-jenkins-jobs
     image_name: codefresh/run-jenkins-jobs
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
-  
-PushingToRegistries:
+  PushingToRegistries:
     title: Pushing to Registry
     type: push
     candidate: ${{BuildImage}}

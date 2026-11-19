@@ -1,0 +1,45 @@
+incubating/codecov-reporter/step.yaml
+  h_e5037b46dfdc11 69,82
+  s_1cd42a6fe63bbf::t_f9e260ba3a1fbf 80,84,87-89
+  s_1cd42a6fe63bbf::t_6719d59281d706 91,93
+incubating/codecov-reporter/Dockerfile
+  s_1cd42a6fe63bbf::t_286b71f81acdb8 5,11,18-20
+  s_fe98f82bab5a35::t_cc451cd0e190ca 10,14
+  s_1cd42a6fe63bbf::t_d43a33084bb101 27
+  h_e5037b46dfdc11 3-4,29
+  s_fe98f82bab5a35::t_c55029932059f5 6,9,12-13,15-16,26
+  s_1cd42a6fe63bbf::t_2eae6bbcca8f23 22,24-25
+  s_1cd42a6fe63bbf::t_ca3ed01bdb5f3a 17,21
+  s_1cd42a6fe63bbf::t_cb3c010c49b52d 7-8
+  s_1cd42a6fe63bbf::t_f9e260ba3a1fbf 23
+  s_1cd42a6fe63bbf::t_48edb39d92f560 1-2,28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3f73e41acf7da2c4bf37e5ad89499e469233d592",
+  "prompts": {},
+  "humans": {
+    "h_e5037b46dfdc11": {
+      "author": "Zhenya Tikhonov <zhenya.tikhonov@octopus.com>"
+    }
+  },
+  "sessions": {
+    "s_1cd42a6fe63bbf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1bd424ff-d9d2-403e-80e7-aaa3c55e2522",
+        "model": "claude-fable-5-2"
+      },
+      "human_author": "Zhenya Tikhonov <zhenya.tikhonov@octopus.com>"
+    },
+    "s_fe98f82bab5a35": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e8d42d1-72f5-410c-bddf-296595422f7f",
+        "model": "claude-fable-5-2"
+      },
+      "human_author": "Zhenya Tikhonov <zhenya.tikhonov@octopus.com>"
+    }
+  }
+}

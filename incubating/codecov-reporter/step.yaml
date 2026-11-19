@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: codecov-reporter
   title: Sends a code scan report to codecov
-  version: 2.1.1
+  version: 2.1.2
   isPublic: true
   description: Sends a code scan report to codecov
   sources:
@@ -66,7 +66,7 @@ spec:
             },
             "os": {
                 "type": "string",
-                "description": "OS being used ( alpine | linux | macos | windows )",
+                "description": "Deprecated and ignored: the Codecov uploader is now bundled in the step image and only supports Linux",
                 "default": "linux"
             },
             "working_directory": {
@@ -77,32 +77,17 @@ spec:
         }
     }
   steps:
-    first:
-      title: "get token"
-      image: codefresh/cli
+    main:
+      name: "send report"
+      image: quay.io/codefreshplugins/codecov-reporter:2.1.2
       environment:
         - CODECOV_INTEGRATION=${{codecov_integration}}
-      commands:
-        - export CODECOV_API_KEY=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.token)
-        - export CODECOV_URL=$(codefresh get context $CODECOV_INTEGRATION --decrypt -o yaml | yq -r -c .spec.data.url)
-        - echo CODECOV_API_KEY=$CODECOV_API_KEY >> /meta/env_vars_to_export
-        - echo CODECOV_URL=$CODECOV_URL >> /meta/env_vars_to_export
-    second:
-      name: "send report"
-      image: node:24
-      environment:
-        - CODECOV_API_KEY=${{CODECOV_API_KEY}}
         - WORKING_DIRECTORY=${{working_directory}}
-        - os=${{os}}
       commands:
+        - CODECOV_CONTEXT=$(codefresh get context "$CODECOV_INTEGRATION" --decrypt -o json)
+        - CODECOV_API_KEY=$(echo "$CODECOV_CONTEXT" | jq -r .spec.data.token)
+        - CODECOV_URL=$(echo "$CODECOV_CONTEXT" | jq -r .spec.data.url)
         - cd ${WORKING_DIRECTORY}
-        - curl https://keybase.io/codecovsecops/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
-        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov"
-        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM"
-        - curl -Os "https://uploader.codecov.io/latest/${{os}}/codecov.SHA256SUM.sig"
-        - gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
-        - shasum -a 256 -c codecov.SHA256SUM
-        - chmod +x ./codecov
-        - ./codecov -t ${{CODECOV_API_KEY}} -u ${{CODECOV_URL}} -Q codefresh-2.0.0 | tee codecov.log
+        - codecov -t "$CODECOV_API_KEY" -u "$CODECOV_URL" -Q codefresh-2.0.0 | tee codecov.log
         # [<< timestamp >>] ['info'] {"status":"success","resultURL":"<< Codecov URL >>"}
-        - cf_export second_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')
+        - cf_export main_CF_OUTPUT_URL=$(grep -A0 'resultURL' codecov.log | awk 'BEGIN{FS="\"";}{print $8}')

@@ -1,0 +1,14 @@
+incubating/msteams-notifier/Dockerfile
+  h_9fd7d1a18c4091 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4d315a2dadf4889c3a0d55a8e02d1c9e2e7e9c1e",
+  "prompts": {},
+  "humans": {
+    "h_9fd7d1a18c4091": {
+      "author": "Alina <alina.shportiuk@codefresh.io>"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # ----- Go Builder ------
 #
-FROM golang:1.26.11-alpine3.23 AS go
+FROM golang:1.26.11-alpine3.24 AS go
 
 WORKDIR /src
 
@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /cfjenkins .
 #
 # ------ Release ------
 #
-FROM alpine:3.23
+FROM alpine:3.24
 
 # Go on Linux reads the system CA pool, so ca-certificates decides which roots are trusted
 RUN apk --no-cache add ca-certificates

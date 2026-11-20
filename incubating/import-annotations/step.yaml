@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: import-annotations
-  version: 0.0.2
+  version: 0.0.3
   isPublic: true
   description: Import Annotations to Pipeline Variables
   sources:
@@ -81,7 +81,7 @@ spec:
         - export ENTITY=$(codefresh get builds --pipeline-name "$PIPELINENAME" --limit 1 --output id --status success)
         - export ENTITY_TYPE=build
       [[- end ]]
-        - codefresh get annotation $ENTITY_TYPE $ENTITY -o json | jq ".[] | \"${PREFIX}\(.key)=\(.value)\"" >> /meta/env_vars_to_export
+        - codefresh get annotation $ENTITY_TYPE $ENTITY -o json | jq -r ".[] | \"${PREFIX}\(.key)=\(.value)\"" >> /meta/env_vars_to_export
   delimiters:
     left: '[['
     right: ']]'

@@ -10,7 +10,7 @@ Twistlock Subscription - https://www.twistlock.com/
 
 ### Documentation:
 
-Twistlock CLI: https://twistlock.desk.com/customer/en/portal/articles/2879128-scan-images-with-twistcli
+Twistlock CLI: https://docs.prismacloud.io/admin-guide/tools/twistcli-scan-images
 
 ## Local Usage
 

@@ -55,6 +55,9 @@ metadata:
               custom_values:
                 - pat.arr="{one,two,three}"
                 - STR_WITH_COMAS="one\,two\,three"
+              repos:
+                - name: stable
+                  url: https://kubernetes-charts.storage.googleapis.com/
     - description: example-push
       workflow:
           deploy:

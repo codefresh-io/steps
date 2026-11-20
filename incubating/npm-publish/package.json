@@ -22,6 +22,6 @@
   "dependencies": {
     "npm-utils": "1.7.1",
     "lodash": "^4.17.4",
-    "yargs": "^10.0.3"
+    "yargs": "^13.2.4"
   }
 }

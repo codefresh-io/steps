@@ -20,7 +20,7 @@
   "license": "MIT",
   "homepage": "https://github.com/codefresh-io/npm-publish#readme",
   "dependencies": {
-    "npm-utils": "1.7.1",
+    "npm-utils": "2.0.1",
     "lodash": "^4.17.4",
     "yargs": "^10.0.3"
   }

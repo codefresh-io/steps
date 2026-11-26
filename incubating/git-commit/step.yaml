@@ -168,7 +168,7 @@ spec:
 
     commit_and_push:
       title: "Commit and push"
-      image: quay.io/codefreshplugins/git-commit:0.1.5
+      image: quay.io/codefreshplugins/git-commit:0.2.1
       shell: bash
       environment:
         - REPO=${{repo}}

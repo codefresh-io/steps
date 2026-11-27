@@ -2,7 +2,7 @@ kind: step-type
 version: '1.0'
 metadata:
   name: msteams-notifier
-  version: 1.1.0
+  version: 1.1.1
   title: Send message to Microsoft teams
   isPublic: true
   description: Send a notification to a Microsoft Teams channel.
@@ -113,7 +113,7 @@ spec:
   stepsTemplate: |-
     main:
         name: msteams-notifier
-        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.1.0
+        image: quay.io/codefreshplugins/cfstep-msteams-notifier:1.1.1
         environment:
         [[ range $key, $val := .Arguments ]]
             - '[[ $key ]]=[[ $val ]]'
